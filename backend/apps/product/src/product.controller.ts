@@ -1,0 +1,76 @@
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
+import { ProductsService } from './product.service';
+import { productDto, updateProductDto } from './product.dto';
+import { Product, Image, Stock } from '@prisma/client';
+import {
+  ApiTags,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiParam,
+  ApiOkResponse,
+} from '@nestjs/swagger';
+
+@Controller('products')
+@ApiTags('products')
+export class ProductsController {
+  constructor(private readonly productsService: ProductsService) {}
+
+  @Post()
+  @ApiBody({ type: productDto })
+  @ApiCreatedResponse({
+    description: 'The product has been successfully created.',
+  })
+  createProduct(@Body() product: productDto): Promise<Product> {
+    return this.productsService.createProduct(product);
+  }
+
+  @Get()
+  getAllProducts(): Promise<Product[]> {
+    return this.productsService.getAllProducts();
+  }
+
+  @Get(':id')
+  @ApiParam({ name: 'id' })
+  getSingleProduct(@Param() params): Promise<Product> {
+    return this.productsService.getSingleProduct(params.id);
+  }
+
+  @Get(':id/images')
+  @ApiParam({ name: 'id' })
+  getAllProductImage(@Param() params): Promise<Image[]> {
+    return this.productsService.getAllProductImage(params.id);
+  }
+
+  @Get(':id/stocks')
+  @ApiParam({ name: 'id' })
+  getAllStocksOfProduct(@Param() params): Promise<Stock[]> {
+    return this.productsService.getAllStocksOfProduct(params.id);
+  }
+
+  @Put(':id')
+  @ApiParam({ name: 'id' })
+  @ApiBody({ type: updateProductDto })
+  @ApiOkResponse({
+    description: 'The product category has been successfully updated.',
+  })
+  updateSingleCategory(
+    @Param() params,
+    @Body() update: updateProductDto,
+  ): Promise<Product> {
+    return this.productsService.updateSingleCategory(params.id, update);
+  }
+
+  @Delete(':id')
+  @ApiParam({ name: 'id' })
+  deleteSingleProduct(@Param() params): Promise<Product> {
+    return this.productsService.deleteSingleProduct(params.id);
+  }
+}

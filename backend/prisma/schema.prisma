@@ -1,0 +1,392 @@
+datasource snb {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native","debian-openssl-1.1.x"]
+}
+
+model User {
+  id                  String   @id @default(uuid())
+
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
+
+  organisationId      String
+
+  name                String
+
+  email               String   @unique
+
+  address             String
+
+  birthday            String
+
+  sex                 SexEnum
+
+  engine              Engine @relation(fields: [engineId], references: [id])
+
+  engineId            String
+
+  role                UserRoleEnum
+
+  permission          UserPermissionEnum
+
+  activities          ActivityLog[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Organisation {
+  id                  String    @id @default(uuid())
+
+  type                OrganisationTypeEnum
+
+  socialReason        String
+
+  fiscalId            String  @unique
+
+  phone               String
+
+  email               String  @unique
+
+  adress              String
+
+  ownerName           String
+
+  paymentDeadline      Int
+
+  users               User[]
+
+  wallet              Wallet?
+
+  stocks              Stock[]
+
+  orders              Order[]
+
+  transactions        Transaction[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Order {
+  id                  String    @id @default(uuid())
+
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
+
+  organisationId      String
+
+  items               ItemOrder[]
+
+  totalAmount         Int
+
+  transaction         Transaction?
+
+  deliveryCode        String
+
+  deliveryMan         String
+
+  status              OrderStatusEnum
+
+  invoice             Invoice?
+
+  deliveryDate        String
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model ItemOrder {
+  id                  String    @id @default(uuid())
+
+  order               Order @relation(fields: [orderId], references: [id])
+
+  orderId             String
+
+  product             Product @relation(fields: [productId], references: [id])
+
+  productId           String
+
+  quantity            Int
+
+  price               Int
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Product {
+  id                  String   @id @default(uuid())
+
+  name                String
+
+  category            ProductCategory @relation(fields: [categoryId], references: [id])
+
+  categoryId          String
+
+  unitPrice           Int
+
+  rackPrice           Int
+
+  packPrice           Int
+
+  volume              Int
+
+  stocks              Stock[]
+
+  image               Image[]
+
+  itemsOrder          ItemOrder[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model ProductCategory {
+  id                  String   @id @default(uuid())
+
+  name                String
+
+  description         String
+
+  products            Product[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Image {
+  id                  String    @id @default(uuid())
+
+  url                 String
+
+  product             Product @relation(fields: [productId], references: [id])
+
+  productId           String
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Stock {
+  id                  String @id @default(uuid())
+
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
+
+  organisationId      String
+
+  product             Product @relation(fields: [productId], references: [id])
+
+  productId           String
+
+  originalQuantity    Int
+
+  currentQuantity     Int
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Transaction {
+  id                  String @id @default(uuid())
+
+  kkiapayId           String
+
+  wallet              Wallet @relation(fields: [walletId], references: [id])
+
+  walletId            String
+
+  order               Order @relation(fields: [orderId], references: [id])
+
+  orderId             String @unique
+
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
+
+  organisationId      String
+
+  amount              Int
+
+  status              TransactionStatusEnum
+
+  paymentMethod       PaymentMethodEnum
+
+  invoice             Invoice?
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Wallet {
+  id                  String @id @default(uuid())
+
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
+
+  organisationId      String @unique
+
+  turnover            Int
+
+  transactions        Transaction[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Invoice {
+  id                  String  @id @default(uuid())
+
+  transaction         Transaction @relation(fields: [transactionId], references: [id])
+
+  transactionId       String @unique
+
+  order               Order @relation(fields: [orderId], references: [id])
+
+  orderId             String @unique
+
+  description         String
+
+  invoiceNumber       Int
+
+  amount              Int
+
+  source              String
+
+  destination         String
+
+  status              InvoiceStatusEnum
+
+  receipt             Receipt?
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Receipt {
+  id                  String @id @default(uuid())
+
+  invoice             Invoice @relation(fields: [invoiceId], references: [id])
+
+  invoiceId           String  @unique
+
+  receiveNumber       Int
+
+  description         String
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model Engine {
+  id                  String @id @default(uuid())
+
+  name                String  @unique
+
+  description         String
+
+  users               User[]
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+model ActivityLog {
+  id                  String @id @default(uuid())
+
+  actor               User @relation(fields: [actorId], references: [id])
+
+  actorId             String
+
+  action              ActionEnum
+
+  modelName           ModelNameEnum
+
+  createdAt           DateTime @default(now())
+
+  updatedAt           DateTime @default(now())
+}
+
+
+
+
+
+enum SexEnum {
+  male
+  female
+  others
+}
+
+enum UserRoleEnum {
+  admin
+  deliveryMan
+}
+
+enum UserPermissionEnum {
+  administrator
+  deliveryMan
+}
+
+enum OrganisationTypeEnum {
+  snb
+  da
+  md
+}
+
+enum OrderStatusEnum {
+  delivered
+  pending
+  rejected
+}
+
+enum TransactionStatusEnum {
+  success
+  pending
+}
+
+enum PaymentMethodEnum {
+  kkiapay
+  cash
+}
+
+enum InvoiceStatusEnum {
+  paid
+  unpaid
+}
+
+enum ModelNameEnum {
+  User
+  Organisation
+  Order
+  ItemsOrder
+  Product
+  ProductCategory
+  Image
+  Stock
+  Transaction
+  Wallet
+  Invoice
+  Receipt
+  Engine
+}
+
+
+enum ActionEnum {
+ created
+ updated
+ deleted
+}
+

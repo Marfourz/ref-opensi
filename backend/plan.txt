@@ -1,0 +1,66 @@
+Mise en place de la base de données , les tables et leurs spécificités
+
+-install nest & create th nest app & set up architecture 
+-install prisma & read the doc
+-connect to the local db
+-write code for tables 
+-test & register some datas
+
+
+Mise en place du module externe "Authentication"
+
+-list all routes to setup
+
+/register
+/login
+/id
+/me
+/users
+/getResetPasswordToken
+/resetPasssword ; changePassword
+/permissions
+/roles
+
+middlewares / guards set up 
+
+-integrate external module users-managers
+-set up & test all routes 1 by 1
+
+
+docker initialized
+run users managers
+
+npx prisma migrate dev --name init
+
+nest build name
+
+nest start name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sudo su - postgres
+postgresql://postgres:fdlcode24@localhost:5432/snb
+Then, this shows all tables in the current schema:
+\dt
