@@ -10,7 +10,6 @@ async function bootstrap() {
     .setTitle('SNB DOCUMENTATION')
     .setDescription('USERS MANAGER API')
     .setVersion('1.0.0')
-    .addTag('users-manager')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
