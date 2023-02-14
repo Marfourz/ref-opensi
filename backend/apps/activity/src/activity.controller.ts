@@ -14,8 +14,11 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiParam,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { ActivityService } from './activity.service';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 
 @ApiTags('activities')
 @Controller('activities')
@@ -24,6 +27,10 @@ export class ActivityController {
 
   @Post()
   @ApiBody({ type: activityDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The activity has been successfully created.',
   })
@@ -32,17 +39,30 @@ export class ActivityController {
   }
 
   @Get()
+  @Roles(Role.Admin)
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllActivities(): Promise<ActivityLog[]> {
     return this.activityService.getAllActivities();
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleActivity(@Param() params): Promise<ActivityLog> {
     return this.activityService.getSingleActivity(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   updateSingleActivity(
     @Param() params,
@@ -52,6 +72,10 @@ export class ActivityController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleActivity(@Param() params): Promise<ActivityLog> {
     return this.activityService.deleteSingleActivity(params.id);

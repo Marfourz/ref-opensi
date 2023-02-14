@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiOkResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('stocks')
@@ -24,6 +25,10 @@ export class StockController {
   constructor(private readonly stockService: StockService) {}
 
   @Post()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: stockDto })
   @ApiCreatedResponse({
     description: 'The stock has been successfully created.',
@@ -33,12 +38,20 @@ export class StockController {
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleStock(@Param() params): Promise<Stock> {
     return this.stockService.getSingleStock(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: updateStockDto })
   @ApiOkResponse({
@@ -52,6 +65,10 @@ export class StockController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleStock(@Param() params): Promise<Stock> {
     return this.stockService.deleteSingleStock(params.id);

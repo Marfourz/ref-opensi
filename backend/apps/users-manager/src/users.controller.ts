@@ -47,7 +47,6 @@ export class UsersController {
   })
   me(@Req() req: Response) {
     const token = req.headers['x-auth-token'];
-    console.log(token);
     const user = this.usersService.me(token);
     return user;
   }

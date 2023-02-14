@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiOkResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('engines')
@@ -25,6 +26,10 @@ export class EngineController {
 
   @Post()
   @ApiBody({ type: engineDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The engine has been successfully created.',
   })
@@ -33,17 +38,29 @@ export class EngineController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllEngines(): Promise<Engine[]> {
     return this.engineService.getAllEngines();
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleEngine(@Param() params): Promise<Engine> {
     return this.engineService.getSingleEngine(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: updateEngineDto })
   @ApiOkResponse({
@@ -57,6 +74,10 @@ export class EngineController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleEngine(@Param() params): Promise<Engine> {
     return this.engineService.deleteSingleEngine(params.id);

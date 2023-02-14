@@ -55,7 +55,7 @@ export class UsersService {
     return logededUser;
   }
 
-  async register(user: UserRegisterDto) {
+  register(user: UserRegisterDto) {
     const registeredUser = this.httpService
       .post('/users', user)
       .pipe(map((res) => res.data))

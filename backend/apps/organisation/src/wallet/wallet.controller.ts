@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiOkResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('wallets')
@@ -24,6 +25,10 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: walletDto })
   @ApiCreatedResponse({
     description: 'The wallet has been successfully created.',
@@ -33,17 +38,29 @@ export class WalletController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllWallets(): Promise<Wallet[]> {
     return this.walletService.getAllWallets();
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleWallet(@Param() params): Promise<Wallet> {
     return this.walletService.getSingleWallet(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: updateWalletDto })
   @ApiOkResponse({
@@ -57,6 +74,10 @@ export class WalletController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleWallet(@Param() params): Promise<Wallet> {
     return this.walletService.deleteSingleWallet(params.id);

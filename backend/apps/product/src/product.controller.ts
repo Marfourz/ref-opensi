@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiOkResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @Controller('products')
@@ -24,6 +25,10 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: productDto })
   @ApiCreatedResponse({
     description: 'The product has been successfully created.',
@@ -33,29 +38,49 @@ export class ProductsController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllProducts(): Promise<Product[]> {
     return this.productsService.getAllProducts();
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleProduct(@Param() params): Promise<Product> {
     return this.productsService.getSingleProduct(params.id);
   }
 
   @Get(':id/images')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getAllProductImage(@Param() params): Promise<Image[]> {
     return this.productsService.getAllProductImage(params.id);
   }
 
   @Get(':id/stocks')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getAllStocksOfProduct(@Param() params): Promise<Stock[]> {
     return this.productsService.getAllStocksOfProduct(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: updateProductDto })
   @ApiOkResponse({
@@ -69,6 +94,10 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleProduct(@Param() params): Promise<Product> {
     return this.productsService.deleteSingleProduct(params.id);

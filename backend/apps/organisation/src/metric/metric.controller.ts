@@ -9,13 +9,7 @@ import {
 } from '@nestjs/common';
 import { MetricService } from './metric.service';
 import { Stock } from '@prisma/client';
-import {
-  ApiTags,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiParam,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiParam, ApiHeader } from '@nestjs/swagger';
 
 @ApiTags('metrics')
 @Controller('metrics')
@@ -23,6 +17,10 @@ export class StockController {
   constructor(private readonly metricService: MetricService) {}
 
   @Get(':orgId/performance/:prodId')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'orgId' })
   @ApiParam({ name: 'prodId' })
   getProductPerformance(@Param() params): Promise<Stock[]> {

@@ -17,13 +17,13 @@ import {
   ApiCreatedResponse,
   ApiBody,
   ApiParam,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { editFileName, getProductImageLink } from './image.helper';
 import { PRODUCT_IMAGES_DEST } from './image.constant';
-
 
 @ApiTags('product-image')
 @Controller('product-image')
@@ -40,6 +40,10 @@ export class ImageController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: FileUploadDto })
   @ApiCreatedResponse({
     description: 'The image of product has been successfully updated.',
@@ -56,6 +60,10 @@ export class ImageController {
   }
 
   @Get(':imgpath')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'imgpath' })
   seeUploadedFile(@Param('imgpath') image, @Res() res) {
     return res.sendFile(image, { root: PRODUCT_IMAGES_DEST });

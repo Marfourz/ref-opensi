@@ -16,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiOkResponse,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('item-order')
@@ -25,6 +26,10 @@ export class ItemOrderController {
 
   @Post()
   @ApiBody({ type: itemOrderDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The item order has been successfully created.',
   })
@@ -33,12 +38,20 @@ export class ItemOrderController {
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleItemOrder(@Param() params): Promise<ItemOrder> {
     return this.itemOrderService.getSingleItemOrder(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: updateItemOrderDto })
   @ApiOkResponse({
@@ -52,6 +65,10 @@ export class ItemOrderController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleItem(@Param() params): Promise<ItemOrder> {
     return this.itemOrderService.deleteSingleItem(params.id);

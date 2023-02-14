@@ -15,6 +15,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiParam,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('orders')
@@ -25,6 +26,10 @@ export class OrderController {
 
   @Post()
   @ApiBody({ type: orderDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The order has been successfully created.',
   })
@@ -34,12 +39,20 @@ export class OrderController {
 
   @Get(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getSingleOrder(@Param() params): Promise<Order> {
     return this.orderService.getSingleOrder(params.id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   updateSingleOrder(
     @Param() params,
     @Body() update: updateOrderDto,
@@ -49,6 +62,10 @@ export class OrderController {
 
   @Delete(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   deleteSingleOrder(@Param() params): Promise<Order> {
     return this.orderService.deleteSingleOrder(params.id);
   }

@@ -15,6 +15,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiParam,
+  ApiHeader,
 } from '@nestjs/swagger';
 
 @ApiTags('users')
@@ -24,6 +25,10 @@ export class UserController {
 
   @Post()
   @ApiBody({ type: userDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The user has been successfully created.',
   })
@@ -32,24 +37,40 @@ export class UserController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllUser(): Promise<User[]> {
     return this.userService.getAllUser();
   }
 
   @Get(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getSingleUser(@Param() params): Promise<User> {
     return this.userService.getSingleUser(params.id);
   }
 
   @Get(':id/activities')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getUserActivities(@Param() params): Promise<ActivityLog[]> {
     return this.userService.getUserActivities(params.id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   updateSingleUser(
     @Param() params,
     @Body() update: updateUserDto,
@@ -58,6 +79,10 @@ export class UserController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleUser(@Param() params): Promise<User> {
     return this.userService.deleteSingleUser(params.id);

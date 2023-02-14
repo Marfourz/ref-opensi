@@ -6,15 +6,13 @@ import {
   Post,
   Get,
   Delete,
-  UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
 import { ReceiptService } from './receipt.service';
 import { Receipt } from '@prisma/client';
 import { receiptDto, updateReceiptDto } from './receipt.dto';
 import {
   ApiTags,
-  ApiConsumes,
+  ApiHeader,
   ApiCreatedResponse,
   ApiBody,
   ApiOkResponse,
@@ -28,6 +26,10 @@ export class ReceiptController {
 
   @Post()
   @ApiBody({ type: receiptDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The receipt has been successfully created.',
   })
@@ -36,18 +38,30 @@ export class ReceiptController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllReceipts(): Promise<Receipt[]> {
     return this.receiptService.getAllReceipts();
   }
 
   @Get(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getSingleReceipt(@Param() params): Promise<Receipt> {
     return this.receiptService.getSingleReceipt(params.id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: updateReceiptDto })
   @ApiOkResponse({
     description: 'The receipt has been successfully updated.',
@@ -61,6 +75,10 @@ export class ReceiptController {
 
   @Delete(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   deleteSingleReceipt(@Param() params): Promise<Receipt> {
     return this.receiptService.deleteSingleReceipt(params.id);
   }

@@ -13,6 +13,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiParam,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { transactionDto, updateTransactionDto } from './transaction.dto';
 import { TransactionService } from './transaction.service';
@@ -24,6 +25,10 @@ export class TransactionController {
 
   @Post()
   @ApiBody({ type: transactionDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The transaction has been successfully created.',
   })
@@ -33,12 +38,20 @@ export class TransactionController {
 
   @Get(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getSingleTransaction(@Param() params): Promise<Transaction> {
     return this.transactionService.getSingleTransaction(params.id);
   }
 
   @Put(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: updateTransactionDto })
   updateSingleTransaction(
     @Param() params,
@@ -48,6 +61,10 @@ export class TransactionController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deleteSingleTransaction(@Param() params): Promise<Transaction> {
     return this.transactionService.deleteSingleTransaction(params.id);

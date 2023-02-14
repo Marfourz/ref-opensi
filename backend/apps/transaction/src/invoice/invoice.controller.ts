@@ -14,7 +14,7 @@ import { Invoice } from '@prisma/client';
 import { invoiceDto, updateInvoiceDto } from './invoice.dto';
 import {
   ApiTags,
-  ApiConsumes,
+  ApiHeader,
   ApiCreatedResponse,
   ApiBody,
   ApiOkResponse,
@@ -28,6 +28,10 @@ export class InvoiceController {
 
   @Post()
   @ApiBody({ type: invoiceDto })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiCreatedResponse({
     description: 'The invoice has been successfully created.',
   })
@@ -36,11 +40,19 @@ export class InvoiceController {
   }
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllInvoices(): Promise<Invoice[]> {
     return this.invoiceService.getAllInvoices();
   }
 
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleInvoice(@Param() params): Promise<Invoice> {
     return this.invoiceService.getSingleInvoice(params.id);
@@ -48,6 +60,10 @@ export class InvoiceController {
 
   @Put(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: updateInvoiceDto })
   @ApiOkResponse({
     description: 'The invoice has been successfully updated.',
@@ -61,6 +77,10 @@ export class InvoiceController {
 
   @Delete(':id')
   @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   deleteSingleInvoice(@Param() params): Promise<Invoice> {
     return this.invoiceService.deleteSingleInvoice(params.id);
   }
