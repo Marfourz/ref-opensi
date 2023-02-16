@@ -6,6 +6,7 @@ import {
   UserGetResetDto,
   UserResetPasswordDto,
   UserUpdateDto,
+  UserChangePasswordDto,
 } from './users.dto';
 import {
   ApiTags,
@@ -21,6 +22,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllUsers() {
     return this.usersService.allUsers();
   }
@@ -56,25 +61,51 @@ export class UsersController {
   @ApiCreatedResponse({
     description: 'The user pasword token is generated.',
   })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getToken(@Body() user: UserGetResetDto) {
     return this.usersService.getResetPasswordToken(user);
   }
 
   @Put('resetPassword/:token')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'token' })
   @ApiBody({ type: UserResetPasswordDto })
   reset(@Body() user: UserResetPasswordDto, @Param() params) {
     return this.usersService.resetPassword(user, params.token);
   }
 
-  //63e7cc5af0279f121bc3fd5b
+  @Put('changePassword/:userId')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiParam({ name: 'userId' })
+  @ApiBody({ type: UserChangePasswordDto })
+  changePassword(@Body() update: UserChangePasswordDto, @Param() params) {
+    return this.usersService.changePassword(update, params.userId);
+  }
+
   @Get(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   getSingleUser(@Param() params) {
     return this.usersService.getSingleUser(params.id);
   }
 
   @Put(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   @ApiBody({ type: UserUpdateDto })
   updateUser(@Body() update: UserUpdateDto, @Param() params) {

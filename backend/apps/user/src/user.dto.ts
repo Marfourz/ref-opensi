@@ -1,4 +1,9 @@
-import { SexEnum, UserRoleEnum, UserPermissionEnum } from '@prisma/client';
+import {
+  SexEnum,
+  UserRoleEnum,
+  UserPermissionEnum,
+  UserStatusEnum,
+} from '@prisma/client';
 import { IsString, Matches, IsEmail, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -12,6 +17,10 @@ export class userDto {
   @ApiProperty()
   @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  phone: string;
 
   @ApiProperty()
   @IsEmail()
@@ -31,6 +40,9 @@ export class userDto {
   @ApiProperty({ type: String })
   sex: SexEnum;
 
+  @ApiProperty({ enum: UserStatusEnum })
+  status: UserStatusEnum;
+
   @ApiProperty({ type: String })
   role: UserRoleEnum;
 
@@ -43,6 +55,11 @@ export class updateUserDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  phone?: string;
 
   @ApiProperty()
   @IsOptional()
@@ -65,6 +82,10 @@ export class updateUserDto {
   @ApiProperty({ type: String })
   @IsOptional()
   sex?: SexEnum;
+
+  @ApiProperty({ enum: UserStatusEnum })
+  @IsOptional()
+  status: UserStatusEnum;
 
   @ApiProperty({ type: String })
   @IsOptional()

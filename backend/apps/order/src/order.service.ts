@@ -59,4 +59,67 @@ export class OrderService {
       return;
     }
   }
+
+  async searchForOrdersOfOrganisation(filterParams, orgId): Promise<Order[]> {
+    try {
+      let Order = 'desc';
+      const { page, perPage, order, totalAmount, status, orderId } =
+        filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      const totalAmountConstraint: any = {};
+      if (!isNaN(totalAmount)) {
+        totalAmountConstraint.totalAmount = Number(totalAmount);
+      }
+
+      if (order != undefined) {
+        Order = order;
+      }
+
+      const statusConstraint: any = {};
+      if (status != undefined) {
+        statusConstraint.status = status;
+      }
+
+      const orderIdConstraint: any = {};
+      if (orderId != undefined) {
+        orderIdConstraint.id = {
+          contains: orderId,
+          mode: 'insensitive',
+        };
+      }
+
+      const orders = await this.prisma.order.findMany({
+        ...paginateConstraints,
+        where: {
+          organisationId: orgId,
+          AND: [
+            {
+              ...totalAmountConstraint,
+            },
+            {
+              ...statusConstraint,
+            },
+            {
+              ...orderIdConstraint,
+            },
+          ],
+        },
+        orderBy: [
+          {
+            createdAt: Order,
+          },
+        ],
+      });
+      return orders;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
 }

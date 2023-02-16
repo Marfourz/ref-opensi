@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Organisation, User, Stock } from '@prisma/client';
+import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
+import { UserRoleEnum } from '@prisma/client';
 
 @Injectable()
 export class OrganisationService {
@@ -77,6 +78,116 @@ export class OrganisationService {
         where: { organisationId: id },
       });
       return users;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
+  async getDeliveryMenOfOrganisation(id: string): Promise<User[]> {
+    try {
+      const users = await this.prisma.user.findMany({
+        where: { organisationId: id, role: UserRoleEnum.deliveryMan },
+      });
+      return users;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
+  async searchForPartners(filterParams): Promise<Organisation[]> {
+    try {
+      let Order = 'desc';
+      const {
+        page,
+        perPage,
+        order,
+        ownerName,
+        phone,
+        email,
+        turnover,
+        status,
+      } = filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      const turnoverConstraint: any = {};
+      if (!isNaN(turnover)) {
+        turnoverConstraint.turnover = Number(turnover);
+      }
+
+      const ownerNameConstraint: any = {};
+      if (ownerName != undefined) {
+        ownerNameConstraint.ownerName = {
+          contains: ownerName,
+          mode: 'insensitive',
+        };
+      }
+
+      const emailConstraint: any = {};
+      if (email != undefined) {
+        emailConstraint.email = {
+          contains: email,
+          mode: 'insensitive',
+        };
+      }
+
+      const phoneConstraint: any = {};
+      if (phone != undefined) {
+        phoneConstraint.phone = {
+          contains: phone,
+          mode: 'insensitive',
+        };
+      }
+
+      const statusConstraint: any = {};
+      if (status != undefined) {
+        statusConstraint.status = status;
+      }
+
+      if (order != undefined) {
+        Order = order;
+      }
+
+      const orders = await this.prisma.organisation.findMany({
+        ...paginateConstraints,
+        where: {
+          NOT: {
+            type: OrganisationTypeEnum.snb,
+          },
+          AND: [
+            {
+              ...ownerNameConstraint,
+            },
+            {
+              ...phoneConstraint,
+            },
+            {
+              ...emailConstraint,
+            },
+            {
+              ...statusConstraint,
+            },
+          ],
+          wallet: {
+            ...turnoverConstraint,
+          },
+        },
+        include: {
+          wallet: true,
+        },
+        orderBy: [
+          {
+            createdAt: Order,
+          },
+        ],
+      });
+      return orders;
     } catch (error) {
       throw error;
       return;

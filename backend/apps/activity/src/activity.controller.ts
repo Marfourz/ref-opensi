@@ -39,7 +39,6 @@ export class ActivityController {
   }
 
   @Get()
-  @Roles(Role.Admin)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

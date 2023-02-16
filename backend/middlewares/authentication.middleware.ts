@@ -22,7 +22,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
             const { data } = result;
-            req.body.user = data;
+            req.user = data;
             next();
           })
           .catch((error) => {

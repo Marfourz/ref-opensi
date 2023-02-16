@@ -13,6 +13,8 @@ import { AuthenticationMiddleware } from 'middlewares/authentication.middleware'
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../../users-manager/src/users.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [HttpModule],
@@ -23,6 +25,10 @@ import { UsersService } from '../../users-manager/src/users.service';
     PrismaService,
     JwtService,
     UsersService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class UserModule implements NestModule {

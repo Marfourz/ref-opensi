@@ -17,6 +17,8 @@ model User {
 
   name                String
 
+  phone               String
+
   email               String   @unique
 
   address             String
@@ -34,6 +36,8 @@ model User {
   permission          UserPermissionEnum
 
   activities          ActivityLog[]
+
+  status              UserStatusEnum  @default(active)
 
   createdAt           DateTime @default(now())
 
@@ -68,6 +72,8 @@ model Organisation {
   orders              Order[]
 
   transactions        Transaction[]
+
+  status              OrganisationStatusEnum  @default(active)
 
   createdAt           DateTime @default(now())
 
@@ -347,9 +353,9 @@ enum OrganisationTypeEnum {
 }
 
 enum OrderStatusEnum {
+  new
   delivered
-  pending
-  rejected
+  accepted
 }
 
 enum TransactionStatusEnum {
@@ -383,10 +389,25 @@ enum ModelNameEnum {
   Engine
 }
 
-
 enum ActionEnum {
  created
  updated
  deleted
+}
+
+enum UserStatusEnum {
+ active
+ inactive
+ suspended
+}
+
+enum OrganisationStatusEnum {
+ active
+ inactive
+}
+
+enum OrderTypeEnum {
+  asc
+  desc
 }
 

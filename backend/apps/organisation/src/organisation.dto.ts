@@ -1,4 +1,4 @@
-import { OrganisationTypeEnum } from '@prisma/client';
+import { OrganisationStatusEnum, OrganisationTypeEnum } from '@prisma/client';
 import { IsString, IsEmail, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -35,6 +35,10 @@ export class organisationDto {
   @ApiProperty({ type: Number })
   @IsNumber()
   paymentDeadline: number;
+
+  @ApiProperty({ enum: OrganisationStatusEnum })
+  @IsString()
+  status: OrganisationStatusEnum;
 }
 
 export class updateOrganisationDto {
@@ -76,4 +80,9 @@ export class updateOrganisationDto {
   @IsOptional()
   @IsNumber()
   paymentDeadline?: number;
+
+  @ApiProperty({ enum: OrganisationStatusEnum })
+  @IsOptional()
+  @IsString()
+  status: OrganisationStatusEnum;
 }

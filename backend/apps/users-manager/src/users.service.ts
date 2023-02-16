@@ -5,6 +5,7 @@ import {
   UserGetResetDto,
   UserResetPasswordDto,
   UserUpdateDto,
+  UserChangePasswordDto,
 } from './users.dto';
 import { HttpService } from '@nestjs/axios';
 import { map, catchError } from 'rxjs';
@@ -110,6 +111,19 @@ export class UsersService {
   updateUser(update: UserUpdateDto, id: string) {
     const data = this.httpService
       .put(`/users/${id}`, update)
+      .pipe(map((res) => res.data))
+      .pipe(
+        catchError((error) => {
+          throw error;
+        }),
+      );
+
+    return data;
+  }
+
+  changePassword(update: UserChangePasswordDto, userId: any) {
+    const data = this.httpService
+      .put(`/users/${userId}/password`, update)
       .pipe(map((res) => res.data))
       .pipe(
         catchError((error) => {

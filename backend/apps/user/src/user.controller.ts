@@ -6,17 +6,27 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User, ActivityLog } from '@prisma/client';
+import {
+  User,
+  ActivityLog,
+  UserStatusEnum,
+  UserRoleEnum,
+} from '@prisma/client';
 import { userDto, updateUserDto } from './user.dto';
+import { OrderTypeEnum } from 'guards/order.type.enum';
 import {
   ApiTags,
   ApiBody,
   ApiCreatedResponse,
   ApiParam,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 
 @ApiTags('users')
 @Controller('users')
@@ -63,6 +73,31 @@ export class UserController {
   })
   getUserActivities(@Param() params): Promise<ActivityLog[]> {
     return this.userService.getUserActivities(params.id);
+  }
+
+  @Get(':orgId/search')
+  @ApiParam({ name: 'orgId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
+  @ApiQuery({ name: 'userId', type: String, required: false })
+  @ApiQuery({ name: 'name', type: String, required: false })
+  @ApiQuery({ name: 'phone', type: String, required: false })
+  @ApiQuery({ name: 'engineName', type: String, required: false })
+  @ApiQuery({ name: 'status', enum: UserStatusEnum, required: false })
+  @ApiQuery({ name: 'role', enum: UserRoleEnum, required: false })
+  searchForUsersOfOrganisation(
+    @Query() filterParams: any,
+    @Param() params,
+  ): Promise<User[]> {
+    return this.userService.searchForUsersOfOrganisation(
+      filterParams,
+      params.orgId,
+    );
   }
 
   @Put(':id')

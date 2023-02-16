@@ -58,46 +58,83 @@ export class StockService {
       return;
     }
   }
-  /*
 
-
-  async getSingleEngine(id: string): Promise<Engine> {
+  async searchForStocksOfOrganisation(filterParams, orgId): Promise<Stock[]> {
     try {
-      const engine = await this.prisma.engine.findUnique({
-        where: { id },
+      let Order = 'desc';
+      const {
+        page,
+        perPage,
+        order,
+        prodName,
+        stockId,
+        prodRackPrice,
+        currentQuantity,
+      } = filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      const productNameConstraint: any = {};
+      if (prodName != undefined) {
+        productNameConstraint.name = {
+          contains: prodName,
+          mode: 'insensitive',
+        };
+      }
+
+      const productRackPriceConstraint: any = {};
+      if (!isNaN(prodRackPrice)) {
+        productRackPriceConstraint.rackPrice = Number(prodRackPrice);
+      }
+
+      const currentQuantityConstraint: any = {};
+      if (!isNaN(currentQuantity)) {
+        currentQuantityConstraint.currentQuantity = Number(currentQuantity);
+      }
+
+      const stockIdConstraint: any = {};
+      if (stockId != undefined) {
+        stockIdConstraint.id = {
+          contains: stockId,
+          mode: 'insensitive',
+        };
+      }
+
+      if (order != undefined) {
+        Order = order;
+      }
+
+      const stocks = await this.prisma.stock.findMany({
+        ...paginateConstraints,
+        where: {
+          organisationId: orgId,
+          AND: [
+            {
+              ...stockIdConstraint,
+            },
+            {
+              ...currentQuantityConstraint,
+            },
+          ],
+          product: {
+            ...productNameConstraint,
+            ...productRackPriceConstraint,
+          },
+        },
+        orderBy: [
+          {
+            createdAt: Order,
+          },
+        ],
       });
-      return engine;
+      return stocks;
     } catch (error) {
       throw error;
       return;
     }
   }
-
-  async deleteSingleEngine(id: string): Promise<Engine> {
-    try {
-      const deletedEngine = await this.prisma.engine.delete({
-        where: { id },
-      });
-      return deletedEngine;
-    } catch (error) {
-      throw error;
-      return;
-    }
-  }
-
-  async updateSingleEngine(
-    id: string,
-    update: updateEngineDto,
-  ): Promise<Engine> {
-    try {
-      const updatedEngine = await this.prisma.engine.update({
-        where: { id },
-        data: update,
-      });
-      return updatedEngine;
-    } catch (error) {
-      throw error;
-      return;
-    }
-  }*/
 }

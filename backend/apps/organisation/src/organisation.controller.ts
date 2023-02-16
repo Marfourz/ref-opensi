@@ -6,9 +6,10 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
-import { Organisation, User, Stock } from '@prisma/client';
+import { Organisation, User, OrganisationStatusEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import {
   ApiTags,
@@ -16,7 +17,9 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
+import { OrderTypeEnum } from 'guards/order.type.enum';
 
 @ApiTags('organisations')
 @Controller('organisations')
@@ -57,6 +60,25 @@ export class OrganisationController {
     return this.organisationService.getSingleOrganisation(params.id);
   }
 
+  @Get('partners/search')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
+  @ApiQuery({ name: 'ownerName', type: String, required: false })
+  @ApiQuery({ name: 'phone', type: String, required: false })
+  @ApiQuery({ name: 'email', type: String, required: false })
+  @ApiQuery({ name: 'turnover', type: Number, required: false })
+  @ApiQuery({ name: 'status', enum: OrganisationStatusEnum, required: false })
+  searchForOrdersOfOrganisation(
+    @Query() filterParams: any,
+  ): Promise<Organisation[]> {
+    return this.organisationService.searchForPartners(filterParams);
+  }
+
   @Get(':id/users')
   @ApiHeader({
     name: 'x-auth-token',
@@ -65,6 +87,16 @@ export class OrganisationController {
   @ApiParam({ name: 'id' })
   getUsersOfOrganisation(@Param() params): Promise<User[]> {
     return this.organisationService.getUsersOfOrganisation(params.id);
+  }
+
+  @Get(':id/deliveryMen')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiParam({ name: 'id' })
+  getDeliveryMenOfOrganisation(@Param() params): Promise<User[]> {
+    return this.organisationService.getDeliveryMenOfOrganisation(params.id);
   }
 
   @Put(':id')

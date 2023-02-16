@@ -6,9 +6,11 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Order } from '@prisma/client';
+import { Order, OrderStatusEnum } from '@prisma/client';
+import { OrderTypeEnum } from 'guards/order.type.enum';
 import { orderDto, updateOrderDto } from './order.dto';
 import {
   ApiTags,
@@ -16,6 +18,7 @@ import {
   ApiCreatedResponse,
   ApiParam,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 @ApiTags('orders')
@@ -45,6 +48,28 @@ export class OrderController {
   })
   getSingleOrder(@Param() params): Promise<Order> {
     return this.orderService.getSingleOrder(params.id);
+  }
+
+  @Get(':orgId/search')
+  @ApiParam({ name: 'orgId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'orderId', type: String, required: false })
+  @ApiQuery({ name: 'totalAmount', type: Number, required: false })
+  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
+  @ApiQuery({ name: 'status', enum: OrderStatusEnum, required: false })
+  searchForOrdersOfOrganisation(
+    @Query() filterParams: any,
+    @Param() params,
+  ): Promise<Order[]> {
+    return this.orderService.searchForOrdersOfOrganisation(
+      filterParams,
+      params.orgId,
+    );
   }
 
   @Put(':id')

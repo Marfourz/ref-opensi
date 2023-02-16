@@ -80,3 +80,17 @@ export class UserUpdateDto {
   @IsArray()
   roles?: string[];
 }
+
+export class UserChangePasswordDto {
+  @ApiProperty()
+  @IsString()
+  userId: string;
+
+  @ApiProperty()
+  @IsString()
+  oldPassword: string;
+
+  @ApiProperty()
+  @IsString()
+  newPassword: string;
+}

@@ -6,10 +6,12 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './product.service';
 import { productDto, updateProductDto } from './product.dto';
 import { Product, Image, Stock } from '@prisma/client';
+import { OrderTypeEnum } from 'guards/order.type.enum';
 import {
   ApiTags,
   ApiBody,
@@ -17,6 +19,7 @@ import {
   ApiParam,
   ApiOkResponse,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 @Controller('products')
@@ -44,6 +47,21 @@ export class ProductsController {
   })
   getAllProducts(): Promise<Product[]> {
     return this.productsService.getAllProducts();
+  }
+
+  @Get('/search')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
+  @ApiQuery({ name: 'name', type: String, required: false })
+  @ApiQuery({ name: 'rackPrice', type: Number, required: false })
+  @ApiQuery({ name: 'prodId', type: String, required: false })
+  searchForProducts(@Query() filterParams: any): Promise<any[]> {
+    return this.productsService.searchForProducts(filterParams);
   }
 
   @Get(':id')

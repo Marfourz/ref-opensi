@@ -77,4 +77,108 @@ export class UserService {
       return;
     }
   }
+
+  async searchForUsersOfOrganisation(filterParams, orgId): Promise<User[]> {
+    try {
+      let Order = 'desc';
+      const {
+        page,
+        perPage,
+        order,
+        userId,
+        name,
+        phone,
+        engineName,
+        status,
+        role,
+      } = filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      const statusConstraint: any = {};
+      if (status != undefined) {
+        statusConstraint.status = status;
+      }
+
+      const roleConstraint: any = {};
+      if (role != undefined) {
+        roleConstraint.role = role;
+      }
+
+      const userIdConstraint: any = {};
+      if (userId != undefined) {
+        userIdConstraint.id = {
+          contains: userId,
+          mode: 'insensitive',
+        };
+      }
+
+      const userNameConstraint: any = {};
+      if (name != undefined) {
+        userNameConstraint.name = {
+          contains: name,
+          mode: 'insensitive',
+        };
+      }
+
+      const userPhoneConstraint: any = {};
+      if (phone != undefined) {
+        userNameConstraint.phone = {
+          contains: phone,
+          mode: 'insensitive',
+        };
+      }
+
+      const userEngineNameConstraint: any = {};
+      if (engineName != undefined) {
+        userEngineNameConstraint.name = {
+          contains: engineName,
+          mode: 'insensitive',
+        };
+      }
+
+      if (order != undefined) {
+        Order = order;
+      }
+      const orders = await this.prisma.user.findMany({
+        ...paginateConstraints,
+        where: {
+          organisationId: orgId,
+          engine: {
+            ...userEngineNameConstraint,
+          },
+          AND: [
+            {
+              ...userIdConstraint,
+            },
+            {
+              ...userNameConstraint,
+            },
+            {
+              ...userPhoneConstraint,
+            },
+            {
+              ...statusConstraint,
+            },
+            {
+              ...roleConstraint,
+            },
+          ],
+        },
+        orderBy: [
+          {
+            createdAt: Order,
+          },
+        ],
+      });
+      return orders;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
 }

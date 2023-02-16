@@ -15,11 +15,19 @@ export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
   @Get()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   getAllPermissions() {
     return this.permissionsService.getAllPermissions();
   }
 
   @Post()
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiBody({ type: createPermissionDto })
   @ApiCreatedResponse({
     description: 'The permission has been successfully created.',
@@ -29,6 +37,10 @@ export class PermissionsController {
   }
 
   @Delete(':id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
   @ApiParam({ name: 'id' })
   deletePermission(@Param() params) {
     return this.permissionsService.deletePermission(params.id);

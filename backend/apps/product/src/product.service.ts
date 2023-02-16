@@ -29,6 +29,70 @@ export class ProductsService {
     }
   }
 
+  async searchForProducts(filterParams): Promise<any[]> {
+    let Order = 'desc';
+    const { page, perPage, order, name, rackPrice, prodId } = filterParams;
+
+    const paginateConstraints: any = {};
+    if (!isNaN(page) && !isNaN(perPage)) {
+      paginateConstraints.skip = Number((page - 1) * perPage);
+      paginateConstraints.take = Number(perPage);
+    }
+
+    const contraintOnName: any = {};
+    if (name != undefined) {
+      contraintOnName.name = {
+        contains: name,
+        mode: 'insensitive',
+      };
+    }
+
+    if (order != undefined) {
+      Order = order;
+    }
+
+    const contraintOnRackPrice: any = {};
+    if (!isNaN(rackPrice)) {
+      contraintOnRackPrice.rackPrice = Number(rackPrice);
+    }
+
+    const prodIdConstraint: any = {};
+    if (prodId != undefined) {
+      prodIdConstraint.id = {
+        contains: prodId,
+        mode: 'insensitive',
+      };
+    }
+
+    try {
+      const products = await this.prisma.product.findMany({
+        ...paginateConstraints,
+        where: {
+          AND: [
+            {
+              ...contraintOnName,
+            },
+            {
+              ...contraintOnRackPrice,
+            },
+            {
+              ...prodIdConstraint,
+            },
+          ],
+        },
+        orderBy: [
+          {
+            createdAt: Order,
+          },
+        ],
+      });
+      return products;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
   async getSingleProduct(id: string): Promise<Product> {
     try {
       const product = await this.prisma.product.findUnique({
