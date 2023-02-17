@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { NotificationService } from './notification.service';
+import { emailDto, smsDto } from './notification.dto';
 
 @Controller('notifications')
 export class NotificationController {
@@ -10,8 +11,13 @@ export class NotificationController {
     return this.notificationService.getHello();
   }
 
-  @Post('emails')
-  sendEmail(@Body() data: EmailDto): any {
-    return this.notificationService.sendEmail(email);
+  @Post('mails')
+  sendEmail(@Body() data: emailDto): any {
+    return this.notificationService.sendEmail(data);
+  }
+
+  @Post('sms')
+  sendSms(@Body() data: smsDto): any {
+    return this.notificationService.sendSms(data);
   }
 }
