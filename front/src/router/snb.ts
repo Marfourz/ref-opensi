@@ -14,6 +14,9 @@ export default [
     { 
         path : '/dashboard/snb',
         component:DefaultLayout,
+        meta : {
+          auth : true
+        },
         children:[
           {
             path:'commandes',

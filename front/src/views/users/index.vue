@@ -27,13 +27,13 @@
                         <BaseIcon name="close" class="w-5 h-5" @click="showModal = false"></BaseIcon>
                     </div>
                     <div class="flex justify-center pt-6  ">
-                        <Form class="w-3/4 space-y-6">
-                        <BaseInput name="firstname" label="Nom" rules="required"></BaseInput>
-                        <BaseInput name="firstname" label="Prénom" rules="required"></BaseInput>
-                        <BaseInput name="firstname" label="Téléphone" rules="required"></BaseInput>
-                        <BaseInput name="firstname" label="Email" rules="required"></BaseInput>
-                        <BaseSelect label="Sexe" :items="sexes"></BaseSelect>
-                        <BaseSelect label="Rôle" :items="roles"></BaseSelect>
+                        <Form class="w-3/4 space-y-6" @submit="onSubmit">
+                        
+                        <BaseInput name="nom d'utilisateur" label="Nom d'utilisateur" rules="required" v-model="user.name"></BaseInput>
+                        <BaseInput name="téléphone" label="Téléphone" rules="required" v-model="user.phone"></BaseInput>
+                        <BaseInput name="firstname" label="Email" rules="required" v-model="user.email"></BaseInput>
+                        <BaseSelect label="Sexe" :items="sexes" v-model="user.sex"></BaseSelect>
+                        <BaseSelect label="Rôle" :items="roles" v-model="user.role"></BaseSelect>
                         <BaseButton class="w-[200px]" >Ajouter</BaseButton>
                     </Form>
                     </div>
@@ -45,13 +45,24 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent,ref } from 'vue'
+import { computed, defineComponent,reactive,ref } from 'vue'
 import { useUsersStore } from '../../stores/users'
 import { Sex, UserRole } from '../../types/enumerations'
+import { Form } from 'vee-validate'
 
 export default defineComponent({
+    components:{Form},
     setup () {
         const userStore = useUsersStore()
+
+        const user = reactive({
+                name: "",
+                phone: "",
+                email: "",
+                address: "",
+                sex: "",
+                role: "",
+            })
 
         const sexes = computed(()=>{
             return [{
@@ -86,13 +97,9 @@ export default defineComponent({
        
         const titles = [
             {
-                title : "Nom",
-                name : "lastname"
+                title : "Nom d'utilisateur",
+                name : "name"
                 
-            },
-            {
-                title : "Prénom(s)",
-                name : "firstname"
             },
             {
                 title : "Email",
@@ -122,10 +129,22 @@ export default defineComponent({
             },
             {
                 code : UserRole.DELIVERY_MAN,
-                label : "lIVREUR"
+                label : "Livreur"
             }]
 
             return labels.find((value : any)=>value.code == element.role)?.label
+        }
+
+
+        const loading = ref(false)
+
+        async function onSubmit(){
+            loading.value = true
+
+            try{
+                const response = await userStore.create(user)
+            }
+            catch(error : any){}
         }
        
 
@@ -134,7 +153,9 @@ export default defineComponent({
             titles,
             showModal,
             roles,
-            sexes
+            sexes,
+            user,
+            onSubmit
         }
     }
 })

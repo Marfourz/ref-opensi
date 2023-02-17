@@ -42,9 +42,12 @@ async function onSubmit(){
         password : password.value
     })
 
+    console.log("login work")
+    router.push({name : 'users'})
+
     loading.value = false
     }
-    catch{
+    catch(error){
         loading.value = false
     }
     

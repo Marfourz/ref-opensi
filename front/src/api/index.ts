@@ -18,7 +18,7 @@ Api.interceptors.response.use(
     console.log('location', window.location);
     if (
       error.response &&
-      error.response.status == 401 &&
+      (error.response.status == 401 ||  error.response.status == 400) &&
       !window.location.pathname.startsWith('/auth/login')
     )
       window.location.href = '/auth/login?redirect=' + window.location.pathname;
@@ -26,10 +26,19 @@ Api.interceptors.response.use(
   }
 );
 
-if (localStorage.getItem('access_token'))
-  Api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
+if (localStorage.getItem('access_token')){
+  // Api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
+  //   'access_token'
+  // )}`;
+
+
+  Api.defaults.headers.common['x-auth-token'] = `${localStorage.getItem(
     'access_token'
   )}`;
+}
+ 
+
+  
 
 
 Api.setToken = (token: string) => {

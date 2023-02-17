@@ -22,6 +22,18 @@ export const useUsersStore = defineStore('usersStore',{
         },
 
 
+        async me(){
+            try{
+                const response = await Api.get(`users/me`)
+                console.log('me response', response)
+                return response.data
+            }
+            catch(error){
+
+            }
+        },
+
+
         saveCurrentUser(user : IUser){
             localStorage.setItem('current_user', JSON.stringify(user))
         },
@@ -37,9 +49,9 @@ export const useUsersStore = defineStore('usersStore',{
         },
   
         async fetchAll(query : any){
-            return users
+           
             try{
-                const response = await Api.get('users',{params : query})
+                const response = await Api.get('users')
                 return response.data
             }
             catch(error){
@@ -106,9 +118,9 @@ export const useUsersStore = defineStore('usersStore',{
 
 
         async create(data : any){
-            
             try{
-                const response = await Api.post('users', data)
+                
+                const response = await Api.post('users', {...data,organisationId :this.getCurrentUser?.id })
                 return response
             }
             catch(error){

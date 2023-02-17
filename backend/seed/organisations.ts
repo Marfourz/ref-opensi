@@ -1,8 +1,6 @@
-const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();
 
-const organisations = [
+export const organisations = [
   {
     socialReason: 'Maison Mere Snb',
     fiscalId: 'IFUDFG4D6B4R',
@@ -38,24 +36,6 @@ const organisations = [
   },
 ];
 
-async function main() {
-  try {
-    const newOrganisation = await prisma.organisation.createMany({
-      data: organisations,
-    });
-    console.info('Organisation created : ', newOrganisation);
-  } catch (error) {
-    throw error;
-    return;
-  }
-}
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+
+

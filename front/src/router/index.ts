@@ -33,16 +33,17 @@ import { useUsersStore } from "../stores/users";
 router.beforeEach(async (to, from, next) => {
   let data = JSON.parse(localStorage.getItem('current_user') as string)
 
+  
 
   if (to.meta.auth) {
-    if (!data) next("/dashboard/auth/login");
+    if (!data) next("/auth/login");
     else {
+      console.log('data', data.id)
       try {
-        const user = await useUsersStore().findOne(data.id);
-        console.log('user',user)
+        await useUsersStore().me();
         next();
       } catch (error: any) {
-        next("/dashboard/auth/login");
+        next("/auth/login");
       }
     }
   }

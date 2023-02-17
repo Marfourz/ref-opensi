@@ -8,8 +8,9 @@ export const useAuthStore = defineStore('authStore',{
         async login(data : {username :string, password : string}){
             try{
                 const response = await Api.post('users/login',data)
-                if(response.data.access_token && Api.setToken)
-                    Api.setToken(response.data.access_token)
+                console.log('user', response.data)
+                if(response.data.token && Api.setToken)
+                    Api.setToken(response.data.token)
               
                 useUsersStore().saveCurrentUser(response.data.user)
             }
