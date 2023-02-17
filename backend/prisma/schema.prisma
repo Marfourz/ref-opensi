@@ -337,7 +337,10 @@ enum SexEnum {
 }
 
 enum UserRoleEnum {
-  admin
+  superUser
+  administrator
+  accountant
+  commercial
   deliveryMan
 }
 
