@@ -6,6 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(NotificationModule);
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('SNB DOCUMENTATION')
     .setDescription('NOTIFICATIONS API')

@@ -6,6 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
 
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('SNB DOCUMENTATION')
     .setDescription('USERS API')
