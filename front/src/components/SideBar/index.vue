@@ -69,6 +69,13 @@ export default defineComponent({
         route: "deliveryPerson",
         path: "livreurs",
       },
+
+      {
+        title: "Produits",
+        icon: "product",
+        route: "products",
+        path: "produits",
+      },
       {
         title: "Stock",
         icon: "stock",

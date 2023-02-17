@@ -7,6 +7,14 @@
                 <template #action >
                     <BaseIcon name="triplePoints"></BaseIcon>
                 </template>
+
+                <template #filter>
+                    <div class="flex space-x-4 h-full">
+                        <div class="flex border rounded items-center justify-center px-2">Filtré par</div>
+                        <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+                        <BaseButton icon="plus" size="small">Nouveau distributeur</BaseButton>
+                    </div>
+                </template>
                
             </BaseTableWithFilter>
 

@@ -17,7 +17,14 @@
           />
         </div>
 
-        <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+        <div> 
+          <slot name="filter">
+            <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+          </slot>
+          
+        </div>
+
+       
       </div>
       <BasePagination
         :peerPage="paginationData.peerPage"

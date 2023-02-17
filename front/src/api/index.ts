@@ -1,5 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 
+
+console.log('base url', import.meta.env.VITE_APP_API_URL)
+
 const Api: AxiosInstance & { setToken?: (token: string) => void } =
   axios.create({
     baseURL: import.meta.env.VITE_APP_API_URL,

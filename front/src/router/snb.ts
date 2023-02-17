@@ -2,6 +2,7 @@ import DefaultLayout from "@/layouts/default.vue"
 import DeliveryPerson from "@/views/snb/deliveryPerson/index.vue"
 import OrderReceived from "@/views/snb/orderReceived/index.vue"
 import SubDistributors from "@/views/snb/SubDistributors/index.vue"
+import Product from "@/views/snb/products/index.vue"
 import Stock from "@/views/snb/stock/index.vue"
 import Parameter from "@/views/parameter/index.vue"
 import Appros from "@/views/snb/appros/index.vue"
@@ -39,6 +40,11 @@ export default [
             path:'sous-distrivuteurs',
             name : 'subDistributors',
             component : SubDistributors
+          },
+          {
+            path:'produits',
+            name : 'products',
+            component : Product
           },
           {
             path:'livreurs',

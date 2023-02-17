@@ -10,11 +10,37 @@ import BaseTableStatut from "@/components/base/BaseTableStatut.vue"
 import BaseSelectedCard from "@/components/base/BaseSelectedCard.vue"
 import BaseSelect from "@/components/base/BaseSelect.vue"
 import helpers from './helpers/index'
+import customsValidations from './plugins/vee-validate/customs-validations';
+
 
 import App from './App.vue'
 import router from './router'
 
 import './assets/main.css'
+
+import AllRules from '@vee-validate/rules';
+import { defineRule, configure } from 'vee-validate';
+import { localize } from '@vee-validate/i18n';
+
+
+
+Object.keys(AllRules).forEach(rule => {
+    defineRule(rule, AllRules[rule]);
+  });
+
+
+  configure({
+    // Generates an English message locale generator
+    generateMessage: localize('fr', {
+      messages: {
+        required: 'Ce champs est réquis',
+        email : "Adresse mail invalide"
+      },
+    }),
+  });
+
+
+  
 
 
 const app = createApp(App)
