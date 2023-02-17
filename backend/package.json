@@ -12,7 +12,7 @@
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/apps/core/main",
-        "seed": "node seed/creteOrganisation.ts",
+        "seed": "node seed/createOrganisation.ts",
         "migrate": "npx prisma migrate dev --name init",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "test": "jest",
