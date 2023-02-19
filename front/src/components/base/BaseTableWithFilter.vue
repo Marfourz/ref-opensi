@@ -33,7 +33,7 @@
       />
     </div>
 
-    <BaseTable :titles="titles" :data="items" :loading="loading" class="mt-6">
+    <BaseTable :titles="titles" :data="items" :loading="loading" :actions="actions" class="mt-6">
       
       <template v-slot:[title.name] v-for="title in titles">
           
@@ -48,6 +48,7 @@ import { defineComponent, onMounted, reactive, ref } from "vue";
 import type { PropType } from "vue";
 import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
+import { IAction } from "./BaseActions.vue";
 
 export interface QueryParams {
   q: string;
@@ -82,6 +83,9 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    actions : {
+            type : Array as PropType<Array<IAction>>
+        }
   },
   setup(props) {
     const items = ref();

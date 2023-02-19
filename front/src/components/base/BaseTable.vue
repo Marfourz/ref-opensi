@@ -1,11 +1,11 @@
 <template>
   <div class="w-full overflow-auto bg-white text-[14px]">
     <table
-      class="table-auto w-full text-tableColor text-md"
-      style="font-weight: normal"
+      class="table-auto w-full  text-md"
+     
     >
       <thead>
-        <tr class="bg-grey-10">
+        <tr class="bg-grey-10 text-tableColor">
           <th v-if="selectable" class="p-2">
             <input type="checkbox" class="cursor-pointer" v-model="checkedAll" />
           </th>
@@ -30,10 +30,11 @@
       <tbody class="bg-white" v-else-if="data && data.length != 0">
         <tr
           v-for="(element, i) in data"
+          class="font-semibold"
           :key="i"
           :class="{
-            'bg-[#FFF3ED]': isEqual(element, currentElement),
-            'border-b': i != data.length - 1,
+            'bg-[#F8F9FB]': isEqual(element, currentElement),
+            'border-b font-semibold': i != data.length - 1,
           }"
           @mouseenter="currentElement = element"
         >
@@ -67,14 +68,20 @@
             </div>
           
 
-            <div v-else-if="isEqual(element, currentElement)">
-              <slot name="action" :element="element"> </slot>
+            <div v-else-if="isEqual(element, currentElement)" >
+           
+              <slot name="action" :element="element">
+                <div class="relative"> 
+                        <BaseIcon name="triplePoints" @click="showActionMenu = !showActionMenu"></BaseIcon>
+                        <BaseActions :actions="actions" v-if="showActionMenu" :data="element" @click="showActionMenu = false"></BaseActions>
+                    </div>
+              </slot>
             </div>
           </td>
         </tr>
       </tbody>
       <tbody class="bg-white" v-else>
-        <tr>
+        <tr class="">
           <td :colspan="titles.length">
             <div class="w-full text-center p-8 shadow">
               Aucun élément trouvé
@@ -93,9 +100,13 @@ export interface ITitle {
   transform?: Function
 }
 
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import isEqual from "lodash/isEqual";
+import { IAction } from "./BaseActions.vue";
+import BaseActions from '../../components/base/BaseActions.vue'
+
 export default defineComponent({
+  components:{BaseActions},
   props: {
     data: {
       type: Array as () => Array<any>,
@@ -115,14 +126,19 @@ export default defineComponent({
     selectable: {
       type: Boolean,
       default: false,
-    }
+    },
+    actions : {
+            type : Array as PropType<Array<IAction>>
+        }
    
   },
 
   expose: ['resetSelection'],
 
   
+  
   setup(props,context) {
+    const showActionMenu = ref(false)
     const currentElement = ref();
     const checkedAll = ref(false);
     const checkedElements = ref<Array<any>>([]);
@@ -198,6 +214,7 @@ export default defineComponent({
       onCheckedElement,
       checkedElements,
       verifyElementExistInArray,
+      showActionMenu
     };
   },
 });

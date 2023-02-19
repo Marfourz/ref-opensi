@@ -3,7 +3,7 @@
         <HeaderBar />
         <div class="flex-1 flex h-[calc(100vh-56px)] overflow-hidden" >
             <SideBar class="overflow-scroll "></SideBar>
-            <RouterView class="w-full overflow-scroll" :class="{'p-6' : !withoutPadding }"></RouterView>
+            <RouterView class="w-full overflow-scroll" :class="{'px-6 py-8' : !withoutPadding }"></RouterView>
         </div>
         
     </div>

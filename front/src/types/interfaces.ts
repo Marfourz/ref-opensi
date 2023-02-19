@@ -50,8 +50,7 @@ export interface IOrder extends Commun{
 }
 
 export interface IUser extends Commun {
-    firstname : string,
-    lastname : string,
+    name : string,
     phone : string,
     email : string,
     sex : Sex,

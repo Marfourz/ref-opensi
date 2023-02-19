@@ -9,23 +9,23 @@ just all;
 -->
 
 <template>
-  <div class="tld-tabs bg-white">
+  <div class="tld-tabs bg-white text-[16px]">
     <div class="w-full">
       <!-- <div>{{ selectedTab }}</div> -->
       <!-- tabs button -->
       <ul
-        class="tld-tabs-buttons m-0 list-none select-none flex flex-wrap flex-row border-b border-[rgba(0,0,0,0.15)]"
+        class="tld-tabs-buttons m-0 list-none select-none flex flex-wrap flex-row "
       >
         <li
           v-for="tab in tabs"
           :key="tab.name"
-          class="tld-tab-button cursor-pointer py-4 px-6 text-center hover:bg-fadeSecondary"
+          class="tld-tab-button cursor-pointer py-2 px-6 text-center hover:bg-fadeSecondary min-w-[178px]"
           :class="dynamicClass(tab.name)"
           @click="toggleTabs(tab.name)"
         >
         <!-- <div class="flex space-x-2 justify-center items-center"> -->
            <!-- <div class="font-bold text-white rounded-full bg-[#E26018] flex items-center justify-center  font-mono" style="height: 25px; width: 25px; font-size: 16px;">{{tabs.indexOf(tab)+1}}</div> -->
-          <span class="text-sm leading-[1.063rem] font-semibold">
+          <span class="leading-[1.063rem] font-semibold">
             {{ tab.libelle }}
           </span>
         <!-- </div> -->
@@ -65,12 +65,12 @@ export default {
 
     inactiveTab: {
       type: String,
-      default: "text-09101D bg-white",
+      default: "text-09101D bg-white  border border-[#A2A9B8] text-[#6B7A99] border-b-2",
     },
 
     activeTab: {
       type: String,
-      default: "text-005743 bg-D9F2EC border-b-4 border-primary",
+      default: "text-005743 bg-D9F2EC border-b-2 border-primary text-primary font-bold",
     },
     selectedTab: {
       type: String,

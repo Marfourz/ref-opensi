@@ -1,166 +1,320 @@
 <template>
-  
-        <div class=" space-y-6">
-            <BaseTitle title="Utilisateurs"></BaseTitle>
-            <BaseButton icon="plus" size="small" @click="showModal = true">Nouveau utilisateur</BaseButton>
-            <BaseTableWithFilter :titles="titles" :fetchData="userStore.fetchAll">
-                <template #action >
-                    <BaseIcon name="triplePoints"></BaseIcon>
-                </template>
-
-                <template #filter>
-                    <div class="flex space-x-4 h-full">
-                        <div class="flex border rounded items-center justify-center px-2">Filtré par</div>
-                        <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-                        <BaseButton icon="plus" size="small">Nouveau distributeur</BaseButton>
-                    </div>
-                </template>
-               
-            </BaseTableWithFilter>
-
-            <div class="fixed -top-10 bottom-0 right-0 left-0 bg-black opacity-50" v-if="showModal"></div>
-
-            <div class="bg-white flex justify-center pt-10 fixed bottom-0 left-0 right-0 top-12 rounded-t-2xl overflow-scroll" v-if="showModal">
-                <div class="w-[80%]">
-                    <div class="border-b pb-2 flex items-center justify-between">
-                        <div class="font-bold text-2xl">Ajouter un utilisateur</div>
-                        <BaseIcon name="close" class="w-5 h-5" @click="showModal = false"></BaseIcon>
-                    </div>
-                    <div class="flex justify-center pt-6  ">
-                        <Form class="w-3/4 space-y-6" @submit="onSubmit">
-                        
-                        <BaseInput name="nom d'utilisateur" label="Nom d'utilisateur" rules="required" v-model="user.name"></BaseInput>
-                        <BaseInput name="téléphone" label="Téléphone" rules="required" v-model="user.phone"></BaseInput>
-                        <BaseInput name="firstname" label="Email" rules="required" v-model="user.email"></BaseInput>
-                        <BaseSelect label="Sexe" :items="sexes" v-model="user.sex"></BaseSelect>
-                        <BaseSelect label="Rôle" :items="roles" v-model="user.role"></BaseSelect>
-                        <BaseButton class="w-[200px]" >Ajouter</BaseButton>
-                    </Form>
-                    </div>
-                   
-                </div>
-            </div>  
+  <div class="space-y-6">
+    <BaseModal :show="modal.show">
+      <template #modal>
+        <div class="flex flex-col space-y-6 items-center py-4" v-if="modal.mode == 'confirm' && modal.type == 'delete'">
+          <BaseIcon name="warning"></BaseIcon>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+             <BaseButton bgColor="danger" :outline="true" class="w-1/2" @click="modal.show = false"> Annuler </BaseButton>
+            <BaseButton bgColor="danger" class="w-1/2 " @click="deleteUser"> Supprimer </BaseButton>
           </div>
-  
+        </div>
+
+        <div class="flex flex-col space-y-6 items-center py-4" v-else-if="modal.mode = 'success'">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white">
+                <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
+            </div>
+            <div class="font-bold text-2xl">
+                {{ modal.title }}
+            </div>
+            <BaseButton class="w-full" @click="modal.show = false">Terminé</BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <div class="flex items-center space-x-6">
+        <BaseTitle title="Utilisateurs"></BaseTitle>
+        <BaseButton icon="plus" size="small" @click="createUser"
+      >Nouveau utilisateur</BaseButton
+    >
+    </div>
+    
+    
+    <BaseTableWithFilter
+      :titles="titles"
+      :fetchData="userStore.fetchAll"
+      :actions="actions"
+    >
+      <template #filter>
+        <div class="flex space-x-4 h-full">
+          <div
+            class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
+          >
+            <div>Filtré par</div>
+            <BaseIcon name="simpleArrowBottom"></BaseIcon>
+          </div>
+
+          <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+        </div>
+      </template>
+    </BaseTableWithFilter>
+
+    <BaseBottomModal :show="showModal">
+      <div class="w-[80%]">
+        <div class="border-b pb-2 flex items-center justify-between">
+          <div class="font-bold text-2xl">
+            {{ !selectedUser ? "Ajouter un utilisateur" : "Mettre à jour" }}
+          </div>
+          <BaseIcon
+            name="close"
+            class="w-5 h-5"
+            @click="showModal = false"
+          ></BaseIcon>
+        </div>
+        <div class="flex justify-center pt-6">
+          <Form class="w-3/4 space-y-6" @submit="onSubmit">
+            <BaseInput
+              name="nom d'utilisateur"
+              label="Nom d'utilisateur"
+              rules="required"
+              v-model="user.name"
+            ></BaseInput>
+            <BaseInput
+              name="téléphone"
+              label="Téléphone"
+              rules="required"
+              v-model="user.phone"
+            ></BaseInput>
+            <BaseInput
+              name="firstname"
+              label="Email"
+              rules="required"
+              v-model="user.email"
+            ></BaseInput>
+            <BaseSelect
+              label="Sexe"
+              :items="sexes"
+              v-model="user.sex"
+            ></BaseSelect>
+            <BaseSelect
+              label="Rôle"
+              :items="roles"
+              v-model="user.role"
+            ></BaseSelect>
+            <BaseButton class="w-[200px]">{{
+              selectedUser ? "Mettre à jour" : "Ajouter"
+            }}</BaseButton>
+          </Form>
+        </div>
+      </div>
+    </BaseBottomModal>
+  </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent,reactive,ref } from 'vue'
-import { useUsersStore } from '../../stores/users'
-import { Sex, UserRole } from '../../types/enumerations'
-import { Form } from 'vee-validate'
+import { computed, defineComponent, reactive, ref } from "vue";
+import { useUsersStore } from "../../stores/users";
+import { Sex, UserRole } from "../../types/enumerations";
+import { Form } from "vee-validate";
+import { IUser } from "../../types/interfaces";
 
 export default defineComponent({
     components:{Form},
-    setup () {
-        const userStore = useUsersStore()
+  setup() {
+    const userStore = useUsersStore();
 
-        const user = reactive({
-                name: "",
-                phone: "",
-                email: "",
-                address: "",
-                sex: "",
-                role: "",
-            })
+    const actions = [
+      {
+        title: "Voir détail",
+        icon: "eye",
+        action: onView,
+      },
+      {
+        title: "Modifier",
+        icon: "edit",
+        action: onUpdate,
+      },
+      {
+        title: "Supprimer",
+        icon: "removeRed",
+        action: onDelete,
+      },
+    ];
 
-        const sexes = computed(()=>{
-            return [{
-                title : "Homme",
-                value : Sex.MALE
-            },
-            {
-                title : "Femme",
-                value : Sex.FEMALE
-            },
-            {
-                title : "Autre",
-                value : Sex.OTHERS
-            }]
-        })
+    const modal = reactive({
+      title: "",
+      subtitle: "",
+      type: "create" as "create" | "delete" | "update",
+      show: false,
+      mode : "confirm" as "confirm" | "success"
+    });
 
-        const roles = computed(()=>{
-            return [
-                {
-                    title : "Administrateur",
-                    value : UserRole.ADMIN
-                },
-                {
-                    title : "Livreur",
-                    value : UserRole.DELIVERY_MAN
-                }
-            ]
-        })
+    const selectedUser = ref<IUser | null>();
 
-        const showModal = ref(false)
-
-       
-        const titles = [
-            {
-                title : "Nom d'utilisateur",
-                name : "name"
-                
-            },
-            {
-                title : "Email",
-                name : "email"
-            },
-            {
-                title : "Téléphone",
-                name : "phone"
-            },
-            {
-                title : "Rôle",
-                name : "role",
-                transform : getRoleLabel
-            },
-            
-            {
-                title : "Action",
-                name : "action"
-            }
-        ]
-
-
-        function getRoleLabel(element : any, index : number){
-            const labels = [{
-                code : UserRole.ADMIN,
-                label : "Administrateur"
-            },
-            {
-                code : UserRole.DELIVERY_MAN,
-                label : "Livreur"
-            }]
-
-            return labels.find((value : any)=>value.code == element.role)?.label
-        }
-
-
-        const loading = ref(false)
-
-        async function onSubmit(){
-            loading.value = true
-
-            try{
-                const response = await userStore.create(user)
-            }
-            catch(error : any){}
-        }
-       
-
-        return {
-            userStore,
-            titles,
-            showModal,
-            roles,
-            sexes,
-            user,
-            onSubmit
-        }
+    function createUser() {
+      selectedUser.value = null;
+      showModal.value = true;
+      user.name = "";
+      user.phone = "";
+      user.email = "";
+      user.address = "";
+      user.sex = "";
+      user.role = "";
     }
-})
+
+    function onUpdate(value: IUser) {
+      selectedUser.value = value;
+      showModal.value = true;
+      user.name = value.name;
+      user.phone = value.phone;
+      user.email = value.email;
+      user.sex = value.sex;
+      user.role = value.role;
+    }
+
+    function onDelete(value: IUser) {
+      selectedUser.value = value;
+      modal.title = `Êtes-vous sûr de vouloir <br> supprimer l’utilisateur <br> ${selectedUser.value.name} ?`;
+      modal.show = true;
+      modal.subtitle = "";
+      modal.mode = "confirm"
+      modal.type = "delete"
+    }
+
+    function deleteUser(){
+        modal.title = `Utilisateur supprimé avec succès`;
+        modal.show = true;
+        modal.subtitle = "";
+        modal.mode = "success"
+    }
+
+
+    function onView(value: IUser) {
+      selectedUser.value = value;
+    }
+
+    const user = reactive({
+      name: "",
+      phone: "",
+      email: "",
+      address: "",
+      sex: "",
+      role: "",
+    });
+
+    const sexes = computed(() => {
+      return [
+        {
+          title: "Homme",
+          value: Sex.MALE,
+        },
+        {
+          title: "Femme",
+          value: Sex.FEMALE,
+        },
+        {
+          title: "Autre",
+          value: Sex.OTHERS,
+        },
+      ];
+    });
+
+   
+
+    const roles = computed(() => {
+      return [
+        {
+          title: "Administrateur",
+          value: UserRole.ADMIN,
+        },
+        {
+          title: "Livreur",
+          value: UserRole.DELIVERY_MAN,
+        },
+        {
+          title: "Super administrateur",
+          value: UserRole.SUPER_USER,
+        },
+        {
+          title: "Commercial",
+          value: UserRole.COMMERCIAL,
+        },
+      ];
+    });
+
+    const showModal = ref(false);
+
+    const titles = [
+      {
+        title: "Nom d'utilisateur",
+        name: "name",
+      },
+      {
+        title: "Email",
+        name: "email",
+      },
+      {
+        title: "Téléphone",
+        name: "phone",
+      },
+      {
+        title: "Rôle",
+        name: "role",
+        transform: getRoleLabel,
+      },
+
+      {
+        title: "Action",
+        name: "action",
+      },
+    ];
+
+    function getRoleLabel(element: any, index: number) {
+      const labels = [
+        {
+          code: UserRole.ADMIN,
+          label: "Administrateur",
+        },
+        {
+          code: UserRole.DELIVERY_MAN,
+          label: "Livreur",
+        },
+      ];
+
+      return labels.find((value: any) => value.code == element.role)?.label;
+    }
+
+    const loading = ref(false);
+
+    async function onSubmit() {
+      loading.value = true;
+
+      try {
+        if(!selectedUser){
+            const response = await userStore.create(user);
+            modal.title = `Utilisateur crée avec succès`;
+        }
+        else{
+            modal.title = `Utilisateur modifié avec succès`;
+        }
+        modal.show = true;
+        modal.subtitle = "";
+        modal.mode = "success"
+        showModal.value = false
+            
+      } catch (error: any) {}
+    }
+
+    return {
+      userStore,
+      titles,
+      showModal,
+      roles,
+      sexes,
+      user,
+      onSubmit,
+      actions,
+      selectedUser,
+      createUser,
+      modal,
+      deleteUser
+    };
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

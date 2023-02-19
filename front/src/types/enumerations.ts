@@ -5,7 +5,12 @@ export enum Sex {
   }
   
   export enum UserRole {
-    ADMIN = 'admin',
+    SUPER_USER = 'superUser',
+    ADMIN = 'administrator',
+    ACCOUNTANT =  'accountant',
+    COMMERCIAL = 'commercial',
+    
+   
     DELIVERY_MAN = 'deliveryMan'
   }
   

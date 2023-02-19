@@ -11,7 +11,7 @@ generator client {
 model User {
   id                  String   @id @default(uuid())
 
-  organisation        Organisation @relation(fields: [organisationId], references: [id])
+  organisation        Organisation? @relation(fields: [organisationId], references: [id])
 
   organisationId      String
 
@@ -23,17 +23,17 @@ model User {
 
   address             String
 
-  birthday            String
+  birthday            String?
 
   sex                 SexEnum
 
-  engine              Engine @relation(fields: [engineId], references: [id])
+  engine              Engine? @relation(fields: [engineId], references: [id])
 
-  engineId            String
+  engineId            String?
 
   role                UserRoleEnum
 
-  permission          UserPermissionEnum
+  permission          UserPermissionEnum?
 
   activities          ActivityLog[]
 
@@ -83,7 +83,7 @@ model Organisation {
 model Order {
   id                  String    @id @default(uuid())
 
-  organisation        Organisation @relation(fields: [organisationId], references: [id])
+  organisation        Organisation? @relation(fields: [organisationId], references: [id])
 
   organisationId      String
 

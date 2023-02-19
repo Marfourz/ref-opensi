@@ -11,6 +11,9 @@ import BaseSelectedCard from "@/components/base/BaseSelectedCard.vue"
 import BaseSelect from "@/components/base/BaseSelect.vue"
 import helpers from './helpers/index'
 import customsValidations from './plugins/vee-validate/customs-validations';
+import BaseBottomModal from "@/components/base/BaseBottomModal.vue"
+import BaseModal from './components/base/BaseModal.vue'
+import BaseTabs from './components/base/BaseTabs.vue'
 
 
 import App from './App.vue'
@@ -54,6 +57,9 @@ app.component('BaseTableWithFilter',BaseTableWithFilter)
 app.component('BaseTableStatut',BaseTableStatut)
 app.component('BaseSelectedCard',BaseSelectedCard)
 app.component('BaseSelect',BaseSelect)
+app.component('BaseBottomModal',BaseBottomModal)
+app.component('BaseModal',BaseModal)
+app.component('BaseTabs',BaseTabs)
 
 app.use(createPinia())
 app.use(router)

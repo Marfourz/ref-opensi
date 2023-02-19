@@ -1,9 +1,10 @@
 <template>
 
   <div
-    class="flex space-x-4 justify-center items-center p-2 text-center text-grey-70"
+    class="flex space-x-4 justify-center items-center p-2 text-center"
    
     :key="totalElements"
+    v-if="totalElements > peerPage"
   >
     
     <span
@@ -17,10 +18,10 @@
       sur {{ totalElements }}</span
     >
     <span class="cursor-pointer" @click.prevent.stop="previous()" ref="pagination">
-      <BaseIcon name="arrowLeft" class="text-grey-70"/>
+      <BaseIcon name="arrowLeft" />
     </span>
     <span class="cursor-pointer" @click.prevent.stop="next()" ref="pagination">
-      <BaseIcon name="arrowRigth" class="text-grey-70"/>
+      <BaseIcon name="arrowRigth" />
     </span>
   </div>
 </template>
@@ -34,7 +35,7 @@ export default defineComponent({
     totalElements: {
       type: Number,
       required: true,
-      default : 100
+      default : 0
     },
     peerPage: {
       type: Number,

@@ -41,7 +41,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
         res.status(HttpStatus.UNAUTHORIZED).send();
       }
     } else {
-      res.status(HttpStatus.BAD_REQUEST).send();
+      res.status(HttpStatus.UNAUTHORIZED).send();
     }
   }
 }

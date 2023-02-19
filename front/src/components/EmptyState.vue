@@ -1,7 +1,7 @@
 <template>
-    <div class="h-full flex flex-col justify-center items-center space-y-4">
-        <img src="@/assets/images/emptyBasket.png" alt="">
-        <div class="font-semibold text-center ">{{ title }}</div>
+    <div class="h-full flex flex-col  items-center space-y-4">
+        <img :src="image" alt="">
+        <div class="font-semibold text-center " v-html="title"></div>
     </div>
 </template>
 

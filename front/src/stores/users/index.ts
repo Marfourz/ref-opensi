@@ -49,9 +49,8 @@ export const useUsersStore = defineStore('usersStore',{
         },
   
         async fetchAll(query : any){
-           
             try{
-                const response = await Api.get('users')
+                const response = await Api.get('users',{params: query})
                 return response.data
             }
             catch(error){
@@ -120,7 +119,7 @@ export const useUsersStore = defineStore('usersStore',{
         async create(data : any){
             try{
                 
-                const response = await Api.post('users', {...data,organisationId :this.getCurrentUser?.id })
+                const response = await Api.post('users', {...data,organisationId :this.getCurrentUser?.organi })
                 return response
             }
             catch(error){

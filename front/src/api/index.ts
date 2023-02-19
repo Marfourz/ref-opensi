@@ -18,7 +18,7 @@ Api.interceptors.response.use(
     console.log('location', window.location);
     if (
       error.response &&
-      (error.response.status == 401 ||  error.response.status == 400) &&
+      error.response.status == 401 &&
       !window.location.pathname.startsWith('/auth/login')
     )
       window.location.href = '/auth/login?redirect=' + window.location.pathname;
