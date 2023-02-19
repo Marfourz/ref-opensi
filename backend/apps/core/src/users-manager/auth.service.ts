@@ -6,12 +6,12 @@ import {
   UserResetPasswordDto,
   UserUpdateDto,
   UserChangePasswordDto,
-} from './users.dto';
+} from './auth.dto';
 import { HttpService } from '@nestjs/axios';
 import { map, catchError } from 'rxjs';
 
 @Injectable()
-export class UsersService {
+export class AuthService {
   constructor(private readonly httpService: HttpService) {}
 
   allUsers() {

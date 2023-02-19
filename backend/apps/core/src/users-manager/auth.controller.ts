@@ -1,5 +1,5 @@
 import { Controller, Get, Body, Post, Param, Req, Put } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import {
   UserRegisterDto,
   UserLoginDto,
@@ -7,7 +7,7 @@ import {
   UserResetPasswordDto,
   UserUpdateDto,
   UserChangePasswordDto,
-} from './users.dto';
+} from './auth.dto';
 import {
   ApiTags,
   ApiBody,
@@ -16,10 +16,10 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 
-@ApiTags('users')
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@ApiTags('auth')
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @Get()
   @ApiHeader({
@@ -27,7 +27,7 @@ export class UsersController {
     description: 'Contain auth token',
   })
   getAllUsers() {
-    return this.usersService.allUsers();
+    return this.authService.allUsers();
   }
 
   @Post('register')
@@ -36,13 +36,13 @@ export class UsersController {
     description: 'The user has been successfully created.',
   })
   register(@Body() user: UserRegisterDto) {
-    return this.usersService.register(user);
+    return this.authService.register(user);
   }
 
   @Post('login')
   @ApiBody({ type: UserLoginDto })
   login(@Body() user: UserLoginDto) {
-    return this.usersService.login(user);
+    return this.authService.login(user);
   }
 
   @Get('me')
@@ -52,7 +52,7 @@ export class UsersController {
   })
   me(@Req() req: Response) {
     const token = req.headers['x-auth-token'];
-    const user = this.usersService.me(token);
+    const user = this.authService.me(token);
     return user;
   }
 
@@ -66,7 +66,7 @@ export class UsersController {
     description: 'Contain auth token',
   })
   getToken(@Body() user: UserGetResetDto) {
-    return this.usersService.getResetPasswordToken(user);
+    return this.authService.getResetPasswordToken(user);
   }
 
   @Put('resetPassword/:token')
@@ -77,7 +77,7 @@ export class UsersController {
   @ApiParam({ name: 'token' })
   @ApiBody({ type: UserResetPasswordDto })
   reset(@Body() user: UserResetPasswordDto, @Param() params) {
-    return this.usersService.resetPassword(user, params.token);
+    return this.authService.resetPassword(user, params.token);
   }
 
   @Put('changePassword/:userId')
@@ -88,7 +88,7 @@ export class UsersController {
   @ApiParam({ name: 'userId' })
   @ApiBody({ type: UserChangePasswordDto })
   changePassword(@Body() update: UserChangePasswordDto, @Param() params) {
-    return this.usersService.changePassword(update, params.userId);
+    return this.authService.changePassword(update, params.userId);
   }
 
   @Get(':id')
@@ -98,7 +98,7 @@ export class UsersController {
   })
   @ApiParam({ name: 'id' })
   getSingleUser(@Param() params) {
-    return this.usersService.getSingleUser(params.id);
+    return this.authService.getSingleUser(params.id);
   }
 
   @Put(':id')
@@ -109,6 +109,6 @@ export class UsersController {
   @ApiParam({ name: 'id' })
   @ApiBody({ type: UserUpdateDto })
   updateUser(@Body() update: UserUpdateDto, @Param() params) {
-    return this.usersService.updateUser(update, params.id);
+    return this.authService.updateUser(update, params.id);
   }
 }

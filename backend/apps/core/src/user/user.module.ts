@@ -12,7 +12,6 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../../users-manager/src/users.service';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
 
@@ -24,7 +23,6 @@ import { RolesGuard } from 'guards/roles.guard';
     EngineService,
     PrismaService,
     JwtService,
-    UsersService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,

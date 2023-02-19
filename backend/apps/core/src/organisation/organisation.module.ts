@@ -13,7 +13,6 @@ import { WalletController } from './wallet/wallet.controller';
 import { WalletService } from './wallet/wallet.service';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../../users-manager/src/users.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 
 @Module({
@@ -25,7 +24,6 @@ import { AuthenticationMiddleware } from 'middlewares/authentication.middleware'
     StockService,
     WalletService,
     JwtService,
-    UsersService,
   ],
 })
 export class OrganisationModule implements NestModule {

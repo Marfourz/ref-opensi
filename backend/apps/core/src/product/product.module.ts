@@ -15,7 +15,6 @@ import { ImageService } from './image/image.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../../users-manager/src/users.service';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { UsersService } from '../../../users-manager/src/users.service';
     ProductCategoryService,
     ImageService,
     JwtService,
-    UsersService,
   ],
 })
 export class ProductsModule implements NestModule {

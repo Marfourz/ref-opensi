@@ -12,18 +12,11 @@ import { ItemOrderService } from './item-order/item-order.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../../users-manager/src/users.service';
 
 @Module({
   imports: [HttpModule],
   controllers: [OrderController, ItemOrderController],
-  providers: [
-    OrderService,
-    PrismaService,
-    ItemOrderService,
-    JwtService,
-    UsersService,
-  ],
+  providers: [OrderService, PrismaService, ItemOrderService, JwtService],
 })
 export class OrderModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
