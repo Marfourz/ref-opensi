@@ -9,7 +9,6 @@ import { ActivityService } from './activity.service';
 import { PrismaService } from 'libs/prisma/src';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../users-manager/src/users.service';
 import { HttpModule } from '@nestjs/axios';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
@@ -21,7 +20,6 @@ import { RolesGuard } from 'guards/roles.guard';
     ActivityService,
     PrismaService,
     JwtService,
-    UsersService,
     // {
     //   provide: APP_GUARD,
     //   useClass: RolesGuard,
