@@ -9,6 +9,8 @@ import { OrderModule } from './order/order.module';
 import { ProductsModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './users-manager/auth.module';
+import { ActivityModule } from './activity/src/activity.module';
+import { TransactionModule } from './transaction/src/transaction.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,6 +23,8 @@ import { AuthModule } from './users-manager/auth.module';
     OrganisationModule,
     DocumentModule,
     ProductsModule,
+    ActivityModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

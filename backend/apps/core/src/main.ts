@@ -8,7 +8,6 @@ async function bootstrap() {
   app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('SNB DOCUMENTATION')
-    .setDescription('USER API')
     .setVersion('1.0.0')
     .addTag('users')
     .build();

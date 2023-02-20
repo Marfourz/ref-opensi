@@ -14,7 +14,6 @@ import { ReceiptService } from './receipt/receipt.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../users-manager/src/users.service';
 
 @Module({
   imports: [HttpModule],
@@ -25,7 +24,6 @@ import { UsersService } from '../../users-manager/src/users.service';
     InvoiceService,
     ReceiptService,
     JwtService,
-    UsersService,
   ],
 })
 export class TransactionModule implements NestModule {
