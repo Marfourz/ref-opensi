@@ -27,11 +27,15 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
+import { AuthService } from '../users-manager/auth.service';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   @ApiBody({ type: userDto })
@@ -51,8 +55,8 @@ export class UserController {
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getAllUser(): Promise<User[]> {
-    return this.userService.getAllUser();
+  getAllUsers(): Promise<User[]> {
+    return this.userService.getAllUsers();
   }
 
   @Get(':id')

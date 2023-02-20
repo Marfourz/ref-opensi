@@ -2,16 +2,47 @@ import { Injectable } from '@nestjs/common';
 import { User, ActivityLog } from '@prisma/client';
 import { updateUserDto, userDto } from './user.dto';
 import { PrismaService } from 'libs/prisma/src';
+import { AuthService } from '../users-manager/auth.service';
+import { UserRegisterDto } from '../users-manager/auth.dto';
+import { generateRandomString } from 'helpers/generateRandomString';
+import { NotificationService } from 'apps/notification/src/notification.service';
+import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private authService: AuthService,
+    private notifService: NotificationService,
+  ) {}
 
   async createUser(user: userDto): Promise<User> {
+    let token;
     try {
       const newUser = await this.prisma.user.create({
         data: user,
       });
+
+      this.authService
+        .register({
+          username: user.email,
+          email: user.email,
+          password: generateRandomString(15),
+        })
+        .then((data) => {
+          token = data.token;
+          console.log('Token : ', token);
+          this.notifService.sendEmail({
+            email: user.email,
+            object: 'Registration to SNB',
+            body: NOTIFICATION_MESSAGES.registrationMail({
+              email: user.email,
+              token: token,
+            }),
+            sender: 'SNB',
+          });
+        });
+
       return newUser;
     } catch (error) {
       throw error;
@@ -19,7 +50,7 @@ export class UserService {
     }
   }
 
-  async getAllUser(): Promise<User[]> {
+  async getAllUsers(): Promise<User[]> {
     try {
       const users = await this.prisma.user.findMany({});
       return users;

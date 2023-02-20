@@ -9,6 +9,7 @@ import {
 } from './auth.dto';
 import { HttpService } from '@nestjs/axios';
 import { map, catchError } from 'rxjs';
+import { generateRandomString } from 'helpers/generateRandomString';
 
 @Injectable()
 export class AuthService {
@@ -57,14 +58,18 @@ export class AuthService {
   }
 
   register(user: UserRegisterDto) {
+    if (!user.password) {
+      user.password = generateRandomString(15);
+    }
     const registeredUser = this.httpService
       .post('/users', user)
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
 
     return registeredUser;
   }

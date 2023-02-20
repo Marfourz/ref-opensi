@@ -14,9 +14,11 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
+import { AuthModule } from '../users-manager/auth.module';
+import { NotificationModule } from '../../../notification/src/notification.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, AuthModule, NotificationModule],
   controllers: [UserController, EngineController],
   providers: [
     UserService,

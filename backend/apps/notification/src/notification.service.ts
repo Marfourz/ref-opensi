@@ -25,7 +25,8 @@ export class NotificationService {
         catchError((error) => {
           throw error;
         }),
-      );
+      )
+      .subscribe();
   }
 
   sendSms(data: smsDto): any {
@@ -46,6 +47,7 @@ export class NotificationService {
         catchError((error) => {
           throw error;
         }),
-      );
-    }
+      )
+      .subscribe();
+  }
 }

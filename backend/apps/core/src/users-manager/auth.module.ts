@@ -29,8 +29,8 @@ import { AuthService } from './auth.service';
     }),
   ],
   controllers: [AuthController, RolesController, PermissionsController],
-  exports: [AuthService],
   providers: [AuthService, PermissionsService, RolesService, JwtService],
+  exports: [AuthService],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

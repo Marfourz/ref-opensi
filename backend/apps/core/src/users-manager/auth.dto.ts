@@ -18,7 +18,8 @@ export class UserRegisterDto {
 
   @ApiProperty()
   @IsString()
-  password: string;
+  @IsOptional()
+  password?: string;
 }
 
 export class UserLoginDto {
