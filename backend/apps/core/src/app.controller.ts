@@ -19,7 +19,8 @@ export class AppController {
   ) {}
 
   @Post()
-  getHello(): string {
+  getHello(@Body() data: EmailPayload): string {
+    this.notif.sendEmail(data);
     return this.appService.getHello();
   }
 }

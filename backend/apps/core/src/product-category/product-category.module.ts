@@ -4,13 +4,13 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { ProductsController } from './product.controller';
-import { ProductsService } from './product.service';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
+import { ProductCategoryController } from './product-category.controller';
+import { ProductCategoryService } from './product-category.service';
 
 @Module({
   imports: [
@@ -19,16 +19,16 @@ import { JwtService } from '@nestjs/jwt';
       envFilePath: ['.env.production', '.env.development'],
     }),
   ],
-  controllers: [ProductsController],
-  providers: [ProductsService, PrismaService, JwtService],
+  controllers: [ProductCategoryController],
+  providers: [ProductCategoryService, PrismaService, JwtService],
 })
-export class ProductsModule implements NestModule {
+export class ProductCategoryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthenticationMiddleware)
       .forRoutes(
-        { path: 'products', method: RequestMethod.ALL },
-        { path: 'products/(*)', method: RequestMethod.ALL },
+        { path: 'product-category', method: RequestMethod.ALL },
+        { path: 'product-category/(*)', method: RequestMethod.ALL },
       );
   }
 }

@@ -15,6 +15,7 @@ export class createRoleDto {
   description: string;
 
   @ApiProperty()
+  @IsOptional()
   @IsArray()
   permissions?: string[];
 }

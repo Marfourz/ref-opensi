@@ -10,10 +10,10 @@ export class NotificationService {
   async makeRequest<T>(
     path: string,
     method: RequestMethod,
-    args: any,
+    args: T,
     headers: NotificationRequestHeaders,
   ): Promise<any> {
-    return makeGlobalRequest<T, any>(
+    return makeGlobalRequest<any, T>(
       this.configService.get('API_NOTIFICATION'),
       path,
       method,

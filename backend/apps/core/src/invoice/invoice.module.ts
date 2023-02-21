@@ -4,25 +4,25 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { TransactionController } from './transaction.controller';
-import { TransactionService } from './transaction.service';
 import { PrismaService } from 'libs/prisma/src';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
+import { InvoiceController } from './invoice.controller';
+import { InvoiceService } from './invoice.service';
 
 @Module({
   imports: [HttpModule],
-  controllers: [TransactionController],
-  providers: [TransactionService, PrismaService, JwtService],
+  controllers: [InvoiceController],
+  providers: [PrismaService, InvoiceService, JwtService],
 })
-export class TransactionModule implements NestModule {
+export class InvoiceModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthenticationMiddleware)
       .forRoutes(
-        { path: 'transactions', method: RequestMethod.ALL },
-        { path: 'transactions/(*)', method: RequestMethod.ALL },
+        { path: 'invoices', method: RequestMethod.ALL },
+        { path: 'invoices/(*)', method: RequestMethod.ALL },
       );
   }
 }

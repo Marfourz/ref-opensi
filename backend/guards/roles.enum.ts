@@ -1,7 +1,7 @@
 export enum Role {
-  SuperUser = 'superUser',
-  Administrator = 'administrator',
-  Accountant = 'accountant',
-  Commercial = 'commercial',
-  DeliveryMan = 'deliveryMan',
+  SUPER_USER = '  SUPER_USER',
+  ADMINISTRATOR = 'ADMINISTRATOR',
+  ACCOUNTANT = 'ACCOUNTANT',
+  COMMERCIAL = 'COMMERCIAL',
+  DELIVERY_MAN = 'DELIVERY_MAN',
 }

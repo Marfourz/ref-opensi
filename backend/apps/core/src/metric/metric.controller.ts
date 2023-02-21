@@ -13,7 +13,7 @@ import { ApiTags, ApiParam, ApiHeader } from '@nestjs/swagger';
 
 @ApiTags('metrics')
 @Controller('metrics')
-export class StockController {
+export class MetricController {
   constructor(private readonly metricService: MetricService) {}
 
   @Get(':orgId/performance/:prodId')

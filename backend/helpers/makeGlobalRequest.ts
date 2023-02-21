@@ -8,7 +8,7 @@ export async function makeGlobalRequest<T, V>(
   path: string,
   method: RequestMethod = 'get',
   args: V,
-  options: AxiosRequestHeaders = undefined,
+  options,
 ) {
   try {
     const response: AxiosResponse<T> = await axios[method](

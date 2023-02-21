@@ -18,6 +18,8 @@ import {
   ApiOkResponse,
   ApiHeader,
 } from '@nestjs/swagger';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 
 @ApiTags('engines')
 @Controller('engines')
@@ -25,6 +27,7 @@ export class EngineController {
   constructor(private readonly engineService: EngineService) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR)
   @ApiBody({ type: engineDto })
   @ApiHeader({
     name: 'x-auth-token',
