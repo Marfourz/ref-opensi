@@ -27,7 +27,7 @@ export class EngineController {
   constructor(private readonly engineService: EngineService) {}
 
   @Post()
-  @Roles(Role.ADMINISTRATOR)
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiBody({ type: engineDto })
   @ApiHeader({
     name: 'x-auth-token',
