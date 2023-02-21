@@ -7,10 +7,6 @@ import { map, catchError } from 'rxjs';
 export class NotificationService {
   constructor(private readonly httpService: HttpService) {}
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   sendEmail(data: emailDto): any {
     const { object, body, email, sender } = data;
     return this.httpService
@@ -20,13 +16,13 @@ export class NotificationService {
         body,
         contacts: [email],
       })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      )
-      .subscribe();
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   sendSms(data: smsDto): any {

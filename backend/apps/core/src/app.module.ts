@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './users-manager/auth.module';
 import { ActivityModule } from './activity/src/activity.module';
 import { TransactionModule } from './transaction/src/transaction.module';
+import { ConsumerModule } from './consumer/consumer.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +26,7 @@ import { TransactionModule } from './transaction/src/transaction.module';
     ProductsModule,
     ActivityModule,
     TransactionModule,
+    ConsumerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   ApiTags,
@@ -7,13 +7,18 @@ import {
   ApiParam,
   ApiHeader,
 } from '@nestjs/swagger';
+import { NotificationService } from './consumer/notification/notification.service';
+import { EmailPayload } from './consumer/notification/types/index';
 
 @ApiTags('core')
 @Controller('core')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly notif: NotificationService,
+  ) {}
 
-  @Get()
+  @Post()
   getHello(): string {
     return this.appService.getHello();
   }

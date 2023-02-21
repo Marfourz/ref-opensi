@@ -18,6 +18,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3008);
+  await app.listen(3001);
 }
 bootstrap();

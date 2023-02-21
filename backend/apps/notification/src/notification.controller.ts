@@ -1,22 +1,19 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { emailDto, smsDto } from './notification.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('notifications')
+@ApiTags('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @Get()
-  getHello(): string {
-    return this.notificationService.getHello();
-  }
-
-  @Post('mails')
+  @Post('send-email')
   sendEmail(@Body() data: emailDto): any {
     return this.notificationService.sendEmail(data);
   }
 
-  @Post('sms')
+  @Post('send-sms')
   sendSms(@Body() data: smsDto): any {
     return this.notificationService.sendSms(data);
   }
