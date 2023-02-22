@@ -137,11 +137,9 @@ model Product {
 
   categoryId          String
 
+  packagingType       PackagingTypeEnum
+
   unitPrice           Int
-
-  rackPrice           Int
-
-  packPrice           Int
 
   volume              Int
 
@@ -412,5 +410,10 @@ enum OrganisationStatusEnum {
 enum OrderTypeEnum {
   asc
   desc
+}
+
+enum PackagingTypeEnum {
+  rack
+  pack
 }
 
