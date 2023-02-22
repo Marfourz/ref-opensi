@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { productDto, updateProductDto } from './product.dto';
 import { Product, Image, Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
+import { PagiationPayload } from 'types';
 
 @Injectable()
 export class ProductsService {
@@ -29,7 +30,7 @@ export class ProductsService {
     }
   }
 
-  async searchForProducts(filterParams): Promise<any[]> {
+  async searchForProducts(filterParams): Promise<PagiationPayload<Product[]>> {
     let Order = 'desc';
     const { page, perPage, order, name, rackPrice, prodId } = filterParams;
 
@@ -86,7 +87,17 @@ export class ProductsService {
           },
         ],
       });
-      return products;
+
+      const count = await this.prisma.product.count({
+        where: {
+          name: {
+            contains: name,
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      return { data: products, count };
     } catch (error) {
       throw error;
       return;

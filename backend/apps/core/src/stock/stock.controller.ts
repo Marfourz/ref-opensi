@@ -12,6 +12,7 @@ import { StockService } from './stock.service';
 import { Stock } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
 import { stockDto, updateStockDto } from './stock.dto';
+import { PagiationPayload } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -66,7 +67,7 @@ export class StockController {
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
-  ): Promise<Stock[]> {
+  ): Promise<PagiationPayload<Stock[]>> {
     return this.stockService.searchForStocksOfOrganisation(
       filterParams,
       params.orgId,

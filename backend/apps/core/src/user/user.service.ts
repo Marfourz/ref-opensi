@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { User, ActivityLog } from '@prisma/client';
-import { updateUserDto, userDto } from './user.dto';
+import { updateUserDto } from './user.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { AuthService } from '../users-manager/auth.service';
-import { UserRegisterDto } from '../users-manager/auth.dto';
 import { generateRandomString } from 'helpers/generateRandomString';
+import { PagiationPayload } from 'types';
 import { NotificationService } from 'apps/notification/src/notification.service';
 import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
 
@@ -109,7 +109,10 @@ export class UserService {
     }
   }
 
-  async searchForUsersOfOrganisation(filterParams, orgId): Promise<User[]> {
+  async searchForUsersOfOrganisation(
+    filterParams,
+    orgId,
+  ): Promise<PagiationPayload<User[]>> {
     try {
       let Order = 'desc';
       const {
@@ -175,7 +178,7 @@ export class UserService {
       if (order != undefined) {
         Order = order;
       }
-      const orders = await this.prisma.user.findMany({
+      const users = await this.prisma.user.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
@@ -206,7 +209,12 @@ export class UserService {
           },
         ],
       });
-      return orders;
+
+      const count = await this.prisma.user.count({
+        where: { organisationId: orgId },
+      });
+
+      return { data: users, count };
     } catch (error) {
       throw error;
       return;

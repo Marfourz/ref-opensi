@@ -4,7 +4,6 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { EngineController } from './engine.controller';
 import { EngineService } from './engine.service';
@@ -13,6 +12,7 @@ import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
 import { AuthModule } from '../users-manager/auth.module';
+import { PrismaService } from 'libs/prisma/src/prisma.service';
 
 @Module({
   imports: [HttpModule, AuthModule],

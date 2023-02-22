@@ -11,6 +11,7 @@ import {
 import { OrganisationService } from './organisation.service';
 import { Organisation, User, OrganisationStatusEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
+import { PagiationPayload } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -75,7 +76,7 @@ export class OrganisationController {
   @ApiQuery({ name: 'status', enum: OrganisationStatusEnum, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
-  ): Promise<Organisation[]> {
+  ): Promise<PagiationPayload<Organisation[]>> {
     return this.organisationService.searchForPartners(filterParams);
   }
 

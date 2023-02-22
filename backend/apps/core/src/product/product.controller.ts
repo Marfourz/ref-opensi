@@ -12,6 +12,7 @@ import { ProductsService } from './product.service';
 import { productDto, updateProductDto } from './product.dto';
 import { Product, Image, Stock } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
+import { PagiationPayload } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -60,7 +61,9 @@ export class ProductsController {
   @ApiQuery({ name: 'name', type: String, required: false })
   @ApiQuery({ name: 'rackPrice', type: Number, required: false })
   @ApiQuery({ name: 'prodId', type: String, required: false })
-  searchForProducts(@Query() filterParams: any): Promise<any[]> {
+  searchForProducts(
+    @Query() filterParams: any,
+  ): Promise<PagiationPayload<Product[]>> {
     return this.productsService.searchForProducts(filterParams);
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
+import { PagiationPayload } from 'types';
 
 @Injectable()
 export class StockService {
@@ -59,7 +60,10 @@ export class StockService {
     }
   }
 
-  async searchForStocksOfOrganisation(filterParams, orgId): Promise<Stock[]> {
+  async searchForStocksOfOrganisation(
+    filterParams,
+    orgId: string,
+  ): Promise<PagiationPayload<Stock[]>> {
     try {
       let Order = 'desc';
       const {
@@ -131,7 +135,12 @@ export class StockService {
           },
         ],
       });
-      return stocks;
+
+      const count = await this.prisma.stock.count({
+        where: { organisationId: orgId },
+      });
+
+      return { data: stocks, count };
     } catch (error) {
       throw error;
       return;

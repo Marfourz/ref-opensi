@@ -33,7 +33,7 @@ export class UserModule implements NestModule {
     consumer
       .apply(AuthenticationMiddleware)
       .forRoutes(
-        { path: 'users', method: RequestMethod.GET },
+        { path: 'users', method: RequestMethod.ALL },
         { path: 'users/(*)', method: RequestMethod.ALL },
       );
   }

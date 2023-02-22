@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
+import { PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
 
 @Injectable()
@@ -96,7 +97,9 @@ export class OrganisationService {
     }
   }
 
-  async searchForPartners(filterParams): Promise<Organisation[]> {
+  async searchForPartners(
+    filterParams,
+  ): Promise<PagiationPayload<Organisation[]>> {
     try {
       let Order = 'desc';
       const {
@@ -154,7 +157,7 @@ export class OrganisationService {
         Order = order;
       }
 
-      const orders = await this.prisma.organisation.findMany({
+      const organisations = await this.prisma.organisation.findMany({
         ...paginateConstraints,
         where: {
           NOT: {
@@ -187,7 +190,10 @@ export class OrganisationService {
           },
         ],
       });
-      return orders;
+
+      const count = await this.prisma.organisation.count();
+
+      return { data: organisations, count };
     } catch (error) {
       throw error;
       return;

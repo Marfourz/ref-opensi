@@ -10,6 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { PagiationPayload } from 'types';
 import {
   User,
   ActivityLog,
@@ -101,7 +102,7 @@ export class UserController {
   searchForUsersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
-  ): Promise<User[]> {
+  ): Promise<PagiationPayload<User[]>> {
     return this.userService.searchForUsersOfOrganisation(
       filterParams,
       params.orgId,
