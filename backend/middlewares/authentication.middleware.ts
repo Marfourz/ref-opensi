@@ -9,11 +9,13 @@ import { Request, Response, NextFunction } from 'express';
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_SECRET } from './constants.middleware';
+import { PrismaService } from 'libs/prisma/src';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AuthenticationMiddleware implements NestMiddleware {
   constructor(
     private readonly jwtService: JwtService,
+    private prisma: PrismaService,
     @Inject(REQUEST) private readonly req: Request,
   ) {}
 
@@ -28,8 +30,17 @@ export class AuthenticationMiddleware implements NestMiddleware {
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
             const { data } = result;
-            req.user = data;
-            next();
+            this.prisma.user
+              .findUnique({
+                where: { email: data.email },
+                select: { organisation: true },
+              })
+              .then(async (user) => {
+                data.orgId = user.organisation.id;
+                console.log(data);
+                req.user = data;
+                next();
+              });
           })
           .catch((error) => {
             console.error(error);

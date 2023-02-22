@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { makeGlobalRequest, RequestMethod } from 'helpers/makeGlobalRequest';
-import { NotificationRequestHeaders, EmailPayload, SmsPayload } from './types';
+import { NotificationRequestHeaders, EmailPayload, SmsPayload } from '../../../../../types';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

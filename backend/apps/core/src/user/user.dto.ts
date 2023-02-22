@@ -9,7 +9,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class userDto {
   @ApiProperty()
-  organisationId: string;
+  @IsOptional()
+  organisationId?: string;
 
   @ApiProperty()
   engineId: string;

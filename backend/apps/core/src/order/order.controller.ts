@@ -12,6 +12,7 @@ import { OrderService } from './order.service';
 import { Order, OrderStatusEnum } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
 import { orderDto, updateOrderDto } from './order.dto';
+import { PagiationPayload } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -65,7 +66,7 @@ export class OrderController {
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
-  ): Promise<Order[]> {
+  ): Promise<PagiationPayload<Order[]>> {
     return this.orderService.searchForOrdersOfOrganisation(
       filterParams,
       params.orgId,

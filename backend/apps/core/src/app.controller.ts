@@ -8,7 +8,7 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { NotificationService } from './consumer/notification/notification.service';
-import { EmailPayload } from './consumer/notification/types/index';
+import { EmailPayload } from '../../../types/index';
 
 @ApiTags('core')
 @Controller('core')

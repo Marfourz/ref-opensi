@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
@@ -46,7 +47,10 @@ export class UserController {
   @ApiCreatedResponse({
     description: 'The user has been successfully created.',
   })
-  createUser(@Body() user: userDto): Promise<User> {
+  createUser(@Req() req, @Body() user: userDto): Promise<User> {
+    if (!user.organisationId) {
+      user.organisationId = req.user.orgId;
+    }
     return this.userService.createUser(user);
   }
 

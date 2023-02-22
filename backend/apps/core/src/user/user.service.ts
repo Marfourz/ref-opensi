@@ -16,7 +16,7 @@ export class UserService {
     private notifService: NotificationService,
   ) {}
 
-  async createUser(user: userDto): Promise<User> {
+  async createUser(user): Promise<User> {
     let token;
     try {
       const newUser = await this.prisma.user.create({

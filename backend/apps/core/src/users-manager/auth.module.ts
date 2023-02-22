@@ -14,6 +14,7 @@ import { AuthenticationMiddleware } from 'middlewares/authentication.middleware'
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
+import { PrismaService } from 'libs/prisma/src/prisma.service';
 
 @Module({
   imports: [
@@ -29,7 +30,13 @@ import { AuthService } from './auth.service';
     }),
   ],
   controllers: [AuthController, RolesController, PermissionsController],
-  providers: [AuthService, PermissionsService, RolesService, JwtService],
+  providers: [
+    AuthService,
+    PermissionsService,
+    RolesService,
+    JwtService,
+    PrismaService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule implements NestModule {
@@ -42,7 +49,7 @@ export class AuthModule implements NestModule {
       )
       .forRoutes(
         { path: 'auth', method: RequestMethod.ALL },
-        { path: 'users/(*)', method: RequestMethod.ALL },
+        { path: 'auth/(*)', method: RequestMethod.ALL },
 
         { path: 'permissions', method: RequestMethod.ALL },
         { path: 'permissions/(*)', method: RequestMethod.ALL },

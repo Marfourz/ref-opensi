@@ -20,10 +20,10 @@ import { RolesGuard } from 'guards/roles.guard';
     ActivityService,
     PrismaService,
     JwtService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: RolesGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class ActivityModule implements NestModule {

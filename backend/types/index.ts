@@ -12,6 +12,11 @@ export class Payload<Data, Options> {
   provider?: NotificationProviderList;
 }
 
+export class PagiationPayload<Data> {
+  data: Data;
+  count?: number;
+}
+
 export interface ConsumerEmailForm {
   email: string;
   object: string;
