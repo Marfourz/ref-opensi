@@ -90,19 +90,20 @@ export class AuthService {
   getResetPasswordToken(user: UserGetResetDto) {
     const data = this.httpService
       .post(`/passwords/reset`, { username: user.username })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
 
     return data;
   }
 
-  resetPassword(user: UserResetPasswordDto, token) {
+  resetPassword(user: UserResetPasswordDto) {
     const data = this.httpService
-      .post(`/passwords/reset/${token}`, user)
+      .post(`/passwords/reset/${user.token}`, user)
       .pipe(map((res) => res.data))
       .pipe(
         catchError((error) => {

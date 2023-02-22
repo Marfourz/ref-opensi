@@ -69,15 +69,10 @@ export class AuthController {
     return this.authService.getResetPasswordToken(user);
   }
 
-  @Put('resetPassword/:token')
-  @ApiHeader({
-    name: 'x-auth-token',
-    description: 'Contain auth token',
-  })
-  @ApiParam({ name: 'token' })
+  @Put('resetPassword')
   @ApiBody({ type: UserResetPasswordDto })
-  reset(@Body() user: UserResetPasswordDto, @Param() params) {
-    return this.authService.resetPassword(user, params.token);
+  reset(@Body() user: UserResetPasswordDto) {
+    return this.authService.resetPassword(user);
   }
 
   @Put('changePassword/:userId')

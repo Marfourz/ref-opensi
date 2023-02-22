@@ -18,6 +18,7 @@ export class UserService {
 
   async createUser(user): Promise<User> {
     let token;
+    const Dpassword = generateRandomString(15);
     try {
       const newUser = await this.prisma.user.create({
         data: user,
@@ -27,20 +28,25 @@ export class UserService {
         .register({
           username: user.email,
           email: user.email,
-          password: generateRandomString(15),
+          password: Dpassword,
         })
-        .then((data) => {
-          token = data.token;
-          console.log('Token : ', token);
-          this.notifService.sendEmail({
-            email: user.email,
-            object: 'Registration to SNB',
-            body: NOTIFICATION_MESSAGES.registrationMail({
-              email: user.email,
-              token: token,
-            }),
-            sender: 'SNB',
-          });
+        .then((Udata) => {
+          this.authService
+            .getResetPasswordToken({
+              username: Udata.user.email,
+            })
+            .then((Tdata) => {
+              token = Tdata.token;
+              this.notifService.sendEmail({
+                email: user.email,
+                object: 'Registration to SNB',
+                body: NOTIFICATION_MESSAGES.registrationMail({
+                  email: user.email,
+                  token: token,
+                }),
+                sender: 'SNB',
+              });
+            });
         });
 
       return newUser;
