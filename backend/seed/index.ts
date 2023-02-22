@@ -2,6 +2,7 @@ import { users } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
 const { PrismaClient } = require('@prisma/client');
+import { AuthService } from 'apps/core/src/users-manager/auth.service';
 
 const prisma = new PrismaClient();
 

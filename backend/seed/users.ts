@@ -1,9 +1,5 @@
-
-
 export const users = [
   {
-    
-  
     name: 'Utilisateur Test 1',
     phone: '22990000000',
     email: 'usertest1@email.com',
@@ -15,7 +11,6 @@ export const users = [
     permission: 'deliveryMan',
   },
   {
-   
     name: 'Utilisateur Test 2',
     phone: '22951874156',
     email: 'usertest2@email.com',
@@ -27,7 +22,6 @@ export const users = [
     permission: 'deliveryMan',
   },
   {
-   
     name: 'Utilisateur Test 3',
     phone: '22978524639',
     email: 'usertest3@email.com',
@@ -40,4 +34,20 @@ export const users = [
   },
 ];
 
-
+export const MUsers = [
+  {
+    username: 'User1',
+    email: 'usertest1@email.com',
+    password: 'azertyuiop789',
+  },
+  {
+    username: 'User2',
+    email: 'usertest2@email.com',
+    password: 'azertyuiop456',
+  },
+  {
+    username: 'User3',
+    email: 'usertest3@email.com',
+    password: 'azertyuiop123',
+  },
+];
