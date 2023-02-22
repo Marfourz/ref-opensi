@@ -38,7 +38,9 @@ export class AuthenticationMiddleware implements NestMiddleware {
                 select: { organisation: true, role: true },
               })
               .then(async (user) => {
-                data.role = user.role;
+                console.log(data);
+                console.log(user);
+                //data.role = user.role;
                 data.orgId = user.organisation.id;
                 console.log(data);
                 req.user = data;

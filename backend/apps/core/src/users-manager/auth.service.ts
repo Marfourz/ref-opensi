@@ -10,10 +10,12 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { map, catchError } from 'rxjs';
 import { generateRandomString } from 'helpers/generateRandomString';
+import { PrismaService } from 'libs/prisma/src/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService,
+    private readonly prismaService: PrismaService) {}
 
   allUsers() {
     const users = this.httpService
@@ -28,15 +30,20 @@ export class AuthService {
     return users;
   }
 
-  me(token: string) {
+  async me(token: string) {
     const me = this.httpService
       .get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then(async (res) => {
+        const user = await this.prismaService.user.findUnique({
+          where: { email: res.data.email },
+        });
+        console.log(user);
+        return res.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
 
     return me;
   }
