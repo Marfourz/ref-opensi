@@ -29,17 +29,24 @@ export class AuthenticationMiddleware implements NestMiddleware {
         this.jwtService
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
+            console.log(result);
             const { data } = result;
+            data.uid = result.uid;
             this.prisma.user
               .findUnique({
                 where: { email: data.email },
-                select: { organisation: true },
+                select: { organisation: true, role: true },
               })
               .then(async (user) => {
+                data.role = user.role;
                 data.orgId = user.organisation.id;
                 console.log(data);
                 req.user = data;
                 next();
+              })
+              .catch((error) => {
+                console.error(error);
+                res.status(HttpStatus.UNAUTHORIZED).send(error);
               });
           })
           .catch((error) => {

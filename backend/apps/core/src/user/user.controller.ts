@@ -128,7 +128,7 @@ export class UserController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'id' })
-  deleteSingleUser(@Param() params): Promise<User> {
-    return this.userService.deleteSingleUser(params.id);
+  deleteSingleUser(@Req() req, @Param() params): Promise<User> {
+    return this.userService.deleteSingleUser(params.id, req.user.uid);
   }
 }

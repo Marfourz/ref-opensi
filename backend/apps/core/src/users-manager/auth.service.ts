@@ -139,4 +139,18 @@ export class AuthService {
 
     return data;
   }
+
+  deleteUser(userId: string) {
+    const data = this.httpService
+      .delete(`/users/${userId}`)
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    return data;
+  }
 }
