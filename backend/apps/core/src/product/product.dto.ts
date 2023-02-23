@@ -15,6 +15,10 @@ export class productDto {
   @IsNumber()
   unitPrice: number;
 
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  bulkPrice: number;
+
   @ApiProperty({ enum: PackagingTypeEnum })
   @IsString()
   packagingType: PackagingTypeEnum;

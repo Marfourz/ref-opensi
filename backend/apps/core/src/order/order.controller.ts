@@ -59,10 +59,7 @@ export class OrderController {
   })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
-  @ApiQuery({ name: 'orderId', type: String, required: false })
-  @ApiQuery({ name: 'totalAmount', type: Number, required: false })
-  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
-  @ApiQuery({ name: 'status', enum: OrderStatusEnum, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,

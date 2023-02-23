@@ -141,6 +141,8 @@ model Product {
 
   unitPrice           Int
 
+  bulkPrice           Int
+
   volume              Int
 
   stocks              Stock[]
