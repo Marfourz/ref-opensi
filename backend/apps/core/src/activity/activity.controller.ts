@@ -39,6 +39,7 @@ export class ActivityController {
   }
 
   @Get()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -48,6 +49,7 @@ export class ActivityController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -58,6 +60,7 @@ export class ActivityController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -71,6 +74,7 @@ export class ActivityController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

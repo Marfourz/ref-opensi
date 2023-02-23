@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProductCategory, Product } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { categoryDto, updateCategoryDto } from './product-category.dto';
+import { PagiationPayload } from 'types';
 
 @Injectable()
 export class ProductCategoryService {
@@ -19,10 +20,23 @@ export class ProductCategoryService {
     }
   }
 
-  async getAllCategories(): Promise<ProductCategory[]> {
+  async getAllCategories(
+    filterParams: any,
+  ): Promise<PagiationPayload<ProductCategory[]>> {
+    const { page, perPage, q } = filterParams;
+
+    const paginateConstraints: any = {};
+    if (!isNaN(page) && !isNaN(perPage)) {
+      paginateConstraints.skip = Number((page - 1) * perPage);
+      paginateConstraints.take = Number(perPage);
+    }
+
     try {
-      const categories = await this.prisma.productCategory.findMany();
-      return categories;
+      const categories = await this.prisma.productCategory.findMany({
+        ...paginateConstraints,
+      });
+      const count = await this.prisma.productCategory.count();
+      return { data: categories, count };
     } catch (error) {
       throw error;
       return;
@@ -69,12 +83,29 @@ export class ProductCategoryService {
     }
   }
 
-  async getProductsOfCategory(id: string): Promise<Product[]> {
+  async getProductsOfCategory(
+    id: string,
+    filterParams,
+  ): Promise<PagiationPayload<Product[]>> {
+    const { page, perPage, q } = filterParams;
+
+    const paginateConstraints: any = {};
+    if (!isNaN(page) && !isNaN(perPage)) {
+      paginateConstraints.skip = Number((page - 1) * perPage);
+      paginateConstraints.take = Number(perPage);
+    }
+
     try {
       const products = await this.prisma.product.findMany({
+        ...paginateConstraints,
         where: { categoryId: id },
       });
-      return products;
+
+      const count = await this.prisma.product.count({
+        where: { categoryId: id },
+      });
+
+      return { data: products, count };
     } catch (error) {
       throw error;
       return;

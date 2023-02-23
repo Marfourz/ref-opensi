@@ -41,6 +41,7 @@ export class EngineController {
   }
 
   @Get()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -50,6 +51,7 @@ export class EngineController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

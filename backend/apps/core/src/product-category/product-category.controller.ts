@@ -6,10 +6,12 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ProductCategoryService } from './product-category.service';
 import { ProductCategory, Product } from '@prisma/client';
 import { categoryDto, updateCategoryDto } from './product-category.dto';
+import { PagiationPayload } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -17,6 +19,7 @@ import {
   ApiParam,
   ApiOkResponse,
   ApiHeader,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 @ApiTags('product-category')
@@ -44,8 +47,13 @@ export class ProductCategoryController {
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getAllCategories(): Promise<ProductCategory[]> {
-    return this.productCategoryService.getAllCategories();
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  getAllCategories(
+    @Query() filterParams: any,
+  ): Promise<PagiationPayload<ProductCategory[]>> {
+    return this.productCategoryService.getAllCategories(filterParams);
   }
 
   @Get(':id')
@@ -64,8 +72,17 @@ export class ProductCategoryController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'id' })
-  getProductsOfCategory(@Param() params): Promise<Product[]> {
-    return this.productCategoryService.getProductsOfCategory(params.id);
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  getProductsOfCategory(
+    @Param() params,
+    @Query() filterParams: any,
+  ): Promise<PagiationPayload<Product[]>> {
+    return this.productCategoryService.getProductsOfCategory(
+      params.id,
+      filterParams,
+    );
   }
 
   @Put(':id')
