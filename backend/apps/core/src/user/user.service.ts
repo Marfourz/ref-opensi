@@ -41,6 +41,7 @@ export class UserService {
                 email: user.email,
                 object: 'Registration to SNB',
                 body: NOTIFICATION_MESSAGES.registrationMail({
+                  name: user.name,
                   email: user.email,
                   token: token,
                 }),
