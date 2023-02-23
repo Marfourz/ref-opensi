@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ProductCategory, Product, TransactionStatusEnum } from '@prisma/client';
+import {
+  ProductCategory,
+  Product,
+  TransactionStatusEnum,
+} from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { categoryDto, updateCategoryDto } from './product-category.dto';
 import { PagiationPayload } from 'types';
@@ -117,7 +121,7 @@ export class ProductCategoryService {
         where: { categoryId: id },
         include: {
           image: true,
-         // stocks: {where: },
+          stocks: { where: { organisationId: orgId } },
         },
       });
 

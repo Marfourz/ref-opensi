@@ -83,7 +83,7 @@ export class ProductCategoryController {
   ): Promise<PagiationPayload<Product[]>> {
     return this.productCategoryService.getProductsOfCategory(
       params.id,
-      req.user.organisationId,
+      req.user.orgId,
       filterParams,
     );
   }
