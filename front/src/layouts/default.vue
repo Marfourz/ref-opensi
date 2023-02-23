@@ -10,17 +10,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,computed } from 'vue'
+import { defineComponent,computed, onMounted } from 'vue'
 import HeaderBar from "@/components/HeaderBar.vue";
 import SideBar from "@/components/SideBar/index.vue"
 import { useRoute } from 'vue-router';
+import { useUsersStore } from '../stores/users';
 
 export default defineComponent({
     components:{HeaderBar,SideBar},
     setup () {
         const route = useRoute()
+        const userStore = useUsersStore()
         const withoutPadding = computed(()=>{
             return route.meta.withoutPadding
+        })
+
+        onMounted(async ()=>{
+            try{
+                await userStore.me()
+            }
+            catch(error:any){
+
+            }        
         })
         return {
             withoutPadding

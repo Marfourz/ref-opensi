@@ -42,6 +42,8 @@ export class AuthenticationMiddleware implements NestMiddleware {
                 console.log(user);
                 //data.role = user.role;
                 data.orgId = user.organisation.id;
+                console.log("user user", user);
+                
                 console.log(data);
                 req.user = data;
                 next();

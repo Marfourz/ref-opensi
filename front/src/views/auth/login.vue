@@ -1,9 +1,9 @@
 <template>
     <div>
         <Form class="space-y-6 " @submit="onSubmit">
-            <BaseInput name="email" label="Email" v-model="username"></BaseInput>
+            <BaseInput name="email" label="Email" rules="required" v-model="username"></BaseInput>
             <div>
-                <BaseInput name="mot de passe" label="Mot de passe" type="password" v-model="password"></BaseInput> 
+                <BaseInput name="mot de passe" rules="required" label="Mot de passe" type="password" v-model="password"></BaseInput> 
                 <div class="underline font-bold text-right text-sm text-link cursor-pointer mt-1" @click="goToForgotPassword">Mot de passe oublié</div>
             </div>
             
@@ -16,17 +16,17 @@
 </template>
 
 <script setup lang="ts">
-import BaseIcon from '../../components/base/BaseIcon.vue';
-import BaseButton from '../../components/base/BaseButton.vue';
-import BaseInput from '../../components/base/BaseInput.vue';
 import {Form} from "vee-validate"
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/users/auth-store';
 import { ref } from 'vue';
+import { useToast } from "vue-toastification";
 
 const router = useRouter()
 
 const authStore = useAuthStore()
+
+const toast = useToast()
 
 const username = ref("")
 
@@ -43,11 +43,13 @@ async function onSubmit(){
     })
 
     console.log("login work")
-    router.push({name : 'users'})
+    router.push({name : 'stock'})
 
     loading.value = false
     }
     catch(error){
+        toast.error("Vos identifiants incorrectes")
+        console.log("error", error)
         loading.value = false
     }
     

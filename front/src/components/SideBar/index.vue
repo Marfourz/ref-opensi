@@ -15,6 +15,19 @@
           v-for="menu in menus"
           @click="changeMenu(menu)"
         />
+
+        <div class="h-[1px] bg-[black] opacity-20 w-full"></div>
+
+        
+        <SideItem
+          :icon="menu.icon"
+          :label="menu.title"
+          :key="menu.title"
+          :isActive="activeRouteName == menu.route"
+          :showOnlyIcon="showOnlyIcon"
+          v-for="menu in bottomMenus"
+          @click="changeMenu(menu)"
+        />
       </div>
      
     </div>
@@ -36,6 +49,28 @@ export default defineComponent({
     const route = useRoute();
     const activeMenu = ref("Accueil");
     const showOnlyIcon = ref(false)
+
+    const bottomMenus = [
+    {
+        title: "Utilisateurs",
+        icon: "user",
+        route: "users",
+        path: "utitlisateurs",
+      },
+      {
+        title: "Paramètres",
+        icon: "setting",
+        route: "setting",
+        path: "parametre",
+      },
+      {
+        title: "Déconexion",
+        icon: "logout",
+        route: "logout",
+        path: "deconnexion",
+      },
+    ]
+
     const menus = [
       {
         title: "Tableau de bord",
@@ -81,28 +116,10 @@ export default defineComponent({
         icon: "stock",
         route: "stock",
         path: "stock",
-      },
-
-      {
-        title: "Utilisateurs",
-        icon: "user",
-        route: "users",
-        path: "utitlisateurs",
-      },
-      {
-        title: "Paramètres",
-        icon: "setting",
-        route: "setting",
-        path: "parametre",
-      },
-      {
-        title: "Déconexion",
-        icon: "logout",
-        route: "logout",
-        path: "deconnexion",
-      },
+      }
     ];
     function changeMenu(menu: any) {
+      console.log("actual menu", menu)
       activeMenu.value = menu.title;
       router.push({ name: menu.route });
     }
@@ -110,8 +127,9 @@ export default defineComponent({
       const routesList = route.path.split("/");
       const actualRoute = routesList[3];
      
+      const allMenus = menus.concat(bottomMenus)
 
-      const menu: any = menus.find((value: any) => {
+      const menu: any = allMenus.find((value: any) => {
         if (value?.path) {
           const valuePath: string | null = value?.path.split("/")[0];
           return valuePath == actualRoute;
@@ -133,7 +151,8 @@ export default defineComponent({
       changeMenu,
       goToHome,
       activeRouteName,
-      showOnlyIcon
+      showOnlyIcon,
+      bottomMenus
     };
   },
 });

@@ -2,42 +2,66 @@
   <div class="space-y-6">
     <BaseModal :show="modal.show">
       <template #modal>
-        <div class="flex flex-col space-y-6 items-center py-4" v-if="modal.mode == 'confirm' && modal.type == 'delete'">
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+        >
           <BaseIcon name="warning"></BaseIcon>
           <div
             class="text-center font-semibold text-2xl"
             v-html="modal.title"
           ></div>
           <div class="flex items-center space-x-2 w-full">
-             <BaseButton bgColor="danger" :outline="true" class="w-1/2" @click="modal.show = false"> Annuler </BaseButton>
-            <BaseButton bgColor="danger" class="w-1/2 " @click="deleteUser"> Supprimer </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              class="w-1/2 bg-danger"
+              @click="deleteUser"
+            >
+              Supprimer
+            </BaseButton>
           </div>
         </div>
 
-        <div class="flex flex-col space-y-6 items-center py-4" v-else-if="modal.mode = 'success'">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white">
-                <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
-            </div>
-            <div class="font-bold text-2xl">
-                {{ modal.title }}
-            </div>
-            <BaseButton class="w-full" @click="modal.show = false">Terminé</BaseButton>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-else-if="(modal.mode = 'success')"
+        >
+          <div
+            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+          >
+            <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
+          </div>
+          <div class="font-bold text-2xl">
+            {{ modal.title }}
+          </div>
+          <BaseButton class="w-full" @click="modal.show = false"
+            >Terminé</BaseButton
+          >
         </div>
       </template>
     </BaseModal>
 
     <div class="flex items-center space-x-6">
-        <BaseTitle title="Utilisateurs"></BaseTitle>
-        <BaseButton icon="plus" size="small" @click="createUser"
-      >Nouveau utilisateur</BaseButton
-    >
+      <BaseTitle title="Utilisateurs"></BaseTitle>
+      <BaseButton icon="plus" size="small" @click="createUser"
+        >Nouveau utilisateur</BaseButton
+      >
     </div>
-    
-    
+    {{ userStore.getCurrentUser?.organisationId }}aa
     <BaseTableWithFilter
       :titles="titles"
-      :fetchData="userStore.fetchAll"
+      :fetchData="userStore.fetchByOrganization"
+      :requestId="userStore.getCurrentUser?.organizationId"
       :actions="actions"
+      :key="reload"
     >
       <template #filter>
         <div class="flex space-x-4 h-full">
@@ -95,7 +119,7 @@
               :items="roles"
               v-model="user.role"
             ></BaseSelect>
-            <BaseButton class="w-[200px]">{{
+            <BaseButton class="w-[200px]" :loading="loading">{{
               selectedUser ? "Mettre à jour" : "Ajouter"
             }}</BaseButton>
           </Form>
@@ -113,16 +137,16 @@ import { Form } from "vee-validate";
 import { IUser } from "../../types/interfaces";
 
 export default defineComponent({
-    components:{Form},
+  components: { Form },
   setup() {
     const userStore = useUsersStore();
 
     const actions = [
-      {
-        title: "Voir détail",
-        icon: "eye",
-        action: onView,
-      },
+      //   {
+      //     title: "Voir détail",
+      //     icon: "eye",
+      //     action: onView,
+      //   },
       {
         title: "Modifier",
         icon: "edit",
@@ -140,7 +164,7 @@ export default defineComponent({
       subtitle: "",
       type: "create" as "create" | "delete" | "update",
       show: false,
-      mode : "confirm" as "confirm" | "success"
+      mode: "confirm" as "confirm" | "success",
     });
 
     const selectedUser = ref<IUser | null>();
@@ -171,17 +195,22 @@ export default defineComponent({
       modal.title = `Êtes-vous sûr de vouloir <br> supprimer l’utilisateur <br> ${selectedUser.value.name} ?`;
       modal.show = true;
       modal.subtitle = "";
-      modal.mode = "confirm"
-      modal.type = "delete"
+      modal.mode = "confirm";
+      modal.type = "delete";
     }
 
-    function deleteUser(){
-        modal.title = `Utilisateur supprimé avec succès`;
-        modal.show = true;
-        modal.subtitle = "";
-        modal.mode = "success"
+    async function deleteUser() {
+      try {
+        if (selectedUser.value) {
+          const response = await userStore.delete(selectedUser.value.id);
+          reload.value = !reload.value;
+          modal.title = `Utilisateur supprimé avec succès`;
+          modal.show = true;
+          modal.subtitle = "";
+          modal.mode = "success";
+        }
+      } catch (error) {}
     }
-
 
     function onView(value: IUser) {
       selectedUser.value = value;
@@ -212,8 +241,6 @@ export default defineComponent({
         },
       ];
     });
-
-   
 
     const roles = computed(() => {
       return [
@@ -273,6 +300,14 @@ export default defineComponent({
           code: UserRole.DELIVERY_MAN,
           label: "Livreur",
         },
+        {
+          code: UserRole.COMMERCIAL,
+          label: "Commercial",
+        },
+        {
+          code: UserRole.SUPER_USER,
+          label: "Super administrateur",
+        },
       ];
 
       return labels.find((value: any) => value.code == element.role)?.label;
@@ -280,23 +315,28 @@ export default defineComponent({
 
     const loading = ref(false);
 
+    const reload = ref(false);
+
     async function onSubmit() {
       loading.value = true;
 
       try {
-        if(!selectedUser){
-            const response = await userStore.create(user);
-            modal.title = `Utilisateur crée avec succès`;
-        }
-        else{
-            modal.title = `Utilisateur modifié avec succès`;
+        if (selectedUser.value) {
+          const response = await userStore.update(selectedUser.value.id, user);
+          modal.title = `Utilisateur modifié avec succès`;
+        } else {
+          const response = await userStore.create(user);
+          modal.title = `Utilisateur crée avec succès`;
         }
         modal.show = true;
         modal.subtitle = "";
-        modal.mode = "success"
-        showModal.value = false
-            
-      } catch (error: any) {}
+        modal.mode = "success";
+        showModal.value = false;
+        loading.value = false;
+        reload.value = !reload.value;
+      } catch (error: any) {
+        loading.value = false;
+      }
     }
 
     return {
@@ -311,7 +351,9 @@ export default defineComponent({
       selectedUser,
       createUser,
       modal,
-      deleteUser
+      deleteUser,
+      loading,
+      reload,
     };
   },
 });
