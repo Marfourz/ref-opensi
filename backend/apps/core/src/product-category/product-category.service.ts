@@ -114,6 +114,9 @@ export class ProductCategoryService {
       const products = await this.prisma.product.findMany({
         ...paginateConstraints,
         where: { categoryId: id },
+        include: {
+          image: true,
+        },
       });
 
       const count = await this.prisma.product.count({
