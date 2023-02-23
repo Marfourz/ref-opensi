@@ -68,12 +68,7 @@ export class OrganisationController {
   })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
-  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
-  @ApiQuery({ name: 'ownerName', type: String, required: false })
-  @ApiQuery({ name: 'phone', type: String, required: false })
-  @ApiQuery({ name: 'email', type: String, required: false })
-  @ApiQuery({ name: 'turnover', type: Number, required: false })
-  @ApiQuery({ name: 'status', enum: OrganisationStatusEnum, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
   ): Promise<PagiationPayload<Organisation[]>> {

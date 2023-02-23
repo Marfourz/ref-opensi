@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async createUser(user): Promise<User> {
-    console.log("user test",user)
+    console.log('user test', user);
     let token;
     const Dpassword = generateRandomString(15);
     try {
@@ -133,32 +133,26 @@ export class UserService {
       }
 
       const userIdConstraint: any = {};
+      const userNameConstraint: any = {};
+      const userEmailConstraint: any = {};
+      const userPhoneConstraint: any = {};
       if (q != undefined) {
         userIdConstraint.id = {
           contains: q,
           mode: 'insensitive',
         };
-      }
 
-      const userNameConstraint: any = {};
-      if (q != undefined) {
         userNameConstraint.name = {
           contains: q,
           mode: 'insensitive',
         };
-      }
 
-      const userEmailConstraint: any = {};
-      if (q != undefined) {
-        userNameConstraint.email = {
+        userEmailConstraint.email = {
           contains: q,
           mode: 'insensitive',
         };
-      }
 
-      const userPhoneConstraint: any = {};
-      if (q != undefined) {
-        userNameConstraint.phone = {
+        userPhoneConstraint.phone = {
           contains: q,
           mode: 'insensitive',
         };
@@ -168,22 +162,20 @@ export class UserService {
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          AND: {
-            OR: [
-              {
-                ...userIdConstraint,
-              },
-              {
-                ...userEmailConstraint,
-              },
-              {
-                ...userNameConstraint,
-              },
-              {
-                ...userPhoneConstraint,
-              },
-            ],
-          },
+          OR: [
+            {
+              ...userIdConstraint,
+            },
+            {
+              ...userEmailConstraint,
+            },
+            {
+              ...userNameConstraint,
+            },
+            {
+              ...userPhoneConstraint,
+            },
+          ],
         },
       });
 

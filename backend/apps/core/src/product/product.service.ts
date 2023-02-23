@@ -31,8 +31,7 @@ export class ProductsService {
   }
 
   async searchForProducts(filterParams): Promise<PagiationPayload<Product[]>> {
-    let Order = 'desc';
-    const { page, perPage, order, name, rackPrice, prodId } = filterParams;
+    const { page, perPage, q } = filterParams;
 
     const paginateConstraints: any = {};
     if (!isNaN(page) && !isNaN(perPage)) {
@@ -40,62 +39,43 @@ export class ProductsService {
       paginateConstraints.take = Number(perPage);
     }
 
-    const contraintOnName: any = {};
-    if (name != undefined) {
-      contraintOnName.name = {
-        contains: name,
-        mode: 'insensitive',
-      };
-    }
-
-    if (order != undefined) {
-      Order = order;
-    }
-
-    const contraintOnRackPrice: any = {};
-    if (!isNaN(rackPrice)) {
-      contraintOnRackPrice.rackPrice = Number(rackPrice);
-    }
-
     const prodIdConstraint: any = {};
-    if (prodId != undefined) {
+    const prodNameConstraint: any = {};
+    const prodPriceConstraint: any = {};
+    if (q != undefined) {
       prodIdConstraint.id = {
-        contains: prodId,
+        contains: q,
         mode: 'insensitive',
       };
-    }
 
+      prodNameConstraint.name = {
+        contains: q,
+        mode: 'insensitive',
+      };
+
+      if (!isNaN(q)) {
+        prodPriceConstraint.unitPrice = Number(q);
+      }
+    }
     try {
       const products = await this.prisma.product.findMany({
         ...paginateConstraints,
         where: {
-          AND: [
+          OR: [
             {
-              ...contraintOnName,
-            },
-            {
-              ...contraintOnRackPrice,
+              ...prodNameConstraint,
             },
             {
               ...prodIdConstraint,
             },
+            {
+              ...prodPriceConstraint,
+            },
           ],
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
-      const count = await this.prisma.product.count({
-        where: {
-          name: {
-            contains: name,
-            mode: 'insensitive',
-          },
-        },
-      });
+      const count = await this.prisma.product.count();
 
       return { data: products, count };
     } catch (error) {

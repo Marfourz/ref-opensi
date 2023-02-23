@@ -101,17 +101,7 @@ export class OrganisationService {
     filterParams,
   ): Promise<PagiationPayload<Organisation[]>> {
     try {
-      let Order = 'desc';
-      const {
-        page,
-        perPage,
-        order,
-        ownerName,
-        phone,
-        email,
-        turnover,
-        status,
-      } = filterParams;
+      const { page, perPage, q } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -119,51 +109,38 @@ export class OrganisationService {
         paginateConstraints.take = Number(perPage);
       }
 
-      const turnoverConstraint: any = {};
-      if (!isNaN(turnover)) {
-        turnoverConstraint.turnover = Number(turnover);
-      }
-
       const ownerNameConstraint: any = {};
-      if (ownerName != undefined) {
-        ownerNameConstraint.ownerName = {
-          contains: ownerName,
-          mode: 'insensitive',
-        };
-      }
-
-      const emailConstraint: any = {};
-      if (email != undefined) {
-        emailConstraint.email = {
-          contains: email,
-          mode: 'insensitive',
-        };
-      }
-
       const phoneConstraint: any = {};
-      if (phone != undefined) {
-        phoneConstraint.phone = {
-          contains: phone,
+      const emailConstraint: any = {};
+      const turnoverConstraint: any = {};
+      if (q != undefined) {
+        ownerNameConstraint.ownerName = {
+          contains: q,
           mode: 'insensitive',
         };
-      }
 
-      const statusConstraint: any = {};
-      if (status != undefined) {
-        statusConstraint.status = status;
-      }
+        phoneConstraint.phone = {
+          contains: q,
+          mode: 'insensitive',
+        };
 
-      if (order != undefined) {
-        Order = order;
+        emailConstraint.email = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        if (!isNaN(q)) {
+          turnoverConstraint.turnover = Number(q);
+        }
       }
 
       const organisations = await this.prisma.organisation.findMany({
         ...paginateConstraints,
         where: {
-          NOT: {
-            type: OrganisationTypeEnum.snb,
+          wallet: {
+            ...turnoverConstraint,
           },
-          AND: [
+          OR: [
             {
               ...ownerNameConstraint,
             },
@@ -173,22 +150,14 @@ export class OrganisationService {
             {
               ...emailConstraint,
             },
-            {
-              ...statusConstraint,
-            },
           ],
-          wallet: {
-            ...turnoverConstraint,
+          NOT: {
+            type: OrganisationTypeEnum.snb,
           },
         },
         include: {
           wallet: true,
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
       const count = await this.prisma.organisation.count();
