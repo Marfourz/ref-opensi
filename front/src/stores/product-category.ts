@@ -1,20 +1,29 @@
 import { defineStore } from "pinia";
-import { IUser } from "@/types/interfaces";
 import Api from "../api";
-import product from "../data/product";
+import { PrimaryKey } from "../types/interfaces";
 
-export const useProductStore = defineStore("productStore", {
+export const useProductCategoryStore = defineStore("productCategoryStore", {
   actions: {
     async fetchOne(id: number) {
       try {
-        const response = await Api.get(`products/${id}`);
+        const response = await Api.get(`product-category/${id}`);
         return response.data;
       } catch (error) {}
     },
 
     async fetchAll(query: any) {
       try {
-        const response = await Api.get("products", { params: query });
+        const response = await Api.get("product-category", { params: query });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+    async fetchProducts(query: any,id:PrimaryKey) {
+      try {
+        const response = await Api.get(`product-category/${id}/products`, { params: query });
         return response.data;
       } catch (error) {
         throw error;
@@ -23,7 +32,7 @@ export const useProductStore = defineStore("productStore", {
 
     async create(data: any) {
       try {
-        const response = await Api.post("products", data);
+        const response = await Api.post("product-category", data);
         return response;
       } catch (error) {
         throw error;
@@ -32,7 +41,7 @@ export const useProductStore = defineStore("productStore", {
 
     async update(id: number, data: any) {
       try {
-        const response = await Api.patch(`products/${id}`, data);
+        const response = await Api.put(`product-category/${id}`, data);
         return response;
       } catch (error) {
         throw error;

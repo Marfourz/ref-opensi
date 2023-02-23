@@ -56,7 +56,7 @@ export interface ISelect {
   title: string;
   value: string;
 }
-import { defineComponent, ref, onUpdated,watch,onMounted } from "vue";
+import { defineComponent, ref, onUpdated,watch,onMounted, toRef } from "vue";
 export default defineComponent({
  
   props: {
@@ -78,6 +78,7 @@ export default defineComponent({
   setup(props, context) {
     const selected = ref();
     const showElement = ref(false);
+   
 
     function selectElement(element: ISelect) {
       showElement.value = !showElement.value;
@@ -86,7 +87,6 @@ export default defineComponent({
     }
 
     watch(()=>props.modelValue,(newValue)=>{
-      
       
       const elementIndex = props.items.findIndex((value:ISelect)=>value.value == props.modelValue)
 
@@ -97,9 +97,16 @@ export default defineComponent({
         
     })
 
+
+   
+
     onMounted(() => {
-        if(props.items && props.items.length > 0)
-          selected.value = props.items[0];
+      console.log("props.items[0]",props.items[0])
+      if(props.items && props.items.length > 0){
+        selected.value = props.items[0];
+        context.emit("update:modelValue", selected.value.value);
+      }
+          
     })
 
     return {

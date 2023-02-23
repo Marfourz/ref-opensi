@@ -14,6 +14,8 @@ import customsValidations from './plugins/vee-validate/customs-validations';
 import BaseBottomModal from "@/components/base/BaseBottomModal.vue"
 import BaseModal from './components/base/BaseModal.vue'
 import BaseTabs from './components/base/BaseTabs.vue'
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 
 import App from './App.vue'
@@ -64,5 +66,6 @@ app.component('BaseTabs',BaseTabs)
 app.use(createPinia())
 app.use(router)
 app.use(helpers)
+app.use(Toast, {});
 
 app.mount('#app')

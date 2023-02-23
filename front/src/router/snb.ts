@@ -8,6 +8,7 @@ import Parameter from "@/views/parameter/index.vue"
 import Appros from "@/views/snb/appros/index.vue"
 import ApprosCreate from "@/views/snb/appros/create.vue"
 import Users from "@/views/users/index.vue"
+import Category from "@/views/snb/categories/index.vue"
 
 
 export default [
@@ -21,7 +22,10 @@ export default [
           {
             path:'commandes',
             name : 'orderReceived',
-            component : OrderReceived
+            component : OrderReceived,
+            meta:{
+              withoutPadding : true
+            }
           },
           {
             path:'appros',
@@ -43,6 +47,11 @@ export default [
             path:'sous-distrivuteurs',
             name : 'subDistributors',
             component : SubDistributors
+          },
+          {
+            path:'produits/categories',
+            name : 'categories',
+            component : Category
           },
           {
             path:'produits',

@@ -7,7 +7,7 @@
     >
       <div class="w-1 h-12" :class="{ 'bg-yellow': isActive }"></div>
       <div>
-        <BaseIcon :name="icon"></BaseIcon>
+        <BaseIcon :name="icon" class="w-5 h-5"></BaseIcon>
       </div>
       <div class="" v-if="!showOnlyIcon">{{ label }}</div>
     </div>

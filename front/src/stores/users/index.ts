@@ -1,22 +1,38 @@
 import { defineStore } from 'pinia'
-import { IUser } from '@/types/interfaces'
+import { IUser, PrimaryKey } from '@/types/interfaces'
 import Api from '../../api'
 import { UserRole } from '../../types/enumerations'
 import users from '../../data/users'
 
 
 export const useUsersStore = defineStore('usersStore',{
+
+    state:()=>{
+        return {
+            current_user  : {} as IUser
+        }
+    },
   
     actions: {
         getRoleLabel(role : UserRole) : string | undefined{
-            const labels = [{
-                code : UserRole.ADMIN,
-                label : "Administrateur"
-            },
-            {
-                code : UserRole.DELIVERY_MAN,
-                label : "lIVREUR"
-            }]
+            const labels =[
+                {
+                  code: UserRole.ADMIN,
+                  label: "Administrateur",
+                },
+                {
+                  code: UserRole.DELIVERY_MAN,
+                  label: "Livreur",
+                },
+                {
+                  code: UserRole.COMMERCIAL,
+                  label: "Commercial",
+                },
+                {
+                  code: UserRole.SUPER_USER,
+                  label: "Super administrateur",
+                },
+              ];
 
             return labels.find((value : any)=>value.code == role)?.label
         },
@@ -24,8 +40,8 @@ export const useUsersStore = defineStore('usersStore',{
 
         async me(){
             try{
-                const response = await Api.get(`users/me`)
-                console.log('me response', response)
+                const response = await Api.get(`auth/me`)
+                useUsersStore().saveCurrentUser(response.data)
                 return response.data
             }
             catch(error){
@@ -35,6 +51,7 @@ export const useUsersStore = defineStore('usersStore',{
 
 
         saveCurrentUser(user : IUser){
+            this.current_user = user
             localStorage.setItem('current_user', JSON.stringify(user))
         },
 
@@ -57,6 +74,19 @@ export const useUsersStore = defineStore('usersStore',{
                 throw(error)
             }
         },
+
+
+        async fetchByOrganization(id : PrimaryKey, query : any){
+            try{
+                const response = await Api.get(`users/${id}/search`,{params: query})
+                return response.data
+            }
+            catch(error){
+                throw(error)
+            }
+        },
+
+
 
         async findByEmail(email : string){
             try{
@@ -100,11 +130,12 @@ export const useUsersStore = defineStore('usersStore',{
 
         },
 
-        async definePassword(data : {token : string, password : string}){
+        async definePassword(data : {username : string,password : string,token : string }){
             console.log("ssss",data);
             
             try{
-                const response = await Api.post(`auth/password/define`, data)
+                const response = await Api.put(`auth/resetPassword`, data)
+                return response
             }
             catch(error){
                 throw(error)
@@ -112,14 +143,10 @@ export const useUsersStore = defineStore('usersStore',{
 
         },
 
-
-        
-
-
         async create(data : any){
             try{
                 
-                const response = await Api.post('users', {...data,organisationId :this.getCurrentUser?.organi })
+                const response = await Api.post('users', {...data})
                 return response
             }
             catch(error){
@@ -127,9 +154,9 @@ export const useUsersStore = defineStore('usersStore',{
             }
         },
 
-        async update(id : number,data : any){
+        async update(id : PrimaryKey,data : any){
             try{
-                const response = await Api.patch(`users/${id}`, data)
+                const response = await Api.put(`users/${id}`, data)
                 return response
             }
             catch(error){
@@ -138,7 +165,7 @@ export const useUsersStore = defineStore('usersStore',{
         },
 
 
-        async delete(id : number){
+        async delete(id : PrimaryKey){
             try{
                 const response = await Api.delete(`users/${id}`)
                 return response
@@ -146,20 +173,17 @@ export const useUsersStore = defineStore('usersStore',{
             catch(error){
                 throw error
             }
-        }
+        },
+
+
+       
     },
 
     getters: {
-
-
-        
-
-
-
         getCurrentUser() : IUser | null{
+            if(this.current_user)
+                return this.current_user
             const user = localStorage.getItem('current_user')
-            console.log("user", user);
-            
             if(user)
                 return JSON.parse(user)
             return null

@@ -36,17 +36,18 @@ router.beforeEach(async (to, from, next) => {
   
 
   if (to.meta.auth) {
+
     if (!data) next("/auth/login");
-    next();
-    // else {
-    //   console.log('data', data.id)
-    //   try {
-    //     await useUsersStore().me();
-    //     next();
-    //   } catch (error: any) {
-    //     next("/auth/login");
-    //   }
-    // }
+    else {
+      // console.log('data', data.id)
+      // try {
+      //   await useUsersStore().me();
+      //   next();
+      // } catch (error: any) {
+      //   next("/auth/login");
+      // }
+      next()
+    }
   }
   else
     next();
