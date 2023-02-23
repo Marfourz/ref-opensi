@@ -31,9 +31,24 @@ export class ProductCategoryService {
       paginateConstraints.take = Number(perPage);
     }
 
+    const categoryNameConstraint: any = {};
+    if (q != undefined) {
+      categoryNameConstraint.name = {
+        contains: q,
+        mode: 'insensitive',
+      };
+    }
+
     try {
       const categories = await this.prisma.productCategory.findMany({
         ...paginateConstraints,
+        where: {
+          OR: [
+            {
+              ...categoryNameConstraint,
+            },
+          ],
+        },
       });
       const count = await this.prisma.productCategory.count();
       return { data: categories, count };
