@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProductCategory, Product } from '@prisma/client';
+import { ProductCategory, Product, TransactionStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { categoryDto, updateCategoryDto } from './product-category.dto';
 import { PagiationPayload } from 'types';
@@ -43,7 +43,7 @@ export class ProductCategoryService {
       const categories = await this.prisma.productCategory.findMany({
         ...paginateConstraints,
         where: {
-          OR: [
+          AND: [
             {
               ...categoryNameConstraint,
             },
@@ -100,6 +100,7 @@ export class ProductCategoryService {
 
   async getProductsOfCategory(
     id: string,
+    orgId: string,
     filterParams,
   ): Promise<PagiationPayload<Product[]>> {
     const { page, perPage, q } = filterParams;
@@ -116,6 +117,7 @@ export class ProductCategoryService {
         where: { categoryId: id },
         include: {
           image: true,
+         // stocks: {where: },
         },
       });
 

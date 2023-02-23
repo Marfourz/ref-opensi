@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ProductCategoryService } from './product-category.service';
 import { ProductCategory, Product } from '@prisma/client';
@@ -78,9 +79,11 @@ export class ProductCategoryController {
   getProductsOfCategory(
     @Param() params,
     @Query() filterParams: any,
+    @Req() req,
   ): Promise<PagiationPayload<Product[]>> {
     return this.productCategoryService.getProductsOfCategory(
       params.id,
+      req.user.organisationId,
       filterParams,
     );
   }
