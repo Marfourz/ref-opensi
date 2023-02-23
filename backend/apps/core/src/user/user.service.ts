@@ -124,18 +124,7 @@ export class UserService {
     orgId,
   ): Promise<PagiationPayload<User[]>> {
     try {
-      let Order = 'desc';
-      const {
-        page,
-        perPage,
-        order,
-        userId,
-        name,
-        phone,
-        engineName,
-        status,
-        role,
-      } = filterParams;
+      const { page, perPage, q } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -143,81 +132,59 @@ export class UserService {
         paginateConstraints.take = Number(perPage);
       }
 
-      const statusConstraint: any = {};
-      if (status != undefined) {
-        statusConstraint.status = status;
-      }
-
-      const roleConstraint: any = {};
-      if (role != undefined) {
-        roleConstraint.role = role;
-      }
-
       const userIdConstraint: any = {};
-      if (userId != undefined) {
+      if (q != undefined) {
         userIdConstraint.id = {
-          contains: userId,
+          contains: q,
           mode: 'insensitive',
         };
       }
 
       const userNameConstraint: any = {};
-      if (name != undefined) {
+      if (q != undefined) {
         userNameConstraint.name = {
-          contains: name,
+          contains: q,
+          mode: 'insensitive',
+        };
+      }
+
+      const userEmailConstraint: any = {};
+      if (q != undefined) {
+        userNameConstraint.email = {
+          contains: q,
           mode: 'insensitive',
         };
       }
 
       const userPhoneConstraint: any = {};
-      if (phone != undefined) {
+      if (q != undefined) {
         userNameConstraint.phone = {
-          contains: phone,
+          contains: q,
           mode: 'insensitive',
         };
       }
 
-      const userEngineNameConstraint: any = {};
-      if (engineName != undefined) {
-        userEngineNameConstraint.name = {
-          contains: engineName,
-          mode: 'insensitive',
-        };
-      }
-
-      if (order != undefined) {
-        Order = order;
-      }
       const users = await this.prisma.user.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          engine: {
-            ...userEngineNameConstraint,
+          AND: {
+            OR: [
+              {
+                ...userIdConstraint,
+              },
+              {
+                ...userEmailConstraint,
+              },
+              {
+                ...userNameConstraint,
+              },
+              {
+                ...userPhoneConstraint,
+              },
+            ],
           },
-          AND: [
-            {
-              ...userIdConstraint,
-            },
-            {
-              ...userNameConstraint,
-            },
-            {
-              ...userPhoneConstraint,
-            },
-            {
-              ...statusConstraint,
-            },
-            {
-              ...roleConstraint,
-            },
-          ],
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
       const count = await this.prisma.user.count({

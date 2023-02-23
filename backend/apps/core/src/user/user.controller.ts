@@ -92,13 +92,7 @@ export class UserController {
   })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
-  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
-  @ApiQuery({ name: 'userId', type: String, required: false })
-  @ApiQuery({ name: 'name', type: String, required: false })
-  @ApiQuery({ name: 'phone', type: String, required: false })
-  @ApiQuery({ name: 'engineName', type: String, required: false })
-  @ApiQuery({ name: 'status', enum: UserStatusEnum, required: false })
-  @ApiQuery({ name: 'role', enum: UserRoleEnum, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   searchForUsersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
