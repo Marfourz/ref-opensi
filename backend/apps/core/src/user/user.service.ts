@@ -17,6 +17,7 @@ export class UserService {
   ) {}
 
   async createUser(user): Promise<User> {
+    console.log("user test",user)
     let token;
     const Dpassword = generateRandomString(15);
     try {

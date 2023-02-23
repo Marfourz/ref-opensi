@@ -79,18 +79,23 @@ export default {
 
   setup(props, { emit }) {
     const Tabs = toRef(props, "tabs");
-    const openTab = ref(Tabs.value[0].name);
+    
+    const openTab = ref();
     
     const activeTab = toRef(props, "activeTab");
     const inactiveTab = toRef(props, "inactiveTab");
     const selectedTab = toRef(props, "selectedTab")
 
-    
+    watch((Tabs), (newValue)=>{
+      console.log("dsdssss")
+      openTab.value = Tabs.value[0].name
+    })
 
     watch(selectedTab, (newValue) => {
       console.log("WATCH", newValue);
       openTab.value = newValue;
     });
+
 
     const dynamicClass = (tabname) => {
       if (tabname === openTab.value) return activeTab.value;

@@ -54,12 +54,21 @@ export interface IUser extends Commun {
     phone : string,
     email : string,
     sex : Sex,
-    role : UserRole
+    role : UserRole,
+    organisationId : string
 
 }
 
 
 export interface ITransaction extends Commun{
 
+}
+
+
+
+
+export enum FileType {
+    PUBLICATION = 'PUBLICATION',
+    DOCUMENT = 'DOCUMENT'
 }
 

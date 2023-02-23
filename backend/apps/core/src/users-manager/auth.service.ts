@@ -38,8 +38,8 @@ export class AuthService {
         const user = await this.prismaService.user.findUnique({
           where: { email: res.data.email },
         });
-        console.log(user);
-        return res.data;
+        console.log("user test",{...res.data,role : user.role});
+        return user;
       })
       .catch((err) => {
         throw err;

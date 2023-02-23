@@ -27,9 +27,9 @@ Api.interceptors.response.use(
 );
 
 if (localStorage.getItem('access_token')){
-  // Api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
-  //   'access_token'
-  // )}`;
+  Api.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
+    'access_token'
+  )}`;
 
 
   Api.defaults.headers.common['x-auth-token'] = `${localStorage.getItem(
@@ -37,10 +37,6 @@ if (localStorage.getItem('access_token')){
   )}`;
 }
  
-
-  
-
-
 Api.setToken = (token: string) => {
   localStorage.setItem('access_token', token);
   Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;

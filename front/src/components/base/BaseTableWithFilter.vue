@@ -1,6 +1,7 @@
 <template>
   <div>
     <div
+      v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
     >
       <div class="space-x-4 flex">
@@ -17,9 +18,9 @@
           />
         </div>
 
-        <div> 
-          <slot name="filter">
-            <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+        <div class=""> 
+          <slot name="filter" >
+            <BaseButton icon="upload" size="small" class="h-full">Télécharger</BaseButton>
           </slot>
           
         </div>
@@ -49,6 +50,7 @@ import type { PropType } from "vue";
 import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
 import { IAction } from "./BaseActions.vue";
+import { PrimaryKey } from "../../types/interfaces";
 
 export interface QueryParams {
   q: string;
@@ -56,10 +58,12 @@ export interface QueryParams {
 }
 
 export interface ResponseData<T> {
-  data: Array<T>;
+  
+    count : number,
+    data:Array<T>
 }
 
-export type FetchData<T> = (params: QueryParams) => Promise<ResponseData<T>>;
+export type FetchData<T> = (params: QueryParams,id? : PrimaryKey) => Promise<ResponseData<T>>  ;
 
 export default defineComponent({
   components: { BasePagination },
@@ -83,12 +87,22 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    requestId: {
+      type: String as PropType<PrimaryKey>
+    },
     actions : {
             type : Array as PropType<Array<IAction>>
-        }
+        },
+
+    hideFilter: {
+      type: Boolean,
+      default: false,
+    }
   },
-  setup(props) {
+  setup(props,context) {
     const items = ref();
+
+    const count = ref(0)
 
     const paginationData = reactive({
       total: 0,
@@ -107,20 +121,42 @@ export default defineComponent({
 
     async function loadData() {
       params.peerPage = paginationData.peerPage;
+      
+      
       loading.value = true;
       try {
-        items.value = await props.fetchData(params);
+        console.log("responseId",params,props.requestId);
+        let response
+        if(!props.requestId)
+          response = await props.fetchData(params)
+        else 
+        {
+          console.log("responseId",params,props.requestId);
+          
+          response = await props.fetchData(params,props.requestId);
+        }
+          
+
+        items.value = response.data
+        count.value = response.count
+        context.emit('total', items.value.length)
+        
       } catch (error: any) {
         console.log({ ...error });
       }
     }
+
+
+    
+
+    
 
     onMounted(async () => {
       await loadData();
     });
 
     function onSearch() {
-      console.log("make search");
+      loadData()
     }
     return {
       paginationData,

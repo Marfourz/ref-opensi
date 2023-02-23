@@ -1,21 +1,19 @@
 <template>
-    <div>
-        Sous distributeur
-    </div>
+  <div>Sous distributeur</div>
+  <!-- <div v-for="index in etat" :key="index"> -->
+  <Organization />
+  <!-- </div> -->
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+// import { ref } from "vue";
+import Organization from "@/components/Organization.vue";
 
-export default defineComponent({
-    setup () {
-        
-
-        return {}
-    }
-})
+// const etat = ref([
+//   { names: "Master distributeur", icon:  },
+//   { names: "Distributeurs agréés", icon: },
+//   { names: "Dépots", icon:  },
+// ]);
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

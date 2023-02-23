@@ -4,15 +4,21 @@
   >
     <nav class="w-full flex justify-between">
       <IconLogo />
-      <div class="flex space-x-2 items-center">
-        <div class="hidden md:flex items-center space-x-1">
+      <div class="flex space-x-5 items-center">
+
+        <BaseIcon name="notification"></BaseIcon>
+        <div class="bg-borderColor h-1/2 w-[1px]"></div>
+        <div class="hidden md:flex items-center space-x-2">
+          
           <IconProfile />
           <span class="bg-gray-400 separator"></span>
           <div class="flex flex-col">
-            <span class="text-sm font-bold text-black">Samuel Tossou</span>
-            <span class="text-sm text-gray-400">Master distributeur</span>
+            <span class="text-sm font-bold text-black">{{ username }}</span>
+            <span class="text-sm text-gray-400"> {{ roleLabel }}</span>
           </div>
         </div>
+
+
         <div class="flex space-x-9 items-center md:hidden">
           <BaseIcon name="search"></BaseIcon>
           <div class="space-x-8 flex items-center">
@@ -36,10 +42,25 @@
 import IconLogo from "./icons/IconLogo.vue";
 import IconProfile from "./icons/IconProfile.vue";
 import SideBar from "@/components/SideBar/index.vue"
-import { ref } from "vue"
+import { computed, onMounted, ref } from "vue"
+import { useUsersStore } from "../stores/users";
+import { UserRole } from "../types/enumerations";
 
 
 const showMenu = ref(false)
+
+const userStore = useUsersStore()
+
+const username = computed(()=>{
+    return userStore.getCurrentUser?.name
+})
+
+
+const roleLabel = computed(()=>{
+  return userStore.getRoleLabel(userStore.getCurrentUser?.role as UserRole)
+})
+
+
 </script>
 
 <style scoped>
@@ -47,3 +68,6 @@ const showMenu = ref(false)
   width: 2px;
 }
 </style>
+
+
+
