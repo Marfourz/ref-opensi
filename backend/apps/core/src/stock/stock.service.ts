@@ -128,7 +128,7 @@ export class StockService {
         },
       });*/
 
-      const stocks = await this.prisma.productCategory.findMany({
+      const stocks = await this.prisma.productCategory.findUnique({
         where: {
           id: categoryId,
         },
@@ -143,7 +143,7 @@ export class StockService {
         where: { organisationId: orgId },
       });
 
-      return { data: stocks, count };
+      return { data: stocks.products, count };
     } catch (error) {
       throw error;
       return;
