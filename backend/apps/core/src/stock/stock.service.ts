@@ -10,8 +10,24 @@ export class StockService {
 
   async createStock(stock: stockDto): Promise<Stock> {
     try {
+      const haveStock = await this.prisma.stock.findFirst({
+        where: {
+          organisationId: stock.organisationId,
+          productId: stock.productId,
+        },
+      });
+
+      if (haveStock) {
+        return await this.updateSingleStock(haveStock.id, {
+          currentQuantity: stock.currentQuantity,
+        });
+      }
+
+      const Nstock: any = stock;
+      Nstock.originalQuantity = stock.currentQuantity;
+
       const newStock = await this.prisma.stock.create({
-        data: stock,
+        data: Nstock,
       });
       return newStock;
     } catch (error) {
