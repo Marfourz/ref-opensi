@@ -66,9 +66,7 @@ export class OrderService {
     orgId: string,
   ): Promise<PagiationPayload<Order[]>> {
     try {
-      let Order = 'desc';
-      const { page, perPage, order, totalAmount, status, orderId } =
-        filterParams;
+      const { page, perPage, q } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -77,25 +75,16 @@ export class OrderService {
       }
 
       const totalAmountConstraint: any = {};
-      if (!isNaN(totalAmount)) {
-        totalAmountConstraint.totalAmount = Number(totalAmount);
-      }
-
-      if (order != undefined) {
-        Order = order;
-      }
-
-      const statusConstraint: any = {};
-      if (status != undefined) {
-        statusConstraint.status = status;
-      }
-
       const orderIdConstraint: any = {};
-      if (orderId != undefined) {
+      if (q != undefined) {
         orderIdConstraint.id = {
-          contains: orderId,
+          contains: q,
           mode: 'insensitive',
         };
+
+        if (!isNaN(q)) {
+          totalAmountConstraint.totalAmount = Number(q);
+        }
       }
 
       const orders = await this.prisma.order.findMany({
@@ -107,18 +96,10 @@ export class OrderService {
               ...totalAmountConstraint,
             },
             {
-              ...statusConstraint,
-            },
-            {
               ...orderIdConstraint,
             },
           ],
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
       const count = await this.prisma.order.count({

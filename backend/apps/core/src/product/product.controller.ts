@@ -57,10 +57,7 @@ export class ProductsController {
   })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
-  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
-  @ApiQuery({ name: 'name', type: String, required: false })
-  @ApiQuery({ name: 'rackPrice', type: Number, required: false })
-  @ApiQuery({ name: 'prodId', type: String, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   searchForProducts(
     @Query() filterParams: any,
   ): Promise<PagiationPayload<Product[]>> {

@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async createUser(user): Promise<User> {
-    console.log("user test",user)
+    console.log('user test', user);
     let token;
     const Dpassword = generateRandomString(15);
     try {
@@ -42,6 +42,7 @@ export class UserService {
                 email: user.email,
                 object: 'Registration to SNB',
                 body: NOTIFICATION_MESSAGES.registrationMail({
+                  name: user.name,
                   email: user.email,
                   token: token,
                 }),
@@ -123,18 +124,7 @@ export class UserService {
     orgId,
   ): Promise<PagiationPayload<User[]>> {
     try {
-      let Order = 'desc';
-      const {
-        page,
-        perPage,
-        order,
-        userId,
-        name,
-        phone,
-        engineName,
-        status,
-        role,
-      } = filterParams;
+      const { page, perPage, q } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -142,61 +132,42 @@ export class UserService {
         paginateConstraints.take = Number(perPage);
       }
 
-      const statusConstraint: any = {};
-      if (status != undefined) {
-        statusConstraint.status = status;
-      }
-
-      const roleConstraint: any = {};
-      if (role != undefined) {
-        roleConstraint.role = role;
-      }
-
       const userIdConstraint: any = {};
-      if (userId != undefined) {
-        userIdConstraint.id = {
-          contains: userId,
-          mode: 'insensitive',
-        };
-      }
-
       const userNameConstraint: any = {};
-      if (name != undefined) {
-        userNameConstraint.name = {
-          contains: name,
-          mode: 'insensitive',
-        };
-      }
-
+      const userEmailConstraint: any = {};
       const userPhoneConstraint: any = {};
-      if (phone != undefined) {
-        userNameConstraint.phone = {
-          contains: phone,
+      if (q != undefined) {
+        userIdConstraint.id = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        userNameConstraint.name = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        userEmailConstraint.email = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        userPhoneConstraint.phone = {
+          contains: q,
           mode: 'insensitive',
         };
       }
 
-      const userEngineNameConstraint: any = {};
-      if (engineName != undefined) {
-        userEngineNameConstraint.name = {
-          contains: engineName,
-          mode: 'insensitive',
-        };
-      }
-
-      if (order != undefined) {
-        Order = order;
-      }
       const users = await this.prisma.user.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          engine: {
-            ...userEngineNameConstraint,
-          },
-          AND: [
+          OR: [
             {
               ...userIdConstraint,
+            },
+            {
+              ...userEmailConstraint,
             },
             {
               ...userNameConstraint,
@@ -204,19 +175,8 @@ export class UserService {
             {
               ...userPhoneConstraint,
             },
-            {
-              ...statusConstraint,
-            },
-            {
-              ...roleConstraint,
-            },
           ],
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
       const count = await this.prisma.user.count({

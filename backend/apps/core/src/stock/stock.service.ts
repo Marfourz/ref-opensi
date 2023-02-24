@@ -65,16 +65,7 @@ export class StockService {
     orgId: string,
   ): Promise<PagiationPayload<Stock[]>> {
     try {
-      let Order = 'desc';
-      const {
-        page,
-        perPage,
-        order,
-        prodName,
-        stockId,
-        prodRackPrice,
-        currentQuantity,
-      } = filterParams;
+      const { page, perPage, q } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -83,57 +74,37 @@ export class StockService {
       }
 
       const productNameConstraint: any = {};
-      if (prodName != undefined) {
-        productNameConstraint.name = {
-          contains: prodName,
-          mode: 'insensitive',
-        };
-      }
-
-      const productRackPriceConstraint: any = {};
-      if (!isNaN(prodRackPrice)) {
-        productRackPriceConstraint.rackPrice = Number(prodRackPrice);
-      }
-
       const currentQuantityConstraint: any = {};
-      if (!isNaN(currentQuantity)) {
-        currentQuantityConstraint.currentQuantity = Number(currentQuantity);
-      }
-
       const stockIdConstraint: any = {};
-      if (stockId != undefined) {
-        stockIdConstraint.id = {
-          contains: stockId,
+      if (q != undefined) {
+        productNameConstraint.name = {
+          contains: q,
           mode: 'insensitive',
         };
-      }
 
-      if (order != undefined) {
-        Order = order;
+        stockIdConstraint.id = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        if (!isNaN(q)) {
+          currentQuantityConstraint.currentQuantity = Number(q);
+        }
       }
 
       const stocks = await this.prisma.stock.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          AND: [
+          product: {
+            ...productNameConstraint,
+          },
+          OR: [
             {
               ...stockIdConstraint,
             },
-            {
-              ...currentQuantityConstraint,
-            },
           ],
-          product: {
-            ...productNameConstraint,
-            ...productRackPriceConstraint,
-          },
         },
-        orderBy: [
-          {
-            createdAt: Order,
-          },
-        ],
       });
 
       const count = await this.prisma.stock.count({

@@ -59,11 +59,7 @@ export class StockController {
   })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
-  @ApiQuery({ name: 'order', enum: OrderTypeEnum, required: false })
-  @ApiQuery({ name: 'prodName', type: String, required: false })
-  @ApiQuery({ name: 'prodRackPrice', type: Number, required: false })
-  @ApiQuery({ name: 'stockId', type: String, required: false })
-  @ApiQuery({ name: 'currentQuantity', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
     @Param() params,

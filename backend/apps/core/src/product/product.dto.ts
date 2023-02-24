@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PackagingTypeEnum } from '@prisma/client';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class productDto {
   @ApiProperty({ type: String })
@@ -12,15 +12,19 @@ export class productDto {
   name: string;
 
   @ApiProperty({ type: Number })
-  @IsString()
+  @IsNumber()
   unitPrice: number;
+
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  bulkPrice: number;
 
   @ApiProperty({ enum: PackagingTypeEnum })
   @IsString()
   packagingType: PackagingTypeEnum;
 
   @ApiProperty({ type: Number })
-  @IsString()
+  @IsNumber()
   volume: number;
 }
 
