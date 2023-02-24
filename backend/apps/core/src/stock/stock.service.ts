@@ -132,7 +132,7 @@ export class StockService {
         where: {
           id: categoryId,
         },
-        include: {
+        select: {
           products: {
             include: { stocks: { where: { organisationId: orgId } } },
           },
