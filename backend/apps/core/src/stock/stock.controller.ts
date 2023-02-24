@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
-import { Stock } from '@prisma/client';
+import { Stock, ProductCategory } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
 import { stockDto, updateStockDto } from './stock.dto';
 import { Roles } from 'guards/roles.decorator';
@@ -70,7 +70,7 @@ export class StockController {
   searchForStocksOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
-  ): Promise<PagiationPayload<Stock[]>> {
+  ): Promise<PagiationPayload<ProductCategory[]>> {
     return this.stockService.searchForStocksOfOrganisation(
       filterParams,
       params.orgId,
