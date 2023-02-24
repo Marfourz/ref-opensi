@@ -66,6 +66,7 @@ export class StockController {
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
   @ApiQuery({ name: 'q', type: String, required: false })
+  @ApiQuery({ name: 'categoryId', type: String, required: false })
   searchForStocksOfOrganisation(
     @Query() filterParams: any,
     @Param() params,

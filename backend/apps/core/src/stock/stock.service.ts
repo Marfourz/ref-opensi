@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Stock } from '@prisma/client';
+import { Stock, ProductCategory } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
@@ -79,9 +79,9 @@ export class StockService {
   async searchForStocksOfOrganisation(
     filterParams,
     orgId: string,
-  ): Promise<PagiationPayload<Stock[]>> {
+  ): Promise<PagiationPayload<ProductCategory[]>> {
     try {
-      const { page, perPage, q } = filterParams;
+      const { page, perPage, q, categoryId } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -108,18 +108,34 @@ export class StockService {
         }
       }
 
-      const stocks = await this.prisma.stock.findMany({
+      /*const stocks = await this.prisma.stock.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          /*product: {
+          product: {
             ...productNameConstraint,
           },
           OR: [
             {
               ...stockIdConstraint,
             },
-          ],*/
+          ],
+        },
+        include: {
+          product: {
+            include: category: true,
+          },
+        },
+      });*/
+
+      const stocks = await this.prisma.productCategory.findMany({
+        where: {
+          id: categoryId,
+        },
+        include: {
+          products: {
+            include: { stocks: { where: { organisationId: orgId } } },
+          },
         },
       });
 
