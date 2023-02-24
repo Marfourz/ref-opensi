@@ -79,7 +79,7 @@ export class StockService {
   async searchForStocksOfOrganisation(
     filterParams,
     orgId: string,
-  ): Promise<PagiationPayload<ProductCategory[]>> {
+  ): Promise<PagiationPayload<any[]>> {
     try {
       const { page, perPage, q, categoryId } = filterParams;
 

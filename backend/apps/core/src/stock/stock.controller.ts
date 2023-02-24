@@ -70,7 +70,7 @@ export class StockController {
   searchForStocksOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
-  ): Promise<PagiationPayload<ProductCategory[]>> {
+  ): Promise<PagiationPayload<any[]>> {
     return this.stockService.searchForStocksOfOrganisation(
       filterParams,
       params.orgId,
