@@ -11,6 +11,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [
@@ -20,7 +22,15 @@ import { JwtService } from '@nestjs/jwt';
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, PrismaService, JwtService],
+  providers: [
+    ProductsService,
+    PrismaService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class ProductsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

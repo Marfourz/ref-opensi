@@ -10,11 +10,21 @@ import { MetricController } from './metric.controller';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [HttpModule],
   controllers: [MetricController],
-  providers: [PrismaService, MetricService, JwtService],
+  providers: [
+    PrismaService,
+    MetricService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class MetricModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

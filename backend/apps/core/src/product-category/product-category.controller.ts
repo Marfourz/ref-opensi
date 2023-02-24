@@ -13,6 +13,9 @@ import { ProductCategoryService } from './product-category.service';
 import { ProductCategory, Product } from '@prisma/client';
 import { categoryDto, updateCategoryDto } from './product-category.dto';
 import { PagiationPayload } from 'types';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
+
 import {
   ApiTags,
   ApiBody,
@@ -31,6 +34,7 @@ export class ProductCategoryController {
   ) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiBody({ type: categoryDto })
   @ApiHeader({
     name: 'x-auth-token',
@@ -89,6 +93,7 @@ export class ProductCategoryController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -106,6 +111,7 @@ export class ProductCategoryController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

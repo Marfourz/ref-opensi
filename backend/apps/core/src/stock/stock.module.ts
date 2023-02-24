@@ -10,10 +10,21 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { StockController } from './stock.controller';
 import { StockService } from './stock.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
+
 @Module({
   imports: [HttpModule],
   controllers: [StockController],
-  providers: [StockService, PrismaService, JwtService],
+  providers: [
+    StockService,
+    PrismaService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class StockModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

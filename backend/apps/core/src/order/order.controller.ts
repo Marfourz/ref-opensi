@@ -13,6 +13,8 @@ import { Order, OrderStatusEnum } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
 import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 import {
   ApiTags,
   ApiBody,
@@ -29,6 +31,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
+  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiBody({ type: orderDto })
   @ApiHeader({
     name: 'x-auth-token',
@@ -71,6 +74,7 @@ export class OrderController {
   }
 
   @Put(':id')
+  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',
@@ -84,6 +88,7 @@ export class OrderController {
   }
 
   @Delete(':id')
+  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',

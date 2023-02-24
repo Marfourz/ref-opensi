@@ -12,6 +12,9 @@ import { StockService } from './stock.service';
 import { Stock } from '@prisma/client';
 import { OrderTypeEnum } from 'guards/order.type.enum';
 import { stockDto, updateStockDto } from './stock.dto';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
+
 import { PagiationPayload } from 'types';
 import {
   ApiTags,
@@ -29,6 +32,7 @@ export class StockController {
   constructor(private readonly stockService: StockService) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -42,6 +46,7 @@ export class StockController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -52,6 +57,7 @@ export class StockController {
   }
 
   @Get(':orgId/search')
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiParam({ name: 'orgId' })
   @ApiHeader({
     name: 'x-auth-token',
@@ -60,7 +66,7 @@ export class StockController {
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
   @ApiQuery({ name: 'q', type: String, required: false })
-  searchForOrdersOfOrganisation(
+  searchForStocksOfOrganisation(
     @Query() filterParams: any,
     @Param() params,
   ): Promise<PagiationPayload<Stock[]>> {
@@ -70,7 +76,19 @@ export class StockController {
     );
   }
 
+  @Get(':orgId/generalInfos')
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
+  @ApiParam({ name: 'orgId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getStockGeneralInfos(@Param() params): any {
+    return this.stockService.getStockGeneralInfos(params.orgId);
+  }
+
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -88,6 +106,7 @@ export class StockController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

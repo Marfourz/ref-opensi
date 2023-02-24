@@ -96,14 +96,14 @@ export class StockService {
         ...paginateConstraints,
         where: {
           organisationId: orgId,
-          product: {
+          /*product: {
             ...productNameConstraint,
           },
           OR: [
             {
               ...stockIdConstraint,
             },
-          ],
+          ],*/
         },
       });
 
@@ -116,5 +116,42 @@ export class StockService {
       throw error;
       return;
     }
+  }
+
+  async getStockGeneralInfos(orgId: string): Promise<any> {
+    const totalProducts = await this.prisma.stock.aggregate({
+      where: { organisationId: orgId },
+      _sum: { currentQuantity: true },
+    });
+
+    const stocks = await this.prisma.stock.findMany({
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    let totalCost = 0;
+    stocks.map((stock) => {
+      totalCost += stock.currentQuantity * stock.product.unitPrice;
+      console.log('stock', stock);
+    });
+
+    const lastStock = await this.prisma.stock.findMany({
+      take: 1,
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    return { totalProducts, totalCost, lastStock };
   }
 }

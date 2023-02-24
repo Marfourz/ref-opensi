@@ -18,6 +18,8 @@ import {
   ApiOkResponse,
   ApiHeader,
 } from '@nestjs/swagger';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 
 @ApiTags('wallets')
 @Controller('wallets')
@@ -25,6 +27,7 @@ export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -38,6 +41,7 @@ export class WalletController {
   }
 
   @Get()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -46,17 +50,19 @@ export class WalletController {
     return this.walletService.getAllWallets();
   }
 
-  @Get(':id')
+  @Get(':orgId')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  @ApiParam({ name: 'id' })
+  @ApiParam({ name: 'orgId' })
   getSingleWallet(@Param() params): Promise<Wallet> {
-    return this.walletService.getSingleWallet(params.id);
+    return this.walletService.getSingleWallet(params.orgId);
   }
 
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -74,6 +80,7 @@ export class WalletController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

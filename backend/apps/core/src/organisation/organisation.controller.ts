@@ -12,6 +12,8 @@ import { OrganisationService } from './organisation.service';
 import { Organisation, User, OrganisationStatusEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PagiationPayload } from 'types';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 import {
   ApiTags,
   ApiBody,
@@ -28,6 +30,7 @@ export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}
 
   @Post()
+  @Roles(Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -96,6 +99,7 @@ export class OrganisationController {
   }
 
   @Put(':id')
+  @Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -109,6 +113,7 @@ export class OrganisationController {
   }
 
   @Delete(':id')
+  @Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

@@ -11,6 +11,8 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { ProductCategoryController } from './product-category.controller';
 import { ProductCategoryService } from './product-category.service';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [
@@ -20,7 +22,15 @@ import { ProductCategoryService } from './product-category.service';
     }),
   ],
   controllers: [ProductCategoryController],
-  providers: [ProductCategoryService, PrismaService, JwtService],
+  providers: [
+    ProductCategoryService,
+    PrismaService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class ProductCategoryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
