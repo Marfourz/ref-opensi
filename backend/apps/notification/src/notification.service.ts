@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { emailDto, smsDto } from './notification.dto';
 import { HttpService } from '@nestjs/axios';
-import { map, catchError } from 'rxjs';
 
 @Injectable()
 export class NotificationService {
@@ -21,7 +20,11 @@ export class NotificationService {
         return res.data;
       })
       .catch((err) => {
-        throw err;
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
       });
   }
 
@@ -38,12 +41,16 @@ export class NotificationService {
         sender: sender,
         body,
       })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      )
-      .subscribe();
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
   }
 }

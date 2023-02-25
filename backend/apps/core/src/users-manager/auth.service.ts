@@ -8,24 +8,30 @@ import {
   UserChangePasswordDto,
 } from './auth.dto';
 import { HttpService } from '@nestjs/axios';
-import { map, catchError } from 'rxjs';
 import { generateRandomString } from 'helpers/generateRandomString';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly httpService: HttpService,
-    private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   allUsers() {
     const users = this.httpService
       .get('/users')
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return users;
   }
@@ -38,11 +44,15 @@ export class AuthService {
         const user = await this.prismaService.user.findUnique({
           where: { email: res.data.email },
         });
-        console.log("user test",{...res.data,role : user.role});
+        console.log('user test', { ...res.data, role: user.role });
         return user;
       })
       .catch((err) => {
-        throw err;
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
       });
 
     return me;
@@ -54,12 +64,17 @@ export class AuthService {
         username: user.username,
         password: user.password,
       })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return logededUser;
   }
@@ -75,7 +90,11 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        throw err;
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
       });
 
     return registeredUser;
@@ -84,12 +103,17 @@ export class AuthService {
   getSingleUser(id: string) {
     const singleUser = this.httpService
       .get(`/users/${id}`)
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return singleUser;
   }
@@ -102,7 +126,11 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        throw err;
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
       });
 
     return data;
@@ -111,12 +139,17 @@ export class AuthService {
   resetPassword(user: UserResetPasswordDto) {
     const data = this.httpService
       .post(`/passwords/reset/${user.token}`, user)
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return data;
   }
@@ -124,12 +157,17 @@ export class AuthService {
   updateUser(update: UserUpdateDto, id: string) {
     const data = this.httpService
       .put(`/users/${id}`, update)
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return data;
   }
@@ -137,12 +175,17 @@ export class AuthService {
   changePassword(update: UserChangePasswordDto, userId: any) {
     const data = this.httpService
       .put(`/users/${userId}/password`, update)
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
 
     return data;
   }
@@ -155,7 +198,11 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        throw err;
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
       });
 
     return data;
