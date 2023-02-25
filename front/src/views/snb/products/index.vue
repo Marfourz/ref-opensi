@@ -3,7 +3,9 @@
     <div class="flex justify-between items-center">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
-        <BaseButton icon="plus" size="small" @click="showModal = true">Nouveau produit</BaseButton>
+        <BaseButton icon="plus" size="small" @click="showModal = true"
+          >Nouveau produit</BaseButton
+        >
       </div>
       <div
         class="text-link underline cursor-pointer font-semibold"
@@ -22,21 +24,17 @@
 
     <div class="pt-8">
       <BaseTabs :tabs="tabs" v-show="total == 0" @change="categoryId = $event">
-        <template #[tab.name] v-for="tab in tabs" >
-            <BaseTableWithFilter
-              
-              :key="tab.name"
-              :fetchData="productCategoryStore.fetchProducts"
-              :titles="titles"
-              :actions="actions"
-              
-              :requestId="categoryId"
-              @total="total = $event"
-
-              class="mt-6"
-            ></BaseTableWithFilter>
-          </template>
-       
+        <template #[tab.name] v-for="tab in tabs">
+          <BaseTableWithFilter
+            :key="tab.name"
+            :fetchData="productCategoryStore.fetchProducts"
+            :titles="titles"
+            :actions="actions"
+            :requestId="categoryId"
+            @total="total = $event"
+            class="mt-6"
+          ></BaseTableWithFilter>
+        </template>
       </BaseTabs>
     </div>
 
@@ -52,7 +50,7 @@
             @click="showModal = false"
           ></BaseIcon>
         </div>
-         <div class="flex justify-center pt-6">
+        <div class="flex justify-center pt-6">
           <Form class="w-3/4 space-y-6" @submit="onSubmit">
             <BaseInput
               name="nom du produit"
@@ -89,15 +87,14 @@
               rules="required"
               v-model="product.rackPrice"
             ></BaseInput>
-            
+
             <UploadFileVue></UploadFileVue>
-         
+
             <BaseButton class="w-[200px]" :loading="loading">{{
               selectedProduct ? "Mettre à jour" : "Ajouter"
             }}</BaseButton>
           </Form>
-        </div> 
-     
+        </div>
       </div>
     </BaseBottomModal>
   </div>
@@ -209,40 +206,30 @@ export default defineComponent({
       return [];
     });
 
-    const categoryId = ref("")
-
+    const categoryId = ref("");
 
     //Product creation
 
-    const loading = ref(false)
-    
-    async function onSubmit(){
-        try{
-          const response = await productStore.create(product)
-        }
-        catch(error : any){
+    const loading = ref(false);
 
-        }
-        
+    async function onSubmit() {
+      try {
+        const response = await productStore.create(product);
+      } catch (error: any) {}
     }
-
-
-
 
     onMounted(async () => {
       try {
         const response = await productCategoryStore.fetchAll({});
 
-        categoryId.value = response[0].id
-       
+        categoryId.value = response[0].id;
+
         categories.value = response.map((value: any) => {
           return {
             value: value.id,
             title: value.name,
           };
         });
-
-       
       } catch (error: any) {}
     });
     return {
@@ -259,7 +246,7 @@ export default defineComponent({
       categories,
       categoryId,
       onSubmit,
-      loading
+      loading,
     };
   },
 });
