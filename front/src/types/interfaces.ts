@@ -2,73 +2,67 @@ import type { OrderStatus, Sex, UserRole } from "./enumerations";
 
 export type PrimaryKey = string | null | undefined;
 
-
-
 export interface Commun {
-    id?: PrimaryKey;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
-
-
-export interface IProductCategory extends Commun{
-    name : string,
-    description : string
+  id?: PrimaryKey;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface IProduct extends Commun{
-    name : string,
-    category? : IProductCategory,
-    unitPrice : number,
-    rackPrice : number,
-    packPrice : number,
-    volume : number,
-    image? : Array<string>
-} 
-
-export interface IOrganisation extends Commun{
-
+export interface IProductCategory extends Commun {
+  name: string;
+  description: string;
 }
 
-export interface ItemsOrder extends Commun{
-    product : IProduct,
-    quantity : number,
-    price : number,
-    order? : IOrder
+export interface IProduct extends Commun {
+  name: string;
+  category?: IProductCategory;
+  unitPrice: number;
+  rackPrice: number;
+  packPrice: number;
+  volume: number;
+  image?: Array<string>;
 }
 
+export interface IOrganisation extends Commun {}
 
-export interface IOrder extends Commun{
-    organisation? : IOrganisation,
-    items : Array<ItemsOrder>,
-    totalAmount : number,
-    transaction : ITransaction,
-    status : OrderStatus,
-    deliveryDate : Date
+export interface ItemsOrder extends Commun {
+  product: IProduct;
+  quantity: number;
+  price: number;
+  order?: IOrder;
+}
 
-
+export interface IOrder extends Commun {
+  organisation?: IOrganisation;
+  items: Array<ItemsOrder>;
+  totalAmount: number;
+  transaction: ITransaction;
+  status: OrderStatus;
+  deliveryDate: Date;
 }
 
 export interface IUser extends Commun {
-    name : string,
-    phone : string,
-    email : string,
-    sex : Sex,
-    role : UserRole,
-    organisationId : string
-
+  name: string;
+  phone: string;
+  email: string;
+  sex: Sex;
+  role: UserRole;
+  organisationId: string;
 }
 
-
-export interface ITransaction extends Commun{
-
+//master distributeur
+export interface IMaster extends Commun {
+  name: string;
+  phone: string;
+  email: string;
+  address: String;
+  ifu: String;
+  company: string;
 }
 
-
-
+export interface ITransaction extends Commun {}
 
 export enum FileType {
-    PUBLICATION = 'PUBLICATION',
-    DOCUMENT = 'DOCUMENT'
+  PUBLICATION = "PUBLICATION",
+  DOCUMENT = "DOCUMENT",
 }
-
