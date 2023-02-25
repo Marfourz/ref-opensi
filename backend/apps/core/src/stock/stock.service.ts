@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Stock, ProductCategory } from '@prisma/client';
+import { Stock, PackagingTypeEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
@@ -151,8 +151,23 @@ export class StockService {
   }
 
   async getStockGeneralInfos(orgId: string): Promise<any> {
-    const totalProducts = await this.prisma.stock.aggregate({
-      where: { organisationId: orgId },
+    const totalPackProducts = await this.prisma.stock.aggregate({
+      where: {
+        organisationId: orgId,
+        product: {
+          packagingType: PackagingTypeEnum.pack,
+        },
+      },
+      _sum: { currentQuantity: true },
+    });
+
+    const totalRackProducts = await this.prisma.stock.aggregate({
+      where: {
+        organisationId: orgId,
+        product: {
+          packagingType: PackagingTypeEnum.rack,
+        },
+      },
       _sum: { currentQuantity: true },
     });
 
@@ -184,6 +199,6 @@ export class StockService {
       },
     });
 
-    return { totalProducts, totalCost, lastStock };
+    return { totalPackProducts, totalRackProducts, totalCost, lastStock };
   }
 }
