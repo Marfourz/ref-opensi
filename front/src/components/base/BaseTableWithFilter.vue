@@ -18,34 +18,45 @@
           />
         </div>
 
-        <div class=""> 
-          <slot name="filter" >
-            <BaseButton icon="upload" size="small" class="h-full">Télécharger</BaseButton>
+        <div class="">
+          <slot name="filter">
+            <BaseButton icon="upload" size="small" class="h-full"
+              >Télécharger</BaseButton
+            >
           </slot>
-          
         </div>
-
-       
       </div>
       <BasePagination
         :peerPage="paginationData.peerPage"
         :totalElements="paginationData.total"
-        @change="params.page = $event"
+        @change="pageChange"
       />
     </div>
 
-    <BaseTable :titles="titles" :data="items" :loading="loading" :actions="actions" class="mt-6">
-      
+    
+    <BaseTable
+      :titles="titles"
+      :data="items"
+      :loading="loading"
+      :actions="actions"
+      class="mt-6"
+    >
       <template v-slot:[title.name] v-for="title in titles">
-          
-        <slot :key="title.name" :name="title.name" > </slot>
+        <slot :key="title.name" :name="title.name"> </slot>
       </template>
     </BaseTable>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUpdated,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 import type { PropType } from "vue";
 import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
@@ -58,12 +69,14 @@ export interface QueryParams {
 }
 
 export interface ResponseData<T> {
-  
-    count : number,
-    data:Array<T>
+  count: number;
+  data: Array<T>;
 }
 
-export type FetchData<T> = (params: QueryParams,id? : PrimaryKey) => Promise<ResponseData<T>>  ;
+export type FetchData<T> = (
+  params: QueryParams,
+  id?: PrimaryKey
+) => Promise<ResponseData<T>>;
 
 export default defineComponent({
   components: { BasePagination },
@@ -88,21 +101,27 @@ export default defineComponent({
       default: false,
     },
     requestId: {
-      type: String as PropType<PrimaryKey>
+      type: String as PropType<PrimaryKey>,
     },
-    actions : {
-            type : Array as PropType<Array<IAction>>
-        },
+    actions: {
+      type: Array as PropType<Array<IAction>>,
+    },
+
+
 
     hideFilter: {
       type: Boolean,
       default: false,
+    },
+
+    params:{
+      type : Object
     }
   },
-  setup(props,context) {
+  setup(props, context) {
     const items = ref();
 
-    const count = ref(0)
+    const count = ref(0);
 
     const paginationData = reactive({
       total: 0,
@@ -113,50 +132,54 @@ export default defineComponent({
 
     const params = reactive({
       q: "",
-      peerPage: 10,
+      perPage: 10,
       page: 1,
     });
 
     const loading = ref(false);
 
     async function loadData() {
-      params.peerPage = paginationData.peerPage;
-      
-      
+      params.perPage = paginationData.peerPage;
+
       loading.value = true;
       try {
-        console.log("responseId",params,props.requestId);
-        let response
-        if(!props.requestId)
-          response = await props.fetchData(params)
-        else 
-        {
-          console.log("responseId",params,props.requestId);
-          
-          response = await props.fetchData(params,props.requestId);
-        }
-          
+        console.log("responseId", params, props.requestId);
+        let response;
+        if (!props.requestId) response = await props.fetchData({...params,...props.params});
+        else {
+          console.log("responseId", params, props.requestId);
 
-        items.value = response.data
-        count.value = response.count
-        context.emit('total', items.value.length)
-        
+          response = await props.fetchData({...params,...props.params}, props.requestId);
+        }
+
+        items.value = response.data;
+        paginationData.total = response.count;
+        context.emit("total", items.value.length);
       } catch (error: any) {
         console.log({ ...error });
       }
     }
 
+    watch(
+      () => props.requestId,
+      (newValue, oldValue) => loadData()
+    );
 
-    
-
-    
+    function pageChange(value: number) {
+      params.page = value;
+      loadData();
+    }
 
     onMounted(async () => {
+      console.log("organisationId", props);
       await loadData();
+     
     });
 
     function onSearch() {
-      loadData()
+      console.log("onSearch", props.requestId);
+
+      loadData();
     }
     return {
       paginationData,
@@ -164,6 +187,7 @@ export default defineComponent({
       onSearch,
       params,
       items,
+      pageChange,
     };
   },
 });

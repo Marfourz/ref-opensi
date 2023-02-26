@@ -1,7 +1,15 @@
 import { defineStore } from "pinia";
-import { IUser } from "@/types/interfaces";
+import { IUser, PrimaryKey } from "@/types/interfaces";
 import Api from "../api";
 import product from "../data/product";
+import { PackagingType } from "../types/enumerations";
+import { useUsersStore } from "./users";
+
+interface ICreateStock {
+  organisationId: PrimaryKey,
+  productId: PrimaryKey,
+  currentQuantity: number
+}
 
 export const useProductStore = defineStore("productStore", {
   actions: {
@@ -47,5 +55,72 @@ export const useProductStore = defineStore("productStore", {
         throw error;
       }
     },
+
+    async updateStock(id: PrimaryKey, quantity : number) {
+      try {
+        const response = await Api.put(`stocks/${id}`,{currentQuantity : quantity});
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async fetchAllProductsStock(query : any){
+      const userStore = useUsersStore()
+      const orgId = userStore.getCurrentUser?.organisationId
+      try {
+        const response = await Api.get(`stocks/${orgId}/search`,{params : query});
+
+        const values = response.data.data.filter((value : any)=>value.stocks && value.stocks.length >0 )
+
+        return {
+          count : response.data.count,
+          data : values
+        }
+        
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+    async createStock(data : ICreateStock){
+     
+      try {
+        const response = await Api.post(`stocks`,data);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async stockGeneralInfo(){
+      const userStore = useUsersStore()
+      const orgId = userStore.getCurrentUser?.organisationId
+      try {
+        const response = await Api.get(`stocks/${orgId}/generalInfos`);
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+
+
+    getPackageTypeLabel(type : PackagingType) : string | undefined{
+      const labels =[
+          {
+            code: PackagingType.PACK,
+            label: "Casier",
+          },
+          {
+            code: PackagingType.RACK,
+            label: "Pack",
+          }
+        ];
+
+      return labels.find((value : any)=>value.code == type)?.label
+  },
   },
 });

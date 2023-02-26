@@ -55,12 +55,13 @@
           >Nouveau livreur</BaseButton
         >
       </div>
-  
+      
+      <div>{{ userStore.getCurrentUser?.organisationId }}aa</div>
     
       <BaseTableWithFilter
         :titles="titles"
-        :fetchData="userStore.fetchByOrganization"
-        :requestId="userStore.getCurrentUser?.organizationId"
+        :fetchData="organizationStore.fetchAllDeliveryMen"
+        :requestId="userStore.getCurrentUser?.organisationId"
         :actions="actions"
         :key="reload"
       >
@@ -92,7 +93,7 @@
           </div>
           <div class="flex justify-center pt-6">
             <Form  @submit="onSubmit" class="w-3/4">
-                <div class=" grid grid-cols-2 gap-4">
+                <div class=" grid grid-cols-2 gap-6">
                     <BaseInput
                 name="nom d'utilisateur"
                 label="Nom d'utilisateur"
@@ -107,6 +108,13 @@
               ></BaseSelect>
 
               <BaseInput
+                name="Date de naissance"
+                label="Date de naissance"
+                rules="required"
+                v-model="user.birthday"
+              ></BaseInput>
+
+              <BaseInput
                 name="téléphone"
                 label="Téléphone"
                 rules="required"
@@ -119,12 +127,13 @@
                 v-model="user.email"
               ></BaseInput>
              
-              <BaseInput
+              <BaseSelect
                 name="adresse"
-                label="Adresse"
+                label="Engin"
                 rules="required"
-                v-model="user.address"
-              ></BaseInput>
+                :items="engines"
+                v-model="user.engineId"
+              ></BaseSelect>
 
               <BaseInput
                 name="adresse"
@@ -133,19 +142,9 @@
                 v-model="user.address"
               ></BaseInput>
 
-              <BaseInput
-                name="adresse"
-                label="Adresse"
-                rules="required"
-                v-model="user.address"
-              ></BaseInput>
+            
 
-              <BaseInput
-                name="adresse"
-                label="Adresse"
-                rules="required"
-                v-model="user.address"
-              ></BaseInput>
+            
                 </div>
               
               <BaseButton class="w-[200px] mt-6" :loading="loading">{{
@@ -159,11 +158,13 @@
   </template>
   
   <script lang="ts">
-  import { computed, defineComponent, reactive, ref } from "vue";
+  import { computed, defineComponent, onMounted, reactive, ref } from "vue";
   import { useUsersStore } from "@/stores/users";
   import { Sex, UserRole } from "@/types/enumerations";
   import { Form } from "vee-validate";
   import { IUser } from "@/types/interfaces";
+import { useEnginesStore } from "../../../stores/engines";
+import { useOrganizationStore } from "../../../stores/organization";
   
   export default defineComponent({
     components: { Form },
@@ -252,6 +253,8 @@
         address: "",
         sex: "",
         role: "",
+        birthday:null,
+        engineId:""
       });
   
       const sexes = computed(() => {
@@ -271,54 +274,29 @@
         ];
       });
   
-      const roles = computed(() => {
-        return [
-          {
-            title: "Administrateur",
-            value: UserRole.ADMIN,
-          },
-          {
-            title: "Livreur",
-            value: UserRole.DELIVERY_MAN,
-          },
-          {
-            title: "Super administrateur",
-            value: UserRole.SUPER_USER,
-          },
-          {
-            title: "Commercial",
-            value: UserRole.COMMERCIAL,
-          },
-        ];
-      });
-  
+        
       const showModal = ref(false);
   
       const titles = [
-      {
-          title: "Identifiant",
-          name: "name",
-        },
+    
         {
           title: "Nom & Prénoms",
           name: "name",
         },
 
-      
         {
           title: "Téléphone",
           name: "phone",
         },
         {
           title: "Engin",
-          name: "engin",
-          transform: getRoleLabel,
+          name: "engin"
         },
 
         {
           title: "Statut",
           name: "statut",
-          transform: getRoleLabel,
+          transform: getStatutLabel,
         },
   
         {
@@ -327,32 +305,33 @@
         },
       ];
   
-      function getRoleLabel(element: any, index: number) {
-        const labels = [
-          {
-            code: UserRole.ADMIN,
-            label: "Administrateur",
-          },
-          {
-            code: UserRole.DELIVERY_MAN,
-            label: "Livreur",
-          },
-          {
-            code: UserRole.COMMERCIAL,
-            label: "Commercial",
-          },
-          {
-            code: UserRole.SUPER_USER,
-            label: "Super administrateur",
-          },
-        ];
-  
-        return labels.find((value: any) => value.code == element.role)?.label;
-      }
+     function getStatutLabel(element : IUser){
+        console.log("eee")
+     }
+
+    
   
       const loading = ref(false);
   
       const reload = ref(false);
+
+      const engines = ref([])
+      
+      const enginesStore = useEnginesStore()
+
+
+      onMounted(async()=>{
+        const response = await enginesStore.fetchAll()
+
+        engines.value = response.map((value:any)=>{
+            return {
+                title : value.name,
+                value : value.id
+            }
+        })
+      })
+
+      const organizationStore = useOrganizationStore()
   
       async function onSubmit() {
         loading.value = true;
@@ -380,7 +359,6 @@
         userStore,
         titles,
         showModal,
-        roles,
         sexes,
         user,
         onSubmit,
@@ -391,6 +369,8 @@
         deleteUser,
         loading,
         reload,
+        engines,
+        organizationStore
       };
     },
   });

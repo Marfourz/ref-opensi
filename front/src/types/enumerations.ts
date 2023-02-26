@@ -30,6 +30,12 @@ export enum Sex {
     PENDING = 'pending',
     REJECTED = 'rejected'
   }
+
+  export enum AccountStatus {
+    DELIVERY = 'delivered',
+    PENDING = 'pending',
+    REJECTED = 'rejected'
+  }
   
   export enum TransactionStatus {
     SUCCESS = 'success',
@@ -44,6 +50,12 @@ export enum Sex {
   export enum InvoiceStatus {
     PAID = 'paid',
     UNPAID = 'unpaid'
+  }
+
+
+  export enum PackagingType {
+    RACK = 'rack',
+    PACK = 'pack'
   }
   
   

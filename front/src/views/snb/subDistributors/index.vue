@@ -8,35 +8,25 @@
           <div v-for="(etat, index) in etats" :key="index">
             <VPanel
               :labels="etat.name"
-              @click="select(index)"
+              @click="master.type = etat.value"
               :class="{
-                'text-white bg-green': index === active,
+                'text-white bg-primary': etat.value === master.type,
               }"
             />
           </div>
         </div>
       </div>
-      {{ masterStore.getCurrentMaster?.organisationId }}
       <BaseTableWithFilter
         :titles="titles"
-        :fetchData="masterStore.fetchByOrganization"
-        :requestId="masterStore.getCurrentMaster?.organizationId"
+        :fetchData="organizationStore.fetchAll"
+        :requestId="userStore.getCurrentUser?.organizationId"
         :actions="actions"
         :key="reload"
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
             <div
-              class="
-                flex
-                border
-                rounded
-                items-center
-                justify-center
-                px-4
-                font-semibold
-                space-x-2
-              "
+              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
             >
               <div>Filtré par</div>
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
@@ -73,13 +63,13 @@
                 name="raison sociale"
                 label="Raison Sociale"
                 rules="required"
-                v-model="master.company"
+                v-model="master.socialReason"
               ></BaseInput>
               <BaseInput
                 name="numéro ifu"
                 label="Numéro IFU"
                 rules="required"
-                v-model="master.ifu"
+                v-model="master.fiscalId"
               ></BaseInput>
             </div>
             <div class="flex justify-between space-x-6">
@@ -99,16 +89,31 @@
             <div class="flex justify-between space-x-6">
               <BaseInput
                 name="Nom du représentant"
-                label="nom du représentant"
+                label="Nom du représentant"
                 rules="required"
-                v-model="master.name"
+                v-model="master.ownerName"
               ></BaseInput>
               <BaseInput
                 name="adresse"
                 label="Adresse"
                 rules="required"
-                v-model="master.address"
+                v-model="master.adress"
               ></BaseInput>
+            </div>
+
+            <div class="text-[#0F0F14]">Méthode de paiement</div>
+            <div class="flex items-center space-x-6">
+
+                <div class="flex items-center space-x-2"  v-for="method in paymentMethods" :key="method.title">
+                    <BaseSelectedCard
+                        :selected="master.paymentDeadline == method.value"
+                        @click="master.paymentDeadline = +method.value"
+                        >
+                        <BaseIcon :name="method.icon"></BaseIcon>
+                    </BaseSelectedCard>
+                    <div class="text-[14px] font-semibold">{{ method.title }}</div>
+                </div>
+           
             </div>
 
             <BaseButton class="w-[200px]" :loading="loading">{{
@@ -123,25 +128,54 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from "vue";
-import { useMasterStore } from "@/stores/parteners/master";
+import { useOrganizationStore } from "@/stores/organization";
 import { Form } from "vee-validate";
-import { IMaster } from "@/types/interfaces";
+import { IOrganisation } from "@/types/interfaces";
 import VPanel from "@/components/VPanel.vue";
+import { useUsersStore } from "../../../stores/users";
+import { OrganisationType } from "../../../types/enumerations";
+import { PrimaryKey } from "../../../types/interfaces";
 
 export default defineComponent({
   components: { Form, VPanel },
   setup() {
     const etats = ref([
-      { name: "Master distributeur" },
-      { name: "Distributeurs agréés" },
-      { name: "Dépots" },
+      { name: "Master distributeur", value: OrganisationType.MD },
+      { name: "Distributeurs agréés", value: OrganisationType.DA },
+      { name: "Dépots", value: OrganisationType.DA },
     ]);
-    const active = ref(0);
-    function select(i: number) {
-      active.value = i;
-    }
 
-    const masterStore = useMasterStore();
+
+    const paymentMethods = ref([
+      {
+        title: "Paiment à la commande",
+        icon: "cash",
+        value: 0,
+      },
+      {
+        title: "Paiment sur 30 jours",
+        icon: "calendar",
+        value: 30,
+      },
+      {
+        title: "Paiment sur 60 jours",
+        icon: "calendar",
+        value: 60,
+      },
+      {
+        title: "Paiment sur 90 jours",
+        icon: "calendar",
+        value: 90,
+      },
+    ]);
+
+    const active = ref(0);
+
+   
+
+    const organizationStore = useOrganizationStore();
+
+    const userStore = useUsersStore()
 
     const actions = [
       //   {
@@ -169,31 +203,31 @@ export default defineComponent({
       mode: "confirm" as "confirm" | "success",
     });
 
-    const selectedMaster = ref<IMaster | null>();
+    const selectedMaster = ref<IOrganisation | null>();
 
     function createMaster() {
       selectedMaster.value = null;
       showModal.value = true;
-      master.name = "";
+      master.ownerName = "";
       master.phone = "";
       master.email = "";
-      master.address = "";
-      master.ifu = "";
-      master.company = "";
+      master.adress = "";
+      master.fiscalId = "";
+      master.socialReason = "";
     }
 
-    function onUpdate(value: IMaster) {
+    function onUpdate(value: IOrganisation) {
       selectedMaster.value = value;
       showModal.value = true;
-      master.name = value.name;
+      master.ownerName = value.ownerName;
       master.phone = value.phone;
       master.email = value.email;
-      master.ifu = value.ifu;
-      master.address = value.address;
-      master.company = value.company;
+      master.fiscalId = value.fiscalId;
+      master.adress = value.adress;
+      master.socialReason = value.socialReason;
     }
 
-    function onDelete(value: IMaster) {
+    function onDelete(value: IOrganisation) {
       selectedMaster.value = value;
       modal.title = `Êtes-vous sûr de vouloir <br> supprimer l’utilisateur <br> ${selectedMaster.value.name} ?`;
       modal.show = true;
@@ -205,9 +239,11 @@ export default defineComponent({
     async function deleteMaster() {
       try {
         if (selectedMaster.value) {
-          const response = await masterStore.delete(selectedMaster.value.id);
+          const response = await organizationStore.delete(
+            selectedMaster.value.id
+          );
           reload.value = !reload.value;
-          modal.title = `Utilisateur supprimé avec succès`;
+          modal.title = `Organisation supprimé avec succès`;
           modal.show = true;
           modal.subtitle = "";
           modal.mode = "success";
@@ -215,17 +251,19 @@ export default defineComponent({
       } catch (error) {}
     }
 
-    function onView(value: IMaster) {
+    function onView(value: IOrganisation) {
       selectedMaster.value = value;
     }
 
     const master = reactive({
-      name: "",
+      type: OrganisationType.MD,
+      fiscalId: "",
       phone: "",
       email: "",
-      address: "",
-      ifu: "",
-      company: "",
+      adress: "",
+      paymentDeadline: 0,
+      socialReason: "",
+      ownerName: "",
     });
 
     const showModal = ref(false);
@@ -272,14 +310,14 @@ export default defineComponent({
 
       try {
         if (selectedMaster.value) {
-          const response = await masterStore.update(
+          const response = await organizationStore.update(
             selectedMaster.value.id,
             master
           );
-          modal.title = `Utilisateur modifié avec succès`;
+          modal.title = `Organisation modifié avec succès`;
         } else {
-          const response = await masterStore.create(master);
-          modal.title = `Utilisateur crée avec succès`;
+          const response = await organizationStore.create(master);
+          modal.title = `Organisation crée avec succès`;
         }
         modal.show = true;
         modal.subtitle = "";
@@ -293,7 +331,7 @@ export default defineComponent({
     }
 
     return {
-      masterStore,
+      organizationStore,
       titles,
       showModal,
 
@@ -307,8 +345,9 @@ export default defineComponent({
       loading,
       reload,
       etats,
-      select,
       active,
+      paymentMethods,
+      userStore
     };
   },
 });

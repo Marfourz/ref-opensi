@@ -39,6 +39,7 @@
       </template>
      
     </BaseModal>
+    <BaseGoBack></BaseGoBack>
     <div class="flex items-center space-x-6">
       <BaseTitle title="Listes des catégories"></BaseTitle>
       <BaseButton icon="plus" size="small" @click="createCategory"
