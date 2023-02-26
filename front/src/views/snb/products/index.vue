@@ -36,8 +36,8 @@
             class="mt-6"
           >
             <template #image="{element}">
-              <div>{{ element.image ? element.image[0].url : '/assets/images/beverage.png' }}</div>
-              <img :src="element.image ? element.image[0].url : '/assets/images/beverage.png'" alt="">
+             
+              <img :src="element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png'" alt="">
             </template>
         </BaseTableWithFilter>
         </template>
@@ -67,7 +67,7 @@
             <BaseSelect
               label="Catégorie"
               :items="categories"
-              v-model="product.category"
+              v-model="product.categoryId"
             ></BaseSelect>
             <BaseInput
               name="Volume"
@@ -87,18 +87,25 @@
               rules="required"
               v-model="product.packPrice"
             ></BaseInput> -->
+
+            <BaseSelect
+              label="Unité"
+              :items="packagingTypes"
+              v-model="product.packagingType"
+            ></BaseSelect>
+
             <BaseInput
-              name="Prix casier (en FCFA)"
-              label="Prix casier (en FCFA)"
+              :name="bulkPriceTitle"
+              :label="bulkPriceTitle"
               rules="required"
-              v-model="product.rackPrice"
+              v-model="product.bulkPrice"
             ></BaseInput>
 
             <UploadFileVue></UploadFileVue>
+              <div>
 
-            <BaseButton class="w-[200px]" :loading="loading">{{
-              selectedProduct ? "Mettre à jour" : "Ajouter"
-            }}</BaseButton>
+              </div>
+           
           </Form>
         </div>
       </div>
@@ -118,9 +125,11 @@ import { useProductCategoryStore } from "../../../stores/product-category";
 
 import UploadFileVue from "../../../components/UploadFile.vue";
 import { IProduct } from "../../../types/interfaces";
+import { Form } from "vee-validate";
+import { PackagingType } from "../../../types/enumerations";
 
 export default defineComponent({
-  components: { EmptyState, BaseTableWithFilter, UploadFileVue },
+  components: { EmptyState, BaseTableWithFilter, UploadFileVue, Form },
   setup() {
     const productStore = useProductStore();
     const productCategoryStore = useProductCategoryStore();
@@ -202,10 +211,10 @@ export default defineComponent({
     const product = reactive({
       name: "",
       unitPrice: 100,
-      rackPrice: 1000,
-      packPrice: 20000,
+      bulkPrice: 0,
+      packagingType:PackagingType.RACK,
       volume: 2000,
-      category: "",
+      categoryId: "",
     });
 
     const showModal = ref(false);
@@ -232,13 +241,33 @@ export default defineComponent({
 
     //Product creation
 
+    const packagingTypes = [{
+      title : "Casier",
+      value : PackagingType.RACK
+    },
+    {
+      title : "Pack",
+      value : PackagingType.PACK
+    }]
+
+
+    const bulkPriceTitle = computed(()=>{
+      if(product.packagingType == PackagingType.PACK)
+        return "Prix pack (en FCFA)"
+      else
+        return "Prix casier (en FCFA)"
+    })
+
     const loading = ref(false);
 
     async function onSubmit() {
       try {
         const response = await productStore.create(product);
+
       } catch (error: any) {}
     }
+
+    
 
     onMounted(async () => {
       try {
@@ -246,9 +275,6 @@ export default defineComponent({
         
 
         categoryId.value = response.data[0].id;
-
-       
-        
 
         categories.value = response.data.map((value: any) => {
           console.log("zzzz");
@@ -277,6 +303,8 @@ export default defineComponent({
       categoryId,
       onSubmit,
       loading,
+      packagingTypes,
+      bulkPriceTitle
     };
   },
 });
