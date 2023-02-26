@@ -1,5 +1,3 @@
-
-
 export const organisations = [
   {
     socialReason: 'Maison Mere Snb',
@@ -35,7 +33,3 @@ export const organisations = [
     type: 'md',
   },
 ];
-
-
-
-

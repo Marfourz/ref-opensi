@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
-import { Organisation, User, OrganisationStatusEnum } from '@prisma/client';
+import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
@@ -22,7 +22,6 @@ import {
   ApiHeader,
   ApiQuery,
 } from '@nestjs/swagger';
-import { OrderTypeEnum } from 'guards/order.type.enum';
 
 @ApiTags('organisations')
 @Controller('organisations')
@@ -72,6 +71,7 @@ export class OrganisationController {
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
   @ApiQuery({ name: 'q', type: String, required: false })
+  @ApiQuery({ name: 'type', enum: OrganisationTypeEnum, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
   ): Promise<PagiationPayload<Organisation[]>> {
@@ -94,8 +94,17 @@ export class OrganisationController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'id' })
-  getDeliveryMenOfOrganisation(@Param() params): Promise<User[]> {
-    return this.organisationService.getDeliveryMenOfOrganisation(params.id);
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  getDeliveryMenOfOrganisation(
+    @Param() params,
+    @Query() filterParams: any,
+  ): Promise<PagiationPayload<User[]>> {
+    return this.organisationService.getDeliveryMenOfOrganisation(
+      params.id,
+      filterParams,
+    );
   }
 
   @Put(':id')
