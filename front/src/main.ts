@@ -18,6 +18,9 @@ import Toast from "vue-toastification";
 import BaseGoBack from './components/base/BaseGoBack.vue'
 import "vue-toastification/dist/index.css";
 
+import VCalendar from 'v-calendar';
+import 'v-calendar/dist/style.css';
+
 
 import App from './App.vue'
 import router from './router'
@@ -68,5 +71,6 @@ app.component('BaseGoBack',BaseGoBack)
 app.use(createPinia())
 app.use(router)
 app.use(Toast, {});
+app.use(VCalendar, {})
 
 app.mount('#app')

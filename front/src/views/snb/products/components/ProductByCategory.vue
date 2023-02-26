@@ -14,9 +14,10 @@
             :params="{categoryId:categoryId}"
             class="mt-6"
           >
-            <template #image>
+            <template #image="element">
+             
               <div class="flex justify-center">
-                <img src="@/assets/images/beverage.png" alt="" />
+                <img :src="element.image" alt="" />
               </div>
             </template>
           </BaseTableWithFilter>

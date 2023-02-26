@@ -23,7 +23,8 @@
     </div> -->
 
     <div class="pt-8">
-      <BaseTabs :tabs="tabs" v-show="total == 0" @change="categoryId = $event">
+      
+      <BaseTabs :tabs="tabs"  @change="categoryId = $event">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
             :key="tab.name"
@@ -33,7 +34,12 @@
             :requestId="categoryId"
             @total="total = $event"
             class="mt-6"
-          ></BaseTableWithFilter>
+          >
+            <template #image="{element}">
+              <div>{{ element.image ? element.image[0].url : '/assets/images/beverage.png' }}</div>
+              <img :src="element.image ? element.image[0].url : '/assets/images/beverage.png'" alt="">
+            </template>
+        </BaseTableWithFilter>
         </template>
       </BaseTabs>
     </div>
@@ -111,6 +117,7 @@ import { useRouter } from "vue-router";
 import { useProductCategoryStore } from "../../../stores/product-category";
 
 import UploadFileVue from "../../../components/UploadFile.vue";
+import { IProduct } from "../../../types/interfaces";
 
 export default defineComponent({
   components: { EmptyState, BaseTableWithFilter, UploadFileVue },
@@ -148,6 +155,11 @@ export default defineComponent({
     }
 
     const titles = [
+    {
+        title: "Image",
+        name: "image",
+       
+      },
       {
         title: "Nom du produit",
         name: "name",
@@ -160,7 +172,7 @@ export default defineComponent({
 
       {
         title: "Prix/Casier",
-        name: "packPrice",
+        name: "bulkPrice",
       },
       {
         title: "Date de création",
@@ -169,7 +181,9 @@ export default defineComponent({
       {
         title: "Quantité en stock",
         name: "stock",
+        transform: getStock
       },
+     
       {
         title: "Action",
         name: "action",
@@ -177,6 +191,13 @@ export default defineComponent({
     ];
 
     const selectedProduct = ref();
+
+    function getStock(element: IProduct) {
+      if (element.stocks && element.stocks[0])
+        return element.stocks[0].currentQuantity;
+      else return 0;
+    }
+
 
     const product = reactive({
       name: "",
@@ -194,7 +215,8 @@ export default defineComponent({
     const tabs = computed(() => {
       if (categories.value && categories.value.length != 0) {
         const elements = [] as Array<{ name: string; libelle: string }>;
-
+        
+        
         categories.value.forEach((element: any) => {
           elements.push({
             name: element.value,
@@ -220,16 +242,24 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const response = await productCategoryStore.fetchAll({});
+        const response = await productCategoryStore.fetchAll();
+        
 
-        categoryId.value = response[0].id;
+        categoryId.value = response.data[0].id;
 
-        categories.value = response.map((value: any) => {
+       
+        
+
+        categories.value = response.data.map((value: any) => {
+          console.log("zzzz");
+          
           return {
             value: value.id,
             title: value.name,
           };
         });
+
+        console.log("response", categories.value);
       } catch (error: any) {}
     });
     return {

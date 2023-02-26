@@ -6,14 +6,14 @@ export const useOrganizationStore = defineStore("organizationStore", {
   actions: {
     async fetchOne(id: PrimaryKey) {
       try {
-        const response = await Api.get(`organization/${id}`);
+        const response = await Api.get(`organisation/${id}`);
         return response.data;
       } catch (error) {}
     },
 
     async fetchAll(query: any) {
       try {
-        const response = await Api.get("organization", { params: query });
+        const response = await Api.get("organisations", { params: query });
         return response.data;
       } catch (error) {
         throw error;
@@ -21,9 +21,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
 
-    async fetchAllDeliveryMen(id: PrimaryKey, query: any) {
+    async fetchAllDeliveryMen(query: any,id: PrimaryKey) {
         try {
-          const response = await Api.get(`organization/${id}/deliveryMen`, { params: query });
+          const response = await Api.get(`organisations/${id}/deliveryMen`, { params: query });
           return response.data;
         } catch (error) {
           throw error;
@@ -33,7 +33,7 @@ export const useOrganizationStore = defineStore("organizationStore", {
   
     async create(data: any) {
       try {
-        const response = await Api.post("organization", data);
+        const response = await Api.post("organisations", data);
         return response;
       } catch (error) {
         throw error;
@@ -42,7 +42,7 @@ export const useOrganizationStore = defineStore("organizationStore", {
 
     async update(id: PrimaryKey, data: any) {
       try {
-        const response = await Api.put(`organization/${id}`, data);
+        const response = await Api.put(`organisations/${id}`, data);
         return response;
       } catch (error) {
         throw error;
@@ -51,7 +51,7 @@ export const useOrganizationStore = defineStore("organizationStore", {
 
     async delete(id: PrimaryKey) {
       try {
-        const response = await Api.delete(`organization/${id}`);
+        const response = await Api.delete(`organisations/${id}`);
         return response;
       } catch (error) {
         throw error;

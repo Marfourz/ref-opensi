@@ -30,6 +30,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "pinia": "^2.0.30",
+    "v-calendar": "^3.0.0-alpha.8",
     "vee-validate": "^4.7.4",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",

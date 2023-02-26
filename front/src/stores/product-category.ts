@@ -11,7 +11,7 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
       } catch (error) {}
     },
 
-    async fetchAll(query: any) {
+    async fetchAll(query?: any) {
       try {
         const response = await Api.get("product-category", { params: query });
         return response.data;

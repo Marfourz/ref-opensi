@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <div
       v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
@@ -33,7 +34,7 @@
       />
     </div>
 
-    
+   
     <BaseTable
       :titles="titles"
       :data="items"
@@ -41,8 +42,9 @@
       :actions="actions"
       class="mt-6"
     >
-      <template v-slot:[title.name] v-for="title in titles">
-        <slot :key="title.name" :name="title.name"> </slot>
+      
+      <template v-slot:[element.title] v-for="element in slotDatas" >
+        <slot :name="element.title" :element="element.element" > </slot>
       </template>
     </BaseTable>
   </div>
@@ -50,6 +52,7 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   onMounted,
   onUpdated,
@@ -143,18 +146,30 @@ export default defineComponent({
 
       loading.value = true;
       try {
-        console.log("responseId", params, props.requestId);
+        
         let response;
-        if (!props.requestId) response = await props.fetchData({...params,...props.params});
+        if (!props.requestId){
+          
+          response = await props.fetchData({...params,...props.params});
+        } 
         else {
-          console.log("responseId", params, props.requestId);
 
           response = await props.fetchData({...params,...props.params}, props.requestId);
+
         }
 
-        items.value = response.data;
-        paginationData.total = response.count;
-        context.emit("total", items.value.length);
+        if(Array.isArray(response)){
+          items.value = response
+         
+        }
+          
+        else{
+          items.value = response.data;
+          paginationData.total = response.count;
+        }
+        context.emit('total', items.value.length)
+      
+        
       } catch (error: any) {
         console.log({ ...error });
       }
@@ -171,13 +186,37 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      console.log("organisationId", props);
+     console.log("salut à tous");
+     
       await loadData();
      
     });
 
+    const slotDatas = computed(()=>{
+      const values = [] as Array<{
+        title : string,
+        element : Object
+      }>
+
+      if(props.titles && items.value){
+        props.titles.forEach((title)=>{
+        items.value.forEach((data : any)=>{
+          values.push({
+            title : title.name,
+            element : data
+          })
+        })
+      })
+
+      }
+
+    
+      return values
+
+    })
+
     function onSearch() {
-      console.log("onSearch", props.requestId);
+      
 
       loadData();
     }
@@ -188,6 +227,7 @@ export default defineComponent({
       params,
       items,
       pageChange,
+      slotDatas
     };
   },
 });

@@ -89,6 +89,9 @@ export class OrganisationService {
     try {
       const users = await this.prisma.user.findMany({
         where: { organisationId: id, role: UserRoleEnum.deliveryMan },
+        include:{
+          engine:true
+        }
       });
       return users;
     } catch (error) {

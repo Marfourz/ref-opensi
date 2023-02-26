@@ -13,8 +13,9 @@
       </div>
     </div>
     
-    <div class="grid grid-cols-3 space-x-4">
-        <DashboardCard :data="stockProduct"></DashboardCard>
+    <div class="grid grid-cols-4 space-x-4">
+        <DashboardCard :data="rackStock"></DashboardCard>
+        <DashboardCard :data="packStock"></DashboardCard>
         <DashboardCard :data="totalCost"></DashboardCard>
         <DashboardCard :data="approDate"></DashboardCard>
     </div>
@@ -42,11 +43,25 @@ export default defineComponent({
     components:{DashboardCard,ProductByCategory},
   setup() {
     
-    const stockProduct = computed(()=>{
+    const packStock = computed(()=>{
         return {
-        title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalProducts._sum.currentQuantity
+        title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalPackProducts._sum.currentQuantity
 ) : 0} `,
-        subtitle: "Produits en stockage",
+        subtitle: "Pack en stock",
+       
+        icon: "bottle",
+        primaryColor: "#B9212E",
+        secondaryColor: "#FFEEED"
+    }
+    }) 
+
+
+
+    const rackStock = computed(()=>{
+        return {
+        title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalRackProducts._sum.currentQuantity
+) : 0} `,
+        subtitle: "Casier en stock",
        
         icon: "bottle",
         primaryColor: "#B9212E",
@@ -57,7 +72,7 @@ export default defineComponent({
     const totalCost = computed(()=>{
         return {
         title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalCost) : 0} FCFA`,
-        subtitle: "Coût total des produits en stockage",
+        subtitle: "Coût total des produits",
        
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -183,7 +198,8 @@ export default defineComponent({
     })
 
     return {
-        stockProduct,
+        packStock,
+        rackStock,
         totalCost,
         approDate,
         goToUpadateStock,

@@ -55,13 +55,11 @@
           >Nouveau livreur</BaseButton
         >
       </div>
-      
-      <div>{{ userStore.getCurrentUser?.organisationId }}aa</div>
-    
+     
       <BaseTableWithFilter
         :titles="titles"
         :fetchData="organizationStore.fetchAllDeliveryMen"
-        :requestId="userStore.getCurrentUser?.organisationId"
+        :requestId="organisationId"
         :actions="actions"
         :key="reload"
       >
@@ -76,6 +74,10 @@
   
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
           </div>
+        </template>
+        <template #status="element">
+            {{ element }}
+           
         </template>
       </BaseTableWithFilter>
   
@@ -110,6 +112,7 @@
               <BaseInput
                 name="Date de naissance"
                 label="Date de naissance"
+                type="date"
                 rules="required"
                 v-model="user.birthday"
               ></BaseInput>
@@ -165,9 +168,10 @@
   import { IUser } from "@/types/interfaces";
 import { useEnginesStore } from "../../../stores/engines";
 import { useOrganizationStore } from "../../../stores/organization";
+import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
   
   export default defineComponent({
-    components: { Form },
+    components: { Form, BaseTableStatut },
     setup() {
       const userStore = useUsersStore();
   
@@ -218,6 +222,7 @@ import { useOrganizationStore } from "../../../stores/organization";
         user.email = value.email;
         user.sex = value.sex;
         user.role = value.role;
+        user.address = value.address
       }
   
       function onDelete(value: IUser) {
@@ -290,12 +295,12 @@ import { useOrganizationStore } from "../../../stores/organization";
         },
         {
           title: "Engin",
-          name: "engin"
+          name: "engine.name"
         },
 
         {
           title: "Statut",
-          name: "statut",
+          name: "status",
           transform: getStatutLabel,
         },
   
@@ -306,7 +311,7 @@ import { useOrganizationStore } from "../../../stores/organization";
       ];
   
      function getStatutLabel(element : IUser){
-        console.log("eee")
+        
      }
 
     
@@ -332,16 +337,21 @@ import { useOrganizationStore } from "../../../stores/organization";
       })
 
       const organizationStore = useOrganizationStore()
+
+      const organisationId = computed(()=>{
+        return "0a28f57d-438b-4811-a629-3448c90fefe1"
+        //userStore.getCurrentUser?.organisationId
+      })
   
       async function onSubmit() {
         loading.value = true;
   
         try {
           if (selectedUser.value) {
-            const response = await userStore.update(selectedUser.value.id, user);
+            const response = await userStore.update(selectedUser.value.id, {...user,role :UserRole.DELIVERY_MAN });
             modal.title = `Utilisateur modifié avec succès`;
           } else {
-            const response = await userStore.create(user);
+            const response = await userStore.create( {...user,role :UserRole.DELIVERY_MAN });
             modal.title = `Utilisateur crée avec succès`;
           }
           modal.show = true;
@@ -370,7 +380,8 @@ import { useOrganizationStore } from "../../../stores/organization";
         loading,
         reload,
         engines,
-        organizationStore
+        organizationStore,
+        organisationId
       };
     },
   });

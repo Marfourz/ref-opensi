@@ -31,21 +31,30 @@ const router = createRouter({
 import { useUsersStore } from "../stores/users";
 
 router.beforeEach(async (to, from, next) => {
-  let data = JSON.parse(localStorage.getItem('current_user') as string)
 
-  
+  let data
+  try{
+     data = JSON.parse(localStorage.getItem('current_user') as string)
+ 
+  }
+  catch(error)
+  {
+    console.log("data", error);
+    data = null
+  }
+   
 
   if (to.meta.auth) {
 
     if (!data) next("/auth/login");
     else {
-      // console.log('data', data.id)
-      // try {
-      //   await useUsersStore().me();
-      //   next();
-      // } catch (error: any) {
-      //   next("/auth/login");
-      // }
+      console.log('data', data.id)
+      try {
+        useUsersStore().me();
+        next();
+      } catch (error: any) {
+        next("/auth/login");
+      }
       next()
     }
   }
