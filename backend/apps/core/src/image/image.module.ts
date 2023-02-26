@@ -26,9 +26,6 @@ export class ImageModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthenticationMiddleware)
-      .forRoutes(
-        { path: 'product-image', method: RequestMethod.ALL },
-        { path: 'product-image/(*)', method: RequestMethod.ALL },
-      );
+      .forRoutes({ path: 'product-image', method: RequestMethod.POST });
   }
 }
