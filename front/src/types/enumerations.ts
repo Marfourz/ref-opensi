@@ -57,6 +57,13 @@ export enum Sex {
     RACK = 'rack',
     PACK = 'pack'
   }
+
+
+  export enum UserAccountStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive',
+    SUSPENDED = "suspended",
+  }
   
   
   

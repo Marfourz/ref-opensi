@@ -21,7 +21,7 @@
     </div>
 
    
-    <ProductByCategory :key="reload" :titles="titles" :actions="actions" :withoutFilter="true"></ProductByCategory>
+    <ProductByCategory  :titles="titles" :actions="actions" :withoutFilter="true"></ProductByCategory>
   </div>
 </template>
 
@@ -179,6 +179,8 @@ export default defineComponent({
 
     const userStore = useUsersStore()
 
+    const reload = ref(false)
+
     const organizationId = computed(()=>{
         return userStore.getCurrentUser?.organisationId
     })
@@ -206,7 +208,8 @@ export default defineComponent({
         titles,
         actions,
         organizationId,
-        generalInfos
+        generalInfos,
+        reload
 
     };
   },

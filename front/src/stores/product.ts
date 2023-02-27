@@ -65,9 +65,7 @@ export const useProductStore = defineStore("productStore", {
       }
     },
 
-    async fetchAllProductsStock(query : any){
-      const userStore = useUsersStore()
-      const orgId = userStore.getCurrentUser?.organisationId
+    async fetchAllProductsStock(query : any, orgId : PrimaryKey){
       try {
         const response = await Api.get(`stocks/${orgId}/search`,{params : query});
 

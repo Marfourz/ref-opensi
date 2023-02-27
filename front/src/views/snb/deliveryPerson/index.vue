@@ -75,8 +75,9 @@
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
           </div>
         </template>
-        <template #status="element">
-            {{ element }}
+        <template #status="{element}">
+     
+         <BaseTableStatut :title="getStatutLabel(element.element)" :type="getStatutType(element.element)"></BaseTableStatut>
            
         </template>
       </BaseTableWithFilter>
@@ -169,6 +170,7 @@
 import { useEnginesStore } from "../../../stores/engines";
 import { useOrganizationStore } from "../../../stores/organization";
 import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
+import { UserAccountStatus } from "../../../types/enumerations";
   
   export default defineComponent({
     components: { Form, BaseTableStatut },
@@ -301,7 +303,7 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
         {
           title: "Statut",
           name: "status",
-          transform: getStatutLabel,
+         
         },
   
         {
@@ -311,8 +313,24 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
       ];
   
      function getStatutLabel(element : IUser){
-        
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "Active"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "Inactive"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "Suspendu"
      }
+
+     function getStatutType(element : IUser){
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "success"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "danger"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "warning"
+        }
 
     
   
@@ -323,6 +341,8 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
       const engines = ref([])
       
       const enginesStore = useEnginesStore()
+
+      
 
 
       onMounted(async()=>{
@@ -381,7 +401,9 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
         reload,
         engines,
         organizationStore,
-        organisationId
+        organisationId,
+        getStatutLabel,
+        getStatutType
       };
     },
   });

@@ -9,7 +9,7 @@
             :fetchData="productStore.fetchAllProductsStock"
             :titles="titles"
             :actions="actions"
-            :requestId="categoryId"
+            :requestId="organisationId"
             @total="total = $event"
             :params="{categoryId:categoryId}"
             class="mt-6"
@@ -43,6 +43,7 @@ import { useToast } from "vue-toastification";
 import { IProduct } from "@/types/interfaces";
 import { ITitle } from "../../../../components/base/BaseTable.vue";
 import { IAction } from "../../../../components/base/BaseActions.vue";
+import { useUsersStore } from "../../../../stores/users";
 
 export default defineComponent({
   components: { BaseTableWithFilter, UploadFileVue, Form },
@@ -98,6 +99,12 @@ export default defineComponent({
       return [];
     });
 
+    const userStore = useUsersStore()
+    const organisationId = computed(()=>{
+        return userStore.getCurrentUser?.organisationId
+    })
+     
+
     const categoryId = ref("");
 
     watch(categoryId, (newValue)=>{
@@ -125,7 +132,8 @@ export default defineComponent({
       product,
       showModal,
       categories,
-      categoryId
+      categoryId,
+      organisationId
     };
   },
 });

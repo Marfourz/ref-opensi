@@ -1,4 +1,4 @@
-import type { OrderStatus, OrganisationType, PackagingType, Sex, UserRole } from "./enumerations";
+import type { OrderStatus, OrganisationType, PackagingType, Sex, UserAccountStatus, UserRole } from "./enumerations";
 
 export type PrimaryKey = string | null | undefined;
 
@@ -6,6 +6,11 @@ export interface Commun {
   id?: PrimaryKey;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IProductCategory{
+    name : string,
+    description : string
 }
 
 export interface IProduct extends Commun{
@@ -68,7 +73,8 @@ export interface IUser extends Commun {
   role: UserRole;
   organisationId: string;
   birthday?:Date,
-  engineId?:PrimaryKey
+  engineId?:PrimaryKey,
+  status?: UserAccountStatus
 }
 
 

@@ -35,6 +35,7 @@
     </div>
 
    
+
     <BaseTable
       :titles="titles"
       :data="items"
@@ -42,9 +43,9 @@
       :actions="actions"
       class="mt-6"
     >
-      
-      <template v-slot:[element.title] v-for="element in slotDatas" >
-        <slot :name="element.title" :element="element.element" > </slot>
+    
+    <template v-for="(_, name) in slots" v-slot:[name]="slotData">
+        <slot :name="name" v-bind="slotData" />
       </template>
     </BaseTable>
   </div>
@@ -58,6 +59,7 @@ import {
   onUpdated,
   reactive,
   ref,
+  useSlots,
   watch,
 } from "vue";
 import type { PropType } from "vue";
@@ -110,16 +112,14 @@ export default defineComponent({
       type: Array as PropType<Array<IAction>>,
     },
 
-
-
     hideFilter: {
       type: Boolean,
       default: false,
     },
 
-    params:{
-      type : Object
-    }
+    params: {
+      type: Object,
+    },
   },
   setup(props, context) {
     const items = ref();
@@ -142,34 +142,33 @@ export default defineComponent({
     const loading = ref(false);
 
     async function loadData() {
+     
+      
       params.perPage = paginationData.peerPage;
 
       loading.value = true;
       try {
-        
         let response;
-        if (!props.requestId){
-          
-          response = await props.fetchData({...params,...props.params});
-        } 
-        else {
-
-          response = await props.fetchData({...params,...props.params}, props.requestId);
-
+        if (!props.requestId) {
+          response = await props.fetchData({ ...params, ...props.params });
+        } else {
+          response = await props.fetchData(
+            { ...params, ...props.params },
+            props.requestId
+          );
+          console.log("firstn response",response, props.requestId);
         }
 
-        if(Array.isArray(response)){
-          items.value = response
-         
-        }
-          
-        else{
+
+        
+        
+        if (Array.isArray(response)) {
+          items.value = response;
+        } else {
           items.value = response.data;
           paginationData.total = response.count;
         }
-        context.emit('total', items.value.length)
-      
-        
+        context.emit("total", items.value.length);
       } catch (error: any) {
         console.log({ ...error });
       }
@@ -180,44 +179,46 @@ export default defineComponent({
       (newValue, oldValue) => loadData()
     );
 
+    watch(
+      () => props.params,
+      (newValue, oldValue) => loadData()
+    );
+
     function pageChange(value: number) {
       params.page = value;
       loadData();
     }
 
     onMounted(async () => {
-     console.log("salut à tous");
-     
+      console.log("salut à tous");
+
       await loadData();
-     
     });
 
-    const slotDatas = computed(()=>{
+    const slotDatas = computed(() => {
       const values = [] as Array<{
-        title : string,
-        element : Object
-      }>
+        title: string;
+        element: Object;
+      }>;
 
-      if(props.titles && items.value){
-        props.titles.forEach((title)=>{
-        items.value.forEach((data : any)=>{
-          values.push({
-            title : title.name,
-            element : data
-          })
-        })
-      })
-
+      if (props.titles && items.value) {
+        items.value.forEach((data: any) => {
+          props.titles.forEach((title) => {
+            values.push({
+              title: title.name,
+              element: data,
+            });
+          });
+        });
       }
 
-    
-      return values
+      return values;
+    });
 
-    })
+
+    const slots = useSlots()
 
     function onSearch() {
-      
-
       loadData();
     }
     return {
@@ -227,7 +228,8 @@ export default defineComponent({
       params,
       items,
       pageChange,
-      slotDatas
+      slotDatas,
+      slots
     };
   },
 });

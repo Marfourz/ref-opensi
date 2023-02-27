@@ -18,8 +18,8 @@
       </div>
       <BaseTableWithFilter
         :titles="titles"
-        :fetchData="organizationStore.fetchAll"
-        :requestId="userStore.getCurrentUser?.organizationId"
+        :fetchData="organizationStore.fetchAllParteners"
+        :params="{type : master.type}"
         :actions="actions"
         :key="reload"
       >
@@ -142,7 +142,7 @@ export default defineComponent({
     const etats = ref([
       { name: "Master distributeur", value: OrganisationType.MD },
       { name: "Distributeurs agréés", value: OrganisationType.DA },
-      { name: "Dépots", value: OrganisationType.DA },
+      //{ name: "Dépots", value: OrganisationType.DA },
     ]);
 
 

@@ -22,6 +22,7 @@
       ></EmptyState>
     </div> -->
 
+    
     <div class="pt-8">
       
       <BaseTabs :tabs="tabs"  @change="categoryId = $event">
@@ -36,9 +37,13 @@
             class="mt-6"
           >
             <template #image="{element}">
-             
-              <img :src="element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png'" alt="">
+              <div>
+                <img :src="`${element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png' }`" alt="">
+              </div>
             </template>
+           
+
+        
         </BaseTableWithFilter>
         </template>
       </BaseTabs>
@@ -64,6 +69,7 @@
               rules="required"
               v-model="product.name"
             ></BaseInput>
+            
             <BaseSelect
               label="Catégorie"
               :items="categories"
@@ -73,38 +79,33 @@
               name="Volume"
               label="Volume"
               rules="required"
-              v-model="product.volume"
+              v-model.number="product.volume"
             ></BaseInput>
             <BaseInput
               name="Prix unitaire"
               label="Prix unitaire( en FCFA)"
               rules="required"
-              v-model="product.unitPrice"
+              v-model.number="product.unitPrice"
             ></BaseInput>
-            <!-- <BaseInput
-              name="Unité"
-              label="Unité"
-              rules="required"
-              v-model="product.packPrice"
-            ></BaseInput> -->
-
             <BaseSelect
               label="Unité"
               :items="packagingTypes"
               v-model="product.packagingType"
             ></BaseSelect>
-
             <BaseInput
-              :name="bulkPriceTitle"
-              :label="bulkPriceTitle"
+              name="Prix casier (en FCFA)"
+              :label="packPriceLabel"
               rules="required"
-              v-model="product.bulkPrice"
+              v-model.number="product.bulkPrice"
             ></BaseInput>
-
-            <UploadFileVue></UploadFileVue>
-              <div>
-
-              </div>
+            
+            <UploadFileVue @change="image = $event"></UploadFileVue>
+            
+            <div class="pb-2">
+              <BaseButton class="w-[200px]" :loading="loading">{{
+              selectedProduct ? "Mettre à jour" : "Ajouter"
+            }}</BaseButton>
+            </div>
            
           </Form>
         </div>
@@ -124,12 +125,15 @@ import { useRouter } from "vue-router";
 import { useProductCategoryStore } from "../../../stores/product-category";
 
 import UploadFileVue from "../../../components/UploadFile.vue";
-import { IProduct } from "../../../types/interfaces";
-import { Form } from "vee-validate";
 import { PackagingType } from "../../../types/enumerations";
+import { Form } from "vee-validate";
+import { useFileStore } from "../../../stores/file";
+import { useToast } from "vue-toastification";
+import { IProduct } from "../../../types/interfaces";
+import helpers from "@/helpers/index.ts"
 
 export default defineComponent({
-  components: { EmptyState, BaseTableWithFilter, UploadFileVue, Form },
+  components: { EmptyState, BaseTableWithFilter, UploadFileVue,Form },
   setup() {
     const productStore = useProductStore();
     const productCategoryStore = useProductCategoryStore();
@@ -163,11 +167,13 @@ export default defineComponent({
       router.push({ name: "categories" });
     }
 
+
+    
+
     const titles = [
     {
-        title: "Image",
-        name: "image",
-       
+        title: "Identifiant",
+        name: "image"
       },
       {
         title: "Nom du produit",
@@ -177,15 +183,18 @@ export default defineComponent({
       {
         title: "Volume",
         name: "volume",
+        transform : getVolume
       },
 
       {
         title: "Prix/Casier",
         name: "bulkPrice",
+        transform: getBulkPrice
       },
       {
         title: "Date de création",
         name: "createdAt",
+        transform:formatDate
       },
       {
         title: "Quantité en stock",
@@ -199,21 +208,51 @@ export default defineComponent({
       },
     ];
 
+    
+
+    function formatDate(element: IProduct){
+      return helpers.formatDate(element.createdAt)
+    }
+
+    function getVolume(elememnt : IProduct){
+      return `${helpers.currency(elememnt.volume)} CL`
+    }
+
+    function getUnit(element : IProduct){
+      if(element.packagingType  == PackagingType.PACK)
+        return  "casiers"
+      else 
+        return "packs"
+    }
+
+    function getBulkPrice(element : IProduct){
+      return `${helpers.currency(element.bulkPrice)}`
+    }
+
+    function getStock(element : IProduct){
+
+      if(element.stocks && element.stocks[0]){
+       
+        
+        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}`
+      }
+
+        
+       else 
+        return 0
+    }
+
     const selectedProduct = ref();
 
-    function getStock(element: IProduct) {
-      if (element.stocks && element.stocks[0])
-        return element.stocks[0].currentQuantity;
-      else return 0;
-    }
+   
 
 
     const product = reactive({
       name: "",
-      unitPrice: 100,
+      unitPrice: 0,
+      packagingType: PackagingType.PACK,
       bulkPrice: 0,
-      packagingType:PackagingType.RACK,
-      volume: 2000,
+      volume: 0,
       categoryId: "",
     });
 
@@ -241,14 +280,29 @@ export default defineComponent({
 
     //Product creation
 
-    const packagingTypes = [{
-      title : "Casier",
-      value : PackagingType.RACK
-    },
-    {
-      title : "Pack",
-      value : PackagingType.PACK
-    }]
+    const fileStore = useFileStore()
+
+    const image = ref<File>()
+
+    const loading = ref(false)
+
+    const toast = useToast()
+    
+    async function onSubmit(){
+        try{
+          if(!image.value)
+            toast.error("Vous devez choisir une image")
+          else{
+            const response = await productStore.create(product)
+            console.log("response", response)
+            await fileStore.updloadProductImage(response.data.id , image.value as File)
+            showModal.value = false
+
+            router.push({name : 'products'})
+            toast.success("La boisson a été crée avec succès")
+          }
+        }
+        catch(error : any){}}
 
 
     const bulkPriceTitle = computed(()=>{
@@ -258,36 +312,52 @@ export default defineComponent({
         return "Prix casier (en FCFA)"
     })
 
-    const loading = ref(false);
-
-    async function onSubmit() {
-      try {
-        const response = await productStore.create(product);
-
-      } catch (error: any) {}
-    }
+   
 
     
+
+
+
+    const packagingTypes = computed(()=>{
+      return [
+        {
+          title : "Casier",
+          value : PackagingType.RACK
+        },
+        {
+          title : "Pack",
+          value : PackagingType.PACK
+        }
+      ]
+      
+    })
+
+
+    const packPriceLabel = computed(()=>{
+      if(product.packagingType == PackagingType.PACK)
+        return "Prix du pack (en FCFA)"
+      else
+        return "Prix du casier (en FCFA)"
+    })
+
 
     onMounted(async () => {
       try {
         const response = await productCategoryStore.fetchAll();
         
 
-        categoryId.value = response.data[0].id;
-
+        categoryId.value = response.data[0].id
+       
         categories.value = response.data.map((value: any) => {
-          console.log("zzzz");
-          
           return {
             value: value.id,
             title: value.name,
           };
         });
-
-        console.log("response", categories.value);
       } catch (error: any) {}
     });
+
+
     return {
       tabs,
       productStore,
@@ -304,7 +374,10 @@ export default defineComponent({
       onSubmit,
       loading,
       packagingTypes,
-      bulkPriceTitle
+      packPriceLabel,
+      image,
+      helpers
+      
     };
   },
 });

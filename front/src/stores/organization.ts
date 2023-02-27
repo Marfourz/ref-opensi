@@ -20,6 +20,17 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+    async fetchAllParteners(query: any) {
+        try {
+          const response = await Api.get("organisations/partners/search", { params: query });
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
+
+    
+
 
     async fetchAllDeliveryMen(query: any,id: PrimaryKey) {
         try {

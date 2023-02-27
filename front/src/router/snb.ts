@@ -52,42 +52,8 @@ export default [
               withoutPadding : true
             }
           },
-          {
-            path:'sous-distrivuteurs',
-            name : 'subDistributors',
-            component : SubDistributors
-          },
-          {
-            path:'produits/categories',
-            name : 'categories',
-            component : Category
-          },
-          {
-            path:'produits',
-            name : 'products',
-            component : Product
-          },
-          {
-            path:'livreurs',
-            name : 'deliveryPerson',
-            component : DeliveryPerson
-          },
-          {
-            path:'stock',
-            name : 'stock',
-            component : Stock
-          },
-          {
-            path:'stock/update',
-            name : 'updateStock',
-            component : UpdateStock
-          },
-          {
-            path:'utitlisateurs',
-            name : 'users',
-            component : Users
-          },
-
+         
+       
         ]
   
       },
@@ -136,6 +102,11 @@ export default [
         path: "utitlisateurs",
         name: "users",
         component: Users,
+      },
+      {
+        path:'stock/update',
+        name : 'updateStock',
+        component : UpdateStock
       },
     ],
   },

@@ -1,16 +1,16 @@
 <template>
   <PageInTwoPart>
     <template #firstPart>
-        
       <div class="space-y-8">
         <BaseTitle title="Nouvel appro"></BaseTitle>
-        <div class="flex flex-wrap space-x-3.5">
+        <div class="flex flex-wrap space-x-3.5 ">
           <ProductCategory
-            :isActive="category.id == selectedCategory.id"
+            class="my-2"
+            :isActive="category.id == categoryId"
             :category="category"
             v-for="category in categories"
-            :key="category.name"
-            @click="selectedCategory = category"
+            :key="category.id"
+            @click="categoryId = category.id"
           >
           </ProductCategory>
         </div>
@@ -23,42 +23,63 @@
       </div>
     </template>
     <template #secondPart>
-        <div class="space-y-3 h-full">
-            <BaseTitle title="Appro"></BaseTitle>
-            <Basket></Basket>
-        </div>
-     
+      <div class="space-y-3 h-full">
+        <BaseTitle title="Appro"></BaseTitle>
+        <Basket></Basket>
+      </div>
     </template>
   </PageInTwoPart>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import PageInTwoPart from "@/components/PageInTwoPart.vue";
 import ProductInput from "../../../components/ProductInput.vue";
 import ProductCategory from "../../../components/ProductCategory.vue";
-import products from "../../../data/product";
 import Basket from "../../../components/Basket.vue";
+import { useProductStore } from "../../../stores/product";
+import { useProductCategoryStore } from "../../../stores/product-category";
+import { IProductCategory } from "../../../types/interfaces";
 
 export default defineComponent({
   components: { PageInTwoPart, ProductInput, ProductCategory, Basket },
   setup() {
-    const categories = [
-      {
-        id: "1",
-        name: "Bierre",
-        description: "Descriptpion",
-      },
-      {
-        id: "2",
-        name: "Boisson gazeuse",
-        description: "Descriptpion",
-      },
-    ];
-    const selectedCategory = ref(categories[0]);
+    const productStore = useProductStore();
+
+    const productCategoryStore = useProductCategoryStore();
+
+    const categoryId = ref("");
+
+    const categories = ref([]);
+
+    const products = ref([])
+
+    onMounted(async () => {
+      try {
+        const response = await productCategoryStore.fetchAll();
+
+        categoryId.value = response.data[0].id;
+
+       categories.value = response.data
+
+        await loadProduct()
+      } catch (error: any) {}
+    });
+
+
+    async function loadProduct(){
+      const response = await productCategoryStore.fetchProducts({page : -1},categoryId.value)
+      products.value = response.data
+    }
+
+    watch(categoryId, (newValue)=>{
+      loadProduct()
+    })
+
+
     return {
       categories,
-      selectedCategory,
+      categoryId,
       products,
     };
   },

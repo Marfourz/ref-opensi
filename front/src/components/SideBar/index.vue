@@ -1,5 +1,5 @@
 <template>
-   <div class="bg-[#259475] hidden h-full lg:block " :class="{'w-1/4' : !showOnlyIcon , 'pr-8' : showOnlyIcon}">
+   <div class="bg-[#259475] hidden h-full lg:block " :class="{'w-[23%]' : !showOnlyIcon , 'pr-8' : showOnlyIcon}">
       <div class="text-white flex items-center space-x-10 pl-8 py-6 cursor-pointer" @click="showOnlyIcon = !showOnlyIcon">
         <BaseIcon name="arrowLeft" class="text-white" v-if="!showOnlyIcon"></BaseIcon>
         <BaseIcon name="arrowRigth" class="text-white w-3.5 h-3.5" v-else></BaseIcon>
