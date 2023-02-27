@@ -55,12 +55,11 @@
           >Nouveau livreur</BaseButton
         >
       </div>
-  
-    
+     
       <BaseTableWithFilter
         :titles="titles"
-        :fetchData="userStore.fetchByOrganization"
-        :requestId="userStore.getCurrentUser?.organizationId"
+        :fetchData="organizationStore.fetchAllDeliveryMen"
+        :requestId="organisationId"
         :actions="actions"
         :key="reload"
       >
@@ -75,6 +74,11 @@
   
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
           </div>
+        </template>
+        <template #status="{element}">
+     
+         <BaseTableStatut :title="getStatutLabel(element.element)" :type="getStatutType(element.element)"></BaseTableStatut>
+           
         </template>
       </BaseTableWithFilter>
   
@@ -92,7 +96,7 @@
           </div>
           <div class="flex justify-center pt-6">
             <Form  @submit="onSubmit" class="w-3/4">
-                <div class=" grid grid-cols-2 gap-4">
+                <div class=" grid grid-cols-2 gap-6">
                     <BaseInput
                 name="nom d'utilisateur"
                 label="Nom d'utilisateur"
@@ -107,6 +111,14 @@
               ></BaseSelect>
 
               <BaseInput
+                name="Date de naissance"
+                label="Date de naissance"
+                type="date"
+                rules="required"
+                v-model="user.birthday"
+              ></BaseInput>
+
+              <BaseInput
                 name="téléphone"
                 label="Téléphone"
                 rules="required"
@@ -119,12 +131,13 @@
                 v-model="user.email"
               ></BaseInput>
              
-              <BaseInput
+              <BaseSelect
                 name="adresse"
-                label="Adresse"
+                label="Engin"
                 rules="required"
-                v-model="user.address"
-              ></BaseInput>
+                :items="engines"
+                v-model="user.engineId"
+              ></BaseSelect>
 
               <BaseInput
                 name="adresse"
@@ -133,19 +146,9 @@
                 v-model="user.address"
               ></BaseInput>
 
-              <BaseInput
-                name="adresse"
-                label="Adresse"
-                rules="required"
-                v-model="user.address"
-              ></BaseInput>
+            
 
-              <BaseInput
-                name="adresse"
-                label="Adresse"
-                rules="required"
-                v-model="user.address"
-              ></BaseInput>
+            
                 </div>
               
               <BaseButton class="w-[200px] mt-6" :loading="loading">{{
@@ -159,14 +162,18 @@
   </template>
   
   <script lang="ts">
-  import { computed, defineComponent, reactive, ref } from "vue";
+  import { computed, defineComponent, onMounted, reactive, ref } from "vue";
   import { useUsersStore } from "@/stores/users";
   import { Sex, UserRole } from "@/types/enumerations";
   import { Form } from "vee-validate";
   import { IUser } from "@/types/interfaces";
+import { useEnginesStore } from "../../../stores/engines";
+import { useOrganizationStore } from "../../../stores/organization";
+import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
+import { UserAccountStatus } from "../../../types/enumerations";
   
   export default defineComponent({
-    components: { Form },
+    components: { Form, BaseTableStatut },
     setup() {
       const userStore = useUsersStore();
   
@@ -217,6 +224,7 @@
         user.email = value.email;
         user.sex = value.sex;
         user.role = value.role;
+        user.address = value.address
       }
   
       function onDelete(value: IUser) {
@@ -252,6 +260,8 @@
         address: "",
         sex: "",
         role: "",
+        birthday:null,
+        engineId:""
       });
   
       const sexes = computed(() => {
@@ -271,54 +281,29 @@
         ];
       });
   
-      const roles = computed(() => {
-        return [
-          {
-            title: "Administrateur",
-            value: UserRole.ADMIN,
-          },
-          {
-            title: "Livreur",
-            value: UserRole.DELIVERY_MAN,
-          },
-          {
-            title: "Super administrateur",
-            value: UserRole.SUPER_USER,
-          },
-          {
-            title: "Commercial",
-            value: UserRole.COMMERCIAL,
-          },
-        ];
-      });
-  
+        
       const showModal = ref(false);
   
       const titles = [
-      {
-          title: "Identifiant",
-          name: "name",
-        },
+    
         {
           title: "Nom & Prénoms",
           name: "name",
         },
 
-      
         {
           title: "Téléphone",
           name: "phone",
         },
         {
           title: "Engin",
-          name: "engin",
-          transform: getRoleLabel,
+          name: "engine.name"
         },
 
         {
           title: "Statut",
-          name: "statut",
-          transform: getRoleLabel,
+          name: "status",
+         
         },
   
         {
@@ -327,42 +312,66 @@
         },
       ];
   
-      function getRoleLabel(element: any, index: number) {
-        const labels = [
-          {
-            code: UserRole.ADMIN,
-            label: "Administrateur",
-          },
-          {
-            code: UserRole.DELIVERY_MAN,
-            label: "Livreur",
-          },
-          {
-            code: UserRole.COMMERCIAL,
-            label: "Commercial",
-          },
-          {
-            code: UserRole.SUPER_USER,
-            label: "Super administrateur",
-          },
-        ];
-  
-        return labels.find((value: any) => value.code == element.role)?.label;
-      }
+     function getStatutLabel(element : IUser){
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "Active"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "Inactive"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "Suspendu"
+     }
+
+     function getStatutType(element : IUser){
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "success"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "danger"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "warning"
+        }
+
+    
   
       const loading = ref(false);
   
       const reload = ref(false);
+
+      const engines = ref([])
+      
+      const enginesStore = useEnginesStore()
+
+      
+
+
+      onMounted(async()=>{
+        const response = await enginesStore.fetchAll()
+
+        engines.value = response.map((value:any)=>{
+            return {
+                title : value.name,
+                value : value.id
+            }
+        })
+      })
+
+      const organizationStore = useOrganizationStore()
+
+      const organisationId = computed(()=>{
+        return "0a28f57d-438b-4811-a629-3448c90fefe1"
+        //userStore.getCurrentUser?.organisationId
+      })
   
       async function onSubmit() {
         loading.value = true;
   
         try {
           if (selectedUser.value) {
-            const response = await userStore.update(selectedUser.value.id, user);
+            const response = await userStore.update(selectedUser.value.id, {...user,role :UserRole.DELIVERY_MAN });
             modal.title = `Utilisateur modifié avec succès`;
           } else {
-            const response = await userStore.create(user);
+            const response = await userStore.create( {...user,role :UserRole.DELIVERY_MAN });
             modal.title = `Utilisateur crée avec succès`;
           }
           modal.show = true;
@@ -380,7 +389,6 @@
         userStore,
         titles,
         showModal,
-        roles,
         sexes,
         user,
         onSubmit,
@@ -391,6 +399,11 @@
         deleteUser,
         loading,
         reload,
+        engines,
+        organizationStore,
+        organisationId,
+        getStatutLabel,
+        getStatutType
       };
     },
   });

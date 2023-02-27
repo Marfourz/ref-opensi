@@ -1,5 +1,5 @@
 <template>
-
+  
   <div
     class="flex space-x-4 justify-center items-center p-2 text-center"
    
@@ -34,8 +34,8 @@ export default defineComponent({
   props: {
     totalElements: {
       type: Number,
-      required: true,
-      default : 0
+      required: true
+     
     },
     peerPage: {
       type: Number,

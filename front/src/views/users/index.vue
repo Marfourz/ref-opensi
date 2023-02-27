@@ -55,11 +55,10 @@
         >Nouveau utilisateur</BaseButton
       >
     </div>
-    {{ userStore.getCurrentUser?.organisationId }}aa
     <BaseTableWithFilter
       :titles="titles"
       :fetchData="userStore.fetchByOrganization"
-      :requestId="userStore.getCurrentUser?.organizationId"
+      :requestId="organisationId"
       :actions="actions"
       :key="reload"
     >
@@ -242,6 +241,10 @@ export default defineComponent({
       ];
     });
 
+    const organisationId = computed(()=>{
+      return userStore.getCurrentUser?.organisationId
+    })
+
     const roles = computed(() => {
       return [
         {
@@ -354,9 +357,18 @@ export default defineComponent({
       deleteUser,
       loading,
       reload,
+      organisationId
     };
   },
 });
 </script>
 
 <style scoped></style>
+
+
+
+
+
+
+
+

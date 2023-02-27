@@ -22,23 +22,23 @@
       </div>
     </div>
 
-    <div class="flex flex-col space-y-4" v-else>
+    <div class="flex flex-col items-center space-y-4" v-else>
       <div class="rounded">
         <img
           :src="fileStore.getFileLink(onlineFile.link)"
           alt=""
-          class="rounded h-[250px] w-[220px]"
+          class="rounded "
           v-if="onlineFile && !selectedFile.link"
         />
         <img
           :src="selectedFile.link"
           alt=""
-          class="rounded h-[250px] w-[220px]"
+          class="rounded "
           v-else
         />
       </div>
 
-      <BaseButton type="outline" @click.stop.prevent="onSelectFile"
+      <BaseButton size="small" class="w-fit" :outline="true" @click.stop.prevent="onSelectFile"
         >Changer l'image</BaseButton
       >
     </div>

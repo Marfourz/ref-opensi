@@ -39,22 +39,22 @@
       </template>
      
     </BaseModal>
+    <BaseGoBack></BaseGoBack>
     <div class="flex items-center space-x-6">
       <BaseTitle title="Listes des catégories"></BaseTitle>
       <BaseButton icon="plus" size="small" @click="createCategory"
         >Nouvelle catégorie
       </BaseButton>
     </div>
-
-    <div class="px-8 pt-12" v-show="total == 0">
+    <!-- <div class="px-8 pt-12" v-show="total == 0">
       <EmptyState
         title="Vos catégories ajoutés seront visibles ici. <br> Cliquez sur le bouton Nouvelle catégorie <br> pour ajouter des catégories"
         image="/src/assets/images/emptyProduct.png"
       ></EmptyState>
-    </div>
+    </div> -->
 
     <BaseTableWithFilter
-      v-show="total != 0"
+     
       :fetchData="productCategoryStore.fetchAll"
       :titles="titles"
       :actions="actions"

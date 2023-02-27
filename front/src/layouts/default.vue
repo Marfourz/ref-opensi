@@ -27,7 +27,7 @@ export default defineComponent({
 
         onMounted(async ()=>{
             try{
-                await userStore.me()
+                 userStore.me()
             }
             catch(error:any){
 

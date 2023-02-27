@@ -76,7 +76,9 @@ export const useUsersStore = defineStore('usersStore',{
         },
 
 
-        async fetchByOrganization(id : PrimaryKey, query : any){
+        async fetchByOrganization(query : any,id : PrimaryKey){
+            console.log("fetchByOrganization", id);
+            
             try{
                 const response = await Api.get(`users/${id}/search`,{params: query})
                 return response.data
@@ -165,6 +167,8 @@ export const useUsersStore = defineStore('usersStore',{
         },
 
 
+
+
         async delete(id : PrimaryKey){
             try{
                 const response = await Api.delete(`users/${id}`)
@@ -174,6 +178,8 @@ export const useUsersStore = defineStore('usersStore',{
                 throw error
             }
         },
+
+        
 
 
        

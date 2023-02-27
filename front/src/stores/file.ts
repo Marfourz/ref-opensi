@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import Api from '@/api'
-import { FileType } from '@/types/interfaces'
+import { FileType, PrimaryKey } from '@/types/interfaces'
 
 
 export const useFileStore = defineStore('fileStore',{
@@ -33,6 +33,23 @@ export const useFileStore = defineStore('fileStore',{
             //     return response
             // }
         },
+
+        async updloadProductImage(productId : PrimaryKey ,file : File){
+            try{
+                const formData = new FormData()
+                formData.append("productId", productId as string)
+                formData.append("file", file)
+
+                const response = await Api.post('product-image',formData )
+
+                return response
+
+            }
+            catch(error){
+
+            }
+        },
+
 
 
         async getFile(path: string){

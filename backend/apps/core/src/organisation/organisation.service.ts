@@ -123,10 +123,10 @@ export class OrganisationService {
       }
 
       const users = await this.prisma.user.findMany({
-        ...paginateConstraints,
-        where: {
-          ...w,
-        },
+        where: { organisationId: id, role: UserRoleEnum.deliveryMan },
+        include:{
+          engine:true
+        }
       });
 
       const count = await this.prisma.user.count({
