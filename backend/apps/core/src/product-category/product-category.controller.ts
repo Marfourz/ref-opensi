@@ -34,7 +34,7 @@ export class ProductCategoryController {
   ) {}
 
   @Post()
-  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiBody({ type: categoryDto })
   @ApiHeader({
     name: 'x-auth-token',

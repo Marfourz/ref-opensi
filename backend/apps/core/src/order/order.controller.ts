@@ -31,7 +31,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiBody({ type: orderDto })
   @ApiHeader({
     name: 'x-auth-token',

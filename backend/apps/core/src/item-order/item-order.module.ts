@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
   imports: [HttpModule],
   controllers: [ItemOrderController],
   providers: [PrismaService, ItemOrderService, JwtService],
+  exports: [ItemOrderService],
 })
 export class ItemOrderModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

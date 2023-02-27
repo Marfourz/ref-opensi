@@ -30,7 +30,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

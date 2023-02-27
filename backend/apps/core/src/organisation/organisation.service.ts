@@ -161,7 +161,7 @@ export class OrganisationService {
       const turnoverConstraint: any = {};
       const w: any = {};
       w.NOT = { type: OrganisationTypeEnum.snb };
-      if (q != undefined) {
+      if (q != undefined && q != '') {
         ownerNameConstraint.ownerName = {
           contains: q,
           mode: 'insensitive',
@@ -195,11 +195,13 @@ export class OrganisationService {
         },
         include: {
           wallet: true,
+          orders: true,
         },
       });
 
       const count = await this.prisma.organisation.count({
         where: {
+          type: type,
           NOT: {
             type: OrganisationTypeEnum.snb,
           },

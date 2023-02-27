@@ -13,10 +13,6 @@ export class itemOrderDto {
   @ApiProperty({ type: Number })
   @IsNumber()
   quantity: number;
-
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  price: number;
 }
 
 export class updateItemOrderDto {
@@ -34,9 +30,4 @@ export class updateItemOrderDto {
   @IsOptional()
   @IsNumber()
   quantity?: number;
-
-  @ApiProperty({ type: Number })
-  @IsOptional()
-  @IsNumber()
-  price?: number;
 }
