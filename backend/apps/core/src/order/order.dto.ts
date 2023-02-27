@@ -1,33 +1,35 @@
 import { OrderStatusEnum } from '@prisma/client';
-import { IsString, IsNumber, IsOptional, Matches, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  Matches,
+  IsArray,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { itemOrderDto } from '../item-order/item-order.dto';
 
 export class orderDto {
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  totalAmount: number;
-
   @ApiProperty({ type: String })
   organisationId?: string;
 
+  @ApiProperty({ type: itemOrderDto })
+  @IsArray()
+  items: itemOrder[];
+}
+
+class itemOrder {
   @ApiProperty({ type: String })
   @IsString()
-  deliveryCode: string;
+  productId: string;
 
-  @ApiProperty({ type: String })
-  @IsString()
-  deliveryMan: string;
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  quantity: number;
 
-  @ApiProperty({ enum: OrderStatusEnum })
-  @IsString()
-  status: OrderStatusEnum;
-
-  @ApiProperty({ type: String })
-  @IsString()
-  @Matches(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/, {
-    message: '$property format must be YYYY-MM-DD',
-  })
-  deliveryDate: string;
+  @ApiProperty({ type: Number })
+  @IsNumber()
+  price: number;
 }
 
 export class updateOrderDto {

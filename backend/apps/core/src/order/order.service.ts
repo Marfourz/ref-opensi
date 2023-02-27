@@ -1,19 +1,42 @@
 import { Injectable } from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
+import { generateRandomString } from '../../../../helpers/generateRandomString';
+import { ItemOrderService } from '../item-order/item-order.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private itemOrderService: ItemOrderService,
+  ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
     try {
+      const itemsOrders = order.items;
+      const orderPayload = {
+        organisationId: order.organisationId,
+        deliveryCode: generateRandomString(5),
+        status: OrderStatusEnum.new,
+      };
       const newOrder = await this.prisma.order.create({
-        data: order as Prisma.OrderCreateInput,
+        data: orderPayload as unknown as Prisma.OrderCreateInput,
       });
-      return newOrder;
+
+      const orderId = newOrder.id;
+
+      let totalAmount = 0;
+
+      itemsOrders.forEach(async (item) => {
+        totalAmount += item.price;
+        return await this.itemOrderService.createItem({ ...item, orderId });
+      });
+
+      await this.updateSingleOrder(orderId, { totalAmount });
+
+      return await this.getSingleOrder(orderId);
     } catch (error) {
       throw error;
       return;

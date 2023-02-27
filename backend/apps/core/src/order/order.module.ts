@@ -12,9 +12,10 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
+import { ItemOrderModule } from '../item-order/item-order.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, ItemOrderModule],
   controllers: [OrderController],
   providers: [
     OrderService,

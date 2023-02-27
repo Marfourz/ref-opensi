@@ -83,25 +83,25 @@ model Organisation {
 model Order {
   id                  String    @id @default(uuid())
 
-  organisation        Organisation? @relation(fields: [organisationId], references: [id])
+  organisation        Organisation @relation(fields: [organisationId], references: [id])
 
   organisationId      String
 
   items               ItemOrder[]
 
-  totalAmount         Int
+  totalAmount         Int?
 
   transaction         Transaction?
 
   deliveryCode        String
 
-  deliveryMan         String
+  deliveryMan         String?
 
   status              OrderStatusEnum
 
   invoice             Invoice?
 
-  deliveryDate        String
+  deliveryDate        String?
 
   createdAt           DateTime @default(now())
 
