@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Order, ItemOrder } from '@prisma/client';
+import { Order, ItemOrder, Prisma } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { itemOrderDto, updateItemOrderDto } from './item-order.dto';
 
@@ -10,7 +10,7 @@ export class ItemOrderService {
   async createItem(item: itemOrderDto): Promise<ItemOrder> {
     try {
       const newItem = await this.prisma.itemOrder.create({
-        data: item,
+        data: item as unknown as Prisma.ItemOrderCreateInput,
       });
       return newItem;
     } catch (error) {
