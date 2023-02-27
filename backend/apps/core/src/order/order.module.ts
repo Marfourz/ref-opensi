@@ -13,9 +13,10 @@ import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
 import { ItemOrderModule } from '../item-order/item-order.module';
+import { ProductsModule } from '../product/product.module';
 
 @Module({
-  imports: [HttpModule, ItemOrderModule],
+  imports: [HttpModule, ItemOrderModule, ProductsModule],
   controllers: [OrderController],
   providers: [
     OrderService,

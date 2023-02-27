@@ -26,10 +26,6 @@ class itemOrder {
   @ApiProperty({ type: Number })
   @IsNumber()
   quantity: number;
-
-  @ApiProperty({ type: Number })
-  @IsNumber()
-  price: number;
 }
 
 export class updateOrderDto {

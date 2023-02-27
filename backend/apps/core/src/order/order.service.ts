@@ -5,17 +5,20 @@ import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
+import { ProductsService } from '../product/product.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     private prisma: PrismaService,
     private itemOrderService: ItemOrderService,
+    private productService: ProductsService,
   ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
     try {
       const itemsOrders = order.items;
+      const Ilength = itemsOrders.length;
       const orderPayload = {
         organisationId: order.organisationId,
         deliveryCode: generateRandomString(5),
@@ -30,11 +33,24 @@ export class OrderService {
       let totalAmount = 0;
 
       itemsOrders.forEach(async (item) => {
-        totalAmount += item.price;
-        return await this.itemOrderService.createItem({ ...item, orderId });
+        // eslint-disable-next-line prettier/prettier
+        return await this.itemOrderService.createItem({
+          orderId,
+          productId: item.productId,
+          quantity: item.quantity,
+        });
       });
 
-      await this.updateSingleOrder(orderId, { totalAmount });
+      itemsOrders.forEach(async (item, i) => {
+        // eslint-disable-next-line prettier/prettier
+        const product = await this.prisma.product.findUnique({
+          where: { id: item.productId },
+        });
+        totalAmount += product.unitPrice * item.quantity;
+        if (i === Ilength - 1) {
+          await this.updateSingleOrder(orderId, { totalAmount });
+        }
+      });
 
       return await this.getSingleOrder(orderId);
     } catch (error) {

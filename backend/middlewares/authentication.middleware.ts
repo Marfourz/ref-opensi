@@ -29,7 +29,6 @@ export class AuthenticationMiddleware implements NestMiddleware {
         this.jwtService
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
-            console.log(result);
             const { data } = result;
             data.uid = result.uid;
             this.prisma.user
@@ -38,12 +37,8 @@ export class AuthenticationMiddleware implements NestMiddleware {
                 select: { organisation: true, role: true },
               })
               .then(async (user) => {
-                console.log(data);
-                console.log(user);
                 data.roles.push(user.role);
                 data.orgId = user.organisation.id;
-                console.log('user user', user);
-                console.log(data);
                 req.user = data;
                 next();
               })

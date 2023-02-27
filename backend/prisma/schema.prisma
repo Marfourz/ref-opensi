@@ -121,8 +121,6 @@ model ItemOrder {
 
   quantity            Int
 
-  price               Int
-
   createdAt           DateTime @default(now())
 
   updatedAt           DateTime @default(now())
