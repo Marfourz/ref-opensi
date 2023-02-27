@@ -10,7 +10,7 @@
       <BaseIcon :name="data.icon"  :style="'color:' + data.primaryColor"></BaseIcon>
     </div>
     <div class="space-y-2">
-      <div class="font-semibold text-[14px]">{{ data.subtitle }}</div>
+      <div class="font-[500] text-[14px] text-[#0F0F14]">{{ data.subtitle }}</div>
       <div class="font-bold"> {{ data.title }}</div>
     </div>
   </div>

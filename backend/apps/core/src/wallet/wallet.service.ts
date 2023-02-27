@@ -34,7 +34,7 @@ export class WalletService {
   async getSingleWallet(id: string): Promise<Wallet> {
     try {
       const wallet = await this.prisma.wallet.findUnique({
-        where: { id },
+        where: { organisationId: id },
         include: {
           organisation: true,
           transactions: true,

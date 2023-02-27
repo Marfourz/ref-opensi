@@ -1,5 +1,6 @@
 <template>
   <div class="w-full overflow-auto bg-white text-[14px]">
+    
     <table
       class="table-auto w-full  text-md"
      
@@ -60,10 +61,11 @@
               <slot
               :name="title.name"
               :element="{ ...element, index: i }"
-             
+              
             >
               <!-- {{ element[title.name] }} -->
-              {{ getElementValue(title, element, i) }}
+              <div v-html="getElementValue(title, element, i)"></div>
+             
             </slot>
             </div>
           
@@ -72,7 +74,7 @@
            
               <slot name="action" :element="element">
                 <div class="relative"> 
-                        <BaseIcon name="triplePoints" @click="showActionMenu = !showActionMenu"></BaseIcon>
+                        <BaseIcon name="triplePoints"  @click="showActionMenu = !showActionMenu"></BaseIcon>
                         <BaseActions :actions="actions" v-if="showActionMenu" :data="element" @click="showActionMenu = false"></BaseActions>
                     </div>
               </slot>

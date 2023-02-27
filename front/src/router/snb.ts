@@ -9,6 +9,8 @@ import Appros from "@/views/snb/appros/index.vue";
 import ApprosCreate from "@/views/snb/appros/create.vue";
 import Users from "@/views/users/index.vue";
 import Category from "@/views/snb/categories/index.vue";
+import UpdateStock from "@/views/snb/stock/update.vue";
+// import VDetail from "@/components/VDetail.vue";
 
 export default [
   {
@@ -25,6 +27,32 @@ export default [
         meta: {
           withoutPadding: true,
         },
+        children: [
+          {
+            path: "commandes",
+            name: "orderReceived",
+            component: OrderReceived,
+            meta: {
+              withoutPadding: true,
+            },
+          },
+          {
+            path: "appros",
+            name: "appros",
+            component: Appros,
+            meta: {
+              withoutPadding: true,
+            },
+          },
+          {
+            path: "appros/create",
+            name: "approsCreate",
+            component: ApprosCreate,
+            meta: {
+              withoutPadding: true,
+            },
+          },
+        ],
       },
       {
         path: "appros",
@@ -47,6 +75,15 @@ export default [
         name: "subDistributors",
         component: SubDistributors,
       },
+      // {
+      //   path: "/sous-distrivuteurs/:id",
+      //   name: "details",
+      //   component: VDetail,
+      //   meta: {
+      //     title: "",
+      //     withoutPadding: true,
+      //   },
+      // },
       {
         path: "produits/categories",
         name: "categories",
@@ -71,6 +108,11 @@ export default [
         path: "utitlisateurs",
         name: "users",
         component: Users,
+      },
+      {
+        path: "stock/update",
+        name: "updateStock",
+        component: UpdateStock,
       },
     ],
   },

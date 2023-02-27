@@ -87,10 +87,8 @@ export default defineComponent({
     }
 
     watch(()=>props.modelValue,(newValue)=>{
-      
-      const elementIndex = props.items.findIndex((value:ISelect)=>value.value == props.modelValue)
 
-      console.log("new select value", newValue,props.items,elementIndex);
+      const elementIndex = props.items.findIndex((value:ISelect)=>value.value == props.modelValue)
     
       if(elementIndex != -1)
         selected.value = props.items[elementIndex];
@@ -101,7 +99,7 @@ export default defineComponent({
    
 
     onMounted(() => {
-      console.log("props.items[0]",props.items[0])
+     
       if(props.items && props.items.length > 0){
         selected.value = props.items[0];
         context.emit("update:modelValue", selected.value.value);

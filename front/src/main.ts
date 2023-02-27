@@ -15,7 +15,11 @@ import BaseBottomModal from "@/components/base/BaseBottomModal.vue"
 import BaseModal from './components/base/BaseModal.vue'
 import BaseTabs from './components/base/BaseTabs.vue'
 import Toast from "vue-toastification";
+import BaseGoBack from './components/base/BaseGoBack.vue'
 import "vue-toastification/dist/index.css";
+
+import VCalendar from 'v-calendar';
+import 'v-calendar/dist/style.css';
 
 
 import App from './App.vue'
@@ -62,10 +66,11 @@ app.component('BaseSelect',BaseSelect)
 app.component('BaseBottomModal',BaseBottomModal)
 app.component('BaseModal',BaseModal)
 app.component('BaseTabs',BaseTabs)
+app.component('BaseGoBack',BaseGoBack)
 
 app.use(createPinia())
 app.use(router)
-app.use(helpers)
 app.use(Toast, {});
+app.use(VCalendar, {})
 
 app.mount('#app')

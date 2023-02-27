@@ -2,10 +2,10 @@
   <div
     class="
       rounded-40
-      h-9
-      w-52
-      border border-[#6B7A99]
-      bg-[#F4F6F9]
+      p-1
+      w-fit
+      border border-[#D3D8E6]
+
       cursor-pointer
       items-center
     "

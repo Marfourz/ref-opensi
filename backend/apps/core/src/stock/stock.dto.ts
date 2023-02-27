@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class stockDto {
@@ -11,8 +11,9 @@ export class stockDto {
   productId: string;
 
   @ApiProperty({ type: Number })
+  @IsOptional()
   @IsNumber()
-  originalQuantity: number;
+  originalQuantity?: number;
 
   @ApiProperty({ type: Number })
   @IsNumber()

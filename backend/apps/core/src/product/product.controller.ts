@@ -11,7 +11,8 @@ import {
 import { ProductsService } from './product.service';
 import { productDto, updateProductDto } from './product.dto';
 import { Product, Image, Stock } from '@prisma/client';
-import { OrderTypeEnum } from 'guards/order.type.enum';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 import { PagiationPayload } from 'types';
 import {
   ApiTags,
@@ -29,6 +30,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -95,6 +97,7 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -112,6 +115,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

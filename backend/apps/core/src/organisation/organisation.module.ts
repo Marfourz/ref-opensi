@@ -10,11 +10,21 @@ import { PrismaService } from 'libs/prisma/src';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [HttpModule],
   controllers: [OrganisationController],
-  providers: [OrganisationService, PrismaService, JwtService],
+  providers: [
+    OrganisationService,
+    PrismaService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class OrganisationModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

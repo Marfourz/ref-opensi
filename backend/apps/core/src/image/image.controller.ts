@@ -68,5 +68,4 @@ export class ImageController {
   seeUploadedFile(@Param('imgpath') image, @Res() res) {
     return res.sendFile(image, { root: PRODUCT_IMAGES_DEST });
   }
-  //0303be01-d7b9-462b-ad68-2af4240ff58a
 }

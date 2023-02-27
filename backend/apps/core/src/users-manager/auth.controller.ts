@@ -15,6 +15,7 @@ import {
   ApiParam,
   ApiHeader,
 } from '@nestjs/swagger';
+import { Response } from 'supertest';
 
 @ApiTags('auth')
 @Controller('auth')

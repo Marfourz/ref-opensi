@@ -1,4 +1,4 @@
-import type { OrderStatus, Sex, UserRole } from "./enumerations";
+import type { OrderStatus, OrganisationType, PackagingType, Sex, UserAccountStatus, UserRole } from "./enumerations";
 
 export type PrimaryKey = string | null | undefined;
 
@@ -8,9 +8,33 @@ export interface Commun {
   updatedAt?: Date;
 }
 
-export interface IProductCategory extends Commun {
-  name: string;
-  description: string;
+export interface IProductCategory{
+    name : string,
+    description : string
+}
+
+export interface IProduct extends Commun{
+    name : string,
+    category? : IProductCategory,
+    categoryId : string,
+    unitPrice : number,
+    packagingType:PackagingType,
+    bulkPrice : number,
+    volume : number,
+    image? : Array<string>,
+    stocks?: Array<any>
+} 
+
+export interface IOrganisation extends Commun{
+    type: OrganisationType,
+    socialReason: string,
+    fiscalId: string,
+    phone: string,
+    email: string,
+    adress: string,
+    ownerName: string,
+    paymentDeadline: 0,
+    status?: string
 }
 
 export interface IProduct extends Commun {
@@ -48,17 +72,12 @@ export interface IUser extends Commun {
   sex: Sex;
   role: UserRole;
   organisationId: string;
+  birthday?:Date,
+  engineId?:PrimaryKey,
+  status?: UserAccountStatus
 }
 
-//master distributeur
-export interface IMaster extends Commun {
-  name: string;
-  phone: string;
-  email: string;
-  address: String;
-  ifu: String;
-  company: string;
-}
+
 
 export interface ITransaction extends Commun {}
 

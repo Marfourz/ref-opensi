@@ -24,7 +24,7 @@
         </div>
         <div
           v-else-if="type == 'date'"
-          class="border rounded-lg w-full flex items-center justify-between px-4 py-3"
+          class="border rounded-lg w-full flex items-center justify-between px-4 py-2"
           :class="{
             'border-borderColor': errors.length == 0,
             'border-danger bg-fadeDanger': errors.length != 0,
@@ -44,7 +44,7 @@
               />
             </template>
           </v-date-picker>
-          <BaseIcon icon="date-range"></BaseIcon>
+          <!-- <BaseIcon name="date-range"></BaseIcon> -->
         </div>
   
         <div

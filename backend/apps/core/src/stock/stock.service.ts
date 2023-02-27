@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Stock } from '@prisma/client';
+import { Stock, PackagingTypeEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
@@ -10,8 +10,24 @@ export class StockService {
 
   async createStock(stock: stockDto): Promise<Stock> {
     try {
+      const haveStock = await this.prisma.stock.findFirst({
+        where: {
+          organisationId: stock.organisationId,
+          productId: stock.productId,
+        },
+      });
+
+      if (haveStock) {
+        return await this.updateSingleStock(haveStock.id, {
+          currentQuantity: stock.currentQuantity,
+        });
+      }
+
+      const Nstock: any = stock;
+      Nstock.originalQuantity = stock.currentQuantity;
+
       const newStock = await this.prisma.stock.create({
-        data: stock,
+        data: Nstock,
       });
       return newStock;
     } catch (error) {
@@ -63,9 +79,9 @@ export class StockService {
   async searchForStocksOfOrganisation(
     filterParams,
     orgId: string,
-  ): Promise<PagiationPayload<Stock[]>> {
+  ): Promise<PagiationPayload<any[]>> {
     try {
-      const { page, perPage, q } = filterParams;
+      const { page, perPage, q, categoryId } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -92,7 +108,7 @@ export class StockService {
         }
       }
 
-      const stocks = await this.prisma.stock.findMany({
+      /*const stocks = await this.prisma.stock.findMany({
         ...paginateConstraints,
         where: {
           organisationId: orgId,
@@ -105,16 +121,84 @@ export class StockService {
             },
           ],
         },
+        include: {
+          product: {
+            include: category: true,
+          },
+        },
+      });*/
+
+      const stocks = await this.prisma.productCategory.findUnique({
+        where: {
+          id: categoryId,
+        },
+        select: {
+          products: {
+            include: { stocks: { where: { organisationId: orgId } } },
+          },
+        },
       });
 
       const count = await this.prisma.stock.count({
         where: { organisationId: orgId },
       });
 
-      return { data: stocks, count };
+      return { data: stocks.products, count };
     } catch (error) {
       throw error;
       return;
     }
+  }
+
+  async getStockGeneralInfos(orgId: string): Promise<any> {
+    const totalPackProducts = await this.prisma.stock.aggregate({
+      where: {
+        organisationId: orgId,
+        product: {
+          packagingType: PackagingTypeEnum.pack,
+        },
+      },
+      _sum: { currentQuantity: true },
+    });
+
+    const totalRackProducts = await this.prisma.stock.aggregate({
+      where: {
+        organisationId: orgId,
+        product: {
+          packagingType: PackagingTypeEnum.rack,
+        },
+      },
+      _sum: { currentQuantity: true },
+    });
+
+    const stocks = await this.prisma.stock.findMany({
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    let totalCost = 0;
+    stocks.map((stock) => {
+      totalCost += stock.currentQuantity * stock.product.unitPrice;
+      console.log('stock', stock);
+    });
+
+    const lastStock = await this.prisma.stock.findMany({
+      take: 1,
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    return { totalPackProducts, totalRackProducts, totalCost, lastStock };
   }
 }

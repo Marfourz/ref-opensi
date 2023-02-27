@@ -85,12 +85,58 @@ export class OrganisationService {
     }
   }
 
-  async getDeliveryMenOfOrganisation(id: string): Promise<User[]> {
+  async getDeliveryMenOfOrganisation(
+    id: string,
+    filterParams: any,
+  ): Promise<PagiationPayload<User[]>> {
     try {
+      const { page, perPage, q } = filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      const userNameConstraint: any = {};
+      const phoneConstraint: any = {};
+      const emailConstraint: any = {};
+      const w: any = {};
+      w.organisationId = id;
+      w.role = UserRoleEnum.deliveryMan;
+      if (q != undefined) {
+        userNameConstraint.name = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        phoneConstraint.phone = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        emailConstraint.email = {
+          contains: q,
+          mode: 'insensitive',
+        };
+        w.OR = [userNameConstraint, phoneConstraint, emailConstraint];
+      }
+
       const users = await this.prisma.user.findMany({
         where: { organisationId: id, role: UserRoleEnum.deliveryMan },
+        include:{
+          engine:true
+        }
       });
-      return users;
+
+      const count = await this.prisma.user.count({
+        where: {
+          organisationId: id,
+          role: UserRoleEnum.deliveryMan,
+        },
+      });
+
+      return { data: users, count };
     } catch (error) {
       throw error;
       return;
@@ -101,7 +147,7 @@ export class OrganisationService {
     filterParams,
   ): Promise<PagiationPayload<Organisation[]>> {
     try {
-      const { page, perPage, q } = filterParams;
+      const { page, perPage, q, type } = filterParams;
 
       const paginateConstraints: any = {};
       if (!isNaN(page) && !isNaN(perPage)) {
@@ -113,6 +159,8 @@ export class OrganisationService {
       const phoneConstraint: any = {};
       const emailConstraint: any = {};
       const turnoverConstraint: any = {};
+      const w: any = {};
+      w.NOT = { type: OrganisationTypeEnum.snb };
       if (q != undefined) {
         ownerNameConstraint.ownerName = {
           contains: q,
@@ -132,35 +180,31 @@ export class OrganisationService {
         if (!isNaN(q)) {
           turnoverConstraint.turnover = Number(q);
         }
+        w.wallet = { ...turnoverConstraint };
+        w.OR = [ownerNameConstraint, phoneConstraint, emailConstraint];
+      }
+
+      if (type != undefined) {
+        w.type = type;
       }
 
       const organisations = await this.prisma.organisation.findMany({
         ...paginateConstraints,
         where: {
-          wallet: {
-            ...turnoverConstraint,
-          },
-          OR: [
-            {
-              ...ownerNameConstraint,
-            },
-            {
-              ...phoneConstraint,
-            },
-            {
-              ...emailConstraint,
-            },
-          ],
-          NOT: {
-            type: OrganisationTypeEnum.snb,
-          },
+          ...w,
         },
         include: {
           wallet: true,
         },
       });
 
-      const count = await this.prisma.organisation.count();
+      const count = await this.prisma.organisation.count({
+        where: {
+          NOT: {
+            type: OrganisationTypeEnum.snb,
+          },
+        },
+      });
 
       return { data: organisations, count };
     } catch (error) {

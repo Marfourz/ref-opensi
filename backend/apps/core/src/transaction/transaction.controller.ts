@@ -17,6 +17,8 @@ import {
 } from '@nestjs/swagger';
 import { transactionDto, updateTransactionDto } from './transaction.dto';
 import { TransactionService } from './transaction.service';
+import { Roles } from 'guards/roles.decorator';
+import { Role } from 'guards/roles.enum';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -24,6 +26,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiBody({ type: transactionDto })
   @ApiHeader({
     name: 'x-auth-token',
@@ -37,6 +40,7 @@ export class TransactionController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',
@@ -47,6 +51,7 @@ export class TransactionController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',
@@ -61,6 +66,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
