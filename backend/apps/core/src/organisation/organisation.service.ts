@@ -195,6 +195,7 @@ export class OrganisationService {
         },
         include: {
           wallet: true,
+          orders: true,
         },
       });
 
