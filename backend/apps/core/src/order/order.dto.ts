@@ -13,7 +13,7 @@ export class orderDto {
   @ApiProperty({ type: String })
   organisationId?: string;
 
-  @ApiProperty({ type: itemOrderDto })
+  @ApiProperty()
   @IsArray()
   items: itemOrder[];
 }

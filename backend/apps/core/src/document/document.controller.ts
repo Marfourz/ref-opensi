@@ -1,11 +1,6 @@
-import { Controller, Get, Param, Body } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { DocumentService } from './document.service';
-import {
-  ApiBody,
-  ApiCreatedResponse,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiParam, ApiTags, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('documents')
 @Controller('documents')
@@ -15,6 +10,15 @@ export class DocumentController {
   @Get('generate-receipt/:id')
   @ApiParam({ name: 'id' })
   generateDocument(@Param() params) {
-    return this.documentService.generateDocument(params.id);
+    return this.documentService.generateReceiptDocument(params.id);
+  }
+
+  @Get('download-orders/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadOrders(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadOrders(filterParams, params.id);
   }
 }

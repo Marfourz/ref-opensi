@@ -136,7 +136,9 @@ export class UserService {
       const userNameConstraint: any = {};
       const userEmailConstraint: any = {};
       const userPhoneConstraint: any = {};
-      if (q != undefined) {
+      const w: any = {};
+      w.organisationId = orgId;
+      if (q != undefined && q != '') {
         userIdConstraint.id = {
           contains: q,
           mode: 'insensitive',
@@ -156,27 +158,18 @@ export class UserService {
           contains: q,
           mode: 'insensitive',
         };
+
+        w.OR = [
+          userIdConstraint,
+          userNameConstraint,
+          userEmailConstraint,
+          userPhoneConstraint,
+        ];
       }
 
       const users = await this.prisma.user.findMany({
         ...paginateConstraints,
-        where: {
-          organisationId: orgId,
-          OR: [
-            {
-              ...userIdConstraint,
-            },
-            {
-              ...userEmailConstraint,
-            },
-            {
-              ...userNameConstraint,
-            },
-            {
-              ...userPhoneConstraint,
-            },
-          ],
-        },
+        where: { ...w },
       });
 
       const count = await this.prisma.user.count({
