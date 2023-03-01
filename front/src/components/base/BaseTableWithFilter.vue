@@ -33,9 +33,6 @@
         @change="pageChange"
       />
     </div>
-
-   
-
     <BaseTable
       :titles="titles"
       :data="items"

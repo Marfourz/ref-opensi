@@ -1,13 +1,13 @@
 <template>
   <div class="w-full">
     <slot name="title"> </slot>
-    <BaseTable :titles="titles" :data="order.items" >
+    <BaseTable :titles="titles" :data="order.items" v-if="order">
       <template #product="{element}">
         <div class="flex items-center space-x-6">
             <img src="@/assets/images/beverage.png" alt="">
             <div class="flex flex-col ">
                 <div class=" text-black font-semibold">{{ element.product.name }}</div>
-                <div class="text-tableColor">{{ element.product.rackPrice }} / Casiers</div>
+                <div class="text-tableColor">{{ element.product.bulkPrice }} / Casiers</div>
             </div>
             
         </div>
@@ -21,7 +21,7 @@
 
       <template #price="{element}">
         <div class="font-semibold text-black">
-            {{  element.price }} F
+            {{  helpers.currency(element.product.bulkPrice * element.quantity)  }} F
         </div>
       </template>
     </BaseTable>
@@ -39,6 +39,7 @@
 import { defineComponent } from "vue";
 import type { PropType } from "vue";
 import type { IOrder } from "../types/interfaces";
+import helpers from "@/helpers/index"
 
 export default defineComponent({
   props: {
@@ -54,7 +55,7 @@ export default defineComponent({
         name: "product",
       },
       {
-        title: "Quantity",
+        title: "Quantité",
         name: "quantity",
       },
       {
@@ -65,6 +66,7 @@ export default defineComponent({
 
     return {
       titles,
+      helpers
     };
   },
 });

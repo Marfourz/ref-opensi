@@ -75,7 +75,7 @@
               <slot name="action" :element="element">
                 <div class="relative"> 
                         <BaseIcon name="triplePoints"  @click="showActionMenu = !showActionMenu"></BaseIcon>
-                        <BaseActions :actions="actions" v-if="showActionMenu" :data="element" @click="showActionMenu = false"></BaseActions>
+                        <BaseActions  :actions="actions" v-if="showActionMenu" :data="element" @click="showActionMenu = false"></BaseActions>
                     </div>
               </slot>
             </div>
