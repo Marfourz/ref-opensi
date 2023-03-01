@@ -22,6 +22,7 @@ export class OrderService {
       const orderPayload = {
         organisationId: order.organisationId,
         deliveryCode: generateRandomString(5),
+        reference: generateRandomString(7),
         status: OrderStatusEnum.new,
       };
       const newOrder = await this.prisma.order.create({
@@ -115,6 +116,7 @@ export class OrderService {
 
       const totalAmountConstraint: any = {};
       const orderIdConstraint: any = {};
+      const orderReferenceConstraint: any = {};
       const w: any = {};
       w.organisationId = orgId;
       if (q != undefined && q != '') {
@@ -123,11 +125,20 @@ export class OrderService {
           mode: 'insensitive',
         };
 
+        orderReferenceConstraint.reference = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
         if (!isNaN(q)) {
           totalAmountConstraint.totalAmount = Number(q);
         }
 
-        w.OR = [orderIdConstraint, totalAmountConstraint];
+        w.OR = [
+          orderIdConstraint,
+          totalAmountConstraint,
+          orderReferenceConstraint,
+        ];
       }
 
       const orders = await this.prisma.order.findMany({

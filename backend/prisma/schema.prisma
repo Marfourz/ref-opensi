@@ -95,6 +95,8 @@ model Order {
 
   deliveryCode        String
 
+  reference           String?
+
   deliveryMan         String?
 
   status              OrderStatusEnum
