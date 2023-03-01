@@ -2,6 +2,7 @@
 
 stages:
   - build
+  - deploy
 
 build_backend_prod:
   only:
@@ -24,11 +25,11 @@ build_frontend_page_prod:
     refs:
       - prod
     changes:
-      - frontend/**/*
+      - front/**/*
       - .gitlab-ci.yml
   stage: build
   script:
-    - cp ./front/.env ./frontend/.env
+    - cp ./front/.env ./front/.env
     - docker -f front/Dockerfile -t registry.gitlab.com/opensi/snb-front
     - docker push registry.gitlab.com/opensi/snb-front
   tags:
@@ -36,4 +37,12 @@ build_frontend_page_prod:
   environment:
     name: production
 
+deploy_dev_images_prod:
+  stage: deploy
+  tags:
+    - shell-1
+  only:
+    - prod
+  script:
+    - docker -f docker-compose.yml up -d --force-recreate
 
