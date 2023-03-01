@@ -5,7 +5,7 @@ stages:
   - deploy
 
 before_script:
-  - docker login -u itsjdio -p AKjd24'wizy
+  - docker login -u itsjdio -p 
 
 build_backend_prod:
   only:
@@ -16,7 +16,7 @@ build_backend_prod:
       - .gitlab-ci.yml
   stage: build
   script:
-    - docker-compose -f docker-compose.yml build -t registry.gitlab.com/opensi/snb
+    - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend
     - docker push registry.gitlab.com/opensi/snb
   tags:
     - shell-1
@@ -33,7 +33,7 @@ build_frontend_page_prod:
   stage: build
   script:
     - cp ./front/.env ./frontend/.env
-    - docker-compose -f docker-compose.yml build -t registry.gitlab.com/opensi/snb .
+    - docker -f front/Dockerfile -t registry.gitlab.com/opensi/snb-front
     - docker push registry.gitlab.com/opensi/snb
   tags:
     - shell-1
@@ -46,8 +46,4 @@ deploy_dev_images_prod:
     - shell-1
   only:
     - prod
-  #before_script:
-  #  - docker login https://eu.gcr.io
-  script:
-    - docker-compose -f docker-compose.yml pull
-    - docker-compose -f docker-compose.yml up -d --force-recreate
+
