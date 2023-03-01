@@ -19,11 +19,16 @@ export enum Sex {
     DELIVERY_MAN = 'deliveryMan'
   }
   
-  export enum OrganisationType {
-    SNB = 'snb',
-    DA = 'da',
-    MD = 'md'
-  }
+
+
+
+export enum OrganisationType {
+SNB = 'snb',
+DA = 'da',
+MD = 'md',
+Dp = "Dp",
+DP = "DP"
+}
   
   export enum OrderStatus {
     DELIVERY = 'delivered',

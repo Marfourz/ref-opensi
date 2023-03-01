@@ -329,15 +329,10 @@ export default defineComponent({
       }
     }
 
-//  function goToPartenersdetails() {
-//       router.push({ name: "details" });
-//     }
-
     return {
       organizationStore,
       titles,
       showModal,
-
       master,
       onSubmit,
       actions,
