@@ -26,8 +26,7 @@ export enum OrganisationType {
 SNB = 'snb',
 DA = 'da',
 MD = 'md',
-Dp = "Dp",
-DP = "DP"
+DP = "dp"
 }
   
   export enum OrderStatus {

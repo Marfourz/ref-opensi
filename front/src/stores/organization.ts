@@ -82,9 +82,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
     async statPartners(type: OrganisationType) {
       try {
         const response = await Api.get(
-          `organisations/partners/search?type=${type}`
+          `organisations/top-partners?type=${type}`
         );
-        return response.data;
+        return response;
       } catch (error) {
         throw error;
       }

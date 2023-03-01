@@ -84,6 +84,9 @@
           <template #wallet="{ element }">
             <div class="">{{ element.wallet.turnover }}FCFA</div>
           </template>
+          <template #socialReason="{ element }">
+            <div class="text-link">{{ element.socialReason }}</div>
+          </template>
         </BaseTable>
       </div>
 
