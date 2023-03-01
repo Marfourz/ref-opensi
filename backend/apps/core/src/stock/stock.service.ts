@@ -96,7 +96,7 @@ export class StockService {
         where: {
           ...w,
         },
-        select: {
+        include: {
           products: {
             include: { image: true,stocks: { where: { organisationId: orgId } } },
           },

@@ -7,7 +7,11 @@
             <BaseTitle title="Mes appros"></BaseTitle>
             <BaseButton icon="plus" size="small" @click="goToCreateAppros">Nouvel appro</BaseButton>
           </div>
-          <BaseTableWithFilter :titles="titles"></BaseTableWithFilter>
+          <BaseTableWithFilter 
+            :titles="titles" 
+            :requestId="organisationId"
+            :fetchData="orderStore.fetchAllByOrganization" >
+          </BaseTableWithFilter>
         </div>
       </template>
       <template #secondPart>
@@ -25,11 +29,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import PageInTwoPart from "../../../components/PageInTwoPart.vue";
+import {useOrdersStore} from "@/stores/orders"
 import Order from "@/components/Order.vue"
 import { OrderStatus, OrganisationType } from "../../../types/enumerations";
 import { useRouter } from "vue-router";
+import { useUsersStore } from "../../../stores/users";
+
 
 export default defineComponent({
   components: { PageInTwoPart,Order },
@@ -94,6 +101,13 @@ export default defineComponent({
         deliveryDate : Date
     }
 
+    const orderStore = useOrdersStore()
+    const userStore = useUsersStore()
+
+    const organisationId = computed(()=>{
+      return userStore.getCurrentUser?.organisationId
+    })
+
     const router = useRouter()
     function goToCreateAppros(){
       router.push({
@@ -102,10 +116,16 @@ export default defineComponent({
     }
 
 
+   
+
+
     return {
       titles,
       goToCreateAppros,
-      order
+      order,
+      organisationId,
+      orderStore
+      
     };
   },
 });

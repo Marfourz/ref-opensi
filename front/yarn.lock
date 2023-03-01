@@ -1394,6 +1394,11 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@kkiapay-org/widget-interfaces@^1.0.1":
+  "integrity" "sha512-+HIkR+S36EDZNxf7Py9OsdKSRxqdb97LlzJX+ML8JxWp1hEmIN+gbMHsrQdO6Go7Dh+i0ygWfNm9VTiy2Pzz5w=="
+  "resolved" "https://registry.npmjs.org/@kkiapay-org/widget-interfaces/-/widget-interfaces-1.0.30.tgz"
+  "version" "1.0.30"
+
 "@mdx-js/mdx@^1.6.22":
   "integrity" "sha512-AMxuLxPz2j5/6TpF/XSdKpQP1NlG0z11dFOlq+2IP/lSgl11GY8ji6S/rgsViN/L0BDvHvUMruRb7ub+24LUYA=="
   "resolved" "https://registry.npmjs.org/@mdx-js/mdx/-/mdx-1.6.22.tgz"
@@ -7200,7 +7205,7 @@
     "is-ci" "^2.0.0"
     "micromatch" "^4.0.2"
 
-"jest-worker@^26.5.0", "jest-worker@^26.6.2":
+"jest-worker@^26.2.1", "jest-worker@^26.5.0", "jest-worker@^26.6.2":
   "integrity" "sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ=="
   "resolved" "https://registry.npmjs.org/jest-worker/-/jest-worker-26.6.2.tgz"
   "version" "26.6.2"
@@ -7373,6 +7378,14 @@
   "integrity" "sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw=="
   "resolved" "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
   "version" "6.0.3"
+
+"kkiapay@^2.0.16":
+  "integrity" "sha512-m/BOdLn1iMgGJ/lFOR9xQXji60mwEVAwqjl2MoJz+tkQxxeS3miSaXAfDNhW3I5fXFXVKQ+ahA1OLGQvsAblgQ=="
+  "resolved" "https://registry.npmjs.org/kkiapay/-/kkiapay-2.0.16.tgz"
+  "version" "2.0.16"
+  dependencies:
+    "@kkiapay-org/widget-interfaces" "^1.0.1"
+    "rollup-plugin-terser" "^7.0.2"
 
 "kleur@^3.0.3":
   "integrity" "sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w=="
@@ -9788,6 +9801,23 @@
     "hash-base" "^3.0.0"
     "inherits" "^2.0.1"
 
+"rollup-plugin-terser@^7.0.2":
+  "integrity" "sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ=="
+  "resolved" "https://registry.npmjs.org/rollup-plugin-terser/-/rollup-plugin-terser-7.0.2.tgz"
+  "version" "7.0.2"
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "jest-worker" "^26.2.1"
+    "serialize-javascript" "^4.0.0"
+    "terser" "^5.0.0"
+
+"rollup@^2.0.0":
+  "integrity" "sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw=="
+  "resolved" "https://registry.npmjs.org/rollup/-/rollup-2.79.1.tgz"
+  "version" "2.79.1"
+  optionalDependencies:
+    "fsevents" "~2.3.2"
+
 "rollup@^3.7.0":
   "integrity" "sha512-+uWPPkpWQ2H3Qi7sNBcRfhhHJyUNgBYhG4wKe5wuGRj2m55kpo+0p5jubKNBjQODyPe6tSBE3tNpdDwEisQvAQ=="
   "resolved" "https://registry.npmjs.org/rollup/-/rollup-3.11.0.tgz"
@@ -10666,7 +10696,7 @@
     "source-map" "~0.6.1"
     "source-map-support" "~0.5.12"
 
-"terser@^5.3.4", "terser@^5.4.0":
+"terser@^5.0.0", "terser@^5.3.4", "terser@^5.4.0":
   "integrity" "sha512-v8wWLaS/xt3nE9dgKEWhNUFP6q4kngO5B8eYFUuebsu7Dw/UNAnpUod6UHo04jSSkv8TzKHjZDSd7EXdDQAl8Q=="
   "resolved" "https://registry.npmjs.org/terser/-/terser-5.16.3.tgz"
   "version" "5.16.3"

@@ -41,6 +41,7 @@ import { useProductStore } from "../../../stores/product";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProductCategory } from "../../../types/interfaces";
 
+
 export default defineComponent({
   components: { PageInTwoPart, ProductInput, ProductCategory, Basket },
   setup() {
@@ -77,10 +78,12 @@ export default defineComponent({
     })
 
 
+
     return {
       categories,
       categoryId,
       products,
+      kkiapayWidget
     };
   },
 });

@@ -59,6 +59,11 @@ import { useBasketStore } from "../stores/basket";
 import EmptyState from "@/components/EmptyState.vue";
 import BasketItem from "./BasketItem.vue";
 import { PaymentMethod } from "../types/enumerations";
+import {
+  openKkiapayWidget,
+  addKkiapayListener,
+  removeKkiapayListener,
+} from "kkiapay";
 
 export default defineComponent({
   components: { EmptyState, BasketItem },
@@ -72,6 +77,16 @@ export default defineComponent({
     const totalAmount = computed(()=>{
         return basketStore.getBasketPrice
     })
+
+    function kkiapayWidget() {
+      openKkiapayWidget({
+        amount: 4000,
+        api_key: "",
+        sandbox: true,
+        phone: "97000000",
+      });
+    }
+
 
 
     const selectedPaymentMethod = ref<PaymentMethod>(PaymentMethod.KKIAPAY)

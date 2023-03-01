@@ -2,13 +2,13 @@ import { OrderStatusEnum } from '@prisma/client';
 
 export const getPlainStatus = (status: OrderStatusEnum) => {
   switch (status) {
-    case 'new':
+    case OrderStatusEnum.new:
       return 'Nouveau';
       break;
-    case 'accepted':
+    case OrderStatusEnum.accepted:
       return 'Accepté';
       break;
-    case 'delivered':
+    case OrderStatusEnum.delivered:
       return 'Livrée';
       break;
     default:

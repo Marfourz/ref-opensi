@@ -1,17 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
+import {
+  Organisation,
+  User,
+  OrganisationTypeEnum,
+  UserStatusEnum,
+} from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
 import { WalletService } from '../wallet/wallet.service';
-import { promisify } from 'util';
+import { AuthService } from '../users-manager/auth.service';
+import { generateRandomString } from '../../../../helpers/generateRandomString';
+import { NotificationService } from 'apps/notification/src/notification.service';
+import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
+import { Role } from '../../../../guards/roles.enum';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrganisationService {
   constructor(
     private prisma: PrismaService,
     private walletService: WalletService,
+    private authService: AuthService,
+    private notifService: NotificationService,
+    private userService: UserService,
   ) {}
 
   async createOrganisation(
@@ -26,6 +39,19 @@ export class OrganisationService {
         organisationId: newOrganisation.id,
         turnover: 0,
       });
+
+      const userGenerated = {
+        organisationId: newOrganisation.id,
+        name: organisation.socialReason,
+        phone: organisation.phone,
+        email: organisation.email,
+        address: organisation.adress,
+        sex: 'male',
+        role: Role.ADMINISTRATOR,
+        status: UserStatusEnum.active,
+      };
+
+      await this.userService.createUser(userGenerated);
 
       return newOrganisation;
     } catch (error) {
@@ -74,6 +100,35 @@ export class OrganisationService {
 
   async deleteSingleOrganisation(id: string): Promise<Organisation> {
     try {
+      await this.prisma.user.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.stock.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.order.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.transaction.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.wallet.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
       const deletedOrganisation = await this.prisma.organisation.delete({
         where: { id },
       });
