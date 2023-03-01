@@ -10,46 +10,45 @@ services:
       - POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD:-opensi}
     volumes:
       - postgres: postgres:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     networks:
       - snb
   
   migrate:
     build:
       context: ./backend/prisma
-    image: registry.gitlab.com/opensi/snb-backend
+    image: registry.gitlab.com/opensi/snb-backend:prod
     container_name: migrate-snb-prod
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
     depends_on:
       - db_postgres
     # command: npm run clean
-    command: npm run migrate
+    command: npm run migrate && seed
     networks:
       - snb
   
   backend:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend
+    image: registry.gitlab.com/opensi/snb-backend:prod
     ports:
-      - 8000:8000
+      - 9811:3008
     container_name: backend-snb
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
     networks:
       - snb
     depends_on:
-      - db_postgres
+      migrate:
+        condition: service_completed_successfully
 
   frontend:
     build:
       context: ./front
-    image: registry.gitlab.com/opensi/snb-front
+    image: registry.gitlab.com/opensi/snb-front:prod
     ports:
-      - 3000:3000
-    container_name: frontend
+      - 9812:80
+    container_name: frontend-snb
     networks:
       - snb
 
