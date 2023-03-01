@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:16.13.1
 
 WORKDIR /app
 
@@ -6,12 +6,15 @@ COPY package*.json ./
 
 COPY prisma/schema.prisma ./prisma/
 
-RUN npm install
-
 COPY . .
 
-RUN npm run build
+RUN npm install
 
-CMD ["node", "dist/apps/core/main.js"]
+RUN npm run prebuild
+
+RUN npx @nestjs/cli build
 
 EXPOSE 3000
+
+CMD ["node", "dist/app/core/src/main"]
+
