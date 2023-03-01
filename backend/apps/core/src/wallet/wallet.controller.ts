@@ -80,7 +80,7 @@ export class WalletController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

@@ -29,7 +29,7 @@ export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}
 
   @Post()
-  @Roles(Role.SUPER_USER)
+  //@Roles(Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -141,7 +141,7 @@ export class OrganisationController {
   }
 
   @Delete(':id')
-  @Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
+  //@Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

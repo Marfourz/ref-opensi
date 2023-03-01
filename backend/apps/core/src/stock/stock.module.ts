@@ -16,6 +16,7 @@ import { RolesGuard } from 'guards/roles.guard';
 @Module({
   imports: [HttpModule],
   controllers: [StockController],
+  exports: [StockService],
   providers: [
     StockService,
     PrismaService,

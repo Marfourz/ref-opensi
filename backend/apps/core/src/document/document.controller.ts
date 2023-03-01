@@ -21,4 +21,23 @@ export class DocumentController {
   downloadOrders(@Param() params, @Query() filterParams: any) {
     return this.documentService.downloadOrders(filterParams, params.id);
   }
+
+  @Get('download-users/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadUsers(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadUsers(filterParams, params.id);
+  }
+
+  @Get('download-stocks/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  @ApiQuery({ name: 'categoryId', type: String, required: false })
+  downloadStocks(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadStocks(filterParams, params.id);
+  }
 }

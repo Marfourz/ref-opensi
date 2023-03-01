@@ -96,9 +96,9 @@ export class StockService {
         where: {
           ...w,
         },
-        select: {
+        include: {
           products: {
-            select: { stocks: { where: { organisationId: orgId } } },
+            include: { stocks: { where: { organisationId: orgId } } },
           },
         },
       });

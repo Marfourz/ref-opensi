@@ -6,8 +6,12 @@ import { HttpService } from '@nestjs/axios';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderService } from '../order/order.service';
 import { PagiationPayload } from '../../../../types/index';
-import { Order } from '@prisma/client';
+import { Order, User, Stock } from '@prisma/client';
 import { getPlainStatus } from 'helpers/getPlainStatus';
+import { StockService } from '../stock/stock.service';
+import { UserService } from '../user/user.service';
+import { getPlainRole } from 'helpers/getPlainRole';
+import { ProductsService } from '../product/product.service';
 
 @Injectable()
 export class DocumentService {
@@ -15,6 +19,8 @@ export class DocumentService {
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
     private readonly orderService: OrderService,
+    private readonly stockService: StockService,
+    private readonly userService: UserService,
   ) {}
 
   async generateReceiptDocument(invoiceId: string) {
@@ -124,5 +130,46 @@ export class DocumentService {
 
     const document = await this.generateDocument(docContent);
     return document;
+  }
+
+  async downloadUsers(filterParams: any, id: any) {
+    const data: PagiationPayload<User[]> =
+      await this.userService.searchForUsersOfOrganisation(filterParams, id);
+
+    const payload: any = data;
+
+    payload.data.map((element) => {
+      element.role = getPlainRole(element.role);
+    });
+
+    payload.label = 'Récapitulatif des utilisateurs';
+
+    const docContent = this.getTemplate('template-users', payload);
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadStocks(filterParams: any, id: string) {
+    const data: PagiationPayload<Stock[]> =
+      await this.stockService.searchForStocksOfOrganisation(filterParams, id);
+
+    const stocks = [];
+    const payload: any = data.data;
+
+    payload.forEach((element) => {
+      stocks.push(element.stocks[0]);
+    });
+
+    payload.label = 'Récapitulatif des produits';
+
+    payload.data = stocks;
+
+    return data;
+
+    /*const docContent = this.getTemplate('template-stocks', payload);
+
+    const document = await this.generateDocument(docContent);
+    return document;*/
   }
 }
