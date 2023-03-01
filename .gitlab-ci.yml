@@ -1,0 +1,54 @@
+#snb
+
+stages:
+  - build
+  - deploy
+
+before_script:
+  - echo $gcr_sa | base64 -d > gcloud-api-key.json
+  - cat gcloud-api-key.json | docker login -u _json_key --password-stdin https://eu.gcr.io &
+
+build_backend_prod:
+  only:
+    refs:
+      - prod
+    changes:
+      - backend/**/*
+      - .gitlab-ci.yml
+  stage: build
+  script:
+    - docker-compose -f docker-compose.yml build
+    - docker push eu.gcr.io/kkiapay/snb/backend:prod
+  tags:
+    - shell-runner-snb
+  environment:
+    name: production
+
+build_frontend_page_prod:
+  only:
+    refs:
+      - prod
+    changes:
+      - frontend/**/*
+      - .gitlab-ci.yml
+  stage: build
+  script:
+    - cp ./frontend/.env.prod ./frontend/.env
+    - docker-compose -f docker-compose.yml build
+    - docker push eu.gcr.io/kkiapay/snb/frontend:prod
+  tags:
+    - shell-runner-snb
+  environment:
+    name: production
+
+deploy_dev_images_prod:
+  stage: deploy
+  tags:
+    - shell-runner-snb
+  only:
+    - prod
+  #before_script:
+  #  - docker login https://eu.gcr.io
+  script:
+    - docker-compose -f docker-compose.yml pull
+    - docker-compose -f docker-compose.yml up -d --force-recreate
