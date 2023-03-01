@@ -333,6 +333,7 @@ export class OrganisationService {
 
   async getAllProductsIds(): Promise<any> {
     const products = await this.prisma.product.findMany({
+      take: 5,
       select: {
         id: true,
       },
