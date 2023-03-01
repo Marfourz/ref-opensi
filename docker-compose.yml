@@ -14,7 +14,20 @@ services:
       - 5432:5432
     networks:
       - server-side
-
+  
+  migrate:
+    build:
+      context: ./backend
+    image: eu.gcr.io/kkiapay/snb/backend:prod
+    container_name: migrate-snb-prod
+    environment:
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+    depends_on:
+      - db_postgres
+    # command: npm run clean
+    command: npm run migrate
+    networks:
+      - server-side
   backend:
     build:
       context: ./backend
@@ -22,7 +35,7 @@ services:
       - 8000:8000
     container_name: backend-snb
     environment:
-      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/preuvedevie-prod
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
     networks:
       - client-side
       - server-side
