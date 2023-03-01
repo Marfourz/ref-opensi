@@ -33,7 +33,7 @@ build_frontend_page_prod:
       - .gitlab-ci.yml
   stage: build
   script:
-    - cp ./frontend/.env.prod ./frontend/.env
+    - cp ./front/.env ./frontend/.env
     - docker-compose -f docker-compose.yml build
     - docker push eu.gcr.io/kkiapay/snb/frontend:prod
   tags:
