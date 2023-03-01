@@ -360,6 +360,7 @@ export class OrganisationService {
 
   async getTopPartners(type: OrganisationTypeEnum): Promise<Organisation[]> {
     const organisations = await this.prisma.organisation.findMany({
+      take: 10,
       where: {
         type: type,
       },
