@@ -14,6 +14,7 @@ import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
+import { NonSnbOrganisations } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -92,8 +93,8 @@ export class OrganisationController {
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  @ApiQuery({ name: 'type', enum: OrganisationTypeEnum, required: false })
-  getTopPartners(@Query('type') type: OrganisationTypeEnum): any {
+  @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: false })
+  getTopPartners(@Query('type') type: NonSnbOrganisations): any {
     return this.organisationService.getTopPartners(type);
   }
 

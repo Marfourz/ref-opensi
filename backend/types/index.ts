@@ -6,6 +6,12 @@ export enum NotificationProviderList {
   bomboo = 'bomboo',
 }
 
+export enum NonSnbOrganisations {
+  da = 'da',
+  md = 'md',
+  dp = 'dp',
+}
+
 export class Payload<Data, Options> {
   data: Data;
   options?: Options;
