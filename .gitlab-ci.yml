@@ -14,7 +14,7 @@ build_backend_prod:
   stage: build
   script:
     - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend
-    - docker push registry.gitlab.com/opensi/snb
+    - docker push registry.gitlab.com/opensi/snb-backend
   tags:
     - shell-1
   environment:
@@ -31,7 +31,7 @@ build_frontend_page_prod:
   script:
     - cp ./front/.env ./frontend/.env
     - docker -f front/Dockerfile -t registry.gitlab.com/opensi/snb-front
-    - docker push registry.gitlab.com/opensi/snb
+    - docker push registry.gitlab.com/opensi/snb-front
   tags:
     - shell-1
   environment:
