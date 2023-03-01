@@ -47,7 +47,7 @@ export class OrderService {
         const product = await this.prisma.product.findUnique({
           where: { id: item.productId },
         });
-        totalAmount += product.unitPrice * item.quantity;
+        totalAmount += product.bulkPrice * item.quantity;
         if (i === Ilength - 1) {
           await this.updateSingleOrder(orderId, { totalAmount });
         }
