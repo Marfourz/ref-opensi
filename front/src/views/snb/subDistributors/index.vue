@@ -19,7 +19,7 @@
       <BaseTableWithFilter
         :titles="titles"
         :fetchData="organizationStore.fetchAllParteners"
-        :params="{type : master.type}"
+        :params="{ type: master.type }"
         :actions="actions"
         :key="reload"
       >
@@ -113,17 +113,19 @@
 
             <div class="text-[#0F0F14]">Méthode de paiement</div>
             <div class="flex items-center space-x-6">
-
-                <div class="flex items-center space-x-2"  v-for="method in paymentMethods" :key="method.title">
-                    <BaseSelectedCard
-                        :selected="master.paymentDeadline == method.value"
-                        @click="master.paymentDeadline = +method.value"
-                        >
-                        <BaseIcon :name="method.icon"></BaseIcon>
-                    </BaseSelectedCard>
-                    <div class="text-[14px] font-semibold">{{ method.title }}</div>
-                </div>
-           
+              <div
+                class="flex items-center space-x-2"
+                v-for="method in paymentMethods"
+                :key="method.title"
+              >
+                <BaseSelectedCard
+                  :selected="master.paymentDeadline == method.value"
+                  @click="master.paymentDeadline = +method.value"
+                >
+                  <BaseIcon :name="method.icon"></BaseIcon>
+                </BaseSelectedCard>
+                <div class="text-[14px] font-semibold">{{ method.title }}</div>
+              </div>
             </div>
 
             <BaseButton class="w-[200px]" :loading="loading">{{
@@ -155,7 +157,6 @@ export default defineComponent({
       //{ name: "Dépots", value: OrganisationType.DA },
     ]);
 
-
     const paymentMethods = ref([
       {
         title: "Paiment à la commande",
@@ -181,11 +182,9 @@ export default defineComponent({
 
     const active = ref(0);
 
-   
-
     const organizationStore = useOrganizationStore();
 
-    const userStore = useUsersStore()
+    const userStore = useUsersStore();
 
     const actions = [
       //   {
@@ -379,7 +378,6 @@ export default defineComponent({
       organizationStore,
       titles,
       showModal,
-
       master,
       onSubmit,
       actions,
