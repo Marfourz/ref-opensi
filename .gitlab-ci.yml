@@ -44,6 +44,6 @@ deploy_dev_images_prod:
   only:
     - prod
   script:
-    - docker-compose -f docker-compose.yml pull
-    - docker-compose -f docker-compose.yml up -d --force-recreate
+    - docker -f docker-compose.yml pull
+    - docker -f docker-compose.yml up -d --force-recreate
 
