@@ -351,6 +351,7 @@ enum OrganisationTypeEnum {
   snb
   da
   md
+  dp
 }
 
 enum OrderStatusEnum {

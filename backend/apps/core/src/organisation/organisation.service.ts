@@ -7,7 +7,7 @@ import {
 } from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
-import { PagiationPayload } from 'types';
+import { NonSnbOrganisations, PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
 import { WalletService } from '../wallet/wallet.service';
 import { AuthService } from '../users-manager/auth.service';
@@ -358,7 +358,7 @@ export class OrganisationService {
     return { id, name, images, totalBulk, turnover };
   }
 
-  async getTopPartners(type: OrganisationTypeEnum): Promise<Organisation[]> {
+  async getTopPartners(type: NonSnbOrganisations): Promise<Organisation[]> {
     const organisations = await this.prisma.organisation.findMany({
       take: 10,
       where: {
