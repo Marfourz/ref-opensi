@@ -5,15 +5,9 @@ stages:
   - deploy
 
 build_backend_prod:
-  only:
-    refs:
-      - prod
-    changes:
-      - backend/**/*
-      - .gitlab-ci.yml
   stage: build
   script:
-    - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend:prod
+    - docker build -t registry.gitlab.com/opensi/snb-backend:prod backend/Dockerfile
     - docker push registry.gitlab.com/opensi/snb-backend:prod
   tags:
     - shell-1
@@ -30,7 +24,7 @@ build_frontend_page_prod:
   stage: build
   script:
     - cp ./front/.env ./front/.env
-    - docker -f front/Dockerfile -t registry.gitlab.com/opensi/snb-front:prod
+    - docker -t registry.gitlab.com/opensi/snb-front:prod front/Dockerfile
     - docker push registry.gitlab.com/opensi/snb-front:prod
   tags:
     - shell-1
