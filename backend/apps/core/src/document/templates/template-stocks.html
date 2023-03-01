@@ -183,7 +183,7 @@
             <thead>
                 <tr>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">ID</th>
-                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Nom du prooduit</th>
+                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Nom du produit</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Quantité en stock</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Prix/Casier</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Prix total</th>
@@ -201,9 +201,10 @@
                     ">
                         #{{this.id}}
                     </td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.createdAt}}</td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.totalAmount}} FCFA</td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.status}}</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.name}}</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.currentQuantity}}</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.bulkPrice}} FCFA</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.total}} FCFA</td>
                 </tr>
                 {{/each}}
             </tbody>
