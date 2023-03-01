@@ -32,7 +32,7 @@ import DashboardCard from "../../../components/DashboardCard.vue";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
-import helpers from "@/helpers/index.ts"
+import helpers from "@/helpers/index"
 import { useProductStore } from "../../../stores/product";
 import { useUsersStore } from "../../../stores/users";
 

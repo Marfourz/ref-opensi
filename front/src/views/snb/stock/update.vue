@@ -74,7 +74,7 @@ import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct, PrimaryKey } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
 import { useProductStore } from "../../../stores/product";
-import helpers from "@/helpers/index.ts";
+import helpers from "@/helpers/index";
 import { useToast } from "vue-toastification";
 import { Form } from "vee-validate";
 import { useUsersStore } from "../../../stores/users";
@@ -164,7 +164,7 @@ export default defineComponent({
     const productStore = useProductStore();
     const toast = useToast();
 
-    const reload = ref(false)
+    const reload = ref(0)
 
     async function onSubmit() {
         
@@ -175,7 +175,7 @@ export default defineComponent({
         toast.success("Stock mise à jour avec succès");
         loading.value = false;
         modal.show = false;
-        reload.value = !reload.value
+        reload.value = reload.value + 1
       } catch (error) {
         loading.value = false;
         toast.error("Oups un problème est survenu. Contactez l'administrateur");

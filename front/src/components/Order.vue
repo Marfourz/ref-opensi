@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <slot name="title"> </slot>
-    <BaseTable :titles="titles" :data="order.items">
+    <BaseTable :titles="titles" :data="order.items" >
       <template #product="{element}">
         <div class="flex items-center space-x-6">
             <img src="@/assets/images/beverage.png" alt="">
@@ -27,7 +27,7 @@
     </BaseTable>
 
     
-    <div class="mt-48 border-t pt-4 border-borderColor font-bold flex items-center justify-between">
+    <div class="mt-48 border-t pt-4 border-borderColor font-bold flex items-center justify-between" >
         <div>Total</div>
         <div>{{ order.totalAmount }} F</div>
     </div>

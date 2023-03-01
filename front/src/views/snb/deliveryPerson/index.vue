@@ -253,7 +253,7 @@ import { UserAccountStatus } from "../../../types/enumerations";
         selectedUser.value = value;
       }
   
-      const user = reactive({
+      const user = reactive<any>({
         name: "",
         phone: "",
         email: "",

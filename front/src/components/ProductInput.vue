@@ -14,7 +14,7 @@
             <div>
                 <label for="" class="text-xs text-[#6B7A99]">Nombre de casiers</label>
                
-                <BaseInput label="" v-model="quantity" class="h-5"></BaseInput>
+                <BaseInput label="" v-model.number="quantity" class="h-5"></BaseInput>
             </div>
           
             <div class=" w-12 h-9 rounded flex items-center justify-center bg-primary text-white" @click="onSubmit">

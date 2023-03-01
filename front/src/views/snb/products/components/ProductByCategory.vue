@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, reactive, ref, watch } from "vue";
-import { useProductStore } from "@/stores/product.ts";
+import { useProductStore } from "@/stores/product";
 
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
 
@@ -49,7 +49,7 @@ import { IProduct } from "@/types/interfaces";
 import { ITitle } from "../../../../components/base/BaseTable.vue";
 import { IAction } from "../../../../components/base/BaseActions.vue";
 import { useUsersStore } from "../../../../stores/users";
-import helpers from "@/helpers/index.ts"
+import helpers from "@/helpers/index"
 
 export default defineComponent({
   components: { BaseTableWithFilter, UploadFileVue, Form },

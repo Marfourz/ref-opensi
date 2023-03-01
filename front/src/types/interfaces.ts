@@ -4,12 +4,12 @@ import type { OrderStatus, OrganisationType, PackagingType, Sex, UserAccountStat
 export type PrimaryKey = string | null | undefined;
 
 export interface Commun {
-  id?: PrimaryKey;
+  id?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-export interface IProductCategory{
+export interface IProductCategory extends Commun{
     name : string,
     description : string
 }
@@ -27,6 +27,7 @@ export interface IProduct extends Commun{
 } 
 
 export interface IOrganisation extends Commun{
+    name : string,
     type: OrganisationType,
     socialReason: string,
     fiscalId: string,
@@ -77,7 +78,8 @@ export interface IUser extends Commun {
   organisationId: string;
   birthday?:Date,
   engineId?:PrimaryKey,
-  status?: UserAccountStatus
+  status?: UserAccountStatus,
+  address?:string
 }
 
 

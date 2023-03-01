@@ -3,12 +3,15 @@
    
     <div
       v-if="items.length == 0"
-      class="flex flex-col h-full justify-center px-8"
+      class="flex flex-col h-full  justify-center px-8"
     >
-      <EmptyState
+      <div>
+        <EmptyState
         title="Veuillez sélectionner vos produits dans le catalogue"
-        image="@/assets/images/emptyBasket.png"
+        image="/src/assets/images/emptyBasket.png"
       ></EmptyState>
+      </div>
+      
     </div>
 
     <div v-else class="flex flex-col justify-between h-[calc(100vh-160px)]">
@@ -47,7 +50,7 @@
             <div>Total</div>
             <div>{{totalAmount}} F</div>
         </div>
-        <BaseButton class="w-full">Payer maintenant</BaseButton>
+        <BaseButton class="w-full" :loading="loading" @click="onSubmit">Payer maintenant</BaseButton>
       </div>
     </div>
   </div>
@@ -55,7 +58,7 @@
 
 <script lang="ts">
 import { computed, defineComponent,onMounted,ref } from "vue";
-import { useBasketStore } from "../stores/basket";
+import { IItem, useBasketStore } from "../stores/basket";
 import EmptyState from "@/components/EmptyState.vue";
 import BasketItem from "./BasketItem.vue";
 import { PaymentMethod } from "../types/enumerations";
@@ -64,6 +67,9 @@ import {
   addKkiapayListener,
   removeKkiapayListener,
 } from "kkiapay";
+import { useOrdersStore } from "../stores/orders";
+import { useUsersStore } from "../stores/users";
+import { PrimaryKey } from "../types/interfaces";
 
 export default defineComponent({
   components: { EmptyState, BasketItem },
@@ -77,6 +83,31 @@ export default defineComponent({
     const totalAmount = computed(()=>{
         return basketStore.getBasketPrice
     })
+
+    const loading = ref(false)
+
+    const ordersStore = useOrdersStore()
+
+    const userStore = useUsersStore()
+
+    const organisationId = computed(()=>{
+      return userStore.getCurrentUser?.organisationId
+    })
+
+    async function onSubmit(){
+      const orders = items.value.map((item : IItem)=>{
+        return {
+          productId : item.product.id,
+          quantity : item.quantity
+        }
+      })
+      const response = await ordersStore.create({organisationId :organisationId.value, items : orders})
+
+      console.log("response data", response)
+     
+
+      basketStore.clearBasket()
+    }
 
     function kkiapayWidget() {
       openKkiapayWidget({
@@ -103,7 +134,11 @@ export default defineComponent({
       totalAmount,
       selectedPaymentMethod,
       PaymentMethod,
-      changePaymentMethod
+      changePaymentMethod,
+      kkiapayWidget,
+      onSubmit,
+      loading
+        
     };
   },
 });

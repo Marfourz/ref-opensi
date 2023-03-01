@@ -47,6 +47,15 @@ import { useRoute, useRouter } from "vue-router";
 import { useUsersStore } from "../../stores/users";
 import { OrganisationType, UserRole } from "../../types/enumerations";
 
+interface IMenu{
+  title: string,
+  icon: string,
+  route: string,
+  path: string,
+  roles?: string[],
+  organizations?: OrganisationType[]
+}
+
 export default defineComponent({
   components: {
     SideItem,
@@ -82,7 +91,7 @@ export default defineComponent({
       },
     ]
 
-    const menus = [
+    const menus : Array<IMenu> = [
       {
         title: "Tableau de bord",
         icon: "dashboard",

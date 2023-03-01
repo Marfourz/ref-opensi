@@ -321,7 +321,9 @@ export default defineComponent({
     ];
 
     function getTotalOrder(element : IOrganisation){
-        return element.orders.length
+        if(element.orders)
+          return element.orders.length
+        return 0
     }
 
       function getStatutLabel(element : IOrganisation){

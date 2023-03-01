@@ -29,7 +29,7 @@ export const useOrdersStore = defineStore("ordersStore", {
         }
       },
 
-    async create(data: any) {
+    async create(data: {organisationId : PrimaryKey | undefined ,items : Array<{productId : PrimaryKey,quantity : number}>}) {
       try {
         const response = await Api.post("orders", data);
         return response;
