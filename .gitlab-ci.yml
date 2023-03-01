@@ -6,7 +6,7 @@ stages:
 build_backend_job:
   stage: build
   script:
-    - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend
+    - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend:via-docker
     - docker push registry.gitlab.com/opensi/snb-backend
   tags:
     - via-docker
