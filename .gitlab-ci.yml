@@ -5,8 +5,7 @@ stages:
   - deploy
 
 before_script:
-  - echo $gcr_sa | base64 -d > gcloud-api-key.json
-  - cat gcloud-api-key.json | docker login -u _json_key --password-stdin https://eu.gcr.io &
+  - docker login -u itsjdio -p AKjd24'wizy
 
 build_backend_prod:
   only:
@@ -17,10 +16,10 @@ build_backend_prod:
       - .gitlab-ci.yml
   stage: build
   script:
-    - docker-compose -f docker-compose.yml build
-    - docker push eu.gcr.io/kkiapay/snb/backend:prod
+    - docker-compose -f docker-compose.yml build -t registry.gitlab.com/opensi/snb
+    - docker push registry.gitlab.com/opensi/snb
   tags:
-    - shell-runner-snb
+    - shell-1
   environment:
     name: production
 
@@ -34,17 +33,17 @@ build_frontend_page_prod:
   stage: build
   script:
     - cp ./front/.env ./frontend/.env
-    - docker-compose -f docker-compose.yml build
-    - docker push eu.gcr.io/kkiapay/snb/frontend:prod
+    - docker-compose -f docker-compose.yml build -t registry.gitlab.com/opensi/snb .
+    - docker push registry.gitlab.com/opensi/snb
   tags:
-    - shell-runner-snb
+    - shell-1
   environment:
     name: production
 
 deploy_dev_images_prod:
   stage: deploy
   tags:
-    - shell-runner-snb
+    - shell-1
   only:
     - prod
   #before_script:
