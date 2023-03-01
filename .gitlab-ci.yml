@@ -2,16 +2,14 @@
 
 stages:
   - build
-  - deploy
 
-build_backend_prod:
+build_backend_job:
   stage: build
   script:
     - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend
     - docker push registry.gitlab.com/opensi/snb-backend
   tags:
     - shell-1
-  environment:
-    name: production
+
 
 
