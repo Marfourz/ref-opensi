@@ -10,7 +10,7 @@ import ApprosCreate from "@/views/snb/appros/create.vue";
 import Users from "@/views/users/index.vue";
 import Category from "@/views/snb/categories/index.vue";
 import UpdateStock from "@/views/snb/stock/update.vue";
-// import VDetail from "@/components/VDetail.vue";
+//import VDetail from "@/components/VDetail.vue";
 
 export default [
   {
@@ -75,15 +75,15 @@ export default [
         name: "subDistributors",
         component: SubDistributors,
       },
-      // {
-      //   path: "/sous-distrivuteurs/:id",
-      //   name: "details",
-      //   component: VDetail,
-      //   meta: {
-      //     title: "",
-      //     withoutPadding: true,
-      //   },
-      // },
+    // {
+    //   path: "/sous-distrivuteurs/:id",
+    //   name: "details",
+    //   component: VDetail,
+    //   meta: {
+    //     title: "",
+    //     withoutPadding: true,
+    //   },
+    // },
       {
         path: "produits/categories",
         name: "categories",

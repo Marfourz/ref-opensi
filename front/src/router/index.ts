@@ -4,7 +4,6 @@ import DefaultLayout from "@/layouts/default.vue";
 import TableauBord from "@/views/index.vue";
 import AuthRoutes from "@/router/auth";
 import SnbRoutes from "@/router/snb";
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -14,7 +13,7 @@ const router = createRouter({
       children: [
         {
           path: "",
-          name: "tableauBord",
+          name: "dashboard",
           component: TableauBord,
         },
       ],

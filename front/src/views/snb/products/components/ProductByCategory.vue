@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType, reactive, ref, watch } from "vue";
-import { useProductStore } from "@/stores/product.ts";
+import { useProductStore } from "@/stores/product";
 
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
 
@@ -41,9 +41,9 @@ import { PackagingType } from "@/types/enumerations";
 import { Form } from "vee-validate";
 import { useToast } from "vue-toastification";
 import { IProduct } from "@/types/interfaces";
-import { ITitle } from "../../../../components/base/BaseTable.vue";
-import { IAction } from "../../../../components/base/BaseActions.vue";
-import { useUsersStore } from "../../../../stores/users";
+import { ITitle } from "@/components/base/BaseTable.vue";
+import { IAction } from "@/components/base/BaseActions.vue";
+import { useUsersStore } from "@/stores/users";
 
 export default defineComponent({
   components: { BaseTableWithFilter, UploadFileVue, Form },

@@ -1,6 +1,5 @@
 <template>
-  <div>
-    
+  <div>    
     <div
       v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
