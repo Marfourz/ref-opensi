@@ -13,7 +13,7 @@
      
     </div>
     <div class="font-semibold">
-        {{ quantity }} x {{ product.packPrice }}
+        {{ quantity }} x {{ product.bulkPrice }}
       </div>
   </div>
 </template>

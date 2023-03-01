@@ -14,12 +14,17 @@
             :params="{categoryId:categoryId}"
             class="mt-6"
           >
-            <template #image="element">
-             
-              <div class="flex justify-center">
-                <img :src="element.image" alt="" />
+          <template #image="{element}">
+              <div>
+                <img :src="`${element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png' }`" alt="">
               </div>
             </template>
+            <template #volume={element}>
+                <div>
+                    {{ helpers.currency(element.volume)  }} CL
+                </div>
+            </template>
+           
           </BaseTableWithFilter>
         </template>
       </BaseTabs>
@@ -44,6 +49,7 @@ import { IProduct } from "@/types/interfaces";
 import { ITitle } from "../../../../components/base/BaseTable.vue";
 import { IAction } from "../../../../components/base/BaseActions.vue";
 import { useUsersStore } from "../../../../stores/users";
+import helpers from "@/helpers/index.ts"
 
 export default defineComponent({
   components: { BaseTableWithFilter, UploadFileVue, Form },
@@ -133,7 +139,8 @@ export default defineComponent({
       showModal,
       categories,
       categoryId,
-      organisationId
+      organisationId,
+      helpers
     };
   },
 });

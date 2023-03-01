@@ -77,7 +77,7 @@
         </template>
         <template #status="{element}">
      
-         <BaseTableStatut :title="getStatutLabel(element.element)" :type="getStatutType(element.element)"></BaseTableStatut>
+         <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
            
         </template>
       </BaseTableWithFilter>

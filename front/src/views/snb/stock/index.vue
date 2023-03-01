@@ -144,7 +144,7 @@ export default defineComponent({
         let price = 0
         if (element.stocks && element.stocks[0])
             price = element.stocks[0].currentQuantity  * element.bulkPrice
-        return helpers.currency(price)
+        return `${helpers.currency(price)} F`
     }
 
     function formatPrice(element : IProduct){

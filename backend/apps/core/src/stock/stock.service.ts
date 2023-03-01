@@ -134,7 +134,7 @@ export class StockService {
         },
         select: {
           products: {
-            include: { stocks: { where: { organisationId: orgId } } },
+            include: { image: true,stocks: { where: { organisationId: orgId } } },
           },
         },
       });

@@ -226,7 +226,7 @@ export default defineComponent({
     }
 
     function getBulkPrice(element : IProduct){
-      return `${helpers.currency(element.bulkPrice)}`
+      return `${helpers.currency(element.bulkPrice)} F`
     }
 
     function getStock(element : IProduct){
@@ -234,7 +234,7 @@ export default defineComponent({
       if(element.stocks && element.stocks[0]){
        
         
-        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}`
+        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}` 
       }
 
         

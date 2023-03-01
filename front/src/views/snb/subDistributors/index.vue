@@ -34,10 +34,20 @@
 
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
             <BaseButton icon="plus" size="small" @click="createMaster"
-              >Nouveau master distribureur</BaseButton
+              >Nouveau {{ partenaireTitle }}</BaseButton
             >
           </div>
         </template>
+        <template #status="{element}">
+     
+     <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
+       
+    </template>
+
+       
+
+
+
       </BaseTableWithFilter>
     </div>
     <BaseBottomModal :show="showModal">
@@ -46,7 +56,7 @@
           <div class="font-bold text-2xl">
             {{
               !selectedMaster
-                ? "Ajouter un master distributeur"
+                ? `Ajouter un ${partenaireTitle}`
                 : "Mettre à jour"
             }}
           </div>
@@ -133,7 +143,7 @@ import { Form } from "vee-validate";
 import { IOrganisation } from "@/types/interfaces";
 import VPanel from "@/components/VPanel.vue";
 import { useUsersStore } from "../../../stores/users";
-import { OrganisationType } from "../../../types/enumerations";
+import { OrganisationType, UserAccountStatus } from "../../../types/enumerations";
 import { PrimaryKey } from "../../../types/interfaces";
 
 export default defineComponent({
@@ -154,17 +164,17 @@ export default defineComponent({
       },
       {
         title: "Paiment sur 30 jours",
-        icon: "calendar",
+        icon: "calendar30",
         value: 30,
       },
       {
         title: "Paiment sur 60 jours",
-        icon: "calendar",
+        icon: "calendar60",
         value: 60,
       },
       {
         title: "Paiment sur 90 jours",
-        icon: "calendar",
+        icon: "calendar90",
         value: 90,
       },
     ]);
@@ -255,6 +265,14 @@ export default defineComponent({
       selectedMaster.value = value;
     }
 
+
+    const partenaireTitle = computed(()=>{
+        if(master.type == OrganisationType.DA)
+          return 'distributeur agrée'
+        else 
+          return 'master distributeur'
+    })
+
     const master = reactive({
       type: OrganisationType.MD,
       fiscalId: "",
@@ -271,7 +289,7 @@ export default defineComponent({
     const titles = [
       {
         title: "Nom d'utilisateur",
-        name: "name",
+        name: "ownerName",
       },
       {
         title: "Téléphone",
@@ -285,14 +303,15 @@ export default defineComponent({
       {
         title: "Commandes",
         name: "commandes",
+        transform: getTotalOrder
       },
       {
         title: "Chiffre d’affaire",
-        name: "chiffre d’affaire",
+        name: "wallet.turnovers",
       },
       {
         title: "Statut",
-        name: "statut",
+        name: "status",
       },
 
       {
@@ -300,6 +319,30 @@ export default defineComponent({
         name: "action",
       },
     ];
+
+    function getTotalOrder(element : IOrganisation){
+        return element.orders.length
+    }
+
+      function getStatutLabel(element : IOrganisation){
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "Active"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "Inactive"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "Suspendu"
+     }
+
+     function getStatutType(element : IOrganisation){
+
+        if(element.status == UserAccountStatus.ACTIVE )
+            return "success"
+        else if(element.status == UserAccountStatus.INACTIVE)
+            return "danger"
+        else if(element.status == UserAccountStatus.SUSPENDED)
+            return "warning"
+        }
 
     const loading = ref(false);
 
@@ -347,7 +390,10 @@ export default defineComponent({
       etats,
       active,
       paymentMethods,
-      userStore
+      userStore,
+      getStatutLabel,
+      getStatutType,
+      partenaireTitle
     };
   },
 });

@@ -149,12 +149,14 @@ export default defineComponent({
       router.push({ name: menu.route });
     }
     
-    const organizationType = OrganisationType.SNB
+    const organizationType = computed(()=>{
+      return OrganisationType.SNB //userStore.getCurrentUser?.organisation?.type
+    })
 
     function showMenu(menu : any) : boolean {
       if(!menu.organizations || menu.organizations.length == 0)
         return true
-      return menu.organizations.find((value:OrganisationType)=>value == organizationType) 
+      return menu.organizations.find((value:OrganisationType)=>value == organizationType.value) 
 
     }
     const activeRouteName = computed(() => {

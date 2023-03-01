@@ -1,3 +1,4 @@
+import { IItem } from "../stores/basket";
 import type { OrderStatus, OrganisationType, PackagingType, Sex, UserAccountStatus, UserRole } from "./enumerations";
 
 export type PrimaryKey = string | null | undefined;
@@ -34,7 +35,8 @@ export interface IOrganisation extends Commun{
     adress: string,
     ownerName: string,
     paymentDeadline: 0,
-    status?: string
+    status?: string,
+    orders?:Array<ItemsOrder>
 }
 
 export interface IProduct extends Commun {
@@ -71,6 +73,7 @@ export interface IUser extends Commun {
   email: string;
   sex: Sex;
   role: UserRole;
+  organisation: IOrganisation,
   organisationId: string;
   birthday?:Date,
   engineId?:PrimaryKey,

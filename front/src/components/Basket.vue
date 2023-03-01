@@ -11,7 +11,7 @@
       ></EmptyState>
     </div>
 
-    <div v-else class="flex flex-col justify-between h-full">
+    <div v-else class="flex flex-col justify-between h-[calc(100vh-160px)]">
       <div class="space-y-4">
         <div v-for="item in items" :key="item.product.name">
           <BasketItem

@@ -7,7 +7,7 @@
         <img src="@/assets/images/beverage.png" alt="" class="w-4 h-16">
         <div class="flex flex-col items-center">
             <div>{{ product.name }}</div>
-            <div class="text-[#0F0F14] font-bold">{{ product.volume }} pro/Casier</div>
+            <div class="text-[#0F0F14] font-bold">{{ product.bulkPrice }} F /Casier</div>
         </div>
         
         <div class="flex items-end space-x-2" v-if="!isValidate">
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref } from 'vue'
+import { defineComponent,onMounted,ref } from 'vue'
 import { useBasketStore } from '../stores/basket'
 import type { PropType } from 'vue'
 import type { IProduct } from '../types/interfaces'
@@ -72,6 +72,16 @@ export default defineComponent({
             }
             
         }
+
+        onMounted(()=>{
+            const item = basketStore.getProductItem(props.product.id)
+            if(item){
+                quantity.value = item?.quantity
+                isValidate.value = true
+            }
+           
+            
+        })
 
         return {
             isValidate,
