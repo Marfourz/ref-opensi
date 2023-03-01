@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import {
   Organisation,
   User,
@@ -29,6 +29,26 @@ export class OrganisationService {
     organisation: organisationDto,
   ): Promise<Organisation> {
     try {
+      const existingOrganisationByEmail =
+        await this.prisma.organisation.findUnique({
+          where: {
+            email: organisation.adress,
+          },
+        });
+
+      const existingOrganisationByFiscalId =
+        await this.prisma.organisation.findUnique({
+          where: {
+            email: organisation.fiscalId,
+          },
+        });
+
+      if (existingOrganisationByEmail || existingOrganisationByFiscalId) {
+        throw new HttpException(
+          'ORGANISATION WITH EMAIL OR FISCAL ID ALREADY EXIST',
+          HttpStatus.NOT_FOUND,
+        );
+      }
       const newOrganisation = await this.prisma.organisation.create({
         data: organisation,
       });
@@ -363,6 +383,9 @@ export class OrganisationService {
       take: 10,
       where: {
         type: type,
+      },
+      include: {
+        wallet: true,
       },
       orderBy: {
         wallet: {
