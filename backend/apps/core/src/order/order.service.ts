@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { orderDto, updateOrderDto } from './order.dto';
-import { PagiationPayload } from 'types';
+import { NonSnbOrganisations, PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
@@ -153,6 +153,23 @@ export class OrderService {
       });
 
       return { data: orders, count };
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
+  async getOrdersOfOrganisations(type: NonSnbOrganisations): Promise<Order[]> {
+    try {
+      const orders = await this.prisma.order.findMany({
+        where: {
+          organisation: {
+            type,
+          },
+        },
+      });
+
+      return orders;
     } catch (error) {
       throw error;
       return;
