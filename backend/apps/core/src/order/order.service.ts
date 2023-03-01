@@ -115,7 +115,9 @@ export class OrderService {
 
       const totalAmountConstraint: any = {};
       const orderIdConstraint: any = {};
-      if (q != undefined) {
+      const w: any = {};
+      w.organisationId = orgId;
+      if (q != undefined && q != '') {
         orderIdConstraint.id = {
           contains: q,
           mode: 'insensitive',
@@ -124,20 +126,14 @@ export class OrderService {
         if (!isNaN(q)) {
           totalAmountConstraint.totalAmount = Number(q);
         }
+
+        w.OR = [orderIdConstraint, totalAmountConstraint];
       }
 
       const orders = await this.prisma.order.findMany({
         ...paginateConstraints,
         where: {
-          organisationId: orgId,
-          AND: [
-            {
-              ...totalAmountConstraint,
-            },
-            {
-              ...orderIdConstraint,
-            },
-          ],
+          ...w,
         },
       });
 

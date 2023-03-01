@@ -4,6 +4,7 @@ import { DocumentService } from './document.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
+import { OrderModule } from '../order/order.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
       }),
       inject: [ConfigService],
     }),
+    OrderModule,
   ],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService],

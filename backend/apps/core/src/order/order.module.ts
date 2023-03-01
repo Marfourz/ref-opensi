@@ -18,6 +18,7 @@ import { ProductsModule } from '../product/product.module';
 @Module({
   imports: [HttpModule, ItemOrderModule, ProductsModule],
   controllers: [OrderController],
+  exports: [OrderService],
   providers: [
     OrderService,
     PrismaService,

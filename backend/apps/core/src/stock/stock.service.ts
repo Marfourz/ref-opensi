@@ -3,6 +3,7 @@ import { Stock, PackagingTypeEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
+import { pick } from 'underscore';
 
 @Injectable()
 export class StockService {
@@ -88,49 +89,12 @@ export class StockService {
         paginateConstraints.skip = Number((page - 1) * perPage);
         paginateConstraints.take = Number(perPage);
       }
-
-      const productNameConstraint: any = {};
-      const currentQuantityConstraint: any = {};
-      const stockIdConstraint: any = {};
-      if (q != undefined) {
-        productNameConstraint.name = {
-          contains: q,
-          mode: 'insensitive',
-        };
-
-        stockIdConstraint.id = {
-          contains: q,
-          mode: 'insensitive',
-        };
-
-        if (!isNaN(q)) {
-          currentQuantityConstraint.currentQuantity = Number(q);
-        }
-      }
-
-      /*const stocks = await this.prisma.stock.findMany({
-        ...paginateConstraints,
-        where: {
-          organisationId: orgId,
-          product: {
-            ...productNameConstraint,
-          },
-          OR: [
-            {
-              ...stockIdConstraint,
-            },
-          ],
-        },
-        include: {
-          product: {
-            include: category: true,
-          },
-        },
-      });*/
+      const w: any = {};
+      w.id = categoryId;
 
       const stocks = await this.prisma.productCategory.findUnique({
         where: {
-          id: categoryId,
+          ...w,
         },
         select: {
           products: {
@@ -183,7 +147,6 @@ export class StockService {
     let totalCost = 0;
     stocks.map((stock) => {
       totalCost += stock.currentQuantity * stock.product.unitPrice;
-      console.log('stock', stock);
     });
 
     const lastStock = await this.prisma.stock.findMany({

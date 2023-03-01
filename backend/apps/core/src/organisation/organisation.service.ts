@@ -4,10 +4,15 @@ import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
+import { WalletService } from '../wallet/wallet.service';
+import { promisify } from 'util';
 
 @Injectable()
 export class OrganisationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private walletService: WalletService,
+  ) {}
 
   async createOrganisation(
     organisation: organisationDto,
@@ -16,6 +21,12 @@ export class OrganisationService {
       const newOrganisation = await this.prisma.organisation.create({
         data: organisation,
       });
+
+      await this.walletService.createWallet({
+        organisationId: newOrganisation.id,
+        turnover: 0,
+      });
+
       return newOrganisation;
     } catch (error) {
       throw error;
@@ -104,7 +115,7 @@ export class OrganisationService {
       const w: any = {};
       w.organisationId = id;
       w.role = UserRoleEnum.deliveryMan;
-      if (q != undefined) {
+      if (q != undefined && q != '') {
         userNameConstraint.name = {
           contains: q,
           mode: 'insensitive',
@@ -123,10 +134,11 @@ export class OrganisationService {
       }
 
       const users = await this.prisma.user.findMany({
-        where: { organisationId: id, role: UserRoleEnum.deliveryMan },
-        include:{
-          engine:true
-        }
+        ...paginateConstraints,
+        where: { ...w },
+        include: {
+          engine: true,
+        },
       });
 
       const count = await this.prisma.user.count({
@@ -184,7 +196,7 @@ export class OrganisationService {
         w.OR = [ownerNameConstraint, phoneConstraint, emailConstraint];
       }
 
-      if (type != undefined) {
+      if (type != undefined && type != '') {
         w.type = type;
       }
 
@@ -213,5 +225,96 @@ export class OrganisationService {
       throw error;
       return;
     }
+  }
+
+  async getMainOrganisationInfos(): Promise<any> {
+    const snb = await this.prisma.organisation.findFirst({
+      where: { type: OrganisationTypeEnum.snb },
+      include: {
+        wallet: true,
+      },
+    });
+
+    const orders = await this.prisma.order.count({
+      where: {
+        organisationId: snb.id,
+      },
+    });
+
+    const partners = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.snb,
+      },
+    });
+
+    const pIds = await this.getAllProductsIds();
+
+    const productsInfos = await Promise.all(
+      pIds.map(async (id: string) => {
+        return await this.getProdInfos(id);
+      }),
+    );
+
+    return { snb, orders, partners, productsInfos };
+  }
+
+  async getAllProductsIds(): Promise<any> {
+    const products = await this.prisma.product.findMany({
+      select: {
+        id: true,
+      },
+    });
+
+    const pIds = [];
+
+    products.forEach((element) => {
+      pIds.push(element.id);
+    });
+
+    return pIds;
+  }
+
+  async getProdInfos(id: string): Promise<any> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        unitPrice: true,
+        name: true,
+        stocks: true,
+      },
+    });
+
+    const price = product.unitPrice;
+
+    const stocks = product.stocks;
+
+    const name = product.name;
+
+    let totalBulk = 0;
+
+    let turnover = 0;
+
+    stocks.forEach((element) => {
+      totalBulk += element.currentQuantity;
+      turnover += (element.originalQuantity - element.currentQuantity) * price;
+    });
+
+    return { id, name, totalBulk, turnover };
+  }
+
+  async getTopPartners(type: OrganisationTypeEnum): Promise<Organisation[]> {
+    const organisations = await this.prisma.organisation.findMany({
+      where: {
+        type: type,
+      },
+      orderBy: {
+        wallet: {
+          turnover: 'asc',
+        },
+      },
+    });
+
+    return organisations;
   }
 }

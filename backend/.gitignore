@@ -5,6 +5,7 @@ plan.txt
 .env.production
 .env.development
 .env
+/uploads/products-images
 
 
 # Logs

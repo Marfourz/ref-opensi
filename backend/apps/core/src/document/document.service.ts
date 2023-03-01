@@ -4,24 +4,24 @@ import * as path from 'path';
 import * as handlebars from 'handlebars';
 import { HttpService } from '@nestjs/axios';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
-import { catchError, map } from 'rxjs';
+import { OrderService } from '../order/order.service';
+import { PagiationPayload } from '../../../../types/index';
+import { Order } from '@prisma/client';
+import { getPlainStatus } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class DocumentService {
   constructor(
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
+    private readonly orderService: OrderService,
   ) {}
 
-  async generateDocument(invoiceId: string) {
-    //const invoiceData: any = await this.getInvoiceData(invoiceId);
-
-    //invoiceData.label = 'Facture SNB';
-
+  async generateReceiptDocument(invoiceId: string) {
     const docContent = this.getTemplate('invoice0', {
       label: 'Facture KKIAPAY',
       description: 'Facture normalisée proForma',
-      invoiceId: 'bjvhcgfdrtf,y',
+      invoiceId: 'bjvhcgfdrtfy',
       receiveNumber: 'dfgvhbnjkjgyhf',
     });
 
@@ -33,12 +33,17 @@ export class DocumentService {
           format: 'A4',
         }),
       })
-      .pipe(map((res) => res.data))
-      .pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      );
+      .toPromise()
+      .then(async (res) => {
+        return res;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
     return response;
   }
 
@@ -47,7 +52,7 @@ export class DocumentService {
 
     try {
       const htmlContent = fs.readFileSync(
-        path.join(__dirname, 'templates', `${name}.html`),
+        path.join(__dirname, 'document/templates', `${name}.html`),
         'utf8',
       );
 
@@ -76,5 +81,48 @@ export class DocumentService {
       throw error;
       return;
     }
+  }
+
+  async generateDocument(docContent: string) {
+    const response = this.httpService
+      .post('/pdf/v2/template-content', {
+        projectId: 'kkp-v1',
+        document: docContent,
+        options: JSON.stringify({
+          format: 'A4',
+        }),
+      })
+      .toPromise()
+      .then(async (res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        return {
+          statusCode: err.response.status,
+          message: err.response.statusText,
+          data: err.response.data,
+        };
+      });
+    return response;
+  }
+
+  async downloadOrders(filterParams: any, id: string) {
+    const data: PagiationPayload<Order[]> =
+      await this.orderService.searchForOrdersOfOrganisation(filterParams, id);
+
+    const payload: any = data;
+
+    payload.data.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+      element.status = getPlainStatus(element.status);
+    });
+
+    payload.label = 'Récapitulatif des commandes';
+
+    const docContent = this.getTemplate('template-orders', payload);
+
+    const document = await this.generateDocument(docContent);
+    return document;
   }
 }

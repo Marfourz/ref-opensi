@@ -78,6 +78,25 @@ export class OrganisationController {
     return this.organisationService.searchForPartners(filterParams);
   }
 
+  @Get('snb/infos')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getMainOrganisationInfos(): any {
+    return this.organisationService.getMainOrganisationInfos();
+  }
+
+  @Get('top-partners')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'type', enum: OrganisationTypeEnum, required: false })
+  getTopPartners(@Query('type') type: OrganisationTypeEnum): any {
+    return this.organisationService.getTopPartners(type);
+  }
+
   @Get(':id/users')
   @ApiHeader({
     name: 'x-auth-token',
