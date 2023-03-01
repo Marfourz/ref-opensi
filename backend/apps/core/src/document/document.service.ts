@@ -157,19 +157,31 @@ export class DocumentService {
     const stocks = [];
     const payload: any = data.data;
 
-    payload.forEach((element) => {
-      stocks.push(element.stocks[0]);
+    payload.forEach((element, i) => {
+      if (element.stocks.length >= 1) {
+        stocks.push(element.stocks[0]);
+        stocks[i].name = element.name;
+        stocks[i].bulkPrice = element.bulkPrice;
+        stocks[i].total = element.bulkPrice * element.unitPrice;
+      }
     });
 
-    payload.label = 'Récapitulatif des produits';
+    stocks.forEach((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+    });
 
-    payload.data = stocks;
+    /*return {
+      data: stocks,
+      label: 'Récapitulatif des stocks',
+    };*/
 
-    return data;
-
-    /*const docContent = this.getTemplate('template-stocks', payload);
+    const docContent = this.getTemplate('template-stocks', {
+      data: stocks,
+      label: 'Récapitulatif des stocks',
+    });
 
     const document = await this.generateDocument(docContent);
-    return document;*/
+    return document;
   }
 }

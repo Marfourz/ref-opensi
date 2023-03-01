@@ -11,9 +11,7 @@ import { PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
 import { WalletService } from '../wallet/wallet.service';
 import { AuthService } from '../users-manager/auth.service';
-import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { NotificationService } from 'apps/notification/src/notification.service';
-import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
 import { Role } from '../../../../guards/roles.enum';
 import { UserService } from '../user/user.service';
 
@@ -55,8 +53,7 @@ export class OrganisationService {
 
       return newOrganisation;
     } catch (error) {
-      throw error;
-      return;
+      return error;
     }
   }
 
@@ -333,6 +330,7 @@ export class OrganisationService {
     const product = await this.prisma.product.findUnique({
       where: { id },
       select: {
+        image: true,
         id: true,
         unitPrice: true,
         name: true,
@@ -341,6 +339,8 @@ export class OrganisationService {
     });
 
     const price = product.unitPrice;
+
+    const images = product.image;
 
     const stocks = product.stocks;
 
@@ -355,7 +355,7 @@ export class OrganisationService {
       turnover += (element.originalQuantity - element.currentQuantity) * price;
     });
 
-    return { id, name, totalBulk, turnover };
+    return { id, name, images, totalBulk, turnover };
   }
 
   async getTopPartners(type: OrganisationTypeEnum): Promise<Organisation[]> {
