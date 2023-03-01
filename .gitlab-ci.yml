@@ -9,7 +9,7 @@ build_backend_job:
     - docker build -f backend/Dockerfile -t registry.gitlab.com/opensi/snb-backend
     - docker push registry.gitlab.com/opensi/snb-backend
   tags:
-    - shell-1
+    - via-docker
 
 
 
