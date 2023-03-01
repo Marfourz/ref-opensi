@@ -73,6 +73,7 @@ export class OrganisationService {
 
       return newOrganisation;
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
