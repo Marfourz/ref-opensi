@@ -15,6 +15,7 @@ import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
+import { NonSnbOrganisations } from '../../../../types/index';
 import {
   ApiTags,
   ApiBody,
@@ -71,6 +72,17 @@ export class OrderController {
       filterParams,
       params.orgId,
     );
+  }
+
+  @Get('getOrders/:type')
+  @ApiParam({ name: 'type', enum: NonSnbOrganisations })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getOrdersOfOrganisations(@Param() params): Promise<Order[]> {
+    console.log('type sucre', params.type);
+    return this.orderService.getOrdersOfOrganisations(params.type);
   }
 
   @Put(':id')
