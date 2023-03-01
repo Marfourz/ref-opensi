@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Query,
+  Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order, OrderStatusEnum } from '@prisma/client';
@@ -41,8 +42,8 @@ export class OrderController {
   @ApiCreatedResponse({
     description: 'The order has been successfully created.',
   })
-  createOrder(@Body() order: orderDto): Promise<Order> {
-    return this.orderService.createOrder(order);
+  createOrder(@Req() req, @Body() order: orderDto): Promise<Order> {
+    return this.orderService.createOrder(order, req.user.userId);
   }
 
   @Get(':id')

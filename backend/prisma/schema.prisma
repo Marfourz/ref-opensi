@@ -37,6 +37,8 @@ model User {
 
   activities          ActivityLog[]
 
+  users               Order[]
+
   status              UserStatusEnum  @default(active)
 
   createdAt           DateTime @default(now())
@@ -86,6 +88,10 @@ model Order {
   organisation        Organisation @relation(fields: [organisationId], references: [id])
 
   organisationId      String
+
+  user                User @relation(fields: [userId], references: [id])
+
+  userId              String
 
   items               ItemOrder[]
 

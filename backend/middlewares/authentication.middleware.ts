@@ -34,10 +34,11 @@ export class AuthenticationMiddleware implements NestMiddleware {
             this.prisma.user
               .findUnique({
                 where: { email: data.email },
-                select: { organisation: true, role: true },
+                select: { id: true, organisation: true, role: true },
               })
               .then(async (user) => {
                 data.roles.push(user.role);
+                data.userId = user.id;
                 data.orgId = user.organisation.id;
                 req.user = data;
                 next();
