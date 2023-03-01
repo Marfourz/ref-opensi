@@ -1,0 +1,46 @@
+version: '3'
+services:
+  db_postgres:
+    image: postgres:14-alpine
+    container_name: db-snb-prod
+    restart: always
+    environment:
+      - POSTGRES_USER: ${POSTGRESQL_USER:-opensiuser}
+      - POSTGRES_DB: 'snb-prod'
+      - POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD:-opensi}
+    volumes:
+      - postgres: postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - server-side
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - 8000:8000
+    container_name: backend-snb
+    environment:
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/preuvedevie-prod
+    networks:
+      - client-side
+      - server-side
+    depends_on:
+      - db_postgres
+
+  frontend:
+    build:
+      context: ./front
+    ports:
+      - 3000:3000
+    container_name: frontend
+    networks:
+      - client-side
+
+volumes:
+  postgres: ~
+
+networks:
+  client-side: {}
+  server-side: {}
