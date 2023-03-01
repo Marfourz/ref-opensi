@@ -117,7 +117,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import EmptyState from "../../../components/EmptyState.vue";
-import { useProductStore } from "@/stores/product.ts";
+import { useProductStore } from "@/stores/product";
 
 import BaseTableWithFilter from "../../../components/base/BaseTableWithFilter.vue";
 
@@ -130,7 +130,7 @@ import { Form } from "vee-validate";
 import { useFileStore } from "../../../stores/file";
 import { useToast } from "vue-toastification";
 import { IProduct } from "../../../types/interfaces";
-import helpers from "@/helpers/index.ts"
+import helpers from "@/helpers/index"
 
 export default defineComponent({
   components: { EmptyState, BaseTableWithFilter, UploadFileVue,Form },
@@ -211,7 +211,7 @@ export default defineComponent({
     
 
     function formatDate(element: IProduct){
-      return helpers.formatDate(element.createdAt)
+      return helpers.formatDate(element.createdAt as Date)
     }
 
     function getVolume(elememnt : IProduct){
@@ -226,7 +226,7 @@ export default defineComponent({
     }
 
     function getBulkPrice(element : IProduct){
-      return `${helpers.currency(element.bulkPrice)}`
+      return `${helpers.currency(element.bulkPrice)} F`
     }
 
     function getStock(element : IProduct){
@@ -234,7 +234,7 @@ export default defineComponent({
       if(element.stocks && element.stocks[0]){
        
         
-        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}`
+        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}` 
       }
 
         

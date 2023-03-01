@@ -13,29 +13,40 @@ export const useBasketStore = defineStore('basket', {
 
     actions: {
        addToBasket(product: IProduct,quantity : number){
-        this.items.push({
-            product,
-            quantity
-        })
+        const index = this.items.findIndex((item : IItem)=> item.product.id == product.id)
+
+        if(index != -1)
+            this.items.splice(index,1,{product,quantity})
+        else
+            this.items.push({
+                product,
+                quantity
+            })
        },
        withdrawProduct(id : PrimaryKey){
         this.items = this.items.filter((item : IItem)=>item.product.id != id)
         },
         clearBasket(){
             this.items = []
-          }
+          },
+          getProductItem(id : PrimaryKey){
+            return this.items.find((item : IItem)=> item.product.id == id)
+          },
       },
+
+     
 
       getters: {
         getItems: (state) => state.items,
         getBasketPrice: (state)=>{
             let price = 0
             state.items.forEach((item : IItem)=> {
-                price = price + (item.product.packPrice * item.quantity)
+                price = price + (item.product.bulkPrice * item.quantity)
             })
            
             return price
-      }
+      },
+     
     }
      
 })

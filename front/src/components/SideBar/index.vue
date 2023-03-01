@@ -47,6 +47,15 @@ import { useRoute, useRouter } from "vue-router";
 import { useUsersStore } from "../../stores/users";
 import { OrganisationType, UserRole } from "../../types/enumerations";
 
+interface IMenu{
+  title: string,
+  icon: string,
+  route: string,
+  path: string,
+  roles?: string[],
+  organizations?: OrganisationType[]
+}
+
 export default defineComponent({
   components: {
     SideItem,
@@ -82,7 +91,7 @@ export default defineComponent({
       },
     ]
 
-    const menus = [
+    const menus : Array<IMenu> = [
       {
         title: "Tableau de bord",
         icon: "dashboard",
@@ -149,12 +158,14 @@ export default defineComponent({
       router.push({ name: menu.route });
     }
     
-    const organizationType = OrganisationType.SNB
+    const organizationType = computed(()=>{
+      return userStore.getCurrentUser?.organisation?.type
+    })
 
     function showMenu(menu : any) : boolean {
       if(!menu.organizations || menu.organizations.length == 0)
         return true
-      return menu.organizations.find((value:OrganisationType)=>value == organizationType) 
+      return menu.organizations.find((value:OrganisationType)=>value == organizationType.value) 
 
     }
     const activeRouteName = computed(() => {

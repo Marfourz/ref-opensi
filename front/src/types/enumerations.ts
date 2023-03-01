@@ -15,7 +15,7 @@ export enum Sex {
   }
   
   export enum UserPermission {
-    ADMINSTRATOR = 'administrator',
+    ADMINSTRATOR = 'administra tor',
     DELIVERY_MAN = 'deliveryMan'
   }
   
@@ -64,7 +64,10 @@ export enum Sex {
     INACTIVE = 'inactive',
     SUSPENDED = "suspended",
   }
-  
-  
-  
-  
+
+
+  export enum OrderStatus {
+    NEW = 'new',
+    DELIVERED = 'delivered',
+    ACCEPTED = 'accepted'
+  }

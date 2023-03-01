@@ -24,7 +24,7 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent } from "vue";
+  import { defineComponent, ref } from "vue";
   import PageInTwoPart from "../../../components/PageInTwoPart.vue";
   import Order from "@/components/Order.vue"
   import { OrderStatus, OrganisationType } from "../../../types/enumerations";
@@ -55,43 +55,45 @@
           name: "action",
         },
       ];
-  
-      const order = {
-          organisation : OrganisationType.SNB,
-          items : [
-              {
-                  id : 1,
-                  createdAt : new Date(),
-                  updatedAt : new Date(),
-                  product : {
-                      name : "Chap 50 CL",
-                      unitPrice : 1000,
-                      rackPrice : 1000,
-                      packPrice : 20000,
-                      volume : 2000,
-                  },
-                  quantity : 10,
-                  price : 2000,
-              },
-              {
-                  product : {
-                      name : "Chap Cola 50 CL",
-                      unitPrice : 500,
-                      rackPrice : 1000,
-                      packPrice : 20000,
-                      volume : 200,
-                  },
-                  quantity : 220,
-                  price : 200,
-              }
-          ],
-          totalAmount : 1000000,
-          transaction : {
+      
+      const order = ref()
+
+      // const order = {
+      //     organisation : OrganisationType.SNB,
+      //     items : [
+      //         {
+      //             id : 1,
+      //             createdAt : new Date(),
+      //             updatedAt : new Date(),
+      //             product : {
+      //                 name : "Chap 50 CL",
+      //                 unitPrice : 1000,
+      //                 rackPrice : 1000,
+      //                 packPrice : 20000,
+      //                 volume : 2000,
+      //             },
+      //             quantity : 10,
+      //             price : 2000,
+      //         },
+      //         {
+      //             product : {
+      //                 name : "Chap Cola 50 CL",
+      //                 unitPrice : 500,
+      //                 rackPrice : 1000,
+      //                 packPrice : 20000,
+      //                 volume : 200,
+      //             },
+      //             quantity : 220,
+      //             price : 200,
+      //         }
+      //     ],
+      //     totalAmount : 1000000,
+      //     transaction : {
               
-          },
-          status :OrderStatus.DELIVERY,
-          deliveryDate : Date
-      }
+      //     },
+      //     status :OrderStatus.DELIVERY,
+      //     deliveryDate : Date
+      // }
   
       const router = useRouter()
       function goToCreateAppros(){

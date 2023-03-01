@@ -32,7 +32,7 @@ import DashboardCard from "../../../components/DashboardCard.vue";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
-import helpers from "@/helpers/index.ts"
+import helpers from "@/helpers/index"
 import { useProductStore } from "../../../stores/product";
 import { useUsersStore } from "../../../stores/users";
 
@@ -144,7 +144,7 @@ export default defineComponent({
         let price = 0
         if (element.stocks && element.stocks[0])
             price = element.stocks[0].currentQuantity  * element.bulkPrice
-        return helpers.currency(price)
+        return `${helpers.currency(price)} F`
     }
 
     function formatPrice(element : IProduct){
