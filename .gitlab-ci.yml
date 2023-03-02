@@ -1,12 +1,8 @@
-#preuve-de-vie
+#snb
 
 stages:
   - build
   - deploy
-
-before_script:
-  - echo $gcr_sa | base64 -d > gcloud-api-key.json
-  - cat gcloud-api-key.json | docker login -u _json_key --password-stdin https://eu.gcr.io &
 
 build_backend_prod:
   only:
@@ -17,10 +13,10 @@ build_backend_prod:
       - .gitlab-ci.yml
   stage: build
   script:
-    - docker-compose -f docker-compose.yml build
-    - docker push eu.gcr.io/kkiapay/preuvedevie/backend:prod
+    - docker -f  backend/Dockerfile -t registry.gitlab.com/opensi/snb-back:prod
+    - docker push registry.gitlab.com/opensi/snb-back
   tags:
-    - shell-runner-preuvedevie
+    - shell-1
   environment:
     name: production
 
@@ -33,18 +29,18 @@ build_frontend_page_prod:
       - .gitlab-ci.yml
   stage: build
   script:
-    - cp ./frontend/.env.prod ./frontend/.env
-    - docker-compose -f docker-compose.yml build
-    - docker push eu.gcr.io/kkiapay/preuvedevie/frontend:prod
+    - cp ./frontend/.env ./frontend/.env
+    - docker -f front/Dockerfile -t registry.gitlab.com/opensi/snb-front:prod
+    - docker push registry.gitlab.com/opensi/snb-front:prod
   tags:
-    - shell-runner-preuvedevie
+    - shell-1
   environment:
     name: production
 
 deploy_dev_images_prod:
   stage: deploy
   tags:
-    - shell-runner-preuvedevie
+    - shell-1
   only:
     - prod
   #before_script:
