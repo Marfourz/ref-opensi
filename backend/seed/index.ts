@@ -1,8 +1,10 @@
 import { users } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config({ path: '.env.development' });
 const { PrismaClient } = require('@prisma/client');
-import { AuthService } from 'apps/core/src/users-manager/auth.service';
+import axios from 'axios';
 
 const prisma = new PrismaClient();
 
@@ -17,6 +19,19 @@ async function main() {
       data: engines[0],
     });
     console.info('ENGINE created : ', newEngine);
+
+    axios
+      .post(process.env.USERS_MANAGER_URL + '/users', {
+        email: 'admin@admin.com',
+        username: 'admin@admin.com',
+        password: 'azertyuiop789',
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
     const newUser = await prisma.user.createMany({
       data: users.map((value: any) => {
