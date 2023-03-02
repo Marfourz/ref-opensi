@@ -17,7 +17,7 @@ build_backend_prod:
   stage: build
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - docker build -t registry.gitlab.com/opensi/snb  ./backend
+    - docker build -t registry.gitlab.com/opensi/snb-backend  ./backend
     - docker push registry.gitlab.com/opensi/snb
   tags:
     - shell-1
@@ -30,7 +30,7 @@ build_frontend_page_prod:
   stage: build
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - docker build -t registry.gitlab.com/opensi/snb  ./front
+    - docker build -t registry.gitlab.com/opensi/snb-frontend  ./front
     - docker push registry.gitlab.com/opensi/snb
   tags:
     - shell-1

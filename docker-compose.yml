@@ -9,14 +9,14 @@ services:
       POSTGRES_DB: "snb-prod"
       POSTGRES_PASSWORD: "opensi"
     volumes:
-      - postgres: postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     networks:
       - snb
 
   migrate:
     build:
-      context: ./backend/prisma
-    image: registry.gitlab.com/opensi/snb-backend:prod
+      context: ./backend
+    image: registry.gitlab.com/opensi/snb-backend
     container_name: migrate-snb-prod
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
@@ -30,7 +30,7 @@ services:
   backend:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend:prod
+    image: registry.gitlab.com/opensi/snb-backend
     ports:
       - 9811:3008
     container_name: backend-snb
@@ -45,7 +45,7 @@ services:
   frontend:
     build:
       context: ./front
-    image: registry.gitlab.com/opensi/snb-front:prod
+    image: registry.gitlab.com/opensi/snb-frontend
     ports:
       - 9812:80
     container_name: frontend-snb
@@ -53,7 +53,7 @@ services:
       - snb
 
 volumes:
-  postgres: ~
+  postgres:
 
 networks:
   snb:
