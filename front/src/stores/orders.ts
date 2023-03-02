@@ -29,6 +29,16 @@ export const useOrdersStore = defineStore("ordersStore", {
         }
       },
 
+      async fetchAllByOrganizationType(query: any, type : string) {
+        try {
+          const response = await Api.get(`orders/getOrders/${type}`, { params: query });
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      },
+
+
     async create(data: {organisationId : PrimaryKey | undefined ,items : Array<{productId : PrimaryKey,quantity : number}>}) {
       try {
         const response = await Api.post("orders", data);

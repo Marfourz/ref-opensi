@@ -30,14 +30,27 @@
                 {{ helpers.formatDateHour(element.createdAt) }}
               </div>
             </template>
+            <template #filter>
+          <div class="flex space-x-4 h-full">
+            <div
+              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
+            >
+              <div>Filtré par</div>
+              <BaseIcon name="simpleArrowBottom"></BaseIcon>
+            </div>
+
+            <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+           
+          </div>
+        </template>
           </BaseTableWithFilter>
         </div>
       </template>
       <template #secondPart>
         <Order :order="order" v-if="order">
           <template #title>
-            <div class="flex space-x-2 items-center">
-              <div class="font-bold text-lg">Appro #56767 </div>
+            <div class="flex space-x-2  items-center">
+              <div class="font-bold text-lg ">Appro {{ order.reference }} </div>
               <BaseTableStatut :title="getStatutLabel(order)" :type="getStatutType(order)"></BaseTableStatut>
             </div>
           </template>
@@ -72,7 +85,7 @@ export default defineComponent({
     const titles = [
       {
         title: "Appro",
-        name: "appro",
+        name: "reference",
       },
       {
         title: "Date",
@@ -93,43 +106,6 @@ export default defineComponent({
     ];
 
     const order = ref();
-
-    // const order = {
-    //     organisation : OrganisationType.SNB,
-    //     items : [
-    //         {
-    //             id : 1,
-    //             createdAt : new Date(),
-    //             updatedAt : new Date(),
-    //             product : {
-    //                 name : "Chap 50 CL",
-    //                 unitPrice : 1000,
-    //                 rackPrice : 1000,
-    //                 packPrice : 20000,
-    //                 volume : 2000,
-    //             },
-    //             quantity : 10,
-    //             price : 2000,
-    //         },
-    //         {
-    //             product : {
-    //                 name : "Chap Cola 50 CL",
-    //                 unitPrice : 500,
-    //                 rackPrice : 1000,
-    //                 packPrice : 20000,
-    //                 volume : 200,
-    //             },
-    //             quantity : 220,
-    //             price : 200,
-    //         }
-    //     ],
-    //     totalAmount : 1000000,
-    //     transaction : {
-
-    //     },
-    //     status :OrderStatus.DELIVERY,
-    //     deliveryDate : Date
-    // }
 
     const orderStore = useOrdersStore();
     const userStore = useUsersStore();

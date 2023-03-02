@@ -1,7 +1,8 @@
 <template>
-  <div class="w-full">
+  <div class="w-full ">
     <slot name="title"> </slot>
-    <BaseTable :titles="titles" :data="order.items" v-if="order">
+    
+    <BaseTable :titles="titles" :data="order.items" class="mt-2" v-if="order">
       <template #product="{element}">
         <div class="flex items-center space-x-6">
             <img src="@/assets/images/beverage.png" alt="">

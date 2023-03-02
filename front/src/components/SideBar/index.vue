@@ -159,7 +159,7 @@ export default defineComponent({
     }
     
     const organizationType = computed(()=>{
-      return userStore.getCurrentUser?.organisation?.type
+      return OrganisationType.SNB //userStore.getCurrentUser?.organisation?.type
     })
 
     function showMenu(menu : any) : boolean {

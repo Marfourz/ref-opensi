@@ -22,9 +22,9 @@
     </div>
 
     <!--Évolution du chiffre d’affaire  -->
-    <div class="mt-6 font-bold text-xl tracking-[-2%]">
+    <!-- <div class="mt-6 font-bold text-xl tracking-[-2%]">
       Évolution du chiffre d’affaire
-    </div>
+    </div> -->
     <!--Chiffre d’affaire par produit  -->
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">

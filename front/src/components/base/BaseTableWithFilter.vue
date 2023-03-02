@@ -1,12 +1,12 @@
 <template>
-  <div>    
+  <div >    
     <div
       v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
     >
       <div class="space-x-4 flex">
         <div
-          class="border rounded-lg py-2 px-5 flex space-x-4 bg-grey-20 w-[280px]"
+          class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]"
         >
           <BaseIcon name="search" class="text-grey-50"></BaseIcon>
           <input
