@@ -28,49 +28,64 @@ export class OrganisationService {
   async createOrganisation(
     organisation: organisationDto,
   ): Promise<Organisation> {
-    const existingOrganisationByEmail =
-      await this.prisma.organisation.findUnique({
-        where: {
-          email: organisation.email,
-        },
+    try {
+      const existingOrganisationByEmail =
+        await this.prisma.organisation.findUnique({
+          where: {
+            email: organisation.email,
+          },
+        });
+
+      const existingOrganisationByFiscalId =
+        await this.prisma.organisation.findUnique({
+          where: {
+            fiscalId: organisation.fiscalId,
+          },
+        });
+
+      if (existingOrganisationByEmail) {
+        throw new HttpException(
+          'ORGANISATION WITH THIS EMAIL ALREADY EXIST',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      if (existingOrganisationByFiscalId) {
+        throw new HttpException(
+          'ORGANISATION WITH THIS FISCAL ID ALREADY EXIST',
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const newOrganisation = await this.prisma.organisation.create({
+        data: organisation,
       });
 
-    const existingOrganisationByFiscalId =
-      await this.prisma.organisation.findUnique({
-        where: {
-          fiscalId: organisation.fiscalId,
-        },
+      await this.walletService.createWallet({
+        organisationId: newOrganisation.id,
+        turnover: 0,
       });
 
-    if (existingOrganisationByEmail || existingOrganisationByFiscalId) {
+      const userGenerated = {
+        organisationId: newOrganisation.id,
+        name: organisation.ownerName,
+        phone: organisation.phone,
+        email: organisation.email,
+        address: organisation.adress,
+        sex: 'male',
+        role: Role.ADMINISTRATOR,
+        status: UserStatusEnum.active,
+      };
+
+      await this.userService.createUser(userGenerated);
+
+      return newOrganisation;
+    } catch (error) {
       throw new HttpException(
-        'ORGANISATION WITH EMAIL OR FISCAL ID ALREADY EXIST',
-        HttpStatus.CONFLICT,
+        'OUPPS AN ERROR OCCURED :(',
+        HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-    const newOrganisation = await this.prisma.organisation.create({
-      data: organisation,
-    });
-
-    await this.walletService.createWallet({
-      organisationId: newOrganisation.id,
-      turnover: 0,
-    });
-
-    const userGenerated = {
-      organisationId: newOrganisation.id,
-      name: organisation.ownerName,
-      phone: organisation.phone,
-      email: organisation.email,
-      address: organisation.adress,
-      sex: 'male',
-      role: Role.ADMINISTRATOR,
-      status: UserStatusEnum.active,
-    };
-
-    await this.userService.createUser(userGenerated);
-
-    return newOrganisation;
   }
 
   async getAllOrganisations(): Promise<Organisation[]> {
