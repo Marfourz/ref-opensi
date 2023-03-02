@@ -122,6 +122,7 @@ export class StockService {
           product: {
             include: {
               category: true,
+              image: true,
             },
           },
         },
