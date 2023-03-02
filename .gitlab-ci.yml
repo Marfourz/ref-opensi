@@ -9,6 +9,8 @@ stages:
 services:
   - docker:dind
 
+before_script:
+  - docker login -u itsjdio -p AKjd24'wizy https://registry.gitlab.com
 # Define the jobs for the pipeline
 build_backend_prod:
   stage: build
