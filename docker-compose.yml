@@ -5,9 +5,9 @@ services:
     container_name: db-snb-prod
     restart: always
     environment:
-      - POSTGRES_USER: opensiuser
+      - POSTGRES_USER: "opensiuser"
       - POSTGRES_DB: "snb-prod"
-      - POSTGRES_PASSWORD: opensi
+      - POSTGRES_PASSWORD: "opensi"
     volumes:
       - postgres: postgres:/var/lib/postgresql/data
     networks:
