@@ -183,7 +183,7 @@ export default defineComponent({
      
     ];
 
-    async function showItemOrder(element : Order){
+    async function showItemOrder(element : any){
         try{
           const response = await orderStore.fetchOne(element.id)
           order.value = response
@@ -196,7 +196,7 @@ export default defineComponent({
 
     const selectedOrderId = ref()
 
-    async function acceptOrder(order : Order){
+    async function acceptOrder(order : any){
       show.value = true
       selectedOrderId.value = order.id
     }
