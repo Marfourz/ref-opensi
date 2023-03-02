@@ -6,17 +6,18 @@
         <div class="" v-if="!showOnlyIcon">Réduire</div>
       </div>
       <div class="space-y-6">
+
         <div v-for="menu in menus" :key="menu.title" >
           <SideItem
           v-if="showMenu(menu)"
           :icon="menu.icon"
           :label="menu.title"
-          
           :isActive="activeRouteName == menu.route"
           :showOnlyIcon="showOnlyIcon"
-          
           @click="changeMenu(menu)"
         />
+
+
         </div>
         
 
@@ -46,6 +47,7 @@ import SideItem from "./SideItem.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUsersStore } from "../../stores/users";
 import { OrganisationType, UserRole } from "../../types/enumerations";
+import { useAuthStore } from "../../stores/users/auth-store";
 
 interface IMenu{
   title: string,
@@ -152,8 +154,15 @@ export default defineComponent({
         organizations : [OrganisationType.SNB,OrganisationType.MD]
       }
     ];
+
+    const authStore = useAuthStore()
+
     function changeMenu(menu: any) {
-      console.log("actual menu", menu)
+      if(menu.route == 'logout'){
+        authStore.logout()
+        router.push({name : 'login'})
+      }
+        
       activeMenu.value = menu.title;
       router.push({ name: menu.route });
     }
@@ -169,7 +178,11 @@ export default defineComponent({
 
     }
     const activeRouteName = computed(() => {
+      
       const routesList = route.path.split("/");
+     
+      if(route.name == "dashboard")
+        return 'dashboard'
       const actualRoute = routesList[3];
      
       const allMenus = menus.concat(bottomMenus)

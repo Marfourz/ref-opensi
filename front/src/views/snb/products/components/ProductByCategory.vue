@@ -16,12 +16,12 @@
           >
           <template #image="{element}">
               <div>
-                <img :src="`${element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png' }`" alt="">
+                <img :src="`${element.product.image && element.product.image[0] ? element.product.image[0].url : '/assets/images/beverage.png' }`" alt="">
               </div>
             </template>
             <template #volume={element}>
                 <div>
-                    {{ helpers.currency(element.volume)  }} CL
+                    {{ helpers.currency(element.product.volume)  }} CL
                 </div>
             </template>
            

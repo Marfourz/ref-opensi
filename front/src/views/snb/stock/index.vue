@@ -82,7 +82,7 @@ export default defineComponent({
 
     const approDate = computed(()=>{
         return {
-        title: `${generalInfos.value ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
+        title: `${generalInfos.value  && generalInfos.value.lastStock  ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
         subtitle: "Date du dernier appro",
        
         icon: "dollar",
@@ -106,7 +106,7 @@ export default defineComponent({
       },
       {
         title: "Nom du produit",
-        name: "name",
+        name: "product.name",
       },
 
       {
@@ -116,13 +116,12 @@ export default defineComponent({
 
       {
         title: "Quantité en stock",
-        name: "stock",
-        transform: getStock,
+        name: "currentQuantity"
       },
 
       {
         title: "Prix/Casier",
-        name: "bulkPrice",
+        name: "product.bulkPrice",
         transform: formatPrice
         
       },
@@ -133,22 +132,16 @@ export default defineComponent({
       }
     ];
 
-    function getStock(element: IProduct) {
-      if (element.stocks && element.stocks[0])
-        return element.stocks[0].currentQuantity;
-      else return 0;
-    }
+   
 
-
-    function getTotalPrice(element : IProduct){
+    function getTotalPrice(element : any){
         let price = 0
-        if (element.stocks && element.stocks[0])
-            price = element.stocks[0].currentQuantity  * element.bulkPrice
+        price = element.currentQuantity  * element.product.bulkPrice
         return `${helpers.currency(price)} F`
     }
 
-    function formatPrice(element : IProduct){
-        return `${helpers.currency(element.bulkPrice)} F`  
+    function formatPrice(element : any){
+        return `${helpers.currency(element.product.bulkPrice)} F`  
     }
 
     const actions = [

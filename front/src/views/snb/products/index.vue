@@ -118,12 +118,9 @@
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import EmptyState from "../../../components/EmptyState.vue";
 import { useProductStore } from "@/stores/product";
-
 import BaseTableWithFilter from "../../../components/base/BaseTableWithFilter.vue";
-
 import { useRouter } from "vue-router";
 import { useProductCategoryStore } from "../../../stores/product-category";
-
 import UploadFileVue from "../../../components/UploadFile.vue";
 import { PackagingType } from "../../../types/enumerations";
 import { Form } from "vee-validate";

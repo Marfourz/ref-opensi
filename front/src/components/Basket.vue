@@ -15,7 +15,7 @@
     </div>
 
     <div v-else class="flex flex-col justify-between h-[calc(100vh-160px)]">
-      <div class="space-y-4">
+      <div class="space-y-4  h-[calc(100vh-300px)] overflow-scroll" >
         <div v-for="item in items" :key="item.product.name">
           <BasketItem
             :product="item.product"
@@ -70,6 +70,8 @@ import {
 import { useOrdersStore } from "../stores/orders";
 import { useUsersStore } from "../stores/users";
 import { PrimaryKey } from "../types/interfaces";
+import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: { EmptyState, BasketItem },
@@ -94,6 +96,10 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisationId
     })
 
+    const toast = useToast()
+
+    const router = useRouter()
+
     async function onSubmit(){
       const orders = items.value.map((item : IItem)=>{
         return {
@@ -103,8 +109,9 @@ export default defineComponent({
       })
       const response = await ordersStore.create({organisationId :organisationId.value, items : orders})
 
-      console.log("response data", response)
-     
+      router.push({name : "appros"})
+
+      toast.success("Commande effectuée avec succès")
 
       basketStore.clearBasket()
     }
@@ -138,6 +145,7 @@ export default defineComponent({
       kkiapayWidget,
       onSubmit,
       loading
+
         
     };
   },

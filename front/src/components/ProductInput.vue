@@ -2,7 +2,7 @@
     <div class="border flex flex-col items-center rounded-lg px-4 py-6 space-y-4 relative"
         :class="{'border-success' : isValidate}">
         <div class="absolute bg-success top-0 right-0 p-2 rounded-tr-lg rounded-bl-lg" v-if="isValidate">
-            <BaseIcon name="check"></BaseIcon>
+            <BaseIcon name="check" class="text-white"></BaseIcon>
         </div>
         <img src="@/assets/images/beverage.png" alt="" class="w-4 h-16">
         <div class="flex flex-col items-center">

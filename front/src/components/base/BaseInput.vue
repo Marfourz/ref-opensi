@@ -44,7 +44,7 @@
               />
             </template>
           </v-date-picker>
-          <!-- <BaseIcon name="date-range"></BaseIcon> -->
+          <BaseIcon name="calendar"></BaseIcon> 
         </div>
   
         <div

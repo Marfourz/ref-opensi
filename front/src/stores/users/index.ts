@@ -9,7 +9,7 @@ export const useUsersStore = defineStore('usersStore',{
 
     state:()=>{
         return {
-            current_user  : {} as IUser
+            current_user  : {} as IUser | null
         }
     },
   
@@ -50,7 +50,9 @@ export const useUsersStore = defineStore('usersStore',{
         },
 
 
-        saveCurrentUser(user : IUser){
+        saveCurrentUser(user : IUser | null){
+            console.log("saveCurrentUser", user);
+            
             this.current_user = user
             localStorage.setItem('current_user', JSON.stringify(user))
         },

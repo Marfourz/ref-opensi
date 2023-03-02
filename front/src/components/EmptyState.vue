@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full flex flex-col  items-center space-y-4">
+    <div class="flex flex-col  items-center space-y-4">
         <img :src="image" alt="">
         <div class="font-semibold text-center " v-html="title"></div>
     </div>

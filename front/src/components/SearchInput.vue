@@ -1,6 +1,6 @@
 <template>
      <div class="border rounded-lg py-2.5 px-4 flex space-x-1.5 bg-grey-10">
-            <IconSearch class="text-grey-30"/>
+            <IconSearch />
             <input
             v-bind="{ ...$attrs }"
               type="text"
