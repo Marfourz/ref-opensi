@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { orderDto, updateOrderDto } from './order.dto';
-import { NonSnbOrganisations, PagiationPayload } from 'types';
+import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
+import { getSubTypeOrg } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class OrderService {
@@ -160,20 +161,32 @@ export class OrderService {
     }
   }
 
-  async getOrdersOfOrganisations(type: NonSnbOrganisations): Promise<Order[]> {
-    try {
-      const orders = await this.prisma.order.findMany({
-        where: {
-          organisation: {
-            type,
-          },
-        },
-      });
+  async getOrdersOfSubOrganisations(orgId): Promise<Order[]> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: {
+        id: orgId,
+      },
+    });
 
-      return orders;
-    } catch (error) {
-      throw error;
-      return;
+    const subType = getSubTypeOrg(organisation.type);
+
+    if (subType === 'none') {
+      return [];
+    } else {
+      try {
+        const orders = await this.prisma.order.findMany({
+          where: {
+            organisation: {
+              type: subType,
+            },
+          },
+        });
+
+        return orders;
+      } catch (error) {
+        throw error;
+        return;
+      }
     }
   }
 }

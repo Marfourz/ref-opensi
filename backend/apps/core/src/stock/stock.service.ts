@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Stock, PackagingTypeEnum } from '@prisma/client';
+import {
+  Stock,
+  PackagingTypeEnum,
+  TransactionStatusEnum,
+} from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
@@ -89,25 +93,51 @@ export class StockService {
         paginateConstraints.skip = Number((page - 1) * perPage);
         paginateConstraints.take = Number(perPage);
       }
-      const w: any = {};
-      w.id = categoryId;
 
-      const stocks = await this.prisma.productCategory.findUnique({
+      const prodNameConstraint: any = {};
+      const w: any = {};
+      const subProd: any = {};
+      if (q != undefined && q != '') {
+        prodNameConstraint.name = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        subProd.product = {
+          ...prodNameConstraint,
+        };
+
+        w.OR = [subProd];
+      }
+
+      const stocks = await this.prisma.stock.findMany({
         where: {
+          organisationId: orgId,
+          product: {
+            categoryId,
+          },
           ...w,
         },
         include: {
-          products: {
-            include: { image: true,stocks: { where: { organisationId: orgId } } },
+          product: {
+            include: {
+              category: true,
+            },
           },
         },
       });
 
       const count = await this.prisma.stock.count({
-        where: { organisationId: orgId },
+        where: {
+          organisationId: orgId,
+          product: {
+            categoryId,
+          },
+          ...w,
+        },
       });
 
-      return { data: stocks.products, count };
+      return { data: stocks, count };
     } catch (error) {
       throw error;
       return;
@@ -146,7 +176,7 @@ export class StockService {
 
     let totalCost = 0;
     stocks.map((stock) => {
-      totalCost += stock.currentQuantity * stock.product.unitPrice;
+      totalCost += stock.currentQuantity * stock.product.bulkPrice;
     });
 
     const lastStock = await this.prisma.stock.findMany({

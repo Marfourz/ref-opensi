@@ -7,16 +7,13 @@ import {
   Put,
   Delete,
   Query,
-  Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Order, OrderStatusEnum } from '@prisma/client';
-import { OrderTypeEnum } from 'guards/order.type.enum';
+import { Order } from '@prisma/client';
 import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
-import { NonSnbOrganisations } from '../../../../types/index';
 import {
   ApiTags,
   ApiBody,
@@ -75,15 +72,15 @@ export class OrderController {
     );
   }
 
-  @Get('getOrders/:type')
-  @ApiParam({ name: 'type', enum: NonSnbOrganisations })
+  @Get('getOrders/:orgId')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orgId' })
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getOrdersOfOrganisations(@Param() params): Promise<Order[]> {
-    console.log('type sucre', params.type);
-    return this.orderService.getOrdersOfOrganisations(params.type);
+  getOrdersOfSubOrganisations(@Param() params): Promise<Order[]> {
+    return this.orderService.getOrdersOfSubOrganisations(params.orgId);
   }
 
   @Put(':id')
