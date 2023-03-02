@@ -22,7 +22,9 @@ services:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
     depends_on:
       - db_postgres
-    command: npm run migrate && seed
+    command: >
+      sh -c "npm run migrate &&
+      npm run seed"
     networks:
       - snb
 
