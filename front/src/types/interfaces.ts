@@ -72,9 +72,10 @@ export interface IUser extends Commun {
   sex: Sex;
   role: UserRole;
   organisationId: string;
-  birthday?:Date,
-  engineId?:PrimaryKey,
-  status?: UserAccountStatus
+  organisation?: IOrganisation;
+  birthday?: Date;
+  engineId?: PrimaryKey;
+  status?: UserAccountStatus;
 }
 
 
