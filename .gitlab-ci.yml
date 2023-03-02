@@ -1,5 +1,9 @@
 ##snb
 
+variables:
+  REGISTRY: "registry.gitlab.com"
+  DOCKER_REGISTRY: registry.gitlab.com
+
 stages:
   - build
   - deploy
