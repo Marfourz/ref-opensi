@@ -20,6 +20,7 @@ services:
     container_name: migrate-snb-prod
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+      - USERS_MANAGER_URL="http://api_users"
     depends_on:
       - db_postgres
     command: >
@@ -72,7 +73,7 @@ services:
       - PRODUCT_IMAGES_DEST="./uploads/products-images"
       - PDF_GENERATOR_BASE_URL="https://pdf.kkiapay.me/v2"
       - BOMBOO_API_URL="https://api.bomboo.io/v0.2.4"
-      - BOMBOO_API_KEY="*********************************"
+      - BOMBOO_API_KEY="d4e6254924d5b671741f46eeda945d33e63c29aa093bf2e4e48212baa44c7bb2cf0d42b6"
       - FRONTEND_BASE_URL="http://localhost:5000"
       - API_NOTIFICATION="http://localhost:3001"
     networks:
