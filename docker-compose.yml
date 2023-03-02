@@ -66,6 +66,15 @@ services:
     container_name: backend-snb
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+      - APP_URL="http://localhost:3000"
+      - APP_PORT=3000
+      - USERS_MANAGER_URL="http://api_users"
+      - PRODUCT_IMAGES_DEST="./uploads/products-images"
+      - PDF_GENERATOR_BASE_URL="https://pdf.kkiapay.me/v2"
+      - BOMBOO_API_URL="https://api.bomboo.io/v0.2.4"
+      - BOMBOO_API_KEY="*********************************"
+      - FRONTEND_BASE_URL="http://localhost:5000"
+      - API_NOTIFICATION="http://localhost:3001"
     networks:
       - snb
     volumes:
