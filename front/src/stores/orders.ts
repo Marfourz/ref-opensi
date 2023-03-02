@@ -29,9 +29,9 @@ export const useOrdersStore = defineStore("ordersStore", {
         }
       },
 
-      async fetchAllByOrganizationType(query: any, type : string) {
+      async fetchAllByOrganizationType(query: any, id : PrimaryKey) {
         try {
-          const response = await Api.get(`orders/getOrders/${type}`, { params: query });
+          const response = await Api.get(`orders/getOrders/${id}`, { params: query });
           return response.data;
         } catch (error) {
           throw error;

@@ -213,7 +213,7 @@ export default defineComponent({
       },
       {
         title: "Produit",
-        name: "name",
+        name: "Nom",
       },
 
       {
@@ -235,7 +235,7 @@ export default defineComponent({
       },
 
       {
-        title: "name",
+        title: "Nom",
         name: "socialReason",
       },
 

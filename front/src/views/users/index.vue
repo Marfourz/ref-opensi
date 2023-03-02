@@ -134,6 +134,7 @@ import { useUsersStore } from "../../stores/users";
 import { Sex, UserRole } from "../../types/enumerations";
 import { Form } from "vee-validate";
 import { IUser } from "../../types/interfaces";
+import { useToast } from "vue-toastification";
 
 export default defineComponent({
   components: { Form },
@@ -320,6 +321,8 @@ export default defineComponent({
 
     const reload = ref(false);
 
+    const toast = useToast()
+
     async function onSubmit() {
       loading.value = true;
 
@@ -339,6 +342,7 @@ export default defineComponent({
         reload.value = !reload.value;
       } catch (error: any) {
         loading.value = false;
+        toast.error(error.response.data.message)
       }
     }
 

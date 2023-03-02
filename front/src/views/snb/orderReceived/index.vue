@@ -14,7 +14,7 @@
           <div class="relative">
             <BaseTableWithFilter
             :titles="titles"
-            :requestId="OrganisationType.MD"
+            :requestId="organisationId"
             :fetchData="orderStore.fetchAllByOrganizationType"
             :actions="actions"
           >

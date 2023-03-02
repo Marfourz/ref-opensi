@@ -147,6 +147,7 @@ import VPanel from "@/components/VPanel.vue";
 import { useUsersStore } from "../../../stores/users";
 import { OrganisationType, UserAccountStatus } from "../../../types/enumerations";
 import { PrimaryKey } from "../../../types/interfaces";
+import { useToast } from "vue-toastification";
 
 export default defineComponent({
   components: { Form, VPanel },
@@ -349,6 +350,8 @@ export default defineComponent({
 
     const reload = ref(false);
 
+    const toast = useToast()
+    
     async function onSubmit() {
       loading.value = true;
 
@@ -371,6 +374,7 @@ export default defineComponent({
         reload.value = !reload.value;
       } catch (error: any) {
         loading.value = false;
+        toast.error(error.response.data.message)
       }
     }
 

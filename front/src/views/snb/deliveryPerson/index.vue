@@ -171,6 +171,7 @@ import { useEnginesStore } from "../../../stores/engines";
 import { useOrganizationStore } from "../../../stores/organization";
 import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
 import { UserAccountStatus } from "../../../types/enumerations";
+import { useToast } from "vue-toastification";
   
   export default defineComponent({
     components: { Form, BaseTableStatut },
@@ -362,6 +363,8 @@ import { UserAccountStatus } from "../../../types/enumerations";
         
         userStore.getCurrentUser?.organisationId
       })
+
+      const toast = useToast()
   
       async function onSubmit() {
         loading.value = true;
@@ -381,6 +384,7 @@ import { UserAccountStatus } from "../../../types/enumerations";
           reload.value = !reload.value;
         } catch (error: any) {
           loading.value = false;
+          toast.error(error.response.data.message)
         }
       }
   

@@ -89,7 +89,7 @@ export default defineComponent({
     const titles = [
       {
         title: "Produits en stock",
-        name: "name",
+        name: "product.name",
       },
 
       {

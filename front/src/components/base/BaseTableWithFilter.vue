@@ -152,7 +152,7 @@ export default defineComponent({
             { ...params, ...props.params },
             props.requestId
           );
-          console.log("firstn response",response, props.requestId);
+          console.log("firstn response",response);
         }
 
 
