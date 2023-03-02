@@ -8,9 +8,10 @@ COPY . .
 RUN npm run build
 
 # production stage
-FROM httpd:2.4
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
-COPY --from=build-stage /app/dist/ /usr/local/apache2/htdocs/
-COPY .htaccess /usr/local/apache2/htdocs/.htaccess
+FROM nginx:1.23.3-alpine
+RUN rm -rf /usr/share/nginx/html/*
+COPY nginx.conf /etc/nginx/sites-enabled/nginx.conf
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 80
