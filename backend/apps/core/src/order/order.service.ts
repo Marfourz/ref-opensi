@@ -68,7 +68,7 @@ export class OrderService {
         include: {
           items: {include:{product : true}},
           invoice: true,
-          user: true,
+          organisation: true,
         },
       });
       return order;

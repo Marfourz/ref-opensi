@@ -1,5 +1,12 @@
 <template>
-  <div class="">
+  <div class="" :key="reload">
+    <div class="absolute  top-6 right-0 left-0 flex justify-center" v-if="showSuccesInfo">
+      <SuccessInfo title="Livreur assigné avec succès" class="w-fit " @close="showSuccesInfo = false"></SuccessInfo>
+    </div>
+    
+    <BaseModal :show="show" @close="show = false" @submitSuccess="orderAcceptSuccessful" title="Accepter la commande">
+      <FormAssignDeliveryPerson :orderId="selectedOrderId"></FormAssignDeliveryPerson>
+    </BaseModal>
     <PageInTwoPart>
       <template #firstPart>
         <div class="space-y-8">
@@ -54,12 +61,12 @@
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
                   <div class="">
-                    <div class="text-[#6B7A99]">Master distributeur</div>
-                    <div class="font-bold">OPENSI</div>
+                    <div class="text-[#6B7A99]">{{ partenaireTitle }}</div>
+                    <div class="font-bold">{{order.organisation?.socialReason}}</div>
                   </div>
 
                 </div>
-                <div class="border border-[#6B7A99] py-2.5 px-2 rounded">Voir le profil</div>
+                <div class="border border-[#6B7A99] py-2.5 px-2 rounded font-semibold cursor-pointer">Voir le profil</div>
               </div>
               <div class="flex space-x-2  items-center">
                 <div class="font-bold text-lg ">Commande {{ order.reference }} </div>
@@ -93,8 +100,12 @@ import { useToast } from "vue-toastification";
 
 import EmptyState from "../../../components/EmptyState.vue";
 
+import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue";
+
+import SuccessInfo from "../../../components/SuccessInfo.vue";
+
 export default defineComponent({
-  components: { PageInTwoPart, Order,EmptyState },
+  components: { PageInTwoPart, Order,EmptyState,FormAssignDeliveryPerson,SuccessInfo },
   setup() {
     const titles = [
       {
@@ -149,6 +160,29 @@ export default defineComponent({
 
     const toast = useToast()
 
+    
+
+    const partenaireTitle = computed(()=>{
+        if(order.value.organisation.type == OrganisationType.DA)
+          return 'Distributeur agrée'
+        else 
+          return 'Master distributeur'
+    })
+
+    const actions = [
+        {
+          title: "Voir détails",
+          icon: "eye",
+          action: showItemOrder,
+        },
+        {
+          title: "Accepter",
+          icon: "edit",
+          action: acceptOrder,
+        },
+     
+    ];
+
     async function showItemOrder(element : Order){
         try{
           const response = await orderStore.fetchOne(element.id)
@@ -160,14 +194,28 @@ export default defineComponent({
         
     }
 
-    const actions = [
-        {
-          title: "Voir détail",
-          icon: "eye",
-          action: showItemOrder,
-        },
-     
-    ];
+    const selectedOrderId = ref()
+
+    async function acceptOrder(order : Order){
+      show.value = true
+      selectedOrderId.value = order.id
+    }
+
+
+    const reload = ref(1)
+
+    function orderAcceptSuccessful(){
+      show.value = false
+      reload.value = reload.value + 1
+      showSuccesInfo.value = true
+      
+    }
+
+    const show = ref(false)
+
+    const showSuccesInfo = ref(false)
+
+    
 
     return {
       titles,
@@ -179,7 +227,13 @@ export default defineComponent({
       getStatutType,
       helpers,
       actions,
-      OrganisationType
+      OrganisationType,
+      partenaireTitle,
+      show,
+      orderAcceptSuccessful,
+      selectedOrderId,
+      reload,
+      showSuccesInfo
     };
   },
 });

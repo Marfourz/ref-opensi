@@ -37,7 +37,7 @@
             <div
               class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
             >
-              <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
+              <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
             </div>
             <div class="font-bold text-2xl">
               {{ modal.title }}
@@ -359,8 +359,8 @@ import { UserAccountStatus } from "../../../types/enumerations";
       const organizationStore = useOrganizationStore()
 
       const organisationId = computed(()=>{
-        return "0a28f57d-438b-4811-a629-3448c90fefe1"
-        //userStore.getCurrentUser?.organisationId
+        
+        userStore.getCurrentUser?.organisationId
       })
   
       async function onSubmit() {
