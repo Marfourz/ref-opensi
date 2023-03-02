@@ -1,43 +1,50 @@
-# .gitlab-ci.yml
+#snb
 
-# Set the stages for the pipeline
 stages:
   - build
   - deploy
 
-## Define the jobs for the pipeline
 build_backend_prod:
-  stage: build
   only:
-    - deploy
+    refs:
+      - deploy
+    changes:
+      - backend/**/*
+      - .gitlab-ci.yml
+  stage: build
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-backend:prod -f backend/Dockerfile
-    - docker push registry.gitlab.com/opensi/snb-backend:prod
+    - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./backend
+    - docker push registry.gitlab.com/opensi/snb-back
   tags:
     - shell-1
   environment:
     name: production
 
-build_frontend_prod:
-  stage: build
+build_frontend_page_prod:
   only:
-    - deploy
+    refs:
+      - deploy
+    changes:
+      - frontend/**/*
+      - .gitlab-ci.yml
+  stage: build
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-front:prod -f front/Dockerfile
-    - docker push registry.gitlab.com/opensi/snb-front:prod
+    - cp ./front/.env ./frontend/.env
+    - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./front
+    - docker push registry.gitlab.com/opensi/snb-front
   tags:
     - shell-1
   environment:
     name: production
 
-deploy_prod:
+deploy_dev_images_prod:
   stage: deploy
   tags:
     - shell-1
   only:
-    - deploy
+    - prod
+  #before_script:
+  #  - docker login https://eu.gcr.io
   script:
+    - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
-  environment:
-    name: production
- 
