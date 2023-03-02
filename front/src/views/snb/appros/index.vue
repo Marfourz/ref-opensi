@@ -138,7 +138,7 @@ export default defineComponent({
 
     const toast = useToast()
 
-    async function showItemOrder(element : Order){
+    async function showItemOrder(element : any){
         try{
           const response = await orderStore.fetchOne(element.id)
           order.value = response
