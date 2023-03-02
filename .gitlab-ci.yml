@@ -22,7 +22,9 @@ build_backend_prod:
     - docker build -t registry.gitlab.com/opensi/snb-backend:deploy -f backend/Dockerfile
     - docker push registry.gitlab.com/opensi/snb-backend:deploy
   tags:
-    - shell-1
+    - gitlab-org
+  environment:
+    name: production
 
 build_frontend_prod:
   stage: build
@@ -36,12 +38,14 @@ build_frontend_prod:
     - docker build -t registry.gitlab.com/opensi/snb-front:deploy -f front/Dockerfile
     - docker push registry.gitlab.com/opensi/snb-front:deploy
   tags:
-    - shell-1
+    - gitlab-org
+  environment:
+    name: production
 
 deploy_prod:
   stage: deploy
   tags:
-    - shell-1
+    - gitlab-org
   only:
     refs:
       - deploy
