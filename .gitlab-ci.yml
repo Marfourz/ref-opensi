@@ -10,7 +10,7 @@ build_backend_prod:
   stage: build
   script:
     - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./backend
-    - docker push registry.gitlab.com/opensi/snb-back
+    - docker push registry.gitlab.com/opensi/snb-back:prod
   tags:
     - shell-1
   environment:
@@ -22,7 +22,7 @@ build_frontend_page_prod:
   stage: build
   script:
     - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./front
-    - docker push registry.gitlab.com/opensi/snb-front
+    - docker push registry.gitlab.com/opensi/snb-front:prod
   tags:
     - shell-1
   environment:
@@ -33,7 +33,7 @@ deploy_dev_images_prod:
   tags:
     - shell-1
   only:
-    - prod
+    - deploy
   #before_script:
   #  - docker login https://eu.gcr.io
   script:
