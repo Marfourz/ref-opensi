@@ -8,13 +8,15 @@ stages:
   - build
   - deploy
 
-before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+#before_script:
+#  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+
 build_backend_prod:
   only:
     - deploy
   stage: build
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./backend
     - docker push registry.gitlab.com/opensi/snb-back:prod
   tags:
@@ -27,6 +29,7 @@ build_frontend_page_prod:
     - deploy
   stage: build
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./front
     - docker push registry.gitlab.com/opensi/snb-front:prod
   tags:
@@ -43,5 +46,6 @@ deploy_dev_images_prod:
   #before_script:
   #  - docker login https://eu.gcr.io
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
