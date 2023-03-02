@@ -21,7 +21,6 @@ build_frontend_page_prod:
     - deploy
   stage: build
   script:
-    - cp front/.env ./frontend/.env
     - docker build -t registry.gitlab.com/opensi/snb-front:prod  ./front
     - docker push registry.gitlab.com/opensi/snb-front
   tags:
