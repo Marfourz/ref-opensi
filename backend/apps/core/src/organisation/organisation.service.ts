@@ -28,53 +28,57 @@ export class OrganisationService {
   async createOrganisation(
     organisation: organisationDto,
   ): Promise<Organisation> {
-    try {
-      const existingOrganisationByEmail =
-        await this.prisma.organisation.findUnique({
-          where: {
-            email: organisation.adress,
-          },
-        });
-
-      const existingOrganisationByFiscalId =
-        await this.prisma.organisation.findUnique({
-          where: {
-            email: organisation.fiscalId,
-          },
-        });
-
-      if (existingOrganisationByEmail || existingOrganisationByFiscalId) {
-        throw new HttpException(
-          'ORGANISATION WITH EMAIL OR FISCAL ID ALREADY EXIST',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      const newOrganisation = await this.prisma.organisation.create({
-        data: organisation,
+    const existingOrganisationByEmail =
+      await this.prisma.organisation.findUnique({
+        where: {
+          email: organisation.email,
+        },
       });
 
-      await this.walletService.createWallet({
-        organisationId: newOrganisation.id,
-        turnover: 0,
+    const existingOrganisationByFiscalId =
+      await this.prisma.organisation.findUnique({
+        where: {
+          fiscalId: organisation.fiscalId,
+        },
       });
 
-      const userGenerated = {
-        organisationId: newOrganisation.id,
-        name: organisation.socialReason,
-        phone: organisation.phone,
-        email: organisation.email,
-        address: organisation.adress,
-        sex: 'male',
-        role: Role.ADMINISTRATOR,
-        status: UserStatusEnum.active,
-      };
-
-      await this.userService.createUser(userGenerated);
-
-      return newOrganisation;
-    } catch (error) {
-      return error;
+    if (existingOrganisationByEmail) {
+      throw new HttpException(
+        'Une organisation avec cet email existe déja',
+        HttpStatus.CONFLICT,
+      );
     }
+
+    if (existingOrganisationByFiscalId) {
+      throw new HttpException(
+        'Une organisation avec cet IFU existe déja',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const newOrganisation = await this.prisma.organisation.create({
+      data: organisation,
+    });
+
+    await this.walletService.createWallet({
+      organisationId: newOrganisation.id,
+      turnover: 0,
+    });
+
+    const userGenerated = {
+      organisationId: newOrganisation.id,
+      name: organisation.ownerName,
+      phone: organisation.phone,
+      email: organisation.email,
+      address: organisation.adress,
+      sex: 'male',
+      role: Role.ADMINISTRATOR,
+      status: UserStatusEnum.active,
+    };
+
+    await this.userService.createUser(userGenerated);
+
+    return newOrganisation;
   }
 
   async getAllOrganisations(): Promise<Organisation[]> {
@@ -299,9 +303,9 @@ export class OrganisationService {
     }
   }
 
-  async getMainOrganisationInfos(): Promise<any> {
-    const snb = await this.prisma.organisation.findFirst({
-      where: { type: OrganisationTypeEnum.snb },
+  async getOrganisationDashboardInfos(orgId: string): Promise<any> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: { id: orgId },
       include: {
         wallet: true,
       },
@@ -309,29 +313,70 @@ export class OrganisationService {
 
     const orders = await this.prisma.order.count({
       where: {
-        organisationId: snb.id,
+        organisationId: orgId,
       },
     });
 
-    const partners = await this.prisma.organisation.count({
+    const MDs = await this.prisma.organisation.count({
       where: {
-        type: OrganisationTypeEnum.snb,
+        type: OrganisationTypeEnum.md,
       },
     });
 
-    const pIds = await this.getAllProductsIds();
+    const DAs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.da,
+      },
+    });
 
-    const productsInfos = await Promise.all(
+    const DPs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.dp,
+      },
+    });
+
+    let partners = 0;
+
+    switch (organisation.type) {
+      case OrganisationTypeEnum.snb:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.md:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.da:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.dp:
+        partners = MDs + DAs + DPs;
+        break;
+      default:
+        break;
+    }
+
+    //const pIds = await this.getAllProductsIds();
+
+    /*const productsInfos = await Promise.all(
       pIds.map(async (id: string) => {
         return await this.getProdInfos(id);
       }),
-    );
+    );*/
 
-    return { snb, orders, partners, productsInfos };
+    const stocks = await this.prisma.stock.findMany({
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return { organisation, orders, partners, productsInfos: stocks };
   }
 
   async getAllProductsIds(): Promise<any> {
     const products = await this.prisma.product.findMany({
+      take: 5,
       select: {
         id: true,
       },
@@ -380,7 +425,6 @@ export class OrganisationService {
 
   async getTopPartners(type: NonSnbOrganisations): Promise<Organisation[]> {
     const organisations = await this.prisma.organisation.findMany({
-      take: 10,
       where: {
         type: type,
       },

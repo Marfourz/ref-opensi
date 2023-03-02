@@ -69,12 +69,8 @@ export const useProductStore = defineStore("productStore", {
       try {
         const response = await Api.get(`stocks/${orgId}/search`,{params : query});
 
-        const values = response.data.data.filter((value : any)=>value.stocks && value.stocks.length >0 )
-
-        return {
-          count : response.data.count,
-          data : values
-        }
+       
+        return response.data
         
       } catch (error) {
         throw error;

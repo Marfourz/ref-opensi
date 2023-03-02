@@ -27,7 +27,7 @@
           <div
             class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
           >
-            <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
           </div>
           <div
             class="font-bold text-2xl text-center"
@@ -89,7 +89,7 @@ export default defineComponent({
     const titles = [
       {
         title: "Produits en stock",
-        name: "name",
+        name: "product.name",
       },
 
       {

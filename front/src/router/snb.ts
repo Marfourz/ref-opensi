@@ -27,35 +27,32 @@ export default [
         meta: {
           withoutPadding: true,
         },
-        children:[
+        children: [
           {
-            path:'commandes',
-            name : 'orderReceived',
-            component : OrderReceived,
-            meta:{
-              withoutPadding : true
-            }
+            path: "commandes",
+            name: "orderReceived",
+            component: OrderReceived,
+            meta: {
+              withoutPadding: true,
+            },
           },
           {
-            path:'appros',
-            name : 'appros',
-            component : Appros,
-            meta:{
-              withoutPadding : true
-            }
+            path: "appros",
+            name: "appros",
+            component: Appros,
+            meta: {
+              withoutPadding: true,
+            },
           },
           {
-            path:'appros/create',
-            name : 'approsCreate',
-            component : ApprosCreate,
-            meta:{
-              withoutPadding : true
-            }
+            path: "appros/create",
+            name: "approsCreate",
+            component: ApprosCreate,
+            meta: {
+              withoutPadding: true,
+            },
           },
-         
-       
-        ]
-  
+        ],
       },
       {
         path: "appros",
@@ -78,6 +75,15 @@ export default [
         name: "subDistributors",
         component: SubDistributors,
       },
+    // {
+    //   path: "/sous-distrivuteurs/:id",
+    //   name: "details",
+    //   component: VDetail,
+    //   meta: {
+    //     title: "",
+    //     withoutPadding: true,
+    //   },
+    // },
       {
         path: "produits/categories",
         name: "categories",
@@ -104,9 +110,9 @@ export default [
         component: Users,
       },
       {
-        path:'stock/update',
-        name : 'updateStock',
-        component : UpdateStock
+        path: "stock/update",
+        name: "updateStock",
+        component: UpdateStock,
       },
     ],
   },

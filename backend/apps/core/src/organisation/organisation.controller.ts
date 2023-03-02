@@ -7,6 +7,8 @@ import {
   Put,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
 import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
@@ -54,6 +56,17 @@ export class OrganisationController {
     return this.organisationService.getAllOrganisations();
   }
 
+  @Get('top-partners')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: true })
+  getTopPartners(@Query('type') type: NonSnbOrganisations): any {
+    console.log(type);
+    return this.organisationService.getTopPartners(type);
+  }
+
   @Get(':id')
   @ApiHeader({
     name: 'x-auth-token',
@@ -79,23 +92,14 @@ export class OrganisationController {
     return this.organisationService.searchForPartners(filterParams);
   }
 
-  @Get('snb/infos')
+  @Get('snb/infos/:orgId')
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getMainOrganisationInfos(): any {
-    return this.organisationService.getMainOrganisationInfos();
-  }
-
-  @Get('top-partners')
-  @ApiHeader({
-    name: 'x-auth-token',
-    description: 'Contain auth token',
-  })
-  @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: false })
-  getTopPartners(@Query('type') type: NonSnbOrganisations): any {
-    return this.organisationService.getTopPartners(type);
+  @ApiParam({ name: 'orgId' })
+  getOrganisationDashboardInfos(@Param() params): any {
+    return this.organisationService.getOrganisationDashboardInfos(params.orgId);
   }
 
   @Get(':id/users')

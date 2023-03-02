@@ -9,8 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Order, OrderStatusEnum } from '@prisma/client';
-import { OrderTypeEnum } from 'guards/order.type.enum';
+import { Order } from '@prisma/client';
 import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
@@ -71,6 +70,17 @@ export class OrderController {
       filterParams,
       params.orgId,
     );
+  }
+
+  @Get('getOrders/:orgId')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orgId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getOrdersOfSubOrganisations(@Param() params): Promise<Order[]> {
+    return this.orderService.getOrdersOfSubOrganisations(params.orgId);
   }
 
   @Put(':id')

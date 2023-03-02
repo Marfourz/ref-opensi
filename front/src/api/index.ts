@@ -40,6 +40,7 @@ if (localStorage.getItem('access_token')){
 Api.setToken = (token: string) => {
   localStorage.setItem('access_token', token);
   Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  Api.defaults.headers.common['x-auth-token'] = `${token}`;
 };
 
 export default Api;
