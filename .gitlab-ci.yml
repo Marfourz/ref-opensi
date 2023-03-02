@@ -4,6 +4,8 @@ stages:
   - build
   - deploy
 
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
 build_backend_prod:
   only:
     - deploy
