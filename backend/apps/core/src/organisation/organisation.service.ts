@@ -31,14 +31,14 @@ export class OrganisationService {
     const existingOrganisationByEmail =
       await this.prisma.organisation.findUnique({
         where: {
-          email: organisation.adress,
+          email: organisation.email,
         },
       });
 
     const existingOrganisationByFiscalId =
       await this.prisma.organisation.findUnique({
         where: {
-          email: organisation.fiscalId,
+          fiscalId: organisation.fiscalId,
         },
       });
 
@@ -59,7 +59,7 @@ export class OrganisationService {
 
     const userGenerated = {
       organisationId: newOrganisation.id,
-      name: organisation.socialReason,
+      name: organisation.ownerName,
       phone: organisation.phone,
       email: organisation.email,
       address: organisation.adress,
@@ -295,9 +295,9 @@ export class OrganisationService {
     }
   }
 
-  async getMainOrganisationInfos(): Promise<any> {
-    const snb = await this.prisma.organisation.findFirst({
-      where: { type: OrganisationTypeEnum.snb },
+  async getOrganisationDashboardInfos(orgId: string): Promise<any> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: { id: orgId },
       include: {
         wallet: true,
       },
@@ -305,25 +305,65 @@ export class OrganisationService {
 
     const orders = await this.prisma.order.count({
       where: {
-        organisationId: snb.id,
+        organisationId: orgId,
       },
     });
 
-    const partners = await this.prisma.organisation.count({
+    const MDs = await this.prisma.organisation.count({
       where: {
-        type: OrganisationTypeEnum.snb,
+        type: OrganisationTypeEnum.md,
       },
     });
 
-    const pIds = await this.getAllProductsIds();
+    const DAs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.da,
+      },
+    });
 
-    const productsInfos = await Promise.all(
+    const DPs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.dp,
+      },
+    });
+
+    let partners = 0;
+
+    switch (organisation.type) {
+      case OrganisationTypeEnum.snb:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.md:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.da:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.dp:
+        partners = MDs + DAs + DPs;
+        break;
+      default:
+        break;
+    }
+
+    //const pIds = await this.getAllProductsIds();
+
+    /*const productsInfos = await Promise.all(
       pIds.map(async (id: string) => {
         return await this.getProdInfos(id);
       }),
-    );
+    );*/
 
-    return { snb, orders, partners, productsInfos };
+    const stocks = await this.prisma.stock.findMany({
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return { organisation, orders, partners, productsInfos: stocks };
   }
 
   async getAllProductsIds(): Promise<any> {

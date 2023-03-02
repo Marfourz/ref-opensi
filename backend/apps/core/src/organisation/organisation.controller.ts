@@ -44,18 +44,7 @@ export class OrganisationController {
   createOrganisation(
     @Body() organisation: organisationDto,
   ): Promise<Organisation> {
-    try {
-      return this.organisationService.createOrganisation(organisation);
-    } catch (error) {
-      console.log('ERROR: ERROR: ERROR', error);
-      throw new HttpException(
-        {
-          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-          message: error.message,
-        },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
+    return this.organisationService.createOrganisation(organisation);
   }
 
   @Get()
@@ -103,13 +92,14 @@ export class OrganisationController {
     return this.organisationService.searchForPartners(filterParams);
   }
 
-  @Get('snb/infos')
+  @Get('snb/infos/:orgId')
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getMainOrganisationInfos(): any {
-    return this.organisationService.getMainOrganisationInfos();
+  @ApiParam({ name: 'orgId' })
+  getOrganisationDashboardInfos(@Param() params): any {
+    return this.organisationService.getOrganisationDashboardInfos(params.orgId);
   }
 
   @Get(':id/users')
