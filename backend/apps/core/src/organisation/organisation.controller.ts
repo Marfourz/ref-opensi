@@ -7,6 +7,8 @@ import {
   Put,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
 import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
@@ -42,7 +44,18 @@ export class OrganisationController {
   createOrganisation(
     @Body() organisation: organisationDto,
   ): Promise<Organisation> {
-    return this.organisationService.createOrganisation(organisation);
+    try {
+      return this.organisationService.createOrganisation(organisation);
+    } catch (error) {
+      console.log('ERROR: ERROR: ERROR', error);
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          message: error.message,
+        },
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
   }
 
   @Get()
