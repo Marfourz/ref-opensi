@@ -5,7 +5,7 @@ stages:
   - build
   - deploy
 
-# Define the jobs for the pipeline
+## Define the jobs for the pipeline
 build_backend_prod:
   stage: build
   only:
