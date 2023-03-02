@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   db_postgres:
     image: postgres:14-alpine
@@ -6,13 +6,13 @@ services:
     restart: always
     environment:
       - POSTGRES_USER: ${POSTGRESQL_USER:-opensiuser}
-      - POSTGRES_DB: 'snb-prod'
+      - POSTGRES_DB: "snb-prod"
       - POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD:-opensi}
     volumes:
       - postgres: postgres:/var/lib/postgresql/data
     networks:
       - snb
-  
+
   migrate:
     build:
       context: ./backend/prisma
@@ -26,7 +26,7 @@ services:
     command: npm run migrate && seed
     networks:
       - snb
-  
+
   backend:
     build:
       context: ./backend
