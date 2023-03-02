@@ -4,12 +4,14 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+COPY prisma/schema.prisma ./prisma/
 
 COPY . .
 
+RUN npm install
+
 RUN npm run build
 
-CMD ["node", "dist/apps/core/main.js"]
+CMD ["node", "dist/apps/core/main"]
 
 EXPOSE 3000
