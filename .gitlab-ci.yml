@@ -11,8 +11,8 @@ build_backend_prod:
   only:
     - deploy
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-backend:deploy -f backend/Dockerfile
-    - docker push registry.gitlab.com/opensi/snb-backend:deploy
+    - docker build -t registry.gitlab.com/opensi/snb-backend:prod -f backend/Dockerfile
+    - docker push registry.gitlab.com/opensi/snb-backend:prod
   tags:
     - shell-1
   environment:
@@ -23,8 +23,8 @@ build_frontend_prod:
   only:
     - deploy
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-front:deploy -f front/Dockerfile
-    - docker push registry.gitlab.com/opensi/snb-front:deploy
+    - docker build -t registry.gitlab.com/opensi/snb-front:prod -f front/Dockerfile
+    - docker push registry.gitlab.com/opensi/snb-front:prod
   tags:
     - shell-1
   environment:
@@ -37,7 +37,6 @@ deploy_prod:
   only:
     - deploy
   script:
-    - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
   environment:
     name: production
