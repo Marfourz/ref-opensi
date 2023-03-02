@@ -58,7 +58,7 @@ export default defineComponent({
   setup(props, context) {
     const assignData = reactive({
         deliveryDate : null,
-        deliveryMan: null,
+        deliveryMan: "",
         status : null
 
     })
@@ -68,7 +68,7 @@ export default defineComponent({
     const organisationStore = useOrganizationStore()
 
     const organisationId = computed(()=>{
-        return userStore.getCurrentUser.organisationId
+        return userStore.getCurrentUser?.organisationId
     })
 
     async function onSearchDeliveryPerson(search : string){
@@ -86,7 +86,7 @@ export default defineComponent({
 
     function onSelecteDeliveryPersonChange(person : IUser){
         console.log('onSelecteDeliveryPersonChange', person)
-        assignData.deliveryMan = person.id
+        assignData.deliveryMan = person.id as string
     }
 
     const ordersStore = useOrdersStore()
