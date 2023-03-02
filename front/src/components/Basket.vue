@@ -15,7 +15,7 @@
     </div>
 
     <div v-else class="flex flex-col justify-between h-[calc(100vh-160px)]">
-      <div class="space-y-4">
+      <div class="space-y-4  h-[calc(100vh-300px)] overflow-scroll" >
         <div v-for="item in items" :key="item.product.name">
           <BasketItem
             :product="item.product"

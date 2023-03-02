@@ -15,13 +15,12 @@ export class OrderService {
     private productService: ProductsService,
   ) {}
 
-  async createOrder(order: orderDto, userId): Promise<Order> {
+  async createOrder(order: orderDto): Promise<Order> {
     try {
       const itemsOrders = order.items;
       const Ilength = itemsOrders.length;
       const orderPayload = {
         organisationId: order.organisationId,
-        userId,
         deliveryCode: generateRandomString(5),
         reference: generateRandomString(7),
         status: OrderStatusEnum.new,

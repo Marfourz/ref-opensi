@@ -42,8 +42,8 @@ async function onSubmit(){
         password : password.value
     })
 
-    console.log("login work")
-    router.push({name : 'stock'})
+    
+    router.push({name : 'dashboard'})
 
     loading.value = false
     }

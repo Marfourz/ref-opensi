@@ -42,8 +42,8 @@ export class OrderController {
   @ApiCreatedResponse({
     description: 'The order has been successfully created.',
   })
-  createOrder(@Req() req, @Body() order: orderDto): Promise<Order> {
-    return this.orderService.createOrder(order, req.user.userId);
+  createOrder(@Body() order: orderDto): Promise<Order> {
+    return this.orderService.createOrder(order);
   }
 
   @Get(':id')

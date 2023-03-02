@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full ">
+  <div class="w-full h-full relative">
     <slot name="title"> </slot>
     
-    <BaseTable :titles="titles" :data="order.items" class="mt-2" v-if="order">
+    <BaseTable :titles="titles" :data="order.items" class="mt-2 h-[calc(100vh-350px)] overflow-scroll" v-if="order">
       <template #product="{element}">
         <div class="flex items-center space-x-6">
             <img src="@/assets/images/beverage.png" alt="">
@@ -28,7 +28,7 @@
     </BaseTable>
 
     
-    <div class="mt-48 border-t pt-4 border-borderColor font-bold flex items-center justify-between" >
+    <div class="absolute bottom-0 left-0 right-0 border-t pt-4 border-borderColor font-bold flex items-center justify-between" >
         <div>Total</div>
         <div>{{ order.totalAmount }} F</div>
     </div>

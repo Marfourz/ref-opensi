@@ -9,7 +9,8 @@
               >Nouvel appro</BaseButton
             >
           </div>
-          <BaseTableWithFilter
+          <div class="relative">
+            <BaseTableWithFilter
             :titles="titles"
             :requestId="organisationId"
             :fetchData="orderStore.fetchAllByOrganization"
@@ -44,6 +45,8 @@
           </div>
         </template>
           </BaseTableWithFilter>
+          </div>
+          
         </div>
       </template>
       <template #secondPart>

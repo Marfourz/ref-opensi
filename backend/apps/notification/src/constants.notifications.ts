@@ -1,8 +1,6 @@
 const Mailgen = require('mailgen');
 import { ConfigService } from '@nestjs/config';
 
-const FRONT_APP_URL = new ConfigService().get('FRONTEND_BASE_URL');
-
 const mailGenerator: any = new Mailgen({
   theme: 'default',
   product: {
@@ -13,6 +11,7 @@ const mailGenerator: any = new Mailgen({
 });
 export const NOTIFICATION_MESSAGES = {
   registrationMail: ({ name, email, token }) => {
+    const FRONT_APP_URL = new ConfigService().get('FRONTEND_BASE_URL');
     return mailGenerator.generate({
       body: {
         name,
