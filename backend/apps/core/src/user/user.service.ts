@@ -25,7 +25,7 @@ export class UserService {
 
     if (existingUser) {
       throw new HttpException(
-        'USER WITH THIS EMAIL ALREADY EXIST',
+        'Un utilisateur avec cet email existe déja',
         HttpStatus.CONFLICT,
       );
     }
