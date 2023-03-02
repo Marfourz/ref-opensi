@@ -4,8 +4,8 @@
       <SuccessInfo title="Livreur assigné avec succès" class="w-fit " @close="showSuccesInfo = false"></SuccessInfo>
     </div>
     
-    <BaseModal :show="show" @close="show = false" @submitSuccess="orderAcceptSuccessful" title="Accepter la commande">
-      <FormAssignDeliveryPerson :orderId="selectedOrderId"></FormAssignDeliveryPerson>
+    <BaseModal :show="show" @close="show = false"  title="Accepter la commande">
+      <FormAssignDeliveryPerson :orderId="selectedOrderId" @submitSuccess="orderAcceptSuccessful"></FormAssignDeliveryPerson>
     </BaseModal>
     <PageInTwoPart>
       <template #firstPart>

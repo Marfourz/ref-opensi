@@ -365,7 +365,6 @@ import { UserAccountStatus } from "../../../types/enumerations";
   
       async function onSubmit() {
         loading.value = true;
-  
         try {
           if (selectedUser.value) {
             const response = await userStore.update(selectedUser.value.id, {...user,role :UserRole.DELIVERY_MAN });
