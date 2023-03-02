@@ -14,7 +14,7 @@ build_backend_prod:
   stage: build
   only:
     refs:
-      - prod
+      - deploy
     changes:
       - backend/**/*
       - .gitlab-ci.yml
@@ -26,7 +26,7 @@ build_frontend_prod:
   stage: build
   only:
     refs:
-      - prod
+      - deploy
     changes:
       - frontend/**/*
       - .gitlab-ci.yml
@@ -38,7 +38,7 @@ deploy_prod:
   stage: deploy
   only:
     refs:
-      - prod
+      - deploy
   script:
     - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
