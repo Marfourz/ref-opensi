@@ -13,7 +13,7 @@
       </div>
     </div>
     
-    <div class="grid grid-cols-4 space-x-4">
+    <div class="grid grid-cols-4 gap-4">
         <DashboardCard :data="rackStock"></DashboardCard>
         <DashboardCard :data="packStock"></DashboardCard>
         <DashboardCard :data="totalCost"></DashboardCard>

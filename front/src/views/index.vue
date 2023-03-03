@@ -147,7 +147,7 @@ import DashboardCard from "@/components/DashboardCard.vue";
 import helpers from "@/helpers/index";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
-import BaseTitleVue from "@/components/base/BaseTitle.vue";
+// import BaseTitleVue from "@/components/base/BaseTitle.vue";
 import { useOrganizationStore } from "@/stores/organization";
 import { OrganisationType } from "@/types/enumerations";
 import { useUsersStore } from "@/stores/users";
