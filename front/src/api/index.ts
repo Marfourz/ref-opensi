@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
 
-console.log('base url', import.meta.env.VITE_APP_API_URL)
 
 const Api: AxiosInstance & { setToken?: (token: string) => void } =
   axios.create({
@@ -40,6 +39,7 @@ if (localStorage.getItem('access_token')){
 Api.setToken = (token: string) => {
   localStorage.setItem('access_token', token);
   Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  Api.defaults.headers.common['x-auth-token'] = `${token}`;
 };
 
 export default Api;

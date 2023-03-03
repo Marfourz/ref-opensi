@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full overflow-auto bg-white text-[14px]">
-    
+  <div class="w-full overflow-auto bg-white text-[14px] ">
+   
     <table
       class="table-auto w-full  text-md"
      
@@ -73,8 +73,8 @@
             <div v-else-if="isEqual(element, currentElement)" >
            
               <slot name="action" :element="element">
-                <div class="relative"> 
-                        <BaseIcon name="triplePoints"  @click="showActionMenu = !showActionMenu"></BaseIcon>
+                <div > 
+                        <BaseIcon name="triplePoints"  @click="showActionMenu = !showActionMenu" ref=""></BaseIcon>
                         <BaseActions :actions="actions" v-if="showActionMenu" :data="element" @click="showActionMenu = false"></BaseActions>
                     </div>
               </slot>

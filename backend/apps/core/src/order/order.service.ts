@@ -6,6 +6,7 @@ import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
+import { getSubTypeOrg } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class OrderService {
@@ -22,6 +23,7 @@ export class OrderService {
       const orderPayload = {
         organisationId: order.organisationId,
         deliveryCode: generateRandomString(5),
+        reference: generateRandomString(7),
         status: OrderStatusEnum.new,
       };
       const newOrder = await this.prisma.order.create({
@@ -46,7 +48,7 @@ export class OrderService {
         const product = await this.prisma.product.findUnique({
           where: { id: item.productId },
         });
-        totalAmount += product.unitPrice * item.quantity;
+        totalAmount += product.bulkPrice * item.quantity;
         if (i === Ilength - 1) {
           await this.updateSingleOrder(orderId, { totalAmount });
         }
@@ -64,8 +66,9 @@ export class OrderService {
       const order = await this.prisma.order.findUnique({
         where: { id },
         include: {
-          items: true,
+          items: {include:{product : true}},
           invoice: true,
+          organisation: true,
         },
       });
       return order;
@@ -115,8 +118,16 @@ export class OrderService {
 
       const totalAmountConstraint: any = {};
       const orderIdConstraint: any = {};
-      if (q != undefined) {
+      const orderReferenceConstraint: any = {};
+      const w: any = {};
+      w.organisationId = orgId;
+      if (q != undefined && q != '') {
         orderIdConstraint.id = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        orderReferenceConstraint.reference = {
           contains: q,
           mode: 'insensitive',
         };
@@ -124,20 +135,18 @@ export class OrderService {
         if (!isNaN(q)) {
           totalAmountConstraint.totalAmount = Number(q);
         }
+
+        w.OR = [
+          orderIdConstraint,
+          totalAmountConstraint,
+          orderReferenceConstraint,
+        ];
       }
 
       const orders = await this.prisma.order.findMany({
         ...paginateConstraints,
         where: {
-          organisationId: orgId,
-          AND: [
-            {
-              ...totalAmountConstraint,
-            },
-            {
-              ...orderIdConstraint,
-            },
-          ],
+          ...w,
         },
       });
 
@@ -149,6 +158,35 @@ export class OrderService {
     } catch (error) {
       throw error;
       return;
+    }
+  }
+
+  async getOrdersOfSubOrganisations(orgId): Promise<Order[]> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: {
+        id: orgId,
+      },
+    });
+
+    const subType = getSubTypeOrg(organisation.type);
+
+    if (subType === 'none') {
+      return [];
+    } else {
+      try {
+        const orders = await this.prisma.order.findMany({
+          where: {
+            organisation: {
+              type: subType,
+            },
+          },
+        });
+
+        return orders;
+      } catch (error) {
+        throw error;
+        return;
+      }
     }
   }
 }

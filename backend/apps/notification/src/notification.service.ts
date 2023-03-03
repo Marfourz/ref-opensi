@@ -20,6 +20,7 @@ export class NotificationService {
         return res.data;
       })
       .catch((err) => {
+        console.log('Mail:err', err);
         return {
           statusCode: err.response.status,
           message: err.response.statusText,

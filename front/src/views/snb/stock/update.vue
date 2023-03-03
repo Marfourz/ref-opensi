@@ -27,7 +27,7 @@
           <div
             class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
           >
-            <BaseIcon name="check" class="w-8 h-8"></BaseIcon>
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
           </div>
           <div
             class="font-bold text-2xl text-center"
@@ -74,7 +74,7 @@ import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct, PrimaryKey } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
 import { useProductStore } from "../../../stores/product";
-import helpers from "@/helpers/index.ts";
+import helpers from "@/helpers/index";
 import { useToast } from "vue-toastification";
 import { Form } from "vee-validate";
 import { useUsersStore } from "../../../stores/users";
@@ -89,7 +89,7 @@ export default defineComponent({
     const titles = [
       {
         title: "Produits en stock",
-        name: "name",
+        name: "product.name",
       },
 
       {
@@ -164,7 +164,7 @@ export default defineComponent({
     const productStore = useProductStore();
     const toast = useToast();
 
-    const reload = ref(false)
+    const reload = ref(0)
 
     async function onSubmit() {
         
@@ -175,7 +175,7 @@ export default defineComponent({
         toast.success("Stock mise à jour avec succès");
         loading.value = false;
         modal.show = false;
-        reload.value = !reload.value
+        reload.value = reload.value + 1
       } catch (error) {
         loading.value = false;
         toast.error("Oups un problème est survenu. Contactez l'administrateur");

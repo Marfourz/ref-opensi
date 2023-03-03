@@ -2,7 +2,7 @@ export const users = [
   {
     name: 'Utilisateur Test 1',
     phone: '22990000000',
-    email: 'usertest1@email.com',
+    email: 'admin@admin.com',
     address: 'Adress user 1',
     birthday: '1998-02-16',
     sex: 'male',

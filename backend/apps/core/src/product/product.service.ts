@@ -42,7 +42,8 @@ export class ProductsService {
     const prodIdConstraint: any = {};
     const prodNameConstraint: any = {};
     const prodPriceConstraint: any = {};
-    if (q != undefined) {
+    const w: any = {};
+    if (q != undefined && q != '') {
       prodIdConstraint.id = {
         contains: q,
         mode: 'insensitive',
@@ -56,23 +57,13 @@ export class ProductsService {
       if (!isNaN(q)) {
         prodPriceConstraint.unitPrice = Number(q);
       }
+
+      w.OR = [prodIdConstraint, prodNameConstraint, prodPriceConstraint];
     }
     try {
       const products = await this.prisma.product.findMany({
         ...paginateConstraints,
-        where: {
-          OR: [
-            {
-              ...prodNameConstraint,
-            },
-            {
-              ...prodIdConstraint,
-            },
-            {
-              ...prodPriceConstraint,
-            },
-          ],
-        },
+        where: { ...w },
       });
 
       const count = await this.prisma.product.count();

@@ -6,17 +6,18 @@
         <div class="" v-if="!showOnlyIcon">Réduire</div>
       </div>
       <div class="space-y-6">
+
         <div v-for="menu in menus" :key="menu.title" >
           <SideItem
           v-if="showMenu(menu)"
           :icon="menu.icon"
           :label="menu.title"
-          
           :isActive="activeRouteName == menu.route"
           :showOnlyIcon="showOnlyIcon"
-          
           @click="changeMenu(menu)"
         />
+
+
         </div>
         
 
@@ -46,6 +47,16 @@ import SideItem from "./SideItem.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUsersStore } from "../../stores/users";
 import { OrganisationType, UserRole } from "../../types/enumerations";
+import { useAuthStore } from "../../stores/users/auth-store";
+
+interface IMenu{
+  title: string,
+  icon: string,
+  route: string,
+  path: string,
+  roles?: string[],
+  organizations?: OrganisationType[]
+}
 
 export default defineComponent({
   components: {
@@ -82,7 +93,7 @@ export default defineComponent({
       },
     ]
 
-    const menus = [
+    const menus : Array<IMenu> = [
       {
         title: "Tableau de bord",
         icon: "dashboard",
@@ -143,22 +154,47 @@ export default defineComponent({
         organizations : [OrganisationType.SNB,OrganisationType.MD]
       }
     ];
+
+    const authStore = useAuthStore()
+
     function changeMenu(menu: any) {
-      console.log("actual menu", menu)
+      if(menu.route == 'logout'){
+        authStore.logout()
+        router.push({name : 'login'})
+      }
+        
       activeMenu.value = menu.title;
       router.push({ name: menu.route });
     }
     
-    const organizationType = OrganisationType.SNB
+    const organizationType = computed(()=>{
+      return userStore.getCurrentUser?.organisation?.type
+    })
+
+    const role = computed(()=>{
+      return userStore.getCurrentUser?.role
+    })
 
     function showMenu(menu : any) : boolean {
+      
       if(!menu.organizations || menu.organizations.length == 0)
         return true
-      return menu.organizations.find((value:OrganisationType)=>value == organizationType) 
+      if( menu.organizations.find((value:OrganisationType)=>value == organizationType.value) ){
+        if(!menu.roles || menu.roles.length == 0)
+          return true
+        else if(menu.roles.find((value:UserRole)=>value == role.value))
+          return true
+      }
+      
+      return false
 
     }
     const activeRouteName = computed(() => {
+      
       const routesList = route.path.split("/");
+     
+      if(route.name == "dashboard")
+        return 'dashboard'
       const actualRoute = routesList[3];
      
       const allMenus = menus.concat(bottomMenus)

@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Stock, PackagingTypeEnum } from '@prisma/client';
+import {
+  Stock,
+  PackagingTypeEnum,
+  TransactionStatusEnum,
+} from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto } from './stock.dto';
 import { PagiationPayload } from 'types';
+import { pick } from 'underscore';
 
 @Injectable()
 export class StockService {
@@ -89,61 +94,51 @@ export class StockService {
         paginateConstraints.take = Number(perPage);
       }
 
-      const productNameConstraint: any = {};
-      const currentQuantityConstraint: any = {};
-      const stockIdConstraint: any = {};
-      if (q != undefined) {
-        productNameConstraint.name = {
+      const prodNameConstraint: any = {};
+      const w: any = {};
+      const subProd: any = {};
+      if (q != undefined && q != '') {
+        prodNameConstraint.name = {
           contains: q,
           mode: 'insensitive',
         };
 
-        stockIdConstraint.id = {
-          contains: q,
-          mode: 'insensitive',
+        subProd.product = {
+          ...prodNameConstraint,
         };
 
-        if (!isNaN(q)) {
-          currentQuantityConstraint.currentQuantity = Number(q);
-        }
+        w.OR = [subProd];
       }
 
-      /*const stocks = await this.prisma.stock.findMany({
-        ...paginateConstraints,
+      const stocks = await this.prisma.stock.findMany({
         where: {
           organisationId: orgId,
           product: {
-            ...productNameConstraint,
+            categoryId,
           },
-          OR: [
-            {
-              ...stockIdConstraint,
-            },
-          ],
+          ...w,
         },
         include: {
           product: {
-            include: category: true,
-          },
-        },
-      });*/
-
-      const stocks = await this.prisma.productCategory.findUnique({
-        where: {
-          id: categoryId,
-        },
-        select: {
-          products: {
-            include: { stocks: { where: { organisationId: orgId } } },
+            include: {
+              category: true,
+              image: true,
+            },
           },
         },
       });
 
       const count = await this.prisma.stock.count({
-        where: { organisationId: orgId },
+        where: {
+          organisationId: orgId,
+          product: {
+            categoryId,
+          },
+          ...w,
+        },
       });
 
-      return { data: stocks.products, count };
+      return { data: stocks, count };
     } catch (error) {
       throw error;
       return;
@@ -182,8 +177,7 @@ export class StockService {
 
     let totalCost = 0;
     stocks.map((stock) => {
-      totalCost += stock.currentQuantity * stock.product.unitPrice;
-      console.log('stock', stock);
+      totalCost += stock.currentQuantity * stock.product.bulkPrice;
     });
 
     const lastStock = await this.prisma.stock.findMany({

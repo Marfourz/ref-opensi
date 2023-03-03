@@ -12,9 +12,19 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthenticationMiddleware } from 'middlewares/authentication.middleware';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
+import { WalletModule } from '../wallet/wallet.module';
+import { AuthModule } from '../users-manager/auth.module';
+import { NotificationModule } from 'apps/notification/src/notification.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    HttpModule,
+    WalletModule,
+    AuthModule,
+    NotificationModule,
+    UserModule,
+  ],
   controllers: [OrganisationController],
   providers: [
     OrganisationService,

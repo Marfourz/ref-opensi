@@ -2,19 +2,19 @@
     <div class="border flex flex-col items-center rounded-lg px-4 py-6 space-y-4 relative"
         :class="{'border-success' : isValidate}">
         <div class="absolute bg-success top-0 right-0 p-2 rounded-tr-lg rounded-bl-lg" v-if="isValidate">
-            <BaseIcon name="check"></BaseIcon>
+            <BaseIcon name="check" class="text-white"></BaseIcon>
         </div>
         <img src="@/assets/images/beverage.png" alt="" class="w-4 h-16">
         <div class="flex flex-col items-center">
             <div>{{ product.name }}</div>
-            <div class="text-[#0F0F14] font-bold">{{ product.volume }} pro/Casier</div>
+            <div class="text-[#0F0F14] font-bold">{{ product.bulkPrice }} F /Casier</div>
         </div>
         
         <div class="flex items-end space-x-2" v-if="!isValidate">
             <div>
                 <label for="" class="text-xs text-[#6B7A99]">Nombre de casiers</label>
                
-                <BaseInput label="" v-model="quantity" class="h-5"></BaseInput>
+                <BaseInput label="" v-model.number="quantity" class="h-5"></BaseInput>
             </div>
           
             <div class=" w-12 h-9 rounded flex items-center justify-center bg-primary text-white" @click="onSubmit">
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref } from 'vue'
+import { defineComponent,onMounted,ref } from 'vue'
 import { useBasketStore } from '../stores/basket'
 import type { PropType } from 'vue'
 import type { IProduct } from '../types/interfaces'
@@ -72,6 +72,16 @@ export default defineComponent({
             }
             
         }
+
+        onMounted(()=>{
+            const item = basketStore.getProductItem(props.product.id)
+            if(item){
+                quantity.value = item?.quantity
+                isValidate.value = true
+            }
+           
+            
+        })
 
         return {
             isValidate,

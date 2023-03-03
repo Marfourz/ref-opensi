@@ -7,6 +7,8 @@ import {
   Put,
   Delete,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { OrganisationService } from './organisation.service';
 import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
@@ -14,6 +16,7 @@ import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
+import { NonSnbOrganisations } from 'types';
 import {
   ApiTags,
   ApiBody,
@@ -29,7 +32,7 @@ export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}
 
   @Post()
-  @Roles(Role.SUPER_USER)
+  //@Roles(Role.SUPER_USER)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
@@ -51,6 +54,17 @@ export class OrganisationController {
   })
   getAllOrganisations(): Promise<Organisation[]> {
     return this.organisationService.getAllOrganisations();
+  }
+
+  @Get('top-partners')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: true })
+  getTopPartners(@Query('type') type: NonSnbOrganisations): any {
+    console.log(type);
+    return this.organisationService.getTopPartners(type);
   }
 
   @Get(':id')
@@ -76,6 +90,16 @@ export class OrganisationController {
     @Query() filterParams: any,
   ): Promise<PagiationPayload<Organisation[]>> {
     return this.organisationService.searchForPartners(filterParams);
+  }
+
+  @Get('snb/infos/:orgId')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiParam({ name: 'orgId' })
+  getOrganisationDashboardInfos(@Param() params): any {
+    return this.organisationService.getOrganisationDashboardInfos(params.orgId);
   }
 
   @Get(':id/users')
@@ -122,7 +146,7 @@ export class OrganisationController {
   }
 
   @Delete(':id')
-  @Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
+  //@Roles(Role.SUPER_USER, Role.ADMINISTRATOR)
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',

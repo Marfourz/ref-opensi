@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-lg shadow-lg  right-24 fixed mt-2 flex flex-col cursor-pointer">
+  <div class="bg-white rounded-lg shadow-lg  right-20  mt-2 flex flex-col cursor-pointer absolute">
     <div v-for="action in actions" :key="action.title" class="flex items-center space-x-6 px-6 py-3 hover:bg-gray-100" 
             @click="action.action(data)">
         <BaseIcon :name="action.icon"></BaseIcon>

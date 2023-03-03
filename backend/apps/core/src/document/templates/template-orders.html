@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0px;
+            font-family: 'Manrope', sans-serif;
+            transform: translateZ(0);
+            height: 1122px;
+        }
+        
+        section {
+            background: #ffffff;
+            /*-webkit-box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
+            box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);*/
+            height: auto;
+            padding: 48px;
+            position: relative;
+        }
+        
+        .aside-header {
+            font-weight: 800;
+            font-size: 17px;
+            width: 340px;
+        }
+        
+        .footer_page {
+            box-sizing: border-box;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(204, 204, 204, 0.4);
+            padding: 0px 10%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: max-content;
+        }
+        
+        .group-parent {
+            margin-top: 50px;
+            margin-bottom: 25px;
+        }
+        
+        .group-parent table tr {
+            border: 0;
+        }
+        
+        .group {
+            display: block;
+        }
+        
+        .group.rcp {
+            display: inline-block;
+        }
+        
+        .group>div {
+            width: 100%;
+            padding: 1px;
+        }
+        
+        .title {
+            font-weight: 800;
+            font-size: 14px;
+            width: 110px;
+            padding-right: 15px;
+            display: inline-block;
+        }
+        
+        .value,
+        .value-ref {
+            font-weight: 500;
+            font-size: 14px;
+            width: 120px;
+        }
+        
+        .value-ref {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 30px;
+        }
+        
+        tr {
+            border-bottom: 1px solid #253d34;
+        }
+        
+        th {
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+        }
+        
+        td,
+        th {
+            text-align: left;
+        }
+        
+        .fees {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 8px 0px;
+        }
+        
+        .method {
+            padding: 12px 0px;
+            margin-top: 10px;
+        }
+        
+        .payment_method {
+            border-bottom: 0px solid #253d34;
+        }
+        
+        .total_amount {
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        
+        .fees_amount {
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        
+        .another_info {
+            line-height: 30px;
+        }
+        
+        .qrcode {
+            display: block;
+        }
+        
+        .image img {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .more-info-tooltip {
+            background-color: rgba(208, 224, 251, 0.8);
+            padding: 12px;
+            font-size: 12px;
+            line-height: 20px;
+            font-family: 'Manrope', sans-serif;
+            border-radius: 4px;
+        }
+        
+        .clearfix::after {
+            content: " ";
+            visibility: hidden;
+            display: block;
+            height: 5px;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="qrcode clearfix">
+            <h1 style="width: 79%; margin: 0; float: left;">
+                {{ label }}
+            </h1>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">
+                        Commande
+                    </th>
+                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Date</th>
+                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Total</th>
+                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Statut</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each data}}
+                <tr style="border-bottom: 1px solid rgba(37, 61, 52, 0.2)">
+                    <td style="
+                        font-size: 13px;
+                        color: #121212;
+                        font-weight: 400;
+                        padding: 14px 0px;
+                    ">
+                        #{{this.id}}
+                    </td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.createdAt}}</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.totalAmount}} FCFA</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.status}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </section>
+</body>
+
+</html>

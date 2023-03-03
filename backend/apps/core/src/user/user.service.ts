@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User, ActivityLog } from '@prisma/client';
 import { updateUserDto } from './user.dto';
 import { PrismaService } from 'libs/prisma/src';
@@ -17,45 +17,52 @@ export class UserService {
   ) {}
 
   async createUser(user): Promise<User> {
-    console.log('user test', user);
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        email: user.email,
+      },
+    });
+
+    if (existingUser) {
+      throw new HttpException(
+        'Un utilisateur avec cet email existe déja',
+        HttpStatus.CONFLICT,
+      );
+    }
     let token;
     const Dpassword = generateRandomString(15);
-    try {
-      const newUser = await this.prisma.user.create({
-        data: user,
+
+    const newUser = await this.prisma.user.create({
+      data: user,
+    });
+
+    this.authService
+      .register({
+        username: user.email,
+        email: user.email,
+        password: Dpassword,
+      })
+      .then((Udata) => {
+        this.authService
+          .getResetPasswordToken({
+            username: Udata.user.email,
+          })
+          .then((Tdata) => {
+            token = Tdata.token;
+            this.notifService.sendEmail({
+              email: user.email,
+              object: 'Registration to SNB',
+              body: NOTIFICATION_MESSAGES.registrationMail({
+                name: user.name,
+                email: user.email,
+                token: token,
+              }),
+              sender: 'SNB',
+            });
+          });
       });
 
-      this.authService
-        .register({
-          username: user.email,
-          email: user.email,
-          password: Dpassword,
-        })
-        .then((Udata) => {
-          this.authService
-            .getResetPasswordToken({
-              username: Udata.user.email,
-            })
-            .then((Tdata) => {
-              token = Tdata.token;
-              this.notifService.sendEmail({
-                email: user.email,
-                object: 'Registration to SNB',
-                body: NOTIFICATION_MESSAGES.registrationMail({
-                  name: user.name,
-                  email: user.email,
-                  token: token,
-                }),
-                sender: 'SNB',
-              });
-            });
-        });
-
-      return newUser;
-    } catch (error) {
-      throw error;
-      return;
-    }
+    return newUser;
   }
 
   async getAllUsers(): Promise<User[]> {
@@ -136,7 +143,9 @@ export class UserService {
       const userNameConstraint: any = {};
       const userEmailConstraint: any = {};
       const userPhoneConstraint: any = {};
-      if (q != undefined) {
+      const w: any = {};
+      w.organisationId = orgId;
+      if (q != undefined && q != '') {
         userIdConstraint.id = {
           contains: q,
           mode: 'insensitive',
@@ -156,27 +165,18 @@ export class UserService {
           contains: q,
           mode: 'insensitive',
         };
+
+        w.OR = [
+          userIdConstraint,
+          userNameConstraint,
+          userEmailConstraint,
+          userPhoneConstraint,
+        ];
       }
 
       const users = await this.prisma.user.findMany({
         ...paginateConstraints,
-        where: {
-          organisationId: orgId,
-          OR: [
-            {
-              ...userIdConstraint,
-            },
-            {
-              ...userEmailConstraint,
-            },
-            {
-              ...userNameConstraint,
-            },
-            {
-              ...userPhoneConstraint,
-            },
-          ],
-        },
+        where: { ...w },
       });
 
       const count = await this.prisma.user.count({

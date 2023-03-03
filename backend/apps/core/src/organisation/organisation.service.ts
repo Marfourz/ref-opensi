@@ -1,26 +1,84 @@
-import { Injectable } from '@nestjs/common';
-import { Organisation, User, OrganisationTypeEnum } from '@prisma/client';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Organisation,
+  User,
+  OrganisationTypeEnum,
+  UserStatusEnum,
+} from '@prisma/client';
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
-import { PagiationPayload } from 'types';
+import { NonSnbOrganisations, PagiationPayload } from 'types';
 import { UserRoleEnum } from '@prisma/client';
+import { WalletService } from '../wallet/wallet.service';
+import { AuthService } from '../users-manager/auth.service';
+import { NotificationService } from 'apps/notification/src/notification.service';
+import { Role } from '../../../../guards/roles.enum';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OrganisationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private walletService: WalletService,
+    private authService: AuthService,
+    private notifService: NotificationService,
+    private userService: UserService,
+  ) {}
 
   async createOrganisation(
     organisation: organisationDto,
   ): Promise<Organisation> {
-    try {
-      const newOrganisation = await this.prisma.organisation.create({
-        data: organisation,
+    const existingOrganisationByEmail =
+      await this.prisma.organisation.findUnique({
+        where: {
+          email: organisation.email,
+        },
       });
-      return newOrganisation;
-    } catch (error) {
-      throw error;
-      return;
+
+    const existingOrganisationByFiscalId =
+      await this.prisma.organisation.findUnique({
+        where: {
+          fiscalId: organisation.fiscalId,
+        },
+      });
+
+    if (existingOrganisationByEmail) {
+      throw new HttpException(
+        'Une organisation avec cet email existe déja',
+        HttpStatus.CONFLICT,
+      );
     }
+
+    if (existingOrganisationByFiscalId) {
+      throw new HttpException(
+        'Une organisation avec cet IFU existe déja',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const newOrganisation = await this.prisma.organisation.create({
+      data: organisation,
+    });
+
+    await this.walletService.createWallet({
+      organisationId: newOrganisation.id,
+      turnover: 0,
+    });
+
+    const userGenerated = {
+      organisationId: newOrganisation.id,
+      name: organisation.ownerName,
+      phone: organisation.phone,
+      email: organisation.email,
+      address: organisation.adress,
+      sex: 'male',
+      role: Role.ADMINISTRATOR,
+      status: UserStatusEnum.active,
+    };
+
+    await this.userService.createUser(userGenerated);
+
+    return newOrganisation;
   }
 
   async getAllOrganisations(): Promise<Organisation[]> {
@@ -63,6 +121,35 @@ export class OrganisationService {
 
   async deleteSingleOrganisation(id: string): Promise<Organisation> {
     try {
+      await this.prisma.user.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.stock.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.order.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.transaction.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
+
+      await this.prisma.wallet.deleteMany({
+        where: {
+          organisationId: id,
+        },
+      });
       const deletedOrganisation = await this.prisma.organisation.delete({
         where: { id },
       });
@@ -104,7 +191,7 @@ export class OrganisationService {
       const w: any = {};
       w.organisationId = id;
       w.role = UserRoleEnum.deliveryMan;
-      if (q != undefined) {
+      if (q != undefined && q != '') {
         userNameConstraint.name = {
           contains: q,
           mode: 'insensitive',
@@ -123,10 +210,11 @@ export class OrganisationService {
       }
 
       const users = await this.prisma.user.findMany({
-        where: { organisationId: id, role: UserRoleEnum.deliveryMan },
-        include:{
-          engine:true
-        }
+        ...paginateConstraints,
+        where: { ...w },
+        include: {
+          engine: true,
+        },
       });
 
       const count = await this.prisma.user.count({
@@ -184,7 +272,7 @@ export class OrganisationService {
         w.OR = [ownerNameConstraint, phoneConstraint, emailConstraint];
       }
 
-      if (type != undefined) {
+      if (type != undefined && type != '') {
         w.type = type;
       }
 
@@ -213,5 +301,143 @@ export class OrganisationService {
       throw error;
       return;
     }
+  }
+
+  async getOrganisationDashboardInfos(orgId: string): Promise<any> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: { id: orgId },
+      include: {
+        wallet: true,
+      },
+    });
+
+    const orders = await this.prisma.order.count({
+      where: {
+        organisationId: orgId,
+      },
+    });
+
+    const MDs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.md,
+      },
+    });
+
+    const DAs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.da,
+      },
+    });
+
+    const DPs = await this.prisma.organisation.count({
+      where: {
+        type: OrganisationTypeEnum.dp,
+      },
+    });
+
+    let partners = 0;
+
+    switch (organisation.type) {
+      case OrganisationTypeEnum.snb:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.md:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.da:
+        partners = MDs + DAs + DPs;
+        break;
+      case OrganisationTypeEnum.dp:
+        partners = MDs + DAs + DPs;
+        break;
+      default:
+        break;
+    }
+
+    //const pIds = await this.getAllProductsIds();
+
+    /*const productsInfos = await Promise.all(
+      pIds.map(async (id: string) => {
+        return await this.getProdInfos(id);
+      }),
+    );*/
+
+    const stocks = await this.prisma.stock.findMany({
+      where: {
+        organisationId: orgId,
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return { organisation, orders, partners, productsInfos: stocks };
+  }
+
+  async getAllProductsIds(): Promise<any> {
+    const products = await this.prisma.product.findMany({
+      take: 5,
+      select: {
+        id: true,
+      },
+    });
+
+    const pIds = [];
+
+    products.forEach((element) => {
+      pIds.push(element.id);
+    });
+
+    return pIds;
+  }
+
+  async getProdInfos(id: string): Promise<any> {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: {
+        image: true,
+        id: true,
+        unitPrice: true,
+        name: true,
+        stocks: true,
+      },
+    });
+
+    const price = product.unitPrice;
+
+    const images = product.image;
+
+    const stocks = product.stocks;
+
+    const name = product.name;
+
+    let totalBulk = 0;
+
+    let turnover = 0;
+
+    stocks.forEach((element) => {
+      totalBulk += element.currentQuantity;
+      turnover += (element.originalQuantity - element.currentQuantity) * price;
+    });
+
+    return { id, name, images, totalBulk, turnover };
+  }
+
+  async getTopPartners(type: NonSnbOrganisations): Promise<Organisation[]> {
+    const organisations = await this.prisma.organisation.findMany({
+      where: {
+        type: type,
+      },
+      include: {
+        wallet: true,
+      },
+      orderBy: {
+        wallet: {
+          turnover: 'asc',
+        },
+      },
+    });
+
+    return organisations;
   }
 }

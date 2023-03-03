@@ -20,7 +20,7 @@ export const useProductStore = defineStore("productStore", {
       } catch (error) {}
     },
 
-    async fetchAll(query: any) {
+    async fetchAll(query?: any) {
       try {
         const response = await Api.get("products", { params: query });
         return response.data;
@@ -69,12 +69,8 @@ export const useProductStore = defineStore("productStore", {
       try {
         const response = await Api.get(`stocks/${orgId}/search`,{params : query});
 
-        const values = response.data.data.filter((value : any)=>value.stocks && value.stocks.length >0 )
-
-        return {
-          count : response.data.count,
-          data : values
-        }
+       
+        return response.data
         
       } catch (error) {
         throw error;

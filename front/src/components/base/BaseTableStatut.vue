@@ -6,7 +6,8 @@
       'bg-fadeWarning text-warning  border-warning': type == 'warning',
       'bg-fadeDanger text-danger border-danger': type == 'danger',
       'bg-fadeSucces text-success border-success': type == 'success',
-      'underline text-[#2062F6]': type=='colorize',
+      'text-[#2062F6] border-[#2062F6] bg-[#F0F5FF]': type=='blue',
+      'text-[#6929C4] bg-[#F3F0FA] border-[#6929C4]': type=='colorize',
     }"
   >
    
@@ -22,7 +23,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     type: {
-      type: String as () => 'success' | 'danger' | 'warning' | 'colorize',
+      type: String as () => 'success' | 'danger' | 'warning' | 'colorize' | 'blue',
       default: "success",
       
     } ,

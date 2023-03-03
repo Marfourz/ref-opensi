@@ -9,7 +9,7 @@
             :isActive="category.id == categoryId"
             :category="category"
             v-for="category in categories"
-            :key="category.id"
+            :key="category.name"
             @click="categoryId = category.id"
           >
           </ProductCategory>
@@ -39,7 +39,8 @@ import ProductCategory from "../../../components/ProductCategory.vue";
 import Basket from "../../../components/Basket.vue";
 import { useProductStore } from "../../../stores/product";
 import { useProductCategoryStore } from "../../../stores/product-category";
-import { IProductCategory } from "../../../types/interfaces";
+import { IProduct, IProductCategory, PrimaryKey } from "../../../types/interfaces";
+
 
 export default defineComponent({
   components: { PageInTwoPart, ProductInput, ProductCategory, Basket },
@@ -48,11 +49,11 @@ export default defineComponent({
 
     const productCategoryStore = useProductCategoryStore();
 
-    const categoryId = ref("");
+    const categoryId = ref<PrimaryKey>("");
 
-    const categories = ref([]);
+    const categories = ref<Array<IProductCategory>>([]);
 
-    const products = ref([])
+    const products = ref<Array<IProduct>>([])
 
     onMounted(async () => {
       try {
@@ -77,10 +78,11 @@ export default defineComponent({
     })
 
 
+
     return {
       categories,
       categoryId,
-      products,
+      products
     };
   },
 });

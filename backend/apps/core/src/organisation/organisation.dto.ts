@@ -38,6 +38,7 @@ export class organisationDto {
 
   @ApiProperty({ enum: OrganisationStatusEnum })
   @IsString()
+  @IsOptional()
   status: OrganisationStatusEnum;
 }
 

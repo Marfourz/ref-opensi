@@ -17,6 +17,7 @@ import { NotificationModule } from '../../../notification/src/notification.modul
 
 @Module({
   imports: [HttpModule, AuthModule, NotificationModule],
+  exports: [UserService],
   controllers: [UserController],
   providers: [
     UserService,

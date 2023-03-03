@@ -15,15 +15,22 @@
       </div>
     </div>
 
-    <!-- <div class="px-8 pt-12" v-show="total == 0">
-      <EmptyState
+    <div class="px-8 pt-12" v-show="total == 0">
+
+      <div class="flex flex-col  items-center space-y-4">
+        
+        <img src="@/assets/images/emptyProduct.png" alt="">
+        <div class="font-semibold text-center " >Vos produits ajoutés seront visibles ici. <br> Cliquez sur le bouton Nouveau produit <br> pour ajouter des produits</div>
+    </div>
+
+      <!-- <EmptyState
         title="Vos produits ajoutés seront visibles ici. <br> Cliquez sur le bouton Nouveau produit <br> pour ajouter des produits"
-        image="/src/assets/images/emptyProduct.png"
-      ></EmptyState>
-    </div> -->
+        image="/assets/images/emptyProduct.png"
+      ></EmptyState> -->
+    </div>
 
     
-    <div class="pt-8">
+    <div class="pt-8" v-show="total != 0">
       
       <BaseTabs :tabs="tabs"  @change="categoryId = $event">
         <template #[tab.name] v-for="tab in tabs">
@@ -33,7 +40,7 @@
             :titles="titles"
             :actions="actions"
             :requestId="categoryId"
-            @total="total = $event"
+            
             class="mt-6"
           >
             <template #image="{element}">
@@ -137,6 +144,8 @@ export default defineComponent({
 
     const total = ref(0);
 
+  
+
     const actions = [
       {
         title: "Voir détail",
@@ -208,7 +217,7 @@ export default defineComponent({
     
 
     function formatDate(element: IProduct){
-      return helpers.formatDate(element.createdAt)
+      return helpers.formatDate(element.createdAt as Date)
     }
 
     function getVolume(elememnt : IProduct){
@@ -223,7 +232,7 @@ export default defineComponent({
     }
 
     function getBulkPrice(element : IProduct){
-      return `${helpers.currency(element.bulkPrice)}`
+      return `${helpers.currency(element.bulkPrice)} F`
     }
 
     function getStock(element : IProduct){
@@ -231,7 +240,7 @@ export default defineComponent({
       if(element.stocks && element.stocks[0]){
        
         
-        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}`
+        return `${helpers.currency(element.stocks[0].currentQuantity)} ${getUnit(element)}` 
       }
 
         
@@ -344,6 +353,9 @@ export default defineComponent({
         
 
         categoryId.value = response.data[0].id
+
+       
+        
        
         categories.value = response.data.map((value: any) => {
           return {
@@ -352,6 +364,13 @@ export default defineComponent({
           };
         });
       } catch (error: any) {}
+
+      const response = await productStore.fetchAll({})
+
+      total.value = response.length
+
+
+
     });
 
 
