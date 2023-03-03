@@ -74,7 +74,7 @@ services:
       - PDF_GENERATOR_BASE_URL=https://pdf.kkiapay.me/v2
       - BOMBOO_API_URL=https://api.bomboo.io/v0.2.4
       - BOMBOO_API_KEY=d4e6254924d5b671741f46eeda945d33e63c29aa093bf2e4e48212baa44c7bb2cf0d42b6
-      - FRONTEND_BASE_URL=http://localhost:5000
+      - FRONTEND_BASE_URL=https://snb.opensi.co
       - API_NOTIFICATION=http://localhost:3001
     networks:
       - snb
