@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    /*const newOrganisation = await prisma.organisation.create({
+    const newOrganisation = await prisma.organisation.create({
       data: organisations[0],
     });
     console.info('Organisation created : ', newOrganisation);
@@ -18,7 +18,7 @@ async function main() {
     const newEngine = await prisma.engine.create({
       data: engines[0],
     });
-    console.info('ENGINE created : ', newEngine);*/
+    console.info('ENGINE created : ', newEngine);
 
     axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
@@ -33,7 +33,7 @@ async function main() {
         console.log(error);
       });
 
-    /*const newUser = await prisma.user.createMany({
+    const newUser = await prisma.user.createMany({
       data: users.map((value: any) => {
         return {
           ...value,
@@ -42,7 +42,7 @@ async function main() {
         };
       }),
     });
-    console.info('Users created : ', newUser);*/
+    console.info('Users created : ', newUser);
   } catch (error) {
     throw error;
     return;
