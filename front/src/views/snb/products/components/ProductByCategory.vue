@@ -1,8 +1,15 @@
 <template>
   <div class="">
     <div class="pt-8">
+      <div  >
+       
+      <div class="flex flex-col  items-center space-y-4" v-show="!total || total == 0">
         
-      <BaseTabs :tabs="tabs" @change="categoryId = $event">
+        <img src="@/assets/images/emptyProduct.png" alt="">
+        <div class="font-semibold text-center " >Aucun produit dans le stock</div>
+      </div>
+
+      <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
             :key="tab.name"
@@ -10,7 +17,6 @@
             :titles="titles"
             :actions="actions"
             :requestId="organisationId"
-            @total="total = $event"
             :params="{categoryId:categoryId}"
             class="mt-6"
           >
@@ -28,6 +34,10 @@
           </BaseTableWithFilter>
         </template>
       </BaseTabs>
+    
+    
+    </div>
+     
     </div>
   </div>
 </template>
@@ -38,7 +48,7 @@ import { useProductStore } from "@/stores/product";
 
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
 
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useProductCategoryStore } from "@/stores/product-category";
 
 import UploadFileVue from "@/components/UploadFile.vue";
@@ -117,6 +127,26 @@ export default defineComponent({
         context.emit('categoryIdChange', categoryId.value)
     })
 
+    const route = useRoute()
+
+    watch(organisationId, (newValue)=>{
+      console.log("eeeeeeeeee");
+      
+      getTotal()
+    })
+
+
+    async function getTotal(){
+      const response = await productStore.fetchAllProductsStock({},organisationId.value)
+      console.log("response response", response);
+      
+      total.value = response.count
+    }
+
+    
+
+
+
   
 
     onMounted(async () => {
@@ -127,6 +157,8 @@ export default defineComponent({
 
         categoryId.value = response.data[0].id;
       } catch (error: any) {}
+      await getTotal()
+      
     });
     return {
       tabs,

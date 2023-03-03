@@ -4,18 +4,31 @@ import DefaultLayout from "@/layouts/default.vue";
 import TableauBord from "@/views/index.vue";
 import AuthRoutes from "@/router/auth";
 import SnbRoutes from "@/router/snb";
+import Login from "@/views/auth/login.vue"
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
+    {
+      path:'',
+      name : 'login1',
+      component : Login,
+      meta:{
+          title : "Connexion",
+          subtitle : "Veuillez  vous connecter en renseignant votre addresse  gmail et votre mot de passe"
+      }
+    },
     {
       path: "/",
       component: DefaultLayout,
       children: [
         {
-          path: "",
+          path: "/dashboard",
           name: "dashboard",
           component: TableauBord,
         },
+       
       ],
     },
 
@@ -31,7 +44,6 @@ router.beforeEach(async (to, from, next) => {
   try {
     data = JSON.parse(localStorage.getItem("current_user") as string);
   } catch (error) {
-    console.log("data", error);
     data = null;
   }
 
