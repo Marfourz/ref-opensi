@@ -20,7 +20,7 @@ export const useProductStore = defineStore("productStore", {
       } catch (error) {}
     },
 
-    async fetchAll(query: any) {
+    async fetchAll(query?: any) {
       try {
         const response = await Api.get("products", { params: query });
         return response.data;

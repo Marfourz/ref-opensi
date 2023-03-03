@@ -171,10 +171,22 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisation?.type
     })
 
+    const role = computed(()=>{
+      return userStore.getCurrentUser?.role
+    })
+
     function showMenu(menu : any) : boolean {
+      
       if(!menu.organizations || menu.organizations.length == 0)
         return true
-      return menu.organizations.find((value:OrganisationType)=>value == organizationType.value) 
+      if( menu.organizations.find((value:OrganisationType)=>value == organizationType.value) ){
+        if(!menu.roles || menu.roles.length == 0)
+          return true
+        else if(menu.roles.find((value:UserRole)=>value == role.value))
+          return true
+      }
+      
+      return false
 
     }
     const activeRouteName = computed(() => {

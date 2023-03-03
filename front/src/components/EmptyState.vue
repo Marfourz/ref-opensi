@@ -1,12 +1,13 @@
 <template>
     <div class="flex flex-col  items-center space-y-4">
-        <img :src="image" alt="">
+        
+        <img :src="imageUrl" alt="">
         <div class="font-semibold text-center " v-html="title"></div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
     props:{
@@ -20,10 +21,17 @@ export default defineComponent({
             required : true
         }
     },
-    setup () {
-        
+    setup (props) {
 
-        return {}
+        const imageUrl = ref(new URL("/assets/images/emptyProduct.png", import.meta.url).href)
+        
+        onMounted(()=>{
+            imageUrl.value = new URL(props.image, import.meta.url).href
+        })
+
+        return {
+            imageUrl
+        }
     }
 })
 </script>

@@ -7,11 +7,11 @@ import ForgotPassword from "@/views/auth/forgotPassword.vue"
 
 export default [
     {
-        path : '/auth',
+        path : '',
         component:AuthLayout,
         children:[
           {
-            path:'',
+            path:'/auth',
             name : 'firstLogin',
             component : FirstLogin,
             meta:{
@@ -20,7 +20,16 @@ export default [
             }
           },
           {
-            path:'login',
+            path:'',
+            name : 'login1',
+            component : Login,
+            meta:{
+                title : "Connexion",
+                subtitle : "Veuillez  vous connecter en renseignant votre addresse  gmail et votre mot de passe"
+            }
+          },
+          {
+            path:'/auth/login',
             name : 'login',
             component : Login,
             meta:{
@@ -29,7 +38,7 @@ export default [
             }
           },
           {
-            path:'definePassword',
+            path:'/auth/definePassword',
             name : 'definePassword',
             component : DefinePassword,
             meta:{
@@ -38,7 +47,7 @@ export default [
             }
           },
           {
-            path:'forgotPassword',
+            path:'/auth/forgotPassword',
             name : 'forgotPassword',
             component : ForgotPassword,
             meta:{
