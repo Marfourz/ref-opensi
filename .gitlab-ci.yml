@@ -12,10 +12,10 @@ build_backend_prod:
     - deploy
   stage: build
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-backend:staging backend
-    - docker push registry.gitlab.com/opensi/snb-backend:staging
+    - docker build -t registry.gitlab.com/opensi/snb/snb-backend:staging backend
+    - docker push registry.gitlab.com/opensi/snb/snb-backend:staging
   tags:
-    - mtnonboarding-3
+    - shell-runner-snb
   environment:
     name: development
 
@@ -25,17 +25,17 @@ build_frontend_page_staging:
   stage: build
   script:
     - echo "VITE_APP_API_URL=http://api-snb.opensi.co" >> .env
-    - docker build -t registry.gitlab.com/opensi/snb-frontend:staging front
-    - docker push registry.gitlab.com/opensi/snb-frontend:staging
+    - docker build -t registry.gitlab.com/opensi/snb/snb-frontend:staging front
+    - docker push registry.gitlab.com/opensi/snb/snb-frontend:staging
   tags:
-    - mtnonboarding-3
+    - shell-runner-snb
   environment:
     name: development
 
 deploy_dev_images_staging:
   stage: deploy
   tags:
-    - mtnonboarding-3
+    - shell-runner-snb
   only:
     - deploy
   script:
