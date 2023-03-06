@@ -8,15 +8,14 @@ stages:
   - build
   - deploy
 
-#before_script:
-#  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+before_script:
+  docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
 
 build_backend_prod:
   only:
     - deploy
   stage: build
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker build -t registry.gitlab.com/opensi/snb-backend  ./backend
     - docker push registry.gitlab.com/opensi/snb-backend
   tags:
@@ -29,8 +28,6 @@ build_frontend_page_prod:
     - deploy
   stage: build
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    #- echo "VITE_APP_API_URL=/api" >> .env
     - echo "VITE_APP_API_URL=http://api-snb.opensi.co" >> .env
     - docker build --no-cache -t registry.gitlab.com/opensi/snb-frontend  ./front
     - docker push registry.gitlab.com/opensi/snb-frontend
@@ -45,10 +42,7 @@ deploy_dev_images_prod:
     - shell-runner-snb
   only:
     - deploy
-  #before_script:
-  #  - docker login https://eu.gcr.io
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker push registry.gitlab.com/opensi/users-manager
     - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
