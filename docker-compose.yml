@@ -30,7 +30,7 @@ services:
       - snb
 
   api_users:
-    image: registry.gitlab.com/opensi/users-manager:v.snb
+    image: registry.gitlab.com/opensi/users-manager
     depends_on:
       - users_db
     environment:
