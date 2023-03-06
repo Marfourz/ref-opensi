@@ -9,40 +9,40 @@ stages:
   - deploy
 
 before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+  - sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
 
 build_backend_prod:
   only:
     - deploy
   stage: build
   script:
-    - docker build -t registry.gitlab.com/opensi/snb-backend  ./backend
-    - docker push registry.gitlab.com/opensi/snb-backend
+    - docker build -t registry.gitlab.com/opensi/snb-backend:staging  ./backend
+    - sudo docker push registry.gitlab.com/opensi/snb-backend:staging
   tags:
     - shell-runner-snb
   environment:
     name: development
 
-build_frontend_page_prod:
+build_frontend_page_staging:
   only:
     - deploy
   stage: build
   script:
     - echo "VITE_APP_API_URL=http://api-snb.opensi.co" >> .env
-    - docker build --no-cache -t registry.gitlab.com/opensi/snb-frontend  ./front
-    - docker push registry.gitlab.com/opensi/snb-frontend
+    - docker build --no-cache -t registry.gitlab.com/opensi/snb-frontend:staging  ./front
+    - sudo docker push registry.gitlab.com/opensi/snb-frontend:staging
   tags:
     - shell-runner-snb
   environment:
     name: development
 
-deploy_dev_images_prod:
+deploy_dev_images_staging:
   stage: deploy
   tags:
     - shell-runner-snb
   only:
     - deploy
   script:
-    - docker push registry.gitlab.com/opensi/users-manager
+    - sudo docker push registry.gitlab.com/opensi/users-manager
     - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
