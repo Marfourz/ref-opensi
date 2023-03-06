@@ -16,7 +16,7 @@ services:
   migrate:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend:staging
+    image: registry.gitlab.com/opensi/snb/snb-backend:staging
     container_name: migrate-snb-stating
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
@@ -61,10 +61,10 @@ services:
   backend:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend:staging
+    image: registry.gitlab.com/opensi/snb/snb-backend:staging
     ports:
       - 9811:3000
-    container_name: backend-snb
+    container_name: backend-snb-staging
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
       - APP_URL=http://localhost:3000
@@ -89,7 +89,7 @@ services:
     image: registry.gitlab.com/opensi/snb-frontend:staging
     ports:
       - 9812:80
-    container_name: frontend-snb
+    container_name: frontend-snb-staging
     networks:
       - snb
 
