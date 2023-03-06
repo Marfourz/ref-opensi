@@ -19,7 +19,7 @@ build_backend_prod:
     - docker build -t registry.gitlab.com/opensi/snb-backend:staging  ./backend
     - sudo docker push registry.gitlab.com/opensi/snb-backend:staging
   tags:
-    - shell-runner-snb
+    - shell-1
   environment:
     name: development
 
@@ -32,14 +32,14 @@ build_frontend_page_staging:
     - docker build --no-cache -t registry.gitlab.com/opensi/snb-frontend:staging  ./front
     - sudo docker push registry.gitlab.com/opensi/snb-frontend:staging
   tags:
-    - shell-runner-snb
+    - Shell-1
   environment:
     name: development
 
 deploy_dev_images_staging:
   stage: deploy
   tags:
-    - shell-runner-snb
+    - Shell-1
   only:
     - deploy
   script:
