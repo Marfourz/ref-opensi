@@ -48,9 +48,6 @@
                 <img :src="`${element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png' }`" alt="">
               </div>
             </template>
-           
-
-        
         </BaseTableWithFilter>
         </template>
       </BaseTabs>
@@ -317,12 +314,6 @@ export default defineComponent({
       else
         return "Prix casier (en FCFA)"
     })
-
-   
-
-    
-
-
 
     const packagingTypes = computed(()=>{
       return [

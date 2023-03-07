@@ -37,7 +37,17 @@ export interface IOrganisation extends Commun{
     ownerName: string,
     paymentDeadline: 0,
     status?: string,
-    orders?:Array<ItemsOrder>
+    orders?:Array<ItemsOrder>,
+    wallet: Wallet
+}
+export interface Wallet extends Commun {
+  turnover: string;
+}
+
+export interface InfoOrganisation {
+  organisation: IOrganisation;
+  orders: Array<ItemsOrder>;
+  partners: string;
 }
 
 export interface IProduct extends Commun {
