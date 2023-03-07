@@ -21,6 +21,7 @@ import { ProductCategoryModule } from './product-category/product-category.modul
 import { InvoiceModule } from './invoice/invoice.module';
 import { ReceiptModule } from './receipt/receipt.module';
 import { EngineModule } from './engine/engine.module';
+import { WsNotificationModule } from './ws-notification/ws-notification.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -45,6 +46,7 @@ import { EngineModule } from './engine/engine.module';
     InvoiceModule,
     ReceiptModule,
     EngineModule,
+    WsNotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
