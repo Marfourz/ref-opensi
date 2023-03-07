@@ -10,6 +10,8 @@
     },
     "preserveValueImports": false, 
     "importsNotUsedAsValues": "preserve",
+    "target": "esnext",
+    "module": "esnext",
   },
 
   "references": [
