@@ -22,7 +22,7 @@ async function main() {
         console.log(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log('Users manager respond: ' + error.response.statusText);
       });
 
     // create engines for main postgres db
@@ -58,6 +58,23 @@ async function main() {
       orgId = existingOrganisation.id;
     }
 
+    const existingWallet = await prisma.wallet.findUnique({
+      where: {
+        organisationId: orgId,
+      },
+    });
+
+    if (!existingWallet) {
+      const newWallet = await prisma.wallet.create({
+        data: {
+          organisationId: orgId,
+          turnover: 0,
+        },
+      });
+      console.info('Wallet new created : ', newWallet);
+    } else {
+      console.info('Wallet was already created : ', existingWallet);
+    }
     // create user if not exist
     const existingUser = await prisma.user.findUnique({
       where: {
