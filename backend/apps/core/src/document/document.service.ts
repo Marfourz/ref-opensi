@@ -7,7 +7,7 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderService } from '../order/order.service';
 import { PagiationPayload } from '../../../../types/index';
 import { Order, User, Stock } from '@prisma/client';
-import { getPlainStatus } from 'helpers/getPlainStatus';
+import { getPlainPackagingType, getPlainStatus } from 'helpers/getPlainStatus';
 import { StockService } from '../stock/stock.service';
 import { UserService } from '../user/user.service';
 import { getPlainRole } from 'helpers/getPlainRole';
@@ -53,6 +53,24 @@ export class DocumentService {
     return response;
   }
 
+  async generateInvoiceDocument(ordId: string) {
+    const orderData: any = await this.getOrderData(ordId);
+
+    orderData.createdAt = orderData.createdAt.toLocaleDateString();
+
+    orderData.items.map((element) => {
+      element.total = element.quantity * element.product.bulkPrice;
+      element.product.packagingType = getPlainPackagingType(
+        element.product.packagingType,
+      );
+    });
+
+    const docContent = this.getTemplate('template-invoice-proforma', orderData);
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
   private getTemplate(name: string, data: any): string {
     let result = '';
 
@@ -83,6 +101,27 @@ export class DocumentService {
         },
       });
       return invoice;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
+  private async getOrderData(id: string) {
+    try {
+      const order = await this.prisma.order.findUnique({
+        where: { id },
+        include: {
+          transaction: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
+          invoice: true,
+        },
+      });
+      return order;
     } catch (error) {
       throw error;
       return;

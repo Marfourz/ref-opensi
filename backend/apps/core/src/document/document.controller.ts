@@ -7,10 +7,10 @@ import { ApiParam, ApiTags, ApiQuery } from '@nestjs/swagger';
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
-  @Get('generate-receipt/:id')
-  @ApiParam({ name: 'id' })
+  @Get('generate-invoice/:ordId')
+  @ApiParam({ name: 'ordId' })
   generateDocument(@Param() params) {
-    return this.documentService.generateReceiptDocument(params.id);
+    return this.documentService.generateInvoiceDocument(params.ordId);
   }
 
   @Get('download-orders/:id')

@@ -1,0 +1,98 @@
+version: "3.7"
+services:
+  db_postgres:
+    image: postgres:14-alpine
+    container_name: db-snb-prod
+    restart: always
+    environment:
+      POSTGRES_USER: "opensiuser"
+      POSTGRES_DB: "snb-prod"
+      POSTGRES_PASSWORD: "opensi"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - snb
+
+  migrate:
+    build:
+      context: ./backend
+    container_name: migrate-snb-prod
+    environment:
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+    depends_on:
+      - db_postgres
+    command: >
+      sh -c "npm run migrate &&
+      npm run seed"
+    networks:
+      - snb
+  
+  api_users:
+    image: registry.gitlab.com/opensi/users-manager:latest
+    depends_on:
+      - users_db
+    environment:
+      PORT: 80
+      NODE_ENV: production
+      DATABASE_URL: mongodb://users_db/users
+      DATABASE_TYPE: mongo
+      AUTH_JWT_EXPIRE_IN: 10d
+      AUTH_STRATEGY: jwt
+      AUTH_JWT_AUDIENCE: ${AUTH_JWT_AUDIENCE}
+      AUTH_JWT_SECRET: 'wXRCrzGMNbDNFPXoZrzvB1YecE2hh1rrC2BbJmyBXniUmBjKjAnLTiQGYukFgrIAf4c8VZdxvsVcxxQhxMx21De5V5k-yBnU37_AUj-02lZHtasvAbOCV_djrL4WB6fCy_avArv-sa-dx4p9rc04gqTWJ5aB8232heoDV3U6o647CnzKZ8AxumyRmtE5GB_DajPTy_E-v9JsOFob3xqBxnDI40KZbn7NxLSZnXeB96QVcObeBIvFlxCxaAz0ou6asYlKwi3re2yDUv4muBG227AN75gHAGLqqsiy5dhY2YcNRBbgALKx13McSi3J5HKpi5L9WZ64jJfQ7EEVxjzfNQ'
+      PASSWORD_RESET_TOKEN_TYPE: numeric
+      PASSWORD_RESET_TOKEN_LEN: 5
+      PASSWORD_RESET_TOKEN_EXPIRES_IN: 1h
+    networks:
+      - snb
+    restart: always
+
+  users_db:
+    image: mongo:4.0
+    environment:
+      - MONGO_DATA_DIR=/data/db
+    volumes:
+      - users_database:/data/db
+    networks:
+      - snb
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - 9811:3000
+    container_name: backend-snb
+    environment:
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+      - APP_URL="http://localhost:3000"
+      - APP_PORT=3000
+      - USERS_MANAGER_URL="http://api_users"
+      - PRODUCT_IMAGES_DEST="./uploads/products-images"
+      - PDF_GENERATOR_BASE_URL="https://pdf.kkiapay.me/v2"
+      - BOMBOO_API_URL="https://api.bomboo.io/v0.2.4"
+      - BOMBOO_API_KEY="*********************************"
+      - FRONTEND_BASE_URL="http://localhost:5000"
+      - API_NOTIFICATION="http://localhost:3001"
+    networks:
+      - snb
+    volumes:
+      - image:/uploads/products-images
+    depends_on:
+      - migrate
+
+  frontend:
+    build:
+      context: ./front
+    ports:
+      - 9812:80
+    container_name: frontend-snb
+    networks:
+      - snb
+
+volumes:
+  postgres:
+  users_database:
+  image:
+
+networks:
+  snb:

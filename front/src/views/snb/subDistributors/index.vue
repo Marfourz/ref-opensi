@@ -23,7 +23,7 @@
         :actions="actions"
         :key="reload"
       >
-        <template #filter>
+        <!-- <template #filter>
           <div class="flex space-x-4 h-full">
             <div
               class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
@@ -37,7 +37,7 @@
               >Nouveau {{ partenaireTitle }}</BaseButton
             >
           </div>
-        </template>
+        </template> -->
         <template #status="{ element }">
           <BaseTableStatut
             :title="getStatutLabel(element)"

@@ -1,8 +1,9 @@
 <template>
   <div class="">
     <router-link :to="{ name: 'subDistributors' }" path="sous-distributeurs">
-      <BaseButton icon="ArrowLeft" size="small">Retour</BaseButton></router-link
-    >
+      <!-- <BaseButton icon="ArrowLeft" size="small"></BaseButton> -->
+      <BaseGoBack> </BaseGoBack>
+    </router-link>
     <div class="flex justify-between mt-3">
       <div class="flex space-x-4">
         <div class="font-bold text-xl tracking-[-2%]">
@@ -12,7 +13,7 @@
           :title="selectedMaster?.organisation.status"
         ></BaseTableStatut>
       </div>
-      <BaseButton size="small">Désactivé</BaseButton>
+      <BaseButton size="small" bgColor="danger">Désactivé</BaseButton>
     </div>
     <BaseTabs :tabs="tabs" class="mt-7">
       <template #dashboard>
@@ -32,25 +33,20 @@
           <div class="font-bold text-xl tracking-[-2%] mt-6">
             Performance des produits
           </div>
-          <!-- :data="productsInfos" -->
-          <BaseTable :titles="titles">
-            <!-- <template #image="{ element }">
-        <div class="bg-grey-75 gap-2 p-1 rounded-lg">
-          <img
-            :src="`${
-              element.images && element.images[0]
-                ? element.images[0].url
-                : '@/assets/images/beverage.png'
-            }`"
-            alt=""
-          />
-        </div>
-      </template> -->
-          </BaseTable>
+          <BaseTable :titles="titles"> </BaseTable>
         </div>
       </template>
-      <template #orders> <div class="mt-7">commande</div> </template>
-      <template #distributors> <div class="mt-7">sgjgsa</div> </template>
+      <template #orders>
+        <div class="mt-7">
+          <BaseTitle title="Commandes"></BaseTitle>
+          <VOrders />
+        </div>
+      </template>
+      <template #distributors>
+        <div class="mt-7">
+          <BaseTitle title="Distributeurs agréés"></BaseTitle><VOrganisation />
+        </div>
+      </template>
       <template #infos>
         <div class="font-bold text-xl tracking-[-2%] mb-8 mt-7">
           Informations générales
@@ -105,9 +101,18 @@ import { InfoOrganisation } from "@/types/interfaces";
 import { useRoute } from "vue-router";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
 import DashboardCard from "@/components/DashboardCard.vue";
+import VOrders from "@/components/VOrders.vue";
+import VOrganisation from "@/components/VOrganisation.vue";
+import BaseGoBack from "@/components/base/BaseGoBack.vue";
 
 export default defineComponent({
-  components: { BaseTableStatut, DashboardCard },
+  components: {
+    BaseTableStatut,
+    DashboardCard,
+    VOrders,
+    VOrganisation,
+    BaseGoBack,
+  },
   setup() {
     const organizationStore = useOrganizationStore();
 

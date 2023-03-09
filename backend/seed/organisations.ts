@@ -1,12 +1,12 @@
 export const organisations = [
   {
-    socialReason: 'Maison Mere Snb',
+    socialReason: 'Maison Mère Snb',
     fiscalId: 'IFUDFG4D6B4R',
     phone: '22951879399',
     email: 'snb@organisation.com',
-    adress: 'Cotonou Menontin',
-    ownerName: 'Mr Du Dingo',
-    paymentDeadline: 120,
+    adress: 'Cotonou - Bénin',
+    ownerName: 'Mr Admin SNB',
+    paymentDeadline: 30,
     status: 'active',
     type: 'snb',
   },
