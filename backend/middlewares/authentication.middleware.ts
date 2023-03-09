@@ -29,6 +29,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
         this.jwtService
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
+            console.log(result);
             const { data } = result;
             data.uid = result.uid;
             this.prisma.user

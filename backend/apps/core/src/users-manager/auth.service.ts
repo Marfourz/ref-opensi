@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import {
   UserLoginDto,
   UserRegisterDto,
@@ -69,11 +69,10 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        return {
-          statusCode: err.response.status,
-          message: err.response.statusText,
-          data: err.response.data,
-        };
+        throw new HttpException(
+          'Vos identifiants sont incorrects',
+          HttpStatus.UNAUTHORIZED,
+        );
       });
 
     return logededUser;
@@ -90,11 +89,10 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        return {
-          statusCode: err.response.status,
-          message: err.response.statusText,
-          data: err.response.data,
-        };
+        throw new HttpException(
+          "Quelque chose s'est mal passé",
+          HttpStatus.UNAUTHORIZED,
+        );
       });
 
     return registeredUser;

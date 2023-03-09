@@ -49,9 +49,6 @@ export class AuthModule implements NestModule {
         { path: 'auth/resetPassword', method: RequestMethod.PUT },
       )
       .forRoutes(
-        { path: 'auth', method: RequestMethod.ALL },
-        { path: 'auth/(*)', method: RequestMethod.ALL },
-
         { path: 'permissions', method: RequestMethod.ALL },
         { path: 'permissions/(*)', method: RequestMethod.ALL },
 

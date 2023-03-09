@@ -1,0 +1,52 @@
+##snb
+
+variables:
+  REGISTRY: "registry.gitlab.com"
+  DOCKER_REGISTRY: registry.gitlab.com
+
+stages:
+  - build
+  - deploy
+
+#before_script:
+#  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+
+build_backend_prod:
+  only:
+    - deploy
+  stage: build
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+    - docker build -t registry.gitlab.com/opensi/snb-backend  ./backend
+    - docker push registry.gitlab.com/opensi/snb
+  tags:
+    - shell-1
+  environment:
+    name: production
+
+build_frontend_page_prod:
+  only:
+    - deploy
+  stage: build
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+    - echo "VITE_APP_API_URL=/api" >> .env
+    - docker build -t registry.gitlab.com/opensi/snb-frontend  ./front
+    - docker push registry.gitlab.com/opensi/snb
+  tags:
+    - shell-1
+  environment:
+    name: production
+
+deploy_dev_images_prod:
+  stage: deploy
+  tags:
+    - shell-1
+  only:
+    - deploy
+  #before_script:
+  #  - docker login https://eu.gcr.io
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+    - docker-compose -f docker-compose.yml pull
+    - docker-compose -f docker-compose.yml up -d --force-recreate

@@ -22,11 +22,20 @@
       <DashboardCard :data="numberOfPartners"></DashboardCard>
     </div>
 
-    <!--Évolution du chiffre d’affaire  -->
-    <!-- <div class="mt-6 font-bold text-xl tracking-[-2%]">
+    <div class="mt-6 font-bold text-xl tracking-[-2%]">
       Évolution du chiffre d’affaire
-    </div> -->
-    <!--Chiffre d’affaire par produit  -->
+    </div>
+
+    <div class="w-full">
+      <apexchart
+        height="400px"
+        type="line"
+        :options="chartOptions"
+        :series="series"
+      ></apexchart>
+    </div>
+
+   
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">
         Chiffre d’affaire par produit
@@ -64,7 +73,7 @@
         <div
           class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
         >
-        <div class="font-semibold text-sm p-2">Ce mois</div>
+          <div class="font-semibold text-sm p-2">Ce mois</div>
           <BaseIcon name="Top"></BaseIcon>
         </div>
       </div>
@@ -293,6 +302,49 @@ export default defineComponent({
       } catch (error) {}
     });
 
+    const chartOptions = ref({
+      chart: {
+        id: "vuechart-example",
+      },
+      colors: ['#259475'],
+      xaxis: {
+        categories: [
+          "Jan",
+          "Fev",
+          "Mar",
+          "Avr",
+          "Mai",
+          "Jun",
+          "Jui",
+          "Aou",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+      },
+    });
+
+    const series = ref([
+      {
+        name: "series-1",
+        data: [
+          "100k",
+          "300k",
+          "400k",
+          "100k",
+          "100k",
+          "300k",
+          "250k",
+          "300k",
+          "400k",
+          "200k",
+          "100k",
+          "100k",
+        ],
+      },
+    ]);
+
     return {
       numberOfOrders,
       turnover,
@@ -305,6 +357,8 @@ export default defineComponent({
       statPartners,
       orgType,
       OrganisationType,
+      chartOptions,
+      series,
     };
   },
 });
