@@ -14,9 +14,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
 import { ItemOrderModule } from '../item-order/item-order.module';
 import { ProductsModule } from '../product/product.module';
-
+import { WsNotificationModule } from '../ws-notification/ws-notification.module';
 @Module({
-  imports: [HttpModule, ItemOrderModule, ProductsModule],
+  imports: [HttpModule, ItemOrderModule, ProductsModule, WsNotificationModule],
   controllers: [OrderController],
   exports: [OrderService],
   providers: [

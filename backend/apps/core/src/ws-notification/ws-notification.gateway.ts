@@ -48,12 +48,12 @@ export class WsNotificationGateway
 
   @SubscribeMessage('join-room')
   handleEnterRomm(
-    @MessageBody('userId') userId: string,
+    @MessageBody('orgId') orgId: string,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('Client emit "join room" ', userId);
-    client.join(userId);
-    this.server.to(userId).emit('room-joined', { success: true });
+    console.log('Client emit "join room" ', orgId);
+    client.join(orgId);
+    //this.server.to(userId).emit('room-joined', { success: true });
     //client.emit('room-joined', { success: true });
   }
 

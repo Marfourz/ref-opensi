@@ -7,6 +7,8 @@ import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
 import { getSubTypeOrg } from 'helpers/getPlainStatus';
+import { WsNotificationGateway } from '../ws-notification/ws-notification.gateway';
+import { WS_EVENTS } from '../ws-notification/ws-notification.types';
 
 @Injectable()
 export class OrderService {
@@ -14,6 +16,7 @@ export class OrderService {
     private prisma: PrismaService,
     private itemOrderService: ItemOrderService,
     private productService: ProductsService,
+    private wsService: WsNotificationGateway,
   ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
@@ -61,6 +64,11 @@ export class OrderService {
         if (i === Ilength - 1) {
           await this.updateSingleOrder(orderId, { totalAmount });
         }
+      });
+
+      this.wsService.notifyRoom(organisation.parentOrganisationId, {
+        event: WS_EVENTS.NEW_ORDER_RECORDED,
+        value: orderId,
       });
 
       return await this.getSingleOrder(orderId);
