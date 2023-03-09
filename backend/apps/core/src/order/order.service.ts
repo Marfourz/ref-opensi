@@ -20,8 +20,17 @@ export class OrderService {
     try {
       const itemsOrders = order.items;
       const Ilength = itemsOrders.length;
+      const organisation = await this.prisma.organisation.findUnique({
+        where: {
+          id: order.organisationId,
+        },
+        select: {
+          parentOrganisationId: true,
+        },
+      });
       const orderPayload = {
         organisationId: order.organisationId,
+        parentOrganisationId: organisation.parentOrganisationId,
         deliveryCode: generateRandomString(5),
         reference: generateRandomString(7),
         status: OrderStatusEnum.new,
@@ -66,7 +75,7 @@ export class OrderService {
       const order = await this.prisma.order.findUnique({
         where: { id },
         include: {
-          items: {include:{product : true}},
+          items: { include: { product: true } },
           invoice: true,
           organisation: true,
         },

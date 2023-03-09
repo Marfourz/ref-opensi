@@ -63,8 +63,17 @@ export class OrganisationController {
   })
   @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: true })
   getTopPartners(@Query('type') type: NonSnbOrganisations): any {
-    console.log(type);
     return this.organisationService.getTopPartners(type);
+  }
+
+  @Get('turnover-chart/:id')
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiParam({ name: 'id' })
+  getTurnoverEvolution(@Param() params): any {
+    return this.organisationService.getTurnoverEvolution(params.id);
   }
 
   @Get(':id')

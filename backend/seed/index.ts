@@ -1,6 +1,7 @@
 import { user } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
+import { categories } from './p-categories';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
 const { PrismaClient } = require('@prisma/client');
@@ -29,6 +30,11 @@ async function main() {
       data: engines[0],
     });
     console.info('ENGINE created : ', newEngine);
+
+    const newPCategory = await prisma.productCategory.create({
+      data: categories[0],
+    });
+    console.info('CATEGORY created : ', newPCategory);
 
     // create organisation if not exist
     const organisation = organisations[0];

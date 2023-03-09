@@ -6,6 +6,11 @@ export interface IConnectedSocketUsers {
 }
 
 export interface IWSEmitArgs<T> {
-  event: string;
+  event: Events;
   value: T;
+}
+
+enum Events {
+  NEW_ORDER_RECORDED = 'NEW_ORDER_RECORDED',
+  ORDER_UPDATED = 'ORDER_UPDATED',
 }
