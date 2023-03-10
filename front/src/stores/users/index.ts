@@ -189,6 +189,8 @@ export const useUsersStore = defineStore('usersStore',{
 
     getters: {
         getCurrentUser() : IUser | null{
+            console.log("current user", this.current_user);
+            
             if(this.current_user)
                 return this.current_user
             const user = localStorage.getItem('current_user')
