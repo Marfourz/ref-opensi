@@ -39,9 +39,17 @@
           </div>
         </template>
         <template #status="{element}">
+
+        
      
      <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
        
+    </template>
+
+    <template #wallet="{element}">
+      <div>
+        {{ element.wallet ? element.wallet.turnover : 0 }} FCFA
+      </div>
     </template>
 
        
@@ -307,7 +315,8 @@ export default defineComponent({
       },
       {
         title: "Chiffre d’affaire",
-        name: "wallet.turnovers",
+        name: "wallet",
+        
       },
       {
         title: "Statut",
