@@ -88,7 +88,7 @@ export class StockController {
     return this.stockService.getStockGeneralInfos(params.orgId);
   }
 
-  /*@Put(':id')
+  @Put(':id')
   //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({
     name: 'x-auth-token',
@@ -104,7 +104,7 @@ export class StockController {
     @Body() update: updateStockDto,
   ): Promise<Stock> {
     return this.stockService.updateSingleStock(params.id, update);
-  }*/
+  }
 
   @Delete(':id')
   @Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)

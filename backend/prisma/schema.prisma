@@ -49,6 +49,8 @@ model Organisation {
 
   type                OrganisationTypeEnum
 
+  parentOrganisationId  String?
+
   socialReason        String
 
   fiscalId            String  @unique
@@ -86,6 +88,8 @@ model Order {
   organisation        Organisation @relation(fields: [organisationId], references: [id])
 
   organisationId      String
+
+  parentOrganisationId  String
 
   items               ItemOrder[]
 
@@ -227,7 +231,9 @@ model Transaction {
 
   paymentMethod       PaymentMethodEnum
 
-  invoice             Invoice?
+  invoice             Invoice  @relation(fields: [invoiceId], references: [id])
+
+  invoiceId           String @unique
 
   createdAt           DateTime @default(now())
 
@@ -253,9 +259,7 @@ model Wallet {
 model Invoice {
   id                  String  @id @default(uuid())
 
-  transaction         Transaction @relation(fields: [transactionId], references: [id])
-
-  transactionId       String @unique
+  transaction         Transaction?
 
   order               Order @relation(fields: [orderId], references: [id])
 
@@ -299,7 +303,7 @@ model Receipt {
 model Engine {
   id                  String @id @default(uuid())
 
-  name                String  @unique
+  name                String
 
   description         String
 
@@ -360,6 +364,7 @@ enum OrderStatusEnum {
   new
   delivered
   accepted
+  aborted
 }
 
 enum TransactionStatusEnum {

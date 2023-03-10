@@ -89,11 +89,10 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
-        return {
-          statusCode: err.response.status,
-          message: err.response.statusText,
-          data: err.response.data,
-        };
+        throw new HttpException(
+          "Quelque chose s'est mal passé",
+          HttpStatus.UNAUTHORIZED,
+        );
       });
 
     return registeredUser;
