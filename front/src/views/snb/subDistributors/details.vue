@@ -88,8 +88,10 @@
               {{ selectedMaster?.organisation.adress }}
             </span>
           </div>
-        </div></template
-      >
+        </div>
+
+        <!-- <BaseTextGroup :descriptions="demandeInfos"></BaseTextGroup> -->
+      </template>
     </BaseTabs>
   </div>
 </template>
@@ -104,6 +106,7 @@ import DashboardCard from "@/components/DashboardCard.vue";
 import VOrders from "@/components/VOrders.vue";
 import VOrganisation from "@/components/VOrganisation.vue";
 import BaseGoBack from "@/components/base/BaseGoBack.vue";
+import BaseTextGroup from "@/components/base/BaseTextGroup.vue";
 
 export default defineComponent({
   components: {
@@ -112,6 +115,7 @@ export default defineComponent({
     VOrders,
     VOrganisation,
     BaseGoBack,
+    BaseTextGroup,
   },
   setup() {
     const organizationStore = useOrganizationStore();
@@ -226,6 +230,33 @@ export default defineComponent({
       if (element.wallet) return `${element.wallet.turnover} FCFA`;
       return `0 FCFA`;
     }
+
+    // const demandeInfos = [
+    //   {
+    //     label: "Nom",
+    //     value: selectedMaster?.organisation.socialReason,
+    //   },
+    //   {
+    //     label: "Numéro IFU",
+    //     value: selectedMaster?.organisation.fiscalId,
+    //   },
+    //   {
+    //     label: "Téléphone",
+    //     value: selectedMaster?.organisation.phone,
+    //   },
+    //   {
+    //     label: "Email",
+    //     value: selectedMaster?.organisation.email,
+    //   },
+    //   {
+    //     label: "Représentant",
+    //     value: selectedMaster?.organisation.ownerName,
+    //   },
+    //   {
+    //     label: "Adresse",
+    //     value: selectedMaster?.organisation.adress,
+    //   },
+    // ];
     return {
       id,
       state,
@@ -238,6 +269,7 @@ export default defineComponent({
       titles,
       tabs,
       formatPrice,
+      // demandeInfos,
     };
   },
 });

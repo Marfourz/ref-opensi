@@ -18,6 +18,7 @@ import Toast from "vue-toastification";
 import BaseGoBack from './components/base/BaseGoBack.vue'
 import BaseDateRange from "@/components/base/BaseDateRange.vue"
 import "vue-toastification/dist/index.css";
+import VueApexCharts from "vue3-apexcharts";
 
 import VCalendar from 'v-calendar';
 import 'v-calendar/dist/style.css';
@@ -74,5 +75,6 @@ app.use(createPinia())
 app.use(router)
 app.use(Toast, {});
 app.use(VCalendar, {})
+app.use(VueApexCharts);
 
 app.mount('#app')
