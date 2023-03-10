@@ -16,6 +16,11 @@ export class organisationDto {
   fiscalId: string;
 
   @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  parentOrganisationId: string;
+
+  @ApiProperty({ type: String })
   @IsString()
   phone: string;
 
@@ -56,6 +61,11 @@ export class updateOrganisationDto {
   @IsOptional()
   @IsString()
   fiscalId?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  parentOrganisationId: string;
 
   @ApiProperty({ type: String })
   @IsOptional()

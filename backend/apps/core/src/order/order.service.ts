@@ -7,6 +7,8 @@ import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
 import { getSubTypeOrg } from 'helpers/getPlainStatus';
+import { WsNotificationGateway } from '../ws-notification/ws-notification.gateway';
+import { WS_EVENTS } from '../ws-notification/ws-notification.types';
 
 @Injectable()
 export class OrderService {
@@ -14,14 +16,24 @@ export class OrderService {
     private prisma: PrismaService,
     private itemOrderService: ItemOrderService,
     private productService: ProductsService,
+    private wsService: WsNotificationGateway,
   ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
     try {
       const itemsOrders = order.items;
       const Ilength = itemsOrders.length;
+      const organisation = await this.prisma.organisation.findUnique({
+        where: {
+          id: order.organisationId,
+        },
+        select: {
+          parentOrganisationId: true,
+        },
+      });
       const orderPayload = {
         organisationId: order.organisationId,
+        parentOrganisationId: organisation.parentOrganisationId,
         deliveryCode: generateRandomString(5),
         reference: generateRandomString(7),
         status: OrderStatusEnum.new,
@@ -54,6 +66,11 @@ export class OrderService {
         }
       });
 
+      this.wsService.notifyRoom(organisation.parentOrganisationId, {
+        event: WS_EVENTS.NEW_ORDER_RECORDED,
+        value: orderId,
+      });
+
       return await this.getSingleOrder(orderId);
     } catch (error) {
       throw error;
@@ -66,7 +83,7 @@ export class OrderService {
       const order = await this.prisma.order.findUnique({
         where: { id },
         include: {
-          items: {include:{product : true}},
+          items: { include: { product: true } },
           invoice: true,
           organisation: true,
         },
