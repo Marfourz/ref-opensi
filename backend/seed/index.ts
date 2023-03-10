@@ -1,6 +1,7 @@
 import { user } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
+import { categories } from './p-categories';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
 const { PrismaClient } = require('@prisma/client');
@@ -21,7 +22,7 @@ async function main() {
         console.log(response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log('Users manager respond: ' + error.response.statusText);
       });
 
     // create engines for main postgres db
@@ -29,6 +30,11 @@ async function main() {
       data: engines[0],
     });
     console.info('ENGINE created : ', newEngine);
+
+    const newPCategory = await prisma.productCategory.create({
+      data: categories[0],
+    });
+    console.info('CATEGORY created : ', newPCategory);
 
     // create organisation if not exist
     const organisation = organisations[0];
@@ -52,6 +58,23 @@ async function main() {
       orgId = existingOrganisation.id;
     }
 
+    const existingWallet = await prisma.wallet.findUnique({
+      where: {
+        organisationId: orgId,
+      },
+    });
+
+    if (!existingWallet) {
+      const newWallet = await prisma.wallet.create({
+        data: {
+          organisationId: orgId,
+          turnover: 0,
+        },
+      });
+      console.info('Wallet new created : ', newWallet);
+    } else {
+      console.info('Wallet was already created : ', existingWallet);
+    }
     // create user if not exist
     const existingUser = await prisma.user.findUnique({
       where: {

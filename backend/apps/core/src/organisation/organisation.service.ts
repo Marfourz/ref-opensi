@@ -8,7 +8,7 @@ import {
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { NonSnbOrganisations, PagiationPayload } from 'types';
-import { UserRoleEnum } from '@prisma/client';
+import { UserRoleEnum, OrderStatusEnum, OrganisationStatusEnum } from '@prisma/client';
 import { WalletService } from '../wallet/wallet.service';
 import { AuthService } from '../users-manager/auth.service';
 import { NotificationService } from 'apps/notification/src/notification.service';
@@ -248,7 +248,10 @@ export class OrganisationService {
       const emailConstraint: any = {};
       const turnoverConstraint: any = {};
       const w: any = {};
-      w.NOT = { type: OrganisationTypeEnum.snb };
+      w.NOT = {
+        type: OrganisationTypeEnum.snb,
+        status: OrganisationStatusEnum.inactive,
+      };
       if (q != undefined && q != '') {
         ownerNameConstraint.ownerName = {
           contains: q,
@@ -362,13 +365,21 @@ export class OrganisationService {
       }),
     );*/
 
-    const stocks = await this.prisma.stock.findMany({
+    const stocks: any = await this.prisma.stock.findMany({
       where: {
         organisationId: orgId,
       },
       include: {
         product: true,
       },
+    });
+
+    stocks.forEach((element) => {
+      element.selledQuantity =
+        element.originalQuantity - element.currentQuantity;
+      element.productTurnover =
+        element.product.bulkPrice *
+        (element.originalQuantity - element.currentQuantity);
     });
 
     return { organisation, orders, partners, productsInfos: stocks };
@@ -439,5 +450,19 @@ export class OrganisationService {
     });
 
     return organisations;
+  }
+
+  async getTurnoverEvolution(id: string): Promise<any> {
+    const orders = await this.prisma.order.findMany({
+      where: {
+        parentOrganisationId: id,
+        status: OrderStatusEnum.delivered,
+      },
+      select: {
+        createdAt: true,
+        totalAmount: true,
+      },
+    });
+    return orders;
   }
 }

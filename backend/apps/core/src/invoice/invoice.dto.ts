@@ -5,10 +5,6 @@ import { InvoiceStatusEnum } from '@prisma/client';
 export class invoiceDto {
   @ApiProperty({ type: String })
   @IsString()
-  transactionId: string;
-
-  @ApiProperty({ type: String })
-  @IsString()
   orderId: string;
 
   @ApiProperty({ type: String })

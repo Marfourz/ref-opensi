@@ -13,6 +13,10 @@ export class transactionDto {
 
   @ApiProperty({ type: String })
   @IsString()
+  invoiceId: string;
+
+  @ApiProperty({ type: String })
+  @IsString()
   orderId: string;
 
   @ApiProperty({ type: String })
