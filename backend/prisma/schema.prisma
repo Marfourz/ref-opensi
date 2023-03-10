@@ -89,7 +89,7 @@ model Order {
 
   organisationId      String
 
-  parentOrganisationId  String
+  parentOrganisationId  String?
 
   items               ItemOrder[]
 
