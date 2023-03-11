@@ -52,6 +52,13 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+   async onView(id: PrimaryKey ) {
+     try {
+       const response = await Api.get(`organisations/snb/infos/${id}`);
+       return response.data;
+     } catch (error) {}
+   },
+
     async update(id: PrimaryKey, data: any) {
       try {
         const response = await Api.put(`organisations/${id}`, data);

@@ -25,12 +25,12 @@
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
-            <div
+            <!-- <div
               class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
             >
               <div>Filtré par</div>
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div>
+            </div> -->
 
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
             <BaseButton icon="plus" size="small" @click="createMaster"
@@ -38,16 +38,12 @@
             >
           </div>
         </template>
-        <template #status="{element}">
-     
-     <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
-       
-    </template>
-
-       
-
-
-
+        <template #status="{ element }">
+          <BaseTableStatut
+            :title="getStatutLabel(element)"
+            :type="getStatutType(element)"
+          ></BaseTableStatut>
+        </template>
       </BaseTableWithFilter>
     </div>
     <BaseBottomModal :show="showModal">
@@ -145,9 +141,13 @@ import { Form } from "vee-validate";
 import { IOrganisation } from "@/types/interfaces";
 import VPanel from "@/components/VPanel.vue";
 import { useUsersStore } from "../../../stores/users";
-import { OrganisationType, UserAccountStatus } from "../../../types/enumerations";
+import {
+  OrganisationType,
+  UserAccountStatus,
+} from "../../../types/enumerations";
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: { Form, VPanel },
@@ -188,11 +188,11 @@ export default defineComponent({
     const userStore = useUsersStore();
 
     const actions = [
-      //   {
-      //     title: "Voir détail",
-      //     icon: "eye",
-      //     action: onView,
-      //   },
+      {
+        title: "Voir détail",
+        icon: "eye",
+        action: details,
+      },
       {
         title: "Modifier",
         icon: "edit",
@@ -260,18 +260,20 @@ export default defineComponent({
         }
       } catch (error) {}
     }
-
-    function onView(value: IOrganisation) {
-      selectedMaster.value = value;
+    const router = useRouter();
+    function details(row: IOrganisation) {
+      router.push({
+        name: "sousDistributeursDetails",
+        params: {
+          id: row.id,
+        },
+      });
     }
 
-
-    const partenaireTitle = computed(()=>{
-        if(master.type == OrganisationType.DA)
-          return 'distributeur agrée'
-        else 
-          return 'master distributeur'
-    })
+    const partenaireTitle = computed(() => {
+      if (master.type == OrganisationType.DA) return "distributeur agrée";
+      else return "master distributeur";
+    });
 
     const master = reactive({
       type: OrganisationType.MD,
@@ -303,7 +305,7 @@ export default defineComponent({
       {
         title: "Commandes",
         name: "commandes",
-        transform: getTotalOrder
+        transform: getTotalOrder,
       },
       {
         title: "Chiffre d’affaire",
@@ -320,38 +322,29 @@ export default defineComponent({
       },
     ];
 
-    function getTotalOrder(element : IOrganisation){
-        if(element.orders)
-          return element.orders.length
-        return 0
+    function getTotalOrder(element: IOrganisation) {
+      if (element.orders) return element.orders.length;
+      return 0;
     }
 
-      function getStatutLabel(element : IOrganisation){
+    function getStatutLabel(element: IOrganisation) {
+      if (element.status == UserAccountStatus.ACTIVE) return "Active";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactive";
+      else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
+    }
 
-        if(element.status == UserAccountStatus.ACTIVE )
-            return "Active"
-        else if(element.status == UserAccountStatus.INACTIVE)
-            return "Inactive"
-        else if(element.status == UserAccountStatus.SUSPENDED)
-            return "Suspendu"
-     }
-
-     function getStatutType(element : IOrganisation){
-
-        if(element.status == UserAccountStatus.ACTIVE )
-            return "success"
-        else if(element.status == UserAccountStatus.INACTIVE)
-            return "danger"
-        else if(element.status == UserAccountStatus.SUSPENDED)
-            return "warning"
-        }
+    function getStatutType(element: IOrganisation) {
+      if (element.status == UserAccountStatus.ACTIVE) return "success";
+      else if (element.status == UserAccountStatus.INACTIVE) return "danger";
+      else if (element.status == UserAccountStatus.SUSPENDED) return "warning";
+    }
 
     const loading = ref(false);
 
     const reload = ref(false);
 
-    const toast = useToast()
-    
+    const toast = useToast();
+
     async function onSubmit() {
       loading.value = true;
 
@@ -374,7 +367,7 @@ export default defineComponent({
         reload.value = !reload.value;
       } catch (error: any) {
         loading.value = false;
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       }
     }
 
@@ -397,7 +390,8 @@ export default defineComponent({
       userStore,
       getStatutLabel,
       getStatutType,
-      partenaireTitle
+      partenaireTitle,
+      details,
     };
   },
 });
