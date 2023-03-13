@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
-import { assignOrderDto, orderDto, updateOrderDto } from './order.dto';
+import { assignOrderDto, orderDto, updateOrderDto, periodOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
@@ -11,6 +11,7 @@ import { WsNotificationGateway } from '../ws-notification/ws-notification.gatewa
 import { WS_EVENTS } from '../ws-notification/ws-notification.types';
 import { NotificationService } from 'apps/notification/src/notification.service';
 import { smsDto } from '../../../notification/src/notification.dto';
+import { HttpStatus } from '@nestjs/common';
 @Injectable()
 export class OrderService {
   constructor(
@@ -103,6 +104,25 @@ export class OrderService {
         where: { id },
         data: update as Prisma.OrderUpdateInput,
       });
+
+      if (update.deliveryMan) {
+        const deliveryMan = await this.prisma.user.findUnique({
+          where: {
+            id: update.deliveryMan,
+          },
+          select: {
+            phone: true,
+          },
+        });
+
+        const smsBody: smsDto = {
+          to: deliveryMan.phone,
+          body: "Une nouvelle commande vient de vous être attribuée!! Rdv sur l'application SNB pour plus de détails.",
+          sender: 'SNB',
+        };
+
+        await this.notifService.sendSms(smsBody);
+      }
       return updatedOrder;
     } catch (error) {
       throw error;
@@ -238,5 +258,91 @@ export class OrderService {
       throw error;
       return;
     }
+  }
+
+  async searchForOrdersOfDeliveryMan(
+    filterParams: any,
+    deliveryManId: string,
+  ): Promise<PagiationPayload<Order[]>> {
+    try {
+      const { page, perPage, q } = filterParams;
+
+      const paginateConstraints: any = {};
+      if (!isNaN(page) && !isNaN(perPage)) {
+        paginateConstraints.skip = Number((page - 1) * perPage);
+        paginateConstraints.take = Number(perPage);
+      }
+
+      /*const totalAmountConstraint: any = {};
+      const orderIdConstraint: any = {};
+      const orderReferenceConstraint: any = {};*/
+      const w: any = {};
+      w.deliveryMan = deliveryManId;
+      /*if (q != undefined && q != '') {
+        orderIdConstraint.id = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        orderReferenceConstraint.reference = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        if (!isNaN(q)) {
+          totalAmountConstraint.totalAmount = Number(q);
+        }
+
+        w.OR = [
+          orderIdConstraint,
+          totalAmountConstraint,
+          orderReferenceConstraint,
+        ];
+      }*/
+
+      const orders = await this.prisma.order.findMany({
+        ...paginateConstraints,
+        where: {
+          ...w,
+        },
+      });
+
+      const count = await this.prisma.order.count({
+        where: { ...w },
+      });
+
+      return { data: orders, count };
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
+
+  async validateOrder(orderId: string, deliveryCode: string): Promise<any> {
+    const order = await this.getSingleOrder(orderId);
+
+    if (order.deliveryCode === deliveryCode) {
+      await this.updateSingleOrder(orderId, {
+        status: OrderStatusEnum.delivered,
+      });
+      return { statusCode: HttpStatus.OK };
+    } else {
+      return { statusCode: HttpStatus.UNPROCESSABLE_ENTITY };
+    }
+  }
+
+  async getStatisticsOfDeliveryMan(
+    deliveryManId: string,
+    period: periodOrderDto,
+  ): Promise<any> {
+    const ordersByPeriod = await this.prisma.order.count({
+      where: {
+        deliveryMan: deliveryManId,
+        createdAt: {
+          ...period,
+        },
+      },
+    });
+    return { ordersByPeriod };
   }
 }

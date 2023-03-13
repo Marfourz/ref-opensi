@@ -106,6 +106,12 @@ export class ProductsService {
 
   async deleteSingleProduct(id: string): Promise<Product> {
     try {
+      await this.prisma.image.deleteMany({
+        where: {
+          productId: id,
+        },
+      });
+
       const deletedProduct = await this.prisma.product.delete({
         where: { id },
       });

@@ -100,13 +100,13 @@ export class UserService {
     }
   }
 
-  async deleteSingleUser(id: string): Promise<User> {
+  async deleteSingleUser(id: string, user: any): Promise<User> {
     try {
       const deletedUser = await this.prisma.user.delete({
         where: { id },
       });
 
-      //await this.authService.deleteUser(uid);
+      await this.authService.deleteUser(user.uid);
       return deletedUser;
     } catch (error) {
       throw error;
