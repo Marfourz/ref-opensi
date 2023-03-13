@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from '@prisma/client';
-import { orderDto, updateOrderDto, assignOrderDto, periodOrderDto } from './order.dto';
+import { orderDto, updateOrderDto, periodOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
@@ -103,17 +103,21 @@ export class OrderController {
 
   @Get(':deliveryManId/statistics')
   //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
-  @ApiBody({ type: periodOrderDto })
   @ApiParam({ name: 'deliveryManId' })
+  @ApiQuery({ name: 'lte', type: String, required: false })
+  @ApiQuery({ name: 'gte', type: String, required: false })
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
   getStatisticsOfDeliveryMan(
+    @Query() filterParams: any,
     @Param() params,
-    @Body() period: periodOrderDto,
   ): Promise<any> {
-    return this.orderService.getStatisticsOfDeliveryMan(params.deliveryManId);
+    return this.orderService.getStatisticsOfDeliveryMan(
+      params.deliveryManId,
+      filterParams,
+    );
   }
 
   @Put('/:orderId/assignTo/:deliveryManId')

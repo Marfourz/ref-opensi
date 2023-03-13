@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
-import { assignOrderDto, orderDto, updateOrderDto, periodOrderDto } from './order.dto';
+import {
+  assignOrderDto,
+  orderDto,
+  updateOrderDto,
+  periodOrderDto,
+} from './order.dto';
 import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
@@ -12,6 +17,7 @@ import { WS_EVENTS } from '../ws-notification/ws-notification.types';
 import { NotificationService } from 'apps/notification/src/notification.service';
 import { smsDto } from '../../../notification/src/notification.dto';
 import { HttpStatus } from '@nestjs/common';
+import * as dayjs from 'dayjs';
 @Injectable()
 export class OrderService {
   constructor(
@@ -272,7 +278,6 @@ export class OrderService {
         paginateConstraints.skip = Number((page - 1) * perPage);
         paginateConstraints.take = Number(perPage);
       }
-
       /*const totalAmountConstraint: any = {};
       const orderIdConstraint: any = {};
       const orderReferenceConstraint: any = {};*/
@@ -333,16 +338,46 @@ export class OrderService {
 
   async getStatisticsOfDeliveryMan(
     deliveryManId: string,
-    period: periodOrderDto,
+    period,
   ): Promise<any> {
-    const ordersByPeriod = await this.prisma.order.count({
+    const data: any = [];
+    const orderByPeriod = await this.getDeliveryManOrdersByPeriod(
+      period,
+      deliveryManId,
+    );
+
+    const pastMonths: any = [];
+
+    for (let index = 6; index >= 0; index--) {
+      pastMonths.push(dayjs().subtract(index, 'month').format('YYYY-MM-30'));
+    }
+
+    for (let i = 0; i < pastMonths.length; i++) {
+      if (i === pastMonths.length - 1) {
+        break;
+      }
+      const totalOrders = await this.getDeliveryManOrdersByPeriod(
+        {
+          gte: pastMonths[i],
+          lte: pastMonths[i + 1],
+        },
+        deliveryManId,
+      );
+      data.push(totalOrders);
+    }
+
+    return { orderByPeriod, data };
+  }
+
+  async getDeliveryManOrdersByPeriod(period, deliveryManId) {
+    return await this.prisma.order.count({
       where: {
         deliveryMan: deliveryManId,
         createdAt: {
-          ...period,
+          gte: new Date(period.gte).toISOString(),
+          lte: new Date(period.lte).toISOString(),
         },
       },
     });
-    return { ordersByPeriod };
   }
 }

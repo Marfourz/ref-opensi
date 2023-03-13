@@ -8,7 +8,11 @@ import {
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { NonSnbOrganisations, PagiationPayload } from 'types';
-import { UserRoleEnum, OrderStatusEnum, OrganisationStatusEnum } from '@prisma/client';
+import {
+  UserRoleEnum,
+  OrderStatusEnum,
+  OrganisationStatusEnum,
+} from '@prisma/client';
 import { WalletService } from '../wallet/wallet.service';
 import { AuthService } from '../users-manager/auth.service';
 import { NotificationService } from 'apps/notification/src/notification.service';
