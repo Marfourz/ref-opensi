@@ -15,8 +15,15 @@ import { RolesGuard } from 'guards/roles.guard';
 import { ItemOrderModule } from '../item-order/item-order.module';
 import { ProductsModule } from '../product/product.module';
 import { WsNotificationModule } from '../ws-notification/ws-notification.module';
+import { NotificationModule } from 'apps/notification/src/notification.module';
 @Module({
-  imports: [HttpModule, ItemOrderModule, ProductsModule, WsNotificationModule],
+  imports: [
+    HttpModule,
+    ItemOrderModule,
+    ProductsModule,
+    WsNotificationModule,
+    NotificationModule,
+  ],
   controllers: [OrderController],
   exports: [OrderService],
   providers: [

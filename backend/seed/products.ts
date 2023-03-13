@@ -1,6 +1,9 @@
 export const products = [
   {
-    name: 'Boissons alcoliques',
-    description: 'Contient les boissons alcoliques',
+    name: 'Produit test1',
+    unitPrice: 150,
+    bulkPrice: 2500,
+    packagingType: 'rack',
+    volume: 33,
   },
 ];

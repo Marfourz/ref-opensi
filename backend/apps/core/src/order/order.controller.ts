@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from '@prisma/client';
-import { orderDto, updateOrderDto } from './order.dto';
+import { orderDto, updateOrderDto, assignOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
@@ -81,6 +81,18 @@ export class OrderController {
   })
   getOrdersOfSubOrganisations(@Param() params): Promise<Order[]> {
     return this.orderService.getOrdersOfSubOrganisations(params.orgId);
+  }
+
+  @Put('/:orderId/assignTo/:deliveryManId')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orderId' })
+  @ApiParam({ name: 'deliveryManId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  assignOrder(@Param() params): Promise<Order> {
+    return this.orderService.assignOrder(params.orderId, params.deliveryManId);
   }
 
   @Put(':id')

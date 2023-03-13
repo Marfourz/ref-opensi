@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
-import { orderDto, updateOrderDto } from './order.dto';
+import { assignOrderDto, orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { generateRandomString } from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
@@ -9,7 +9,8 @@ import { ProductsService } from '../product/product.service';
 import { getSubTypeOrg } from 'helpers/getPlainStatus';
 import { WsNotificationGateway } from '../ws-notification/ws-notification.gateway';
 import { WS_EVENTS } from '../ws-notification/ws-notification.types';
-
+import { NotificationService } from 'apps/notification/src/notification.service';
+import { smsDto } from '../../../notification/src/notification.dto';
 @Injectable()
 export class OrderService {
   constructor(
@@ -17,6 +18,7 @@ export class OrderService {
     private itemOrderService: ItemOrderService,
     private productService: ProductsService,
     private wsService: WsNotificationGateway,
+    private notifService: NotificationService,
   ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
@@ -204,6 +206,37 @@ export class OrderService {
         throw error;
         return;
       }
+    }
+  }
+
+  async assignOrder(orderId: string, deliveryManId: string): Promise<any> {
+    try {
+      const updatedOrder = await this.prisma.order.update({
+        where: { id: orderId },
+        data: { deliveryMan: deliveryManId },
+      });
+
+      const deliveryMan = await this.prisma.user.findUnique({
+        where: {
+          id: deliveryManId,
+        },
+        select: {
+          phone: true,
+        },
+      });
+
+      const smsBody: smsDto = {
+        to: deliveryMan.phone,
+        body: "Une nouvelle commande vient de vous être attribuée!! Rdv sur l'application SNB pour plus de détails.",
+        sender: 'SNB',
+      };
+
+      await this.notifService.sendSms(smsBody);
+
+      return updatedOrder;
+    } catch (error) {
+      throw error;
+      return;
     }
   }
 }

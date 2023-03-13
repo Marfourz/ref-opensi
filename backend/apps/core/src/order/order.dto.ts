@@ -62,3 +62,9 @@ export class updateOrderDto {
   })
   deliveryDate?: string;
 }
+
+export class assignOrderDto {
+  @ApiProperty({ type: String })
+  @IsString()
+  deliveryMan: string;
+}
