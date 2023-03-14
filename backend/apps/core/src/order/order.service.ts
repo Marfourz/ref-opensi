@@ -332,7 +332,7 @@ export class OrderService {
       });
       return { statusCode: HttpStatus.OK };
     } else {
-      return { statusCode: HttpStatus.UNPROCESSABLE_ENTITY };
+      return { statusCode: HttpStatus.NOT_ACCEPTABLE };
     }
   }
 
@@ -363,7 +363,7 @@ export class OrderService {
         },
         deliveryManId,
       );
-      data.push(totalOrders);
+      data.push({ month: pastMonths[i + 1], total: totalOrders });
     }
 
     return { orderByPeriod, data };
