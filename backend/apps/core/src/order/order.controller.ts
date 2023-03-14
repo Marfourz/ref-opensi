@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from '@prisma/client';
-import { orderDto, updateOrderDto } from './order.dto';
+import { orderDto, updateOrderDto, periodOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
@@ -25,7 +25,6 @@ import {
 
 @ApiTags('orders')
 @Controller('orders')
-@Controller()
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
@@ -41,6 +40,25 @@ export class OrderController {
   })
   createOrder(@Body() order: orderDto): Promise<Order> {
     return this.orderService.createOrder(order);
+  }
+
+  @Get('/deliveryMan/:deliveryManId/orders')
+  @ApiParam({ name: 'deliveryManId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  searchForOrdersOfDeliveryMan(
+    @Query() filterParams: any,
+    @Param() params,
+  ): Promise<PagiationPayload<Order[]>> {
+    return this.orderService.searchForOrdersOfDeliveryMan(
+      filterParams,
+      params.deliveryManId,
+    );
   }
 
   @Get(':id')
@@ -81,6 +99,49 @@ export class OrderController {
   })
   getOrdersOfSubOrganisations(@Param() params): Promise<Order[]> {
     return this.orderService.getOrdersOfSubOrganisations(params.orgId);
+  }
+
+  @Get(':deliveryManId/statistics')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'deliveryManId' })
+  @ApiQuery({ name: 'lte', type: String, required: false })
+  @ApiQuery({ name: 'gte', type: String, required: false })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getStatisticsOfDeliveryMan(
+    @Query() filterParams: any,
+    @Param() params,
+  ): Promise<any> {
+    return this.orderService.getStatisticsOfDeliveryMan(
+      params.deliveryManId,
+      filterParams,
+    );
+  }
+
+  @Put('/:orderId/assignTo/:deliveryManId')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orderId' })
+  @ApiParam({ name: 'deliveryManId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  assignOrder(@Param() params): Promise<Order> {
+    return this.orderService.assignOrder(params.orderId, params.deliveryManId);
+  }
+
+  @Put('/:orderId/validateOrder/:deliveryCode')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orderId' })
+  @ApiParam({ name: 'deliveryCode' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  validateOrder(@Param() params): Promise<Order> {
+    return this.orderService.validateOrder(params.orderId, params.deliveryCode);
   }
 
   @Put(':id')

@@ -1,52 +1,43 @@
-##snb
-
-variables:
-  REGISTRY: "registry.gitlab.com"
-  DOCKER_REGISTRY: registry.gitlab.com
+#SNB
 
 stages:
   - build
   - deploy
 
-#before_script:
-#  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 build_backend_prod:
   only:
     - deploy
   stage: build
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - docker build -t registry.gitlab.com/opensi/snb-backend  ./backend
-    - docker push registry.gitlab.com/opensi/snb
+    - docker build -t registry.gitlab.com/opensi/snb/snb-backend:staging backend
+    - docker push registry.gitlab.com/opensi/snb/snb-backend:staging
   tags:
-    - shell-1
+    - shell-runner-snb
   environment:
-    name: production
+    name: development
 
-build_frontend_page_prod:
+build_frontend_page_staging:
   only:
     - deploy
   stage: build
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - echo "VITE_APP_API_URL=/api" >> .env
-    - docker build -t registry.gitlab.com/opensi/snb-frontend  ./front
-    - docker push registry.gitlab.com/opensi/snb
+    - echo "VITE_APP_API_URL=http://api-snb.opensi.co" >> .env
+    - docker build -t registry.gitlab.com/opensi/snb/snb-frontend:staging front
+    - docker push registry.gitlab.com/opensi/snb/snb-frontend:staging
   tags:
-    - shell-1
+    - shell-runner-snb
   environment:
-    name: production
+    name: development
 
-deploy_dev_images_prod:
+deploy_dev_images_staging:
   stage: deploy
   tags:
-    - shell-1
+    - shell-runner-snb
   only:
     - deploy
-  #before_script:
-  #  - docker login https://eu.gcr.io
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate

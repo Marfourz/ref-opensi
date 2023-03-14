@@ -71,9 +71,8 @@ export default defineComponent({
 
     const totalCost = computed(()=>{
         return {
-        title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalCost) : 0} FCFA`,
+        title: `${generalInfos.value  && generalInfos.value.totalCost ? helpers.currency(generalInfos.value.totalCost) : 0} FCFA`,
         subtitle: "Coût total des produits",
-       
         icon: "dollar",
         primaryColor: "#0060CF",
         secondaryColor: "#E6EAF6"

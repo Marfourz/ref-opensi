@@ -58,12 +58,13 @@
             </div>
           </template>
         </Order>
-        <div  class="flex h-full flex-col justify-center" v-else>
-          <EmptyState
-            title="Vous verrez ici les détails  d'une <br> commande"
-            image="/src/assets/images/emptyBasket.png"
-          ></EmptyState>
+
+        <div class="flex flex-col items-center space-y-4" v-else>
+        <img src="@/assets/images/emptyBasket.png" alt="" />
+        <div class="font-semibold text-center">
+          Vous verrez ici les détails  d'une <br> commande
         </div>
+      </div>
       </template>
     </PageInTwoPart>
   </div>

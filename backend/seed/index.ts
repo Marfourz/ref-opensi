@@ -2,6 +2,8 @@ import { user } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
 import { categories } from './p-categories';
+import { products } from './products';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
 const { PrismaClient } = require('@prisma/client');
@@ -35,6 +37,11 @@ async function main() {
       data: categories[0],
     });
     console.info('CATEGORY created : ', newPCategory);
+
+    const newProduct = await prisma.product.create({
+      data: { ...products[0], categoryId: newPCategory.id },
+    });
+    console.info('PRODUCT created : ', newPCategory);
 
     // create organisation if not exist
     const organisation = organisations[0];

@@ -2,11 +2,11 @@ version: "3.7"
 services:
   db_postgres:
     image: postgres:14-alpine
-    container_name: db-snb-prod
+    container_name: db-snb-staging
     restart: always
     environment:
       POSTGRES_USER: opensiuser
-      POSTGRES_DB: "snb-prod"
+      POSTGRES_DB: "snb-staging"
       POSTGRES_PASSWORD: opensi
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -16,10 +16,10 @@ services:
   migrate:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend
-    container_name: migrate-snb-prod
+    image: registry.gitlab.com/opensi/snb/snb-backend:staging
+    container_name: migrate-snb-stating
     environment:
-      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
       - USERS_MANAGER_URL=http://api_users
     depends_on:
       - db_postgres
@@ -30,7 +30,7 @@ services:
       - snb
 
   api_users:
-    image: registry.gitlab.com/opensi/users-manager:latest
+    image: registry.gitlab.com/opensi/users-manager/snb-users-manager:staging
     depends_on:
       - users_db
     environment:
@@ -61,12 +61,12 @@ services:
   backend:
     build:
       context: ./backend
-    image: registry.gitlab.com/opensi/snb-backend
+    image: registry.gitlab.com/opensi/snb/snb-backend:staging
     ports:
       - 9811:3000
-    container_name: backend-snb
+    container_name: backend-snb-staging
     environment:
-      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-prod
+      - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
       - APP_URL=http://localhost:3000
       - APP_PORT=3000
       - USERS_MANAGER_URL=http://api_users
@@ -74,7 +74,7 @@ services:
       - PDF_GENERATOR_BASE_URL=https://pdf.kkiapay.me/v2
       - BOMBOO_API_URL=https://api.bomboo.io/v0.2.4
       - BOMBOO_API_KEY=d4e6254924d5b671741f46eeda945d33e63c29aa093bf2e4e48212baa44c7bb2cf0d42b6
-      - FRONTEND_BASE_URL=http://localhost:5000
+      - FRONTEND_BASE_URL=https://snb.opensi.co
       - API_NOTIFICATION=http://localhost:3001
     networks:
       - snb
@@ -86,10 +86,10 @@ services:
   frontend:
     build:
       context: ./front
-    image: registry.gitlab.com/opensi/snb-frontend
+    image: registry.gitlab.com/opensi/snb-frontend:staging
     ports:
       - 9812:80
-    container_name: frontend-snb
+    container_name: frontend-snb-staging
     networks:
       - snb
 
