@@ -24,7 +24,7 @@ services:
     depends_on:
       - db_postgres
     command: >
-      sh -c "npm run migrate &&
+      sh -c "npm run migrate:prod &&
       npm run seed"
     networks:
       - snb
