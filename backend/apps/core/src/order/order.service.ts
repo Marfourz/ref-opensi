@@ -332,7 +332,10 @@ export class OrderService {
       });
       return { statusCode: HttpStatus.OK };
     } else {
-      return { statusCode: HttpStatus.NOT_ACCEPTABLE };
+      return {
+        statusCode: HttpStatus.NOT_ACCEPTABLE,
+        message: 'Invalid delivery code',
+      };
     }
   }
 
