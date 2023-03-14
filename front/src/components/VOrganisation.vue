@@ -27,7 +27,7 @@ export default defineComponent({
         // transform: getTotalOrder,
       },
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "wallet.turnovers",
       },
       {

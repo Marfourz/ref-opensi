@@ -1,5 +1,47 @@
 <template>
   <div class="">
+    <BaseModal
+      :title="modal.title"
+      :show="modal.show"
+      @close="modal.show = false"
+    >
+        <template #modal >
+
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.type == 'delete'"
+        >
+          <BaseIcon name="warning"></BaseIcon>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="deleteProduct"
+            >
+              Supprimer
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+
+    
+     
+    </BaseModal>
+
+
     <div class="flex justify-between items-center">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
@@ -32,7 +74,7 @@
     
     <div class="pt-8" v-show="total != 0">
       
-      <BaseTabs :tabs="tabs"  @change="categoryId = $event">
+      <BaseTabs :tabs="tabs"  @change="categoryId = $event" :selectedTab="categoryId">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
             :key="tab.name"
@@ -81,14 +123,14 @@
             ></BaseSelect>
             <BaseInput
               name="Volume"
-              label="Volume"
-              rules="required"
+              label="Volume (en CL)"
+              rules="required|numeric"
               v-model.number="product.volume"
             ></BaseInput>
             <BaseInput
               name="Prix unitaire"
               label="Prix unitaire( en FCFA)"
-              rules="required"
+              rules="required|numeric"
               v-model.number="product.unitPrice"
             ></BaseInput>
             <BaseSelect
@@ -99,10 +141,10 @@
             <BaseInput
               name="Prix casier (en FCFA)"
               :label="packPriceLabel"
-              rules="required"
+              rules="required|numeric"
               v-model.number="product.bulkPrice"
             ></BaseInput>
-            
+             
             <UploadFileVue @change="image = $event"></UploadFileVue>
             
             <div class="pb-2">
@@ -161,9 +203,53 @@ export default defineComponent({
       },
     ];
 
-    function onView() {}
-    function onUpdate() {}
-    function onDelete() {}
+    function onView(value: IProduct) {}
+
+    function onUpdate(value: IProduct ) {
+      product.name = value.name
+     
+      product.packagingType = PackagingType.PACK
+      product.bulkPrice = null
+      product.volume = null
+      product.categoryId = value.categoryId
+      //product.unitPrice = value.unitPrice
+
+
+
+   
+    }
+
+    const modal = reactive({
+      title: "",
+      type: "create" as "create" | "delete" | "update",
+      show: false
+     
+    });
+
+
+    function onDelete(value: IProduct) {
+      modal.title =`Êtes-vous sûr de vouloir <br> supprimer cette boisson ?`;
+      modal.show = true;
+      modal.type = "delete";
+      selectedProduct.value = value
+     
+    }
+
+
+    async function deleteProduct(){
+      loading.value = true
+      try{
+        await productStore.delete(selectedProduct.value.id)
+        toast.success("Suppression effectuée avec le succès")
+        loading.value = false
+        modal.show = false
+      }
+      catch(error : any){
+        toast.error("Suppression impossible")
+        loading.value = false
+        modal.show = false
+      }
+     }
 
     const router = useRouter();
     function goToProductCategory() {
@@ -252,10 +338,10 @@ export default defineComponent({
 
     const product = reactive({
       name: "",
-      unitPrice: 0,
+      unitPrice: null,
       packagingType: PackagingType.PACK,
-      bulkPrice: 0,
-      volume: 0,
+      bulkPrice: null,
+      volume: null,
       categoryId: "",
     });
 
@@ -307,6 +393,9 @@ export default defineComponent({
         }
         catch(error : any){}}
 
+
+
+   
 
     const bulkPriceTitle = computed(()=>{
       if(product.packagingType == PackagingType.PACK)
@@ -383,7 +472,9 @@ export default defineComponent({
       packagingTypes,
       packPriceLabel,
       image,
-      helpers
+      helpers,
+      modal,
+      deleteProduct
       
     };
   },

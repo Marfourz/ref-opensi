@@ -66,12 +66,12 @@
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
-            <div
+            <!-- <div
               class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
             >
               <div>Filtré par</div>
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div>
+            </div> -->
   
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
           </div>

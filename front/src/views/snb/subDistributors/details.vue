@@ -26,7 +26,7 @@
         </div>
         <div>
           <div class="font-bold text-xl tracking-[-2%] mt-6">
-            Évolution du chiffre d’affaire
+            Évolution du chiffre d’affaires
           </div>
         </div>
         <div>
@@ -152,7 +152,7 @@ export default defineComponent({
             : "0"
         } FCFA`,
 
-        subtitle: "Chiffre d’affaire",
+        subtitle: "Chiffre d’affaires",
 
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -220,7 +220,7 @@ export default defineComponent({
       },
 
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "turnover",
         transform: formatPrice,
       },

@@ -23,7 +23,7 @@
     </div>
 
     <div class="mt-6 font-bold text-xl tracking-[-2%]">
-      Évolution du chiffre d’affaire
+      Évolution du chiffre d’affaires
     </div>
 
     <div class="w-full">
@@ -38,7 +38,7 @@
    
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">
-        Chiffre d’affaire par produit
+        Chiffre d’affaires par produit
       </div>
       <div class="text-link underline cursor-pointer font-semibold">
         <div
@@ -172,7 +172,7 @@ export default defineComponent({
             : 0
         } FCFA`,
 
-        subtitle: "Chiffre d’affaire",
+        subtitle: "Chiffre d’affaires",
 
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -230,7 +230,7 @@ export default defineComponent({
       },
 
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "turnover",
         transform: formatPrice,
       },
@@ -248,7 +248,7 @@ export default defineComponent({
       },
 
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "wallet.turnover",
         transform: formatPrice,
       },

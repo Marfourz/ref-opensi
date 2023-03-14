@@ -49,7 +49,7 @@ export const useProductStore = defineStore("productStore", {
 
     async delete(id: number) {
       try {
-        const response = await Api.delete(`produts/${id}`);
+        const response = await Api.delete(`products/${id}`);
         return response;
       } catch (error) {
         throw error;

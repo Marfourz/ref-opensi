@@ -16,7 +16,7 @@ const router = createRouter({
       component : Login,
       meta:{
           title : "Connexion",
-          subtitle : "Veuillez  vous connecter en renseignant votre addresse  gmail et votre mot de passe"
+          subtitle : "Veuillez  vous connecter en renseignant votre adresse  gmail et votre mot de passe"
       }
     },
     {
