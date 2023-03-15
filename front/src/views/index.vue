@@ -35,7 +35,6 @@
       ></apexchart>
     </div>
 
-   
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">
         Chiffre d’affaires par produit
@@ -65,9 +64,7 @@
     </BaseTable>
     <!-- Performance des partenaires -->
     <div class="flex justify-between items-center mt-7">
-      <div class="font-bold text-xl">
-        Performance des partenaires
-      </div>
+      <div class="font-bold text-xl">Performance des partenaires</div>
       <div class="text-link underline cursor-pointer font-semibold">
         <div
           class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
@@ -187,7 +184,7 @@ export default defineComponent({
             ? helpers.currency(statInfos.value.orders)
             : 0
         } `,
-        subtitle: "Nbre de commandes",
+        subtitle: "Nombre de commandes",
 
         icon: "Papers",
         primaryColor: "#B9212E",
@@ -202,7 +199,7 @@ export default defineComponent({
             ? helpers.currency(statInfos.value.partners)
             : 0
         } `,
-        subtitle: "Nbre de partenaires",
+        subtitle: "Nombre de partenaires",
 
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -305,7 +302,7 @@ export default defineComponent({
       chart: {
         id: "vuechart-example",
       },
-      colors: ['#259475'],
+      colors: ["#259475"],
       xaxis: {
         categories: [
           "Jan",

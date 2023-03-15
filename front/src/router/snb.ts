@@ -1,5 +1,6 @@
 import DefaultLayout from "@/layouts/default.vue";
 import DeliveryPerson from "@/views/snb/deliveryPerson/index.vue";
+import LivreursDetails from "@/views/snb/deliveryPerson/details.vue";
 import OrderReceived from "@/views/snb/orderReceived/index.vue";
 import SubDistributors from "@/views/snb/subDistributors/index.vue";
 import DistributorsDetails from "@/views/snb/subDistributors/details.vue";
@@ -78,8 +79,7 @@ export default [
       {
         path: "sous-distributeurs/details/:id",
         name: "sousDistributeursDetails",
-        component: DistributorsDetails
-      
+        component: DistributorsDetails,
       },
 
       {
@@ -96,6 +96,11 @@ export default [
         path: "livreurs",
         name: "deliveryPerson",
         component: DeliveryPerson,
+      },
+      {
+        path: "livreurs/details/:id",
+        name: "livreursDetails",
+        component: LivreursDetails,
       },
       {
         path: "stock",
