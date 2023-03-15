@@ -68,7 +68,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
       - APP_URL=http://localhost:3000
-      - APP_PORT=3000
+      - APP_CORE_PORT=3000
       - USERS_MANAGER_URL=http://api_users
       - PRODUCT_IMAGES_DEST=./uploads/products-images
       - PDF_GENERATOR_BASE_URL=https://pdf.kkiapay.me/v2
@@ -76,6 +76,9 @@ services:
       - BOMBOO_API_KEY=d4e6254924d5b671741f46eeda945d33e63c29aa093bf2e4e48212baa44c7bb2cf0d42b6
       - FRONTEND_BASE_URL=https://snb.opensi.co
       - API_NOTIFICATION=http://localhost:3001
+      - APP_NOTIFICATION_PORT=3001
+      - JWT_SECRET=wXRCrzGMNbDNFPXoZrzvB1YecE2hh1rrC2BbJmyBXniUmBjKjAnLTiQGYukFgrIAf4c8VZdxvsVcxxQhxMx21De5V5k-yBnU37_AUj-02lZHtasvAbOCV_djrL4WB6fCy_avArv-sa-dx4p9rc04gqTWJ5aB8232heoDV3U6o647CnzKZ8AxumyRmtE5GB_DajPTy_E-v9JsOFob3xqBxnDI40KZbn7NxLSZnXeB96QVcObeBIvFlxCxaAz0ou6asYlKwi3re2yDUv4muBG227AN75gHAGLqqsiy5dhY2YcNRBbgALKx13McSi3J5HKpi5L9WZ64jJfQ7EEVxjzfNQ
+      
     networks:
       - snb
     volumes:
