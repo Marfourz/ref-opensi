@@ -6,9 +6,7 @@
       <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
       <!-- <BaseDateRange></BaseDateRange> -->
       <div class="text-link underline cursor-pointer font-semibold">
-        <div
-          class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-        >
+        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
           <div class="font-semibold text-sm p-2">Ce mois</div>
           <BaseIcon name="Top"></BaseIcon>
         </div>
@@ -27,12 +25,7 @@
     </div>
 
     <div class="w-full">
-      <apexchart
-        height="400px"
-        type="line"
-        :options="chartOptions"
-        :series="series"
-      ></apexchart>
+      <apexchart height="400px" type="line" :options="chartOptions" :series="series"></apexchart>
     </div>
 
     <div class="flex justify-between items-center mt-7">
@@ -40,9 +33,7 @@
         Chiffre d’affaires par produit
       </div>
       <div class="text-link underline cursor-pointer font-semibold">
-        <div
-          class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-        >
+        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
           <div class="font-semibold text-sm p-2">Ce mois</div>
           <BaseIcon name="Top"></BaseIcon>
         </div>
@@ -51,24 +42,20 @@
     <BaseTable :titles="titles" :data="productsInfos">
       <template #image="{ element }">
         <div class="bg-grey-75 gap-2 p-1 rounded-lg">
-          <img
-            :src="`${
-              element.images && element.images[0]
-                ? element.images[0].url
-                : '@/assets/images/beverage.png'
-            }`"
-            alt=""
-          />
+          <img :src="`${element.images && element.images[0]
+              ? element.images[0].url
+              : '@/assets/images/beverage.png'
+            }`" alt="" />
         </div>
       </template>
     </BaseTable>
     <!-- Performance des partenaires -->
     <div class="flex justify-between items-center mt-7">
-      <div class="font-bold text-xl">Performance des partenaires</div>
+      <div class="font-bold text-xl">
+        Performance des partenaires
+      </div>
       <div class="text-link underline cursor-pointer font-semibold">
-        <div
-          class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-        >
+        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
           <div class="font-semibold text-sm p-2">Ce mois</div>
           <BaseIcon name="Top"></BaseIcon>
         </div>
@@ -77,10 +64,7 @@
     <!-- Array top parteners -->
     <div>
       <div class="grid grid-cols-3 gap-6 mt-7">
-        <div
-          class="border rounded-lg p-4"
-          v-if="orgType === OrganisationType.SNB"
-        >
+        <div class="border rounded-lg p-4" v-if="orgType === OrganisationType.SNB">
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top masters distributeurs
           </div>
@@ -100,17 +84,13 @@
           </BaseTable>
         </div>
 
-        <div
-          class="border rounded-lg p-4"
-          v-if="
-            orgType === OrganisationType.SNB || orgType === OrganisationType.MD
-          "
-        >
+        <div class="border rounded-lg p-4" v-if="
+          orgType === OrganisationType.SNB || orgType === OrganisationType.MD
+        ">
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top distributeurs agréés
           </div>
-          <BaseTable :titles="title" :data="statPartners.da" class="py-3"
-            ><template #id="{ element }">
+          <BaseTable :titles="title" :data="statPartners.da" class="py-3"><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -128,8 +108,7 @@
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top dépôts
           </div>
-          <BaseTable :titles="title" :data="statPartners.dp" class="py-3"
-            ><template #id="{ element }">
+          <BaseTable :titles="title" :data="statPartners.dp" class="py-3"><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -139,8 +118,8 @@
             </template>
             <template #socialReason="{ element }">
               <div class="text-link">{{ element.socialReason }}</div>
-            </template></BaseTable
-          >
+            </template>
+          </BaseTable>
         </div>
       </div>
     </div>
@@ -163,11 +142,10 @@ export default defineComponent({
   setup() {
     const turnover = computed(() => {
       return {
-        title: `${
-          statInfos.value && statInfos.value.wallet
+        title: `${statInfos.value && statInfos.value.wallet
             ? helpers.currency(statInfos.value.wallet.turnover)
             : 0
-        } FCFA`,
+          } FCFA`,
 
         subtitle: "Chiffre d’affaires",
 
@@ -179,11 +157,10 @@ export default defineComponent({
 
     const numberOfOrders = computed(() => {
       return {
-        title: `${
-          statInfos.value && statInfos.value.orders
+        title: `${statInfos.value && statInfos.value.orders
             ? helpers.currency(statInfos.value.orders)
             : 0
-        } `,
+          } `,
         subtitle: "Nombre de commandes",
 
         icon: "Papers",
@@ -194,11 +171,10 @@ export default defineComponent({
 
     const numberOfPartners = computed(() => {
       return {
-        title: `${
-          statInfos.value && statInfos.value.partners
+        title: `${statInfos.value && statInfos.value.partners
             ? helpers.currency(statInfos.value.partners)
             : 0
-        } `,
+          } `,
         subtitle: "Nombre de partenaires",
 
         icon: "dollar",
@@ -276,26 +252,26 @@ export default defineComponent({
       try {
         const response = await organisationStore.statInfo();
         statInfos.value = response.data;
-      } catch (error) {}
+      } catch (error) { }
 
       try {
         const response = await organisationStore.statPartners(
           OrganisationType.MD
         );
         statPartners.md = response.data;
-      } catch (error) {}
+      } catch (error) { }
       try {
         const response = await organisationStore.statPartners(
           OrganisationType.DP
         );
         statPartners.dp = response.data;
-      } catch (error) {}
+      } catch (error) { }
       try {
         const response = await organisationStore.statPartners(
           OrganisationType.DA
         );
         statPartners.da = response.data;
-      } catch (error) {}
+      } catch (error) { }
     });
 
     const chartOptions = ref({

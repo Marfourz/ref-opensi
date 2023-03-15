@@ -21,9 +21,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async fetchAllParteners(query: any) {
+    async fetchAllParteners(query: any,id:string) {
       try {
-        const response = await Api.get("organisations/partners/search", {
+        const response = await Api.get(`organisations/partners/search/${id}`, {
           params: query,
         });
         return response.data;
@@ -52,12 +52,12 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-   async onView(id: PrimaryKey ) {
-     try {
-       const response = await Api.get(`organisations/snb/infos/${id}`);
-       return response.data;
-     } catch (error) {}
-   },
+    async onView(id: PrimaryKey) {
+      try {
+        const response = await Api.get(`organisations/snb/infos/${id}`);
+        return response.data;
+      } catch (error) {}
+    },
 
     async update(id: PrimaryKey, data: any) {
       try {
@@ -76,6 +76,25 @@ export const useOrganizationStore = defineStore("organizationStore", {
         throw error;
       }
     },
+
+    async disable(id: PrimaryKey) {
+       try {
+        const response = await Api.put(`organisations/${id}`,{status:'inactive'});
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async enable(id: PrimaryKey) {
+       try {
+        const response = await Api.put(`organisations/${id}`,{status:'active'});
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
 
     async statInfo() {
       try {
@@ -96,5 +115,6 @@ export const useOrganizationStore = defineStore("organizationStore", {
         throw error;
       }
     },
+
   },
 });

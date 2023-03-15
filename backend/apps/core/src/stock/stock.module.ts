@@ -3,6 +3,7 @@ import {
   NestModule,
   MiddlewareConsumer,
   RequestMethod,
+  forwardRef,
 } from '@nestjs/common';
 import { PrismaService } from 'libs/prisma/src';
 import { HttpModule } from '@nestjs/axios';
@@ -12,9 +13,10 @@ import { StockController } from './stock.controller';
 import { StockService } from './stock.service';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
+import { OrderModule } from '../order/order.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, forwardRef(() => OrderModule)],
   controllers: [StockController],
   exports: [StockService],
   providers: [

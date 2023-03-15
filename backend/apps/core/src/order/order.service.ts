@@ -1,4 +1,4 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, Inject, forwardRef } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import {
@@ -20,6 +20,7 @@ import { HttpStatus } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { StockService } from '../stock/stock.service';
 import { stockDto } from '../stock/stock.dto';
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -28,6 +29,7 @@ export class OrderService {
     private productService: ProductsService,
     private wsService: WsNotificationGateway,
     private notifService: NotificationService,
+    @Inject(forwardRef(() => StockService))
     private stockService: StockService,
   ) {}
 

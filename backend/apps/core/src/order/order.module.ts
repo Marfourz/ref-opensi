@@ -3,6 +3,7 @@ import {
   NestModule,
   MiddlewareConsumer,
   RequestMethod,
+  forwardRef,
 } from '@nestjs/common';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
@@ -19,12 +20,12 @@ import { NotificationModule } from 'apps/notification/src/notification.module';
 import { StockModule } from '../stock/stock.module';
 @Module({
   imports: [
+    forwardRef(() => StockModule),
     HttpModule,
     ItemOrderModule,
     ProductsModule,
     WsNotificationModule,
     NotificationModule,
-    StockModule,
   ],
   controllers: [OrderController],
   exports: [OrderService],

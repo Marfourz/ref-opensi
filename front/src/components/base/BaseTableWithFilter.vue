@@ -1,5 +1,5 @@
 <template>
-  <div >    
+  <div>
     <div
       v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
@@ -39,8 +39,7 @@
       :actions="actions"
       class="mt-6"
     >
-    
-    <template v-for="(_, name) in slots" v-slot:[name]="slotData">
+      <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
       </template>
     </BaseTable>
@@ -149,12 +148,9 @@ export default defineComponent({
             { ...params, ...props.params },
             props.requestId
           );
-          console.log("firstn response",response);
+          console.log("firstn response", response);
         }
 
-
-        
-        
         if (Array.isArray(response)) {
           items.value = response;
         } else {
@@ -208,8 +204,7 @@ export default defineComponent({
       return values;
     });
 
-
-    const slots = useSlots()
+    const slots = useSlots();
 
     function onSearch() {
       loadData();
@@ -222,7 +217,7 @@ export default defineComponent({
       items,
       pageChange,
       slotDatas,
-      slots
+      slots,
     };
   },
 });

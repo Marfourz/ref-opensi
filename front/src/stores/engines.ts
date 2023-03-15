@@ -20,8 +20,6 @@ export const useEnginesStore = defineStore("enginesStore", {
       }
     },
 
-
-  
     async create(data: any) {
       try {
         const response = await Api.post("engines", data);

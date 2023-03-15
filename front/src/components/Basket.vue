@@ -22,25 +22,25 @@
         </div>
       </div>
 
-      <div class="text-[14px] space-y-3">
+      <div class="text-[14px] space-y-3 pt-4">
         <div>Méthode de paiement</div>
         <div class="flex space-x-2 border-b pb-3">
-          <div class="flex space-x-2 items-center">
+          <div class="flex space-x-2 items-center cursor-pointer" @click="changePaymentMethod(PaymentMethod.KKIAPAY)">
             <BaseSelectedCard
               :selected="selectedPaymentMethod == PaymentMethod.KKIAPAY"
-              @click="changePaymentMethod(PaymentMethod.KKIAPAY)"
+              
             >
               <BaseIcon name="digitalMoney"></BaseIcon>
             </BaseSelectedCard>
             <div class="font-semibold">Mobile Money ou carte bancaire</div>
           </div>
 
-          <div class="flex space-x-2 items-center">
+          <div class="flex space-x-2 items-center cursor-pointer" @click="changePaymentMethod(PaymentMethod.CASH)">
             <BaseSelectedCard
               :selected="selectedPaymentMethod == PaymentMethod.CASH"
-              @click="changePaymentMethod(PaymentMethod.CASH)"
+              
             >
-              <BaseIcon name="calendar"></BaseIcon>
+              <BaseIcon :name="`calendar${paymentDeadline}`"></BaseIcon>
             </BaseSelectedCard>
             <div class="font-semibold">Paiement sur 30 jours</div>
           </div>
@@ -135,6 +135,10 @@ export default defineComponent({
       selectedPaymentMethod.value = method;
     }
 
+    const paymentDeadline = computed(()=>{
+      return userStore.getCurrentUser?.organisation.paymentDeadline
+    })
+
     onMounted(() => {
       basketStore.clearBasket();
     });
@@ -147,6 +151,7 @@ export default defineComponent({
       kkiapayWidget,
       onSubmit,
       loading,
+      paymentDeadline
     };
   },
 });
