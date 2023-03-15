@@ -43,7 +43,7 @@ export class AuthService {
       .then(async (res) => {
         const user = await this.prismaService.user.findUnique({
           where: { email: res.data.email },
-          include: { organisation: true },
+          include: { organisation: true, engine: true },
         });
         return user;
       })

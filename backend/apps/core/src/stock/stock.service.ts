@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import {
   Stock,
   PackagingTypeEnum,
@@ -9,10 +9,16 @@ import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
 import { OrderStatusEnum } from '@prisma/client';
+import { orderDto } from '../order/order.dto';
+import { OrderService } from '../order/order.service';
 
 @Injectable()
 export class StockService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => OrderService))
+    private orderService: OrderService,
+  ) {}
 
   async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
@@ -30,7 +36,7 @@ export class StockService {
         } else {
           newQuantity = haveStock.currentQuantity - stock.currentQuantity;
         }
-        return await this.updateSingleStock(haveStock.id, {
+        await this.updateSingleStock(haveStock.id, {
           currentQuantity: newQuantity,
         });
       }
@@ -38,10 +44,27 @@ export class StockService {
       const Nstock: any = stock;
       Nstock.originalQuantity = stock.currentQuantity;
 
-      const newStock = await this.prisma.stock.create({
+      await this.prisma.stock.create({
         data: Nstock,
       });
-      return newStock;
+
+      const order: orderDto = {
+        organisationId: stock.organisationId,
+        items: [
+          {
+            productId: stock.productId,
+            quantity: stock.currentQuantity,
+          },
+        ],
+      };
+
+      const Norder = await this.orderService.createOrder(order);
+
+      await this.orderService.updateSingleOrder(Norder.id, {
+        status: OrderStatusEnum.delivered,
+      });
+
+      return Nstock;
     } catch (error) {
       throw error;
       return;

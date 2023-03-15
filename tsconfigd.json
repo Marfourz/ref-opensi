@@ -1,0 +1,45 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": [
+    "env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "allowJs": true,
+    "preserveValueImports": false, 
+    "importsNotUsedAsValues": "preserve",
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "lib": ["es2017.object"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "prisma/prisma": [
+        "./backend/libs/prisma/src"
+      ],
+      "prisma/prisma/*": [
+        "./backend/libs/prisma/src/*"
+      ], 
+      "@/*": ["./src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./front/tsconfig.config.json"
+    }
+  ]
+}
+
+
+

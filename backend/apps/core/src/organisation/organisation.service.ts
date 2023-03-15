@@ -351,13 +351,13 @@ export class OrganisationService {
         partners = MDs + DAs + DPs;
         break;
       case OrganisationTypeEnum.md:
-        partners = MDs + DAs + DPs;
+        partners = DAs + DPs;
         break;
       case OrganisationTypeEnum.da:
-        partners = MDs + DAs + DPs;
+        partners = DPs;
         break;
       case OrganisationTypeEnum.dp:
-        partners = MDs + DAs + DPs;
+        partners = 0;
         break;
       default:
         break;

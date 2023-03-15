@@ -12,6 +12,7 @@ import ApprosCreate from "@/views/snb/appros/create.vue";
 import Users from "@/views/users/index.vue";
 import Category from "@/views/snb/categories/index.vue";
 import UpdateStock from "@/views/snb/stock/update.vue";
+import EvolutionStock from "@/views/snb/stock/evolution.vue";
 
 export default [
   {
@@ -116,6 +117,11 @@ export default [
         path: "stock/update",
         name: "updateStock",
         component: UpdateStock,
+      },
+      {
+        path: "stock/evolution",
+        name: "evolutionStock",
+        component: EvolutionStock,
       },
     ],
   },

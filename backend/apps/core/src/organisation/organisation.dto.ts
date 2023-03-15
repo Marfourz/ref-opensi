@@ -75,6 +75,7 @@ export class updateOrganisationDto {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
+  @IsEmail()
   email?: string;
 
   @ApiProperty({ type: String })

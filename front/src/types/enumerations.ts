@@ -75,3 +75,9 @@ DP = "dp"
     DELIVERED = 'delivered',
     ACCEPTED = 'accepted'
   }
+
+  export enum StockState{
+    ALL = '',
+    SUPPLY = 'supply',
+    SALE='sale'
+  }
