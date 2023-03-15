@@ -42,7 +42,7 @@ export class StockController {
     description: 'The stock has been successfully created.',
   })
   createStock(@Body() stock: stockDto): Promise<Stock> {
-    return this.stockService.createStock(stock);
+    return this.stockService.createStock(stock, { add: true });
   }
 
   @Get(':id')
