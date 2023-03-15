@@ -249,11 +249,7 @@ export default defineComponent({
       resetOrder,
       modal,
       loading,
-<<<<<<< HEAD
-      confirmResetOrder
-=======
       confirmResetOrder, reload
->>>>>>> main
     };
   },
 });
