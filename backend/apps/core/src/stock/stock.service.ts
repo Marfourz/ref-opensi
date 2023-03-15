@@ -204,61 +204,61 @@ export class StockService {
   }
 
   async getStockEvolution(orgId: string): Promise<any> {
-    const organisation = await this.prisma.organisation.findUnique({
+    /*const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
       },
       select: {
         type: true,
       },
+    });*/
+
+    const data: any = [];
+    const deliveredOrders = await this.prisma.order.findMany({
+      where: {
+        OR: [
+          {
+            organisationId: orgId,
+          },
+          {
+            parentOrganisationId: orgId,
+          },
+        ],
+        status: OrderStatusEnum.delivered,
+      },
+      include: {
+        items: true,
+      },
     });
 
-    if (organisation.type != 'snb') {
-      const data: any = [];
-      const deliveredOrders = await this.prisma.order.findMany({
-        where: {
-          OR: [
-            {
-              organisationId: orgId,
-            },
-            {
-              parentOrganisationId: orgId,
-            },
-          ],
-          status: OrderStatusEnum.delivered,
-        },
-        include: {
-          items: true,
-        },
-      });
-
-      for (let i = 0; i < deliveredOrders.length; i++) {
-        const element = deliveredOrders[i];
-        let type,
-          quantity = 0;
-        if (element.organisationId == orgId) {
-          type = 'Appro';
-        } else {
-          type = 'Vente';
-        }
-
-        for (let j = 0; j < element.items.length; j++) {
-          const e = element.items[j];
-          quantity += e.quantity;
-        }
-
-        data.push({
-          deliveryDate: element.deliveryDate,
-          type,
-          quantity,
-          total: element.totalAmount,
-        });
-
-        console.log('Data : ', data);
+    for (let i = 0; i < deliveredOrders.length; i++) {
+      const element = deliveredOrders[i];
+      let type,
+        quantity = 0;
+      if (element.organisationId == orgId) {
+        type = 'Appro';
+      } else {
+        type = 'Vente';
       }
-      return data;
-    } else {
-      return organisation.type;
+
+      for (let j = 0; j < element.items.length; j++) {
+        const e = element.items[j];
+        quantity += e.quantity;
+      }
+
+      data.push({
+        deliveryDate: element.deliveryDate,
+        type,
+        quantity,
+        total: element.totalAmount,
+      });
     }
+
+    /*if (organisation.type == 'snb') {
+      const stock
+      data.push('Manage SNB case');
+    }*/
+
+    return data;
   }
 }
