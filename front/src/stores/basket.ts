@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { IProduct, PrimaryKey } from "../types/interfaces";
+import type { IOrder, IProduct, ItemsOrder, PrimaryKey } from "../types/interfaces";
 
 export interface IItem {
     product : IProduct,
@@ -26,12 +26,26 @@ export const useBasketStore = defineStore('basket', {
        withdrawProduct(id : PrimaryKey){
         this.items = this.items.filter((item : IItem)=>item.product.id != id)
         },
+
+        createBasketWithOrder(order : IOrder){
+            console.log("order", order);
+            
+            this.clearBasket()
+            
+            order.items.forEach((value : ItemsOrder)=>{
+                this.addToBasket(value.product,value.quantity)
+            })
+        },
+
+
         clearBasket(){
             this.items = []
           },
           getProductItem(id : PrimaryKey){
             return this.items.find((item : IItem)=> item.product.id == id)
           },
+
+
       },
 
      

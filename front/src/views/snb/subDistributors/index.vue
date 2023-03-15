@@ -45,6 +45,11 @@
             :type="getStatutType(element)"
           ></BaseTableStatut>
         </template>
+        <template #wallet="{element}">
+          <div>
+            {{ element.wallet.turnover }} FCFA
+          </div>
+        </template>
       </BaseTableWithFilter>
     </div>
     <BaseBottomModal :show="showModal">
@@ -310,7 +315,7 @@ export default defineComponent({
       },
       {
         title: "Chiffre d’affaires",
-        name: "wallet.turnovers",
+        name: "wallet",
       },
       {
         title: "Statut",

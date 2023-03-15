@@ -74,7 +74,11 @@ export default defineComponent({
         }
 
         onMounted(()=>{
+            
+            
             const item = basketStore.getProductItem(props.product.id)
+
+            console.log("product in basketStore",basketStore.items );
             if(item){
                 quantity.value = item?.quantity
                 isValidate.value = true

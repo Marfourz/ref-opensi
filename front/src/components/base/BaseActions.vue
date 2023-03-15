@@ -6,10 +6,11 @@
       v-for="action in actions"
       :key="action.title"
       class="flex items-center space-x-6 px-6 py-3 hover:bg-gray-100"
+      
       @click="action.action(data)"
     >
-      <BaseIcon :name="action.icon"></BaseIcon>
-      <div>{{ action.title }}</div>
+      <BaseIcon :name="action.icon" :class="[action.iconClass]" class="w-6 h-6"></BaseIcon>
+      <div :class="[action.titleClass]">{{ action.title }}</div>
     </div>
   </div>
 </template>
@@ -20,6 +21,8 @@ import { defineComponent, PropType } from "vue";
 export interface IAction {
   title: string;
   icon: string;
+  iconClass : string,
+  titleClass : string,
   action: Function;
 }
 
