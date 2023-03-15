@@ -34,7 +34,7 @@
             v-html="modal.title"
           ></div>
           <BaseButton class="w-full" @click="modal.show = false"
-            >Terminé</BaseButton
+            >Terminer</BaseButton
           >
         </div>
       </template>
@@ -48,14 +48,12 @@
     </div>
 
     <div :key="reload">
-        <ProductByCategory
-      :titles="titles"
-      :actions="actions"
-      @categoryIdChange="loadProducts"
-     
-    ></ProductByCategory>
+      <ProductByCategory
+        :titles="titles"
+        :actions="actions"
+        @categoryIdChange="loadProducts"
+      ></ProductByCategory>
     </div>
-   
   </div>
 </template>
 
@@ -95,7 +93,6 @@ export default defineComponent({
       {
         title: "Quantité en stock",
         name: "currentQuantity",
-       
       },
     ];
 
@@ -164,10 +161,9 @@ export default defineComponent({
     const productStore = useProductStore();
     const toast = useToast();
 
-    const reload = ref(0)
+    const reload = ref(0);
 
     async function onSubmit() {
-        
       stock.organisationId = userStore.getCurrentUser?.organisationId as string;
       loading.value = true;
       try {
@@ -175,7 +171,7 @@ export default defineComponent({
         toast.success("Stock mise à jour avec succès");
         loading.value = false;
         modal.show = false;
-        reload.value = reload.value + 1
+        reload.value = reload.value + 1;
       } catch (error) {
         loading.value = false;
         toast.error("Oups un problème est survenu. Contactez l'administrateur");
@@ -195,7 +191,7 @@ export default defineComponent({
       stock,
       loadProducts,
       products,
-      reload
+      reload,
     };
   },
 });

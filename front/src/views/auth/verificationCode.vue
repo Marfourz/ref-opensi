@@ -1,13 +1,7 @@
 <template>
-    <div>
-        Verification code page
-    </div>
+  <div>Verification code page</div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

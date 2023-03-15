@@ -1,7 +1,6 @@
 <template>
   <div class="">
     <router-link :to="{ name: 'subDistributors' }" path="sous-distributeurs">
-      <!-- <BaseButton icon="ArrowLeft" size="small"></BaseButton> -->
       <BaseGoBack> </BaseGoBack>
     </router-link>
     <div class="flex justify-between mt-3">

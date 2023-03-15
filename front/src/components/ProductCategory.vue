@@ -1,18 +1,6 @@
 <template>
   <div
-    class="
-      cursor-pointer
-      w-fit
-      h-fit
-      flex
-      py-2
-      px-4
-      font-semibold
-      rounded-full
-      px-4.5
-      space-x-2.5
-      items-center
-    "
+    class="cursor-pointer w-fit h-fit flex py-2 px-4 font-semibold rounded-full px-4.5 space-x-2.5 items-center"
     :class="{ 'text-white bg-primary': isActive, border: !isActive }"
   >
     <BaseIcon name="home"></BaseIcon>

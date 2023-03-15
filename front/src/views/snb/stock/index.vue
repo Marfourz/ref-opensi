@@ -31,12 +31,9 @@ import DashboardCard from "../../../components/DashboardCard.vue";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
-import helpers from "@/helpers/index"
+import helpers from "@/helpers/index";
 import { useProductStore } from "../../../stores/product";
 import { useUsersStore } from "../../../stores/users";
-
-
-
 
 export default defineComponent({
   components: { DashboardCard, ProductByCategory },
@@ -89,9 +86,15 @@ export default defineComponent({
       }
     })
 
-    const router = useRouter()
+        icon: "calend",
+        primaryColor: "#FF6B00",
+        secondaryColor: "#FFE6CE",
+      };
+    });
 
-    const product = ref([])
+    const router = useRouter();
+
+    const product = ref([]);
 
     function goToUpadateStock() {
       router.push({ name: "updateStock" })
@@ -114,7 +117,7 @@ export default defineComponent({
 
       {
         title: "Quantité en stock",
-        name: "currentQuantity"
+        name: "currentQuantity",
       },
 
       {
@@ -164,13 +167,13 @@ export default defineComponent({
     function onUpdate() { }
     function onDelete() { }
 
-    const generalInfos = ref()
+    const generalInfos = ref();
 
-    const productStore = useProductStore()
+    const productStore = useProductStore();
 
-    const userStore = useUsersStore()
+    const userStore = useUsersStore();
 
-    const reload = ref(false)
+    const reload = ref(false);
 
     const organizationId = computed(() => {
       return userStore.getCurrentUser?.organisationId

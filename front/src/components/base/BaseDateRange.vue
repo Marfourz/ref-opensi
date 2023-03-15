@@ -5,7 +5,7 @@
     >
       <div class="flex space-x-2">
         <BaseIcon icon="calendar"></BaseIcon>
-        
+
         <div v-if="!selectedDate.value">
           Du {{ formatDate(dateChoice.start) }} au
           {{ formatDate(dateChoice.end) }}
@@ -58,121 +58,121 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        reload: false,
-        show: false,
-        dates: [
-          {
-            label: "Aujourd'hui",
-            value: 'today',
-          },
-          {
-            label: 'Semaine passée',
-            value: 'lastWeek',
-          },
-          {
-            label: 'Mois passé',
-            value: 'lastMonth',
-          },
-          {
-            label: 'Année passée',
-            value: 'lastYear',
-          },
-          {
-            label: 'Depuis le début',
-            value: 'all',
-          },
-        ],
-        selectedDate: {},
-        dateChoice: {
-          start: new Date(),
-          end: new Date(),
+export default {
+  data() {
+    return {
+      reload: false,
+      show: false,
+      dates: [
+        {
+          label: "Aujourd'hui",
+          value: "today",
         },
-      };
-    },
-
-    methods: {
-      setDate() {
-        this.reload = false;
-        const start = new Date();
-        const end = new Date();
-        if (this.selectedDate.value == 'today') {
-          start.setHours(0, 0, 0);
-          end.setHours(23, 59, 59);
-          this.dateChoice = {
-            start: start,
-            end: end,
-          };
-        } else if (this.selectedDate.value == 'lastWeek') {
-          start.setDate(start.getDate() - start.getDay() - 7);
-          end.setDate(end.getDate() - end.getDay());
-          this.dateChoice = {
-            start: start,
-            end: end,
-          };
-        } else if (this.selectedDate.value == 'lastMonth') {
-          start.setMonth(start.getMonth() - 1);
-          start.setDate(1);
-          end.setMonth(end.getMonth());
-          end.setDate(0);
-
-          this.dateChoice = {
-            start: start,
-            end: end,
-          };
-        } else if (this.selectedDate.value == 'lastYear') {
-          const start = new Date();
-          start.setFullYear(start.getFullYear() - 1);
-          start.setDate(1);
-          start.setMonth(0);
-
-          const end = new Date();
-          end.setFullYear(end.getFullYear() - 1);
-          end.setMonth(11);
-          end.setDate(31);
-
-          this.dateChoice = {
-            start: start,
-            end: end,
-          };
-
-          this.reload = true;
-        } else if (this.selectedDate.value == 'all') {
-          this.dateChoice = {};
-        }
+        {
+          label: "Semaine passée",
+          value: "lastWeek",
+        },
+        {
+          label: "Mois passé",
+          value: "lastMonth",
+        },
+        {
+          label: "Année passée",
+          value: "lastYear",
+        },
+        {
+          label: "Depuis le début",
+          value: "all",
+        },
+      ],
+      selectedDate: {},
+      dateChoice: {
+        start: new Date(),
+        end: new Date(),
       },
+    };
+  },
 
-      reset() {
-        this.selectedDate = this.dates[0];
-
-        const start = new Date();
-        const end = new Date();
-
+  methods: {
+    setDate() {
+      this.reload = false;
+      const start = new Date();
+      const end = new Date();
+      if (this.selectedDate.value == "today") {
         start.setHours(0, 0, 0);
-          end.setHours(23, 59, 59);
-          this.dateChoice = {
-            start: start,
-            end: end,
-          };
-        this.show = false;
-      },
+        end.setHours(23, 59, 59);
+        this.dateChoice = {
+          start: start,
+          end: end,
+        };
+      } else if (this.selectedDate.value == "lastWeek") {
+        start.setDate(start.getDate() - start.getDay() - 7);
+        end.setDate(end.getDate() - end.getDay());
+        this.dateChoice = {
+          start: start,
+          end: end,
+        };
+      } else if (this.selectedDate.value == "lastMonth") {
+        start.setMonth(start.getMonth() - 1);
+        start.setDate(1);
+        end.setMonth(end.getMonth());
+        end.setDate(0);
 
-      apply() {
-        this.$emit('input', this.dateChoice);
-        this.show = false;
-      },
+        this.dateChoice = {
+          start: start,
+          end: end,
+        };
+      } else if (this.selectedDate.value == "lastYear") {
+        const start = new Date();
+        start.setFullYear(start.getFullYear() - 1);
+        start.setDate(1);
+        start.setMonth(0);
 
-      formatDate(date) {
-        return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
-      },
+        const end = new Date();
+        end.setFullYear(end.getFullYear() - 1);
+        end.setMonth(11);
+        end.setDate(31);
+
+        this.dateChoice = {
+          start: start,
+          end: end,
+        };
+
+        this.reload = true;
+      } else if (this.selectedDate.value == "all") {
+        this.dateChoice = {};
+      }
     },
 
-    mounted() {
+    reset() {
       this.selectedDate = this.dates[0];
+
+      const start = new Date();
+      const end = new Date();
+
+      start.setHours(0, 0, 0);
+      end.setHours(23, 59, 59);
+      this.dateChoice = {
+        start: start,
+        end: end,
+      };
+      this.show = false;
     },
-  };
+
+    apply() {
+      this.$emit("input", this.dateChoice);
+      this.show = false;
+    },
+
+    formatDate(date) {
+      return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+    },
+  },
+
+  mounted() {
+    this.selectedDate = this.dates[0];
+  },
+};
 </script>
 
 <style lang="scss" scoped></style>

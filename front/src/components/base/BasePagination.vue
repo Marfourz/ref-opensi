@@ -1,12 +1,9 @@
 <template>
-  
   <div
     class="flex space-x-4 justify-center items-center p-2 text-center"
-   
     :key="totalElements"
     v-if="totalElements > peerPage"
   >
-    
     <span
       >{{ peerPage * actualPage - peerPage + 1 }} -
       <span v-if="peerPage * actualPage > totalElements">
@@ -17,7 +14,11 @@
       </span>
       sur {{ totalElements }}</span
     >
-    <span class="cursor-pointer" @click.prevent.stop="previous()" ref="pagination">
+    <span
+      class="cursor-pointer"
+      @click.prevent.stop="previous()"
+      ref="pagination"
+    >
       <BaseIcon name="arrowLeft" />
     </span>
     <span class="cursor-pointer" @click.prevent.stop="next()" ref="pagination">
@@ -30,12 +31,11 @@
 import { defineComponent, ref, onMounted } from "vue";
 
 export default defineComponent({
-  emits: ['change'],
+  emits: ["change"],
   props: {
     totalElements: {
       type: Number,
-      required: true
-     
+      required: true,
     },
     peerPage: {
       type: Number,
@@ -45,13 +45,13 @@ export default defineComponent({
 
   setup(props, context) {
     const actualPage = ref(1);
-    function next() : void {
+    function next(): void {
       if (actualPage.value * props.peerPage < props.totalElements) {
         ++actualPage.value;
         context.emit("change", actualPage.value);
       }
     }
-    function previous() : void{
+    function previous(): void {
       if (actualPage.value > 1) {
         --actualPage.value;
         context.emit("change", actualPage.value);
