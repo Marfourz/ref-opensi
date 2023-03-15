@@ -5,7 +5,7 @@
   >
     <div class="flex items-center w-full py-3">
       <div
-        class="ml-3 flex items-center "
+        class="ml-3 flex items-center"
         :style="'background-color:' + completeClass"
       >
         <svg

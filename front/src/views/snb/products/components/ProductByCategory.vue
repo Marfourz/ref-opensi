@@ -1,49 +1,66 @@
 <template>
   <div class="">
     <div class="pt-8">
-      <div  >
-       
-      <div class="flex flex-col  items-center space-y-4" v-show="!total || total == 0">
-        
-        <img src="@/assets/images/emptyProduct.png" alt="">
-        <div class="font-semibold text-center " >Aucun produit dans le stock</div>
-      </div>
+      <div>
+        <div
+          class="flex flex-col items-center space-y-4"
+          v-show="!total || total == 0"
+        >
+          <img src="@/assets/images/emptyProduct.png" alt="" />
+          <div class="font-semibold text-center">
+            Aucun produit dans le stock
+          </div>
+        </div>
 
-      <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0" :selectedTab="categoryId">
-        <template #[tab.name] v-for="tab in tabs">
-          <BaseTableWithFilter
-            :key="tab.name"
-            :fetchData="productStore.fetchAllProductsStock"
-            :titles="titles"
-            :actions="actions"
-            :requestId="organisationId"
-            :params="{categoryId:categoryId}"
-            class="mt-6"
-          >
-          <template #image="{element}">
-              <div>
-                <img :src="`${element.product.image && element.product.image[0] ? element.product.image[0].url : '/assets/images/beverage.png' }`" alt="">
-              </div>
-            </template>
-            <template #volume={element}>
+        <BaseTabs
+          :tabs="tabs"
+          @change="categoryId = $event"
+          v-show="total != 0"
+          :selectedTab="categoryId"
+        >
+          <template #[tab.name] v-for="tab in tabs">
+            <BaseTableWithFilter
+              :key="tab.name"
+              :fetchData="productStore.fetchAllProductsStock"
+              :titles="titles"
+              :actions="actions"
+              :requestId="organisationId"
+              :params="{ categoryId: categoryId }"
+              class="mt-6"
+            >
+              <template #image="{ element }">
                 <div>
-                    {{ helpers.currency(element.product.volume)  }} CL
+                  <img
+                    :src="`${
+                      element.product.image && element.product.image[0]
+                        ? element.product.image[0].url
+                        : '/assets/images/beverage.png'
+                    }`"
+                    alt=""
+                  />
                 </div>
-            </template>
-           
-          </BaseTableWithFilter>
-        </template>
-      </BaseTabs>
-    
-    
-    </div>
-     
+              </template>
+              <template #volume="{ element }">
+                <div>{{ helpers.currency(element.product.volume) }} CL</div>
+              </template>
+            </BaseTableWithFilter>
+          </template>
+        </BaseTabs>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, PropType, reactive, ref, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 import { useProductStore } from "@/stores/product";
 
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
@@ -59,24 +76,23 @@ import { IProduct } from "@/types/interfaces";
 import { ITitle } from "../../../../components/base/BaseTable.vue";
 import { IAction } from "../../../../components/base/BaseActions.vue";
 import { useUsersStore } from "../../../../stores/users";
-import helpers from "@/helpers/index"
+import helpers from "@/helpers/index";
 
 export default defineComponent({
   components: { BaseTableWithFilter, UploadFileVue, Form },
-  
-  props:{
+
+  props: {
     titles: {
       type: Array as () => Array<ITitle>,
       required: true,
     },
-    actions : {
-            type : Array as PropType<Array<IAction>>
-        },
+    actions: {
+      type: Array as PropType<Array<IAction>>,
+    },
   },
-  setup(props,context) {
+  setup(props, context) {
     const productStore = useProductStore();
     const productCategoryStore = useProductCategoryStore();
-    
 
     const total = ref(0);
 
@@ -115,51 +131,44 @@ export default defineComponent({
       return [];
     });
 
-    const userStore = useUsersStore()
-    const organisationId = computed(()=>{
-        return userStore.getCurrentUser?.organisationId
-    })
-     
+    const userStore = useUsersStore();
+    const organisationId = computed(() => {
+      return userStore.getCurrentUser?.organisationId;
+    });
 
     const categoryId = ref("");
-    
 
-    watch(categoryId, (newValue)=>{
-        context.emit('categoryIdChange', categoryId.value)
-    })
+    watch(categoryId, (newValue) => {
+      context.emit("categoryIdChange", categoryId.value);
+    });
 
-    const route = useRoute()
+    const route = useRoute();
 
-    watch(organisationId, (newValue)=>{
+    watch(organisationId, (newValue) => {
       console.log("eeeeeeeeee");
-      
-      getTotal()
-    })
 
+      getTotal();
+    });
 
-    async function getTotal(){
-      const response = await productStore.fetchAllProductsStock({},organisationId.value)
+    async function getTotal() {
+      const response = await productStore.fetchAllProductsStock(
+        {},
+        organisationId.value
+      );
       console.log("response response", response);
-      
-      total.value = response.count
+
+      total.value = response.count;
     }
-
-    
-
-
-
-  
 
     onMounted(async () => {
       try {
         const response = await productCategoryStore.fetchAll({});
 
-        categories.value = response.data
+        categories.value = response.data;
 
         categoryId.value = response.data[0].id;
       } catch (error: any) {}
-      await getTotal()
-      
+      await getTotal();
     });
     return {
       tabs,
@@ -173,7 +182,7 @@ export default defineComponent({
       categories,
       categoryId,
       organisationId,
-      helpers
+      helpers,
     };
   },
 });
