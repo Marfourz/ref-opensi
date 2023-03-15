@@ -32,30 +32,29 @@ export class updateProductDto {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
-  categoryId: string;
+  categoryId?: string;
 
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiProperty({ type: Number })
   @IsOptional()
-  @IsString()
-  unitPrice: number;
+  @IsNumber()
+  unitPrice?: number;
 
   @ApiProperty({ type: Number })
   @IsOptional()
+  @IsNumber()
+  bulkPrice?: number;
+
+  @ApiProperty({ enum: PackagingTypeEnum })
   @IsString()
-  rackPrice: number;
+  packagingType?: PackagingTypeEnum;
 
   @ApiProperty({ type: Number })
   @IsOptional()
-  @IsString()
-  packPrice: number;
-
-  @ApiProperty({ type: Number })
-  @IsOptional()
-  @IsString()
-  volume: number;
+  @IsNumber()
+  volume?: number;
 }
