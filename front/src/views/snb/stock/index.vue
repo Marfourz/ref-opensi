@@ -86,11 +86,6 @@ export default defineComponent({
       }
     })
 
-        icon: "calend",
-        primaryColor: "#FF6B00",
-        secondaryColor: "#FFE6CE",
-      };
-    });
 
     const router = useRouter();
 

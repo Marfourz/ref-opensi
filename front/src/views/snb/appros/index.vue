@@ -280,13 +280,10 @@ export default defineComponent({
       getStatutType,
       helpers,
       actions,
-<<<<<<< HEAD
       resetOrder,
       modal,
       loading,
       confirmResetOrder
-=======
->>>>>>> 98c0c58cc30c94af489dcda6623333df1a90f279
     };
   },
 });
