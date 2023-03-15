@@ -52,10 +52,12 @@ export interface Wallet extends Commun {
   turnover: string;
 }
 
+//TODO productsInfos type
 export interface InfoOrganisation {
   organisation: IOrganisation;
   orders: Array<ItemsOrder>;
   partners: string;
+  productsInfos:Record<any,any>
 }
 
 export interface IProduct extends Commun {
@@ -105,4 +107,11 @@ export interface ITransaction extends Commun {}
 export enum FileType {
   PUBLICATION = "PUBLICATION",
   DOCUMENT = "DOCUMENT",
+}
+export interface IAction {
+  title: string;
+  icon: string;
+  titleClass?: string;
+  iconClass?: string;
+  action: Function;
 }

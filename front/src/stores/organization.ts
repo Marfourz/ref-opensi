@@ -77,6 +77,25 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+    async disable(id: PrimaryKey) {
+       try {
+        const response = await Api.put(`organisations/${id}`,{status:'inactive'});
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async enable(id: PrimaryKey) {
+       try {
+        const response = await Api.put(`organisations/${id}`,{status:'active'});
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
     async statInfo() {
       try {
         const response = await Api.get(`organisations/snb/infos`);
@@ -96,5 +115,6 @@ export const useOrganizationStore = defineStore("organizationStore", {
         throw error;
       }
     },
+
   },
 });
