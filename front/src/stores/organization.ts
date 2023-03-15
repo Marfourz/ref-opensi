@@ -21,9 +21,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async fetchAllParteners(query: any) {
+    async fetchAllParteners(query: any,id:string) {
       try {
-        const response = await Api.get("organisations/partners/search", {
+        const response = await Api.get(`organisations/partners/search/${id}`, {
           params: query,
         });
         return response.data;
