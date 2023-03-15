@@ -21,6 +21,7 @@
         :fetchData="organizationStore.fetchAllParteners"
         :params="{ type: master.type }"
         :actions="actions"
+        :requestId="organisationId"
         :key="reload"
       >
         <template #filter>
@@ -339,6 +340,11 @@ export default defineComponent({
       else if (element.status == UserAccountStatus.SUSPENDED) return "warning";
     }
 
+   
+
+    const organisationId = computed(() => {
+      return userStore.getCurrentUser?.organisationId;
+    });
     const loading = ref(false);
 
     const reload = ref(false);
@@ -356,7 +362,7 @@ export default defineComponent({
           );
           modal.title = `Organisation modifié avec succès`;
         } else {
-          const response = await organizationStore.create(master);
+          const response = await organizationStore.create({...master,parentOrganisationId:organisationId.value});
           modal.title = `Organisation crée avec succès`;
         }
         modal.show = true;
@@ -392,6 +398,7 @@ export default defineComponent({
       getStatutType,
       partenaireTitle,
       details,
+      organisationId
     };
   },
 });
