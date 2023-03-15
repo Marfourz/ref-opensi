@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import {
   ProductCategory,
   Product,
@@ -97,8 +97,10 @@ export class ProductCategoryService {
       });
       return deletedCategory;
     } catch (error) {
-      throw error;
-      return;
+      throw new HttpException(
+        'Vous ne pouvez pas supprimé ce produit',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
   }
 
