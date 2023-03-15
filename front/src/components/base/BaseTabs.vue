@@ -107,6 +107,10 @@ export default {
       emit("change", openTab.value);
     };
 
+    onMounted(()=>{
+      openTab.value = selectedTab;
+    })
+
     return {
       openTab,
       dynamicClass,

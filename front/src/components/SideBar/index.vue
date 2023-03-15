@@ -16,11 +16,8 @@
           :showOnlyIcon="showOnlyIcon"
           @click="changeMenu(menu)"
         />
-
-
         </div>
         
-
         <div class="h-[1px] bg-[black] opacity-20 w-full"></div>
 
         

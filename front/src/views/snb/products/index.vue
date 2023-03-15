@@ -73,11 +73,10 @@
 
     
     <div class="pt-8" v-show="total != 0">
-      
       <BaseTabs :tabs="tabs"  @change="categoryId = $event" :selectedTab="categoryId">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
-            :key="tab.name"
+            :key="`${tab.name}-${reload}`"
             :fetchData="productCategoryStore.fetchProducts"
             :titles="titles"
             :actions="actions"
@@ -144,8 +143,10 @@
               rules="required|numeric"
               v-model.number="product.bulkPrice"
             ></BaseInput>
+
+           
              
-            <UploadFileVue @change="image = $event"></UploadFileVue>
+            <UploadFileVue @change="image = $event" :onlineFile="selectedProduct && selectedProduct.image ? selectedProduct.image[0] : {}"></UploadFileVue>
             
             <div class="pb-2">
               <BaseButton class="w-[200px]" :loading="loading">{{
@@ -209,13 +210,13 @@ export default defineComponent({
       product.name = value.name
      
       product.packagingType = PackagingType.PACK
-      product.bulkPrice = null
-      product.volume = null
+      product.bulkPrice = value.bulkPrice
+      product.volume = value.volume
       product.categoryId = value.categoryId
-      //product.unitPrice = value.unitPrice
+      product.unitPrice = value.unitPrice
+      selectedProduct.value = value
 
-
-
+      showModal.value = true
    
     }
 
@@ -243,6 +244,7 @@ export default defineComponent({
         toast.success("Suppression effectuée avec le succès")
         loading.value = false
         modal.show = false
+        reload.value = reload.value + 1
       }
       catch(error : any){
         toast.error("Suppression impossible")
@@ -338,10 +340,10 @@ export default defineComponent({
 
     const product = reactive({
       name: "",
-      unitPrice: null,
+      unitPrice: 0,
       packagingType: PackagingType.PACK,
-      bulkPrice: null,
-      volume: null,
+      bulkPrice: 0,
+      volume: 0,
       categoryId: "",
     });
 
@@ -376,20 +378,30 @@ export default defineComponent({
     const loading = ref(false)
 
     const toast = useToast()
+
+    const reload = ref(0)
     
     async function onSubmit(){
         try{
-          if(!image.value)
-            toast.error("Vous devez choisir une image")
-          else{
-            const response = await productStore.create(product)
-            console.log("response", response)
-            await fileStore.updloadProductImage(response.data.id , image.value as File)
-            showModal.value = false
-
-            router.push({name : 'products'})
-            toast.success("La boisson a été crée avec succès")
+          if(selectedProduct){
+            const response = await productStore.update(selectedProduct.value.id, selectedProduct.value)
+            if(image.value)
+              await fileStore.updloadProductImage(response.data.id , image.value as File)
           }
+          else{
+            if(!image.value)
+            toast.error("Vous devez choisir une image")
+            else{
+              const response = await productStore.create(product)
+              await fileStore.updloadProductImage(response.data.id , image.value as File)
+              toast.success("La boisson a été crée avec succès")
+              reload.value = reload.value + 1
+            }
+          }
+
+          showModal.value = false
+          router.push({name : 'products'})
+          
         }
         catch(error : any){}}
 
@@ -417,6 +429,9 @@ export default defineComponent({
       ]
       
     })
+
+
+    
 
 
     const packPriceLabel = computed(()=>{
@@ -474,7 +489,8 @@ export default defineComponent({
       image,
       helpers,
       modal,
-      deleteProduct
+      deleteProduct,
+      reload
       
     };
   },

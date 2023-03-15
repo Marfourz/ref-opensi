@@ -138,10 +138,7 @@ export default defineComponent({
     const loading = ref(false);
 
     async function loadData() {
-     
-      
       params.perPage = paginationData.peerPage;
-
       loading.value = true;
       try {
         let response;

@@ -11,7 +11,7 @@
 
     <div
       class="border border-dashed border-primary py-4 flex justify-center rounded"
-      v-if="!selectedFile.file && !onlineFile.link"
+      v-if="!selectedFile.file && !onlineFile.url"
       @click="onSelectFile"
     >
       <div class="flex items-center space-x-4">
@@ -25,7 +25,7 @@
     <div class="border border-dashed border-primary py-4 flex items-center justify-between rounded px-8" v-else>
       <div class="rounded ">
         <img
-          :src="fileStore.getFileLink(onlineFile.link)"
+          :src="onlineFile.url"
           alt=""
           v-if="onlineFile && !selectedFile.link"
         />
