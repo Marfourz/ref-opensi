@@ -13,7 +13,7 @@
       </div>
     </div>
     
-    <div class="grid grid-cols-4 space-x-4">
+    <div class="grid grid-cols-4 gap-4">
         <DashboardCard :data="rackStock"></DashboardCard>
         <DashboardCard :data="packStock"></DashboardCard>
         <DashboardCard :data="totalCost"></DashboardCard>
@@ -47,7 +47,7 @@ export default defineComponent({
         return {
         title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalPackProducts._sum.currentQuantity
 ) : 0} `,
-        subtitle: "Pack en stock",
+        subtitle: "Packs en stock",
        
         icon: "bottle",
         primaryColor: "#B9212E",
@@ -61,7 +61,7 @@ export default defineComponent({
         return {
         title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalRackProducts._sum.currentQuantity
 ) : 0} `,
-        subtitle: "Casier en stock",
+        subtitle: "Casiers en stock",
        
         icon: "bottle",
         primaryColor: "#B9212E",

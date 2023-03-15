@@ -48,7 +48,7 @@ async function onSubmit(){
     loading.value = false
     }
     catch(error){
-        toast.error("Vos identifiants incorrectes")
+        toast.error("Vos identifiants sont incorrects")
         console.log("error", error)
         loading.value = false
     }

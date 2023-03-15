@@ -29,16 +29,28 @@ export class AuthenticationMiddleware implements NestMiddleware {
         this.jwtService
           .verifyAsync(token, { secret: JWT_SECRET })
           .then(async (result) => {
-            console.log(">>>>>>>>: ",result);
+            console.log('>>>>>>>>: ', result);
             const { data } = result;
             data.uid = result.uid;
             this.prisma.user
               .findUnique({
                 where: { email: data.email },
-                select: { id: true, organisation: true, role: true },
+                select: {
+                  id: true,
+                  organisation: true,
+                  role: true,
+                  status: true,
+                },
               })
               .then(async (user) => {
-                console.log("<<<<<<<<<<<<<<<: ",user);
+                console.log('<<<<<<<<<<<<<<<: ', user);
+
+                if (user.status != 'active') {
+                  console.log('Inctive account');
+                  res
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .send("Votre compte n'est pas actif");
+                }
 
                 data.roles.push(user.role);
                 data.userId = user.id;

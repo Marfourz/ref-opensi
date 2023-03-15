@@ -52,7 +52,7 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
 
     async delete(id: number) {
       try {
-        const response = await Api.delete(`produts/${id}`);
+        const response = await Api.delete(`product-category/${id}`);
         return response;
       } catch (error) {
         throw error;

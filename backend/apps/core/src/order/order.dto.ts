@@ -47,6 +47,11 @@ export class updateOrderDto {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
+  acceptedAt?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
   deliveryMan?: string;
 
   @ApiProperty({ enum: OrderStatusEnum })
@@ -61,4 +66,28 @@ export class updateOrderDto {
     message: '$property format must be YYYY-MM-DD',
   })
   deliveryDate?: string;
+}
+
+export class assignOrderDto {
+  @ApiProperty({ type: String })
+  @IsString()
+  deliveryMan: string;
+}
+
+export class periodOrderDto {
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Matches(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/, {
+    message: '$property format must be YYYY-MM-DD',
+  })
+  lte?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Matches(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/, {
+    message: '$property format must be YYYY-MM-DD',
+  })
+  gte?: string;
 }

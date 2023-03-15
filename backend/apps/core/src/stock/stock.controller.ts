@@ -88,6 +88,17 @@ export class StockController {
     return this.stockService.getStockGeneralInfos(params.orgId);
   }
 
+  @Get(':orgId/stock-evolution')
+  //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
+  @ApiParam({ name: 'orgId' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getStockEvolution(@Param() params): any {
+    return this.stockService.getStockEvolution(params.orgId);
+  }
+
   @Put(':id')
   //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.COMMERCIAL)
   @ApiHeader({

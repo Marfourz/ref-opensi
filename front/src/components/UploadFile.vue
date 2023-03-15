@@ -6,12 +6,12 @@
       class="hidden"
       @input="uploadFile"
       multiple
-      accept="image/png, image/jpeg, video/mp3, video/mp4"
+      accept="image/png, image/jpeg"
     />
 
     <div
-      class="border border-dashed border-black py-4 flex justify-center rounded"
-      v-if="!selectedFile.file && !onlineFile.link"
+      class="border border-dashed border-primary py-4 flex justify-center rounded"
+      v-if="!selectedFile.file && !onlineFile.url"
       @click="onSelectFile"
     >
       <div class="flex items-center space-x-4">
@@ -22,25 +22,30 @@
       </div>
     </div>
 
-    <div class="flex flex-col items-center space-y-4" v-else>
-      <div class="rounded">
+    <div class="border border-dashed border-primary py-4 flex items-center justify-between rounded px-8" v-else>
+      <div class="rounded ">
         <img
-          :src="fileStore.getFileLink(onlineFile.link)"
+          :src="onlineFile.url"
           alt=""
-          class="rounded "
           v-if="onlineFile && !selectedFile.link"
         />
         <img
           :src="selectedFile.link"
+         
           alt=""
-          class="rounded "
+          class="h-8"
           v-else
         />
       </div>
 
-      <BaseButton size="small" class="w-fit" :outline="true" @click.stop.prevent="onSelectFile"
-        >Changer l'image</BaseButton
+      <div class="flex items-center space-x-8">
+        <BaseButton size="small" class="w-fit space-x-6" :outline="true" @click.stop.prevent="onSelectFile"
+        >Changer la photo</BaseButton
       >
+      <div class="flex items-center space-x-2 cursor-pointer" @click="onDelete"><BaseIcon name="close" class="text-[#EB5757] font-semibold"></BaseIcon> <div>Supprimer</div></div>
+      </div>
+
+    
     </div>
   </div>
 </template>
@@ -82,6 +87,14 @@ export default defineComponent({
       pickReader.readAsDataURL(selectedFile.value.file as any);
     }
 
+    function onDelete(){
+      selectedFile.value = {
+        file: null,
+        link: "",
+      }
+      context.emit("change", null);
+    }
+
     function onSelectFile() {
       file.value.click();
     }
@@ -92,6 +105,7 @@ export default defineComponent({
       onSelectFile,
       file,
       fileStore,
+      onDelete
     };
   },
 });

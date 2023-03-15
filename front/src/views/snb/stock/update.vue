@@ -94,16 +94,16 @@ export default defineComponent({
 
       {
         title: "Quantité en stock",
-        name: "stock",
-        transform: getStock,
+        name: "currentQuantity",
+       
       },
     ];
 
-    function getStock(element: IProduct) {
-      if (element.stocks && element.stocks[0])
-        return element.stocks[0].currentQuantity;
-      else return 0;
-    }
+    // function getStock(element: IProduct) {
+    //   if (element.stocks && element.stocks[0])
+    //     return element.currentQuantity;
+    //   else return 0;
+    // }
 
     const loading = ref(false);
 

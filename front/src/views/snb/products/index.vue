@@ -1,5 +1,47 @@
 <template>
   <div class="">
+    <BaseModal
+      :title="modal.title"
+      :show="modal.show"
+      @close="modal.show = false"
+    >
+        <template #modal >
+
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.type == 'delete'"
+        >
+          <BaseIcon name="warning"></BaseIcon>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="deleteProduct"
+            >
+              Supprimer
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+
+    
+     
+    </BaseModal>
+
+
     <div class="flex justify-between items-center">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
@@ -31,11 +73,10 @@
 
     
     <div class="pt-8" v-show="total != 0">
-      
-      <BaseTabs :tabs="tabs"  @change="categoryId = $event">
+      <BaseTabs :tabs="tabs"  @change="categoryId = $event" :selectedTab="categoryId">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
-            :key="tab.name"
+            :key="`${tab.name}-${reload}`"
             :fetchData="productCategoryStore.fetchProducts"
             :titles="titles"
             :actions="actions"
@@ -48,9 +89,6 @@
                 <img :src="`${element.image && element.image[0] ? element.image[0].url : '/assets/images/beverage.png' }`" alt="">
               </div>
             </template>
-           
-
-        
         </BaseTableWithFilter>
         </template>
       </BaseTabs>
@@ -84,14 +122,14 @@
             ></BaseSelect>
             <BaseInput
               name="Volume"
-              label="Volume"
-              rules="required"
+              label="Volume (en CL)"
+              rules="required|numeric"
               v-model.number="product.volume"
             ></BaseInput>
             <BaseInput
               name="Prix unitaire"
               label="Prix unitaire( en FCFA)"
-              rules="required"
+              rules="required|numeric"
               v-model.number="product.unitPrice"
             ></BaseInput>
             <BaseSelect
@@ -102,11 +140,13 @@
             <BaseInput
               name="Prix casier (en FCFA)"
               :label="packPriceLabel"
-              rules="required"
+              rules="required|numeric"
               v-model.number="product.bulkPrice"
             ></BaseInput>
-            
-            <UploadFileVue @change="image = $event"></UploadFileVue>
+
+           
+             
+            <UploadFileVue @change="image = $event" :onlineFile="selectedProduct && selectedProduct.image ? selectedProduct.image[0] : {}"></UploadFileVue>
             
             <div class="pb-2">
               <BaseButton class="w-[200px]" :loading="loading">{{
@@ -164,9 +204,54 @@ export default defineComponent({
       },
     ];
 
-    function onView() {}
-    function onUpdate() {}
-    function onDelete() {}
+    function onView(value: IProduct) {}
+
+    function onUpdate(value: IProduct ) {
+      product.name = value.name
+     
+      product.packagingType = PackagingType.PACK
+      product.bulkPrice = value.bulkPrice
+      product.volume = value.volume
+      product.categoryId = value.categoryId
+      product.unitPrice = value.unitPrice
+      selectedProduct.value = value
+
+      showModal.value = true
+   
+    }
+
+    const modal = reactive({
+      title: "",
+      type: "create" as "create" | "delete" | "update",
+      show: false
+     
+    });
+
+
+    function onDelete(value: IProduct) {
+      modal.title =`Êtes-vous sûr de vouloir <br> supprimer cette boisson ?`;
+      modal.show = true;
+      modal.type = "delete";
+      selectedProduct.value = value
+     
+    }
+
+
+    async function deleteProduct(){
+      loading.value = true
+      try{
+        await productStore.delete(selectedProduct.value.id)
+        toast.success("Suppression effectuée avec le succès")
+        loading.value = false
+        modal.show = false
+        reload.value = reload.value + 1
+      }
+      catch(error : any){
+        toast.error("Suppression impossible")
+        loading.value = false
+        modal.show = false
+      }
+     }
 
     const router = useRouter();
     function goToProductCategory() {
@@ -293,23 +378,36 @@ export default defineComponent({
     const loading = ref(false)
 
     const toast = useToast()
+
+    const reload = ref(0)
     
     async function onSubmit(){
         try{
-          if(!image.value)
-            toast.error("Vous devez choisir une image")
-          else{
-            const response = await productStore.create(product)
-            console.log("response", response)
-            await fileStore.updloadProductImage(response.data.id , image.value as File)
-            showModal.value = false
-
-            router.push({name : 'products'})
-            toast.success("La boisson a été crée avec succès")
+          if(selectedProduct){
+            const response = await productStore.update(selectedProduct.value.id, selectedProduct.value)
+            if(image.value)
+              await fileStore.updloadProductImage(response.data.id , image.value as File)
           }
+          else{
+            if(!image.value)
+            toast.error("Vous devez choisir une image")
+            else{
+              const response = await productStore.create(product)
+              await fileStore.updloadProductImage(response.data.id , image.value as File)
+              toast.success("La boisson a été crée avec succès")
+              reload.value = reload.value + 1
+            }
+          }
+
+          showModal.value = false
+          router.push({name : 'products'})
+          
         }
         catch(error : any){}}
 
+
+
+   
 
     const bulkPriceTitle = computed(()=>{
       if(product.packagingType == PackagingType.PACK)
@@ -317,12 +415,6 @@ export default defineComponent({
       else
         return "Prix casier (en FCFA)"
     })
-
-   
-
-    
-
-
 
     const packagingTypes = computed(()=>{
       return [
@@ -337,6 +429,9 @@ export default defineComponent({
       ]
       
     })
+
+
+    
 
 
     const packPriceLabel = computed(()=>{
@@ -392,7 +487,10 @@ export default defineComponent({
       packagingTypes,
       packPriceLabel,
       image,
-      helpers
+      helpers,
+      modal,
+      deleteProduct,
+      reload
       
     };
   },

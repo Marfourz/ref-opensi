@@ -107,6 +107,8 @@ model Order {
 
   invoice             Invoice?
 
+  acceptedAt          String?
+
   deliveryDate        String?
 
   createdAt           DateTime @default(now())

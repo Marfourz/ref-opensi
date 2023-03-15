@@ -40,7 +40,7 @@ export const useProductStore = defineStore("productStore", {
 
     async update(id: number, data: any) {
       try {
-        const response = await Api.patch(`products/${id}`, data);
+        const response = await Api.put(`products/${id}`, data);
         return response;
       } catch (error) {
         throw error;
@@ -49,7 +49,7 @@ export const useProductStore = defineStore("productStore", {
 
     async delete(id: number) {
       try {
-        const response = await Api.delete(`produts/${id}`);
+        const response = await Api.delete(`products/${id}`);
         return response;
       } catch (error) {
         throw error;

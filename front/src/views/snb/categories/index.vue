@@ -5,7 +5,7 @@
       :show="modal.show"
       @close="modal.show = false"
     >
-    <Form @submit="onSubmit" class="space-y-6" v-if="modal.mode == 'confirm'">
+         <Form @submit="onSubmit" class="space-y-6" v-if="modal.mode == 'confirm'">
           <BaseInput
             name="Nom"
             rules="required"
@@ -27,7 +27,7 @@
           <div
             class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
           >
-            <BaseIcon name="check text-white" class="w-8 h-8"></BaseIcon>
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
           </div>
           <div class="font-bold text-2xl text-center" v-html="modal.title">
          
@@ -36,7 +36,38 @@
             >Terminé</BaseButton
           >
         </div>
+
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+        >
+          <BaseIcon name="warning"></BaseIcon>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="deleteCategory"
+            >
+              Supprimer
+            </BaseButton>
+          </div>
+        </div>
       </template>
+
+    
      
     </BaseModal>
     <BaseGoBack></BaseGoBack>
@@ -60,7 +91,13 @@
       :actions="actions"
       @total="total = $event"
       :key="reload"
-    ></BaseTableWithFilter>
+    >
+      <template #description="{element}">
+        <div>
+            {{ element.description ? element.description : 'Aucune' }}
+        </div>
+      </template>
+  </BaseTableWithFilter>
   </div>
 </template>
 
@@ -70,6 +107,7 @@ import { useProductCategoryStore } from "../../../stores/product-category";
 import EmptyState from "../../../components/EmptyState.vue";
 import { Form } from "vee-validate";
 import { IProductCategory } from "../../../types/interfaces";
+import { useToast } from "vue-toastification";
 
 export default defineComponent({
   components: { EmptyState, Form },
@@ -105,7 +143,13 @@ export default defineComponent({
       modal.title = "Modifier la catégorie";
     }
 
-    function onDelete() {}
+    function onDelete(value: IProductCategory) {
+      modal.title =`Êtes-vous sûr de vouloir <br> supprimer la catégorie <br> ${value.name} ?`;
+      modal.show = true;
+      modal.mode = "confirm";
+      modal.type = "delete";
+      selectedCategory.value = value
+    }
 
     const selectedCategory = ref();
 
@@ -116,6 +160,7 @@ export default defineComponent({
       modal.type = "create";
       category.name = ""
       category.description = ""
+      selectedCategory.value = null
     }
 
     const loading = ref(false);
@@ -143,6 +188,25 @@ export default defineComponent({
       } catch (error) {
         loading.value = false;
       }
+    }
+
+    const toast = useToast()
+
+    async function deleteCategory(){
+      loading.value = true
+      try{
+        await productCategoryStore.delete(selectedCategory.value.id)
+        toast.success("Suppression effectuée avec le succès")
+        loading.value = false
+        modal.show = false
+        reload.value = !reload.value
+      }
+      catch(error : any){
+        toast.error("Suppression impossible")
+        loading.value = false
+      }
+      
+
     }
 
     const titles = [
@@ -179,7 +243,8 @@ export default defineComponent({
       onSubmit,
       createCategory,
       loading,
-      reload
+      reload,
+      deleteCategory
     };
   },
 });
