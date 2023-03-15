@@ -1,44 +1,24 @@
 <template>
   <div class="">
 
-    <BaseModal
-      :title="modal.title"
-      :show="modal.show"
-      @close="modal.show = false"
-    >
-        <template #modal >
-        <div
-          class="flex flex-col space-y-6 items-center py-4"
-          v-if="modal.type == 'delete'"
-        >
+    <BaseModal :title="modal.title" :show="modal.show" @close="modal.show = false">
+      <template #modal>
+        <div class="flex flex-col space-y-6 items-center py-4" v-if="modal.type == 'delete'">
           <BaseIcon name="warning"></BaseIcon>
-          <div
-            class="text-center font-semibold text-2xl"
-            v-html="modal.title"
-          ></div>
+          <div class="text-center font-semibold text-2xl" v-html="modal.title"></div>
           <div class="flex items-center space-x-2 w-full">
-            <BaseButton
-              bgColor="danger"
-              :outline="true"
-              class="w-1/2"
-              @click="modal.show = false"
-            >
+            <BaseButton bgColor="danger" :outline="true" class="w-1/2" @click="modal.show = false">
               Annuler
             </BaseButton>
-            <BaseButton
-              bgColor="danger"
-              :loading="loading"
-              class="w-1/2 bg-danger"
-              @click="confirmResetOrder"
-            >
+            <BaseButton bgColor="danger" :loading="loading" class="w-1/2 bg-danger" @click="confirmResetOrder">
               Supprimer
             </BaseButton>
           </div>
         </div>
       </template>
 
-    
-     
+
+
     </BaseModal>
 
 
@@ -47,22 +27,13 @@
         <div class="space-y-8 ">
           <div class="flex space-x-6 items-center">
             <BaseTitle title="Mes appros"></BaseTitle>
-            <BaseButton icon="plus" size="small" @click="goToCreateAppros"
-              >Nouvel appro</BaseButton
-            >
+            <BaseButton icon="plus" size="small" @click="goToCreateAppros">Nouvel appro</BaseButton>
           </div>
           <div class="relative">
-            <BaseTableWithFilter
-              :titles="titles"
-              :requestId="organisationId"
-              :fetchData="orderStore.fetchAllByOrganization"
-              :actions="actions"
-            >
+            <BaseTableWithFilter :titles="titles" :requestId="organisationId"
+              :fetchData="orderStore.fetchAllByOrganization" :actions="actions">
               <template #status="{ element }">
-                <BaseTableStatut
-                  :title="getStatutLabel(element)"
-                  :type="getStatutType(element)"
-                ></BaseTableStatut>
+                <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
               </template>
 
               <template #totalAmount="{ element }">
@@ -82,9 +53,7 @@
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
             </div> -->
 
-                  <BaseButton icon="upload" size="small"
-                    >Télécharger</BaseButton
-                  >
+                  <BaseButton icon="upload" size="small">Télécharger</BaseButton>
                 </div>
               </template>
             </BaseTableWithFilter>
@@ -96,10 +65,7 @@
           <template #title>
             <div class="flex space-x-2 items-center">
               <div class="font-bold text-lg">Appro {{ order.reference }}</div>
-              <BaseTableStatut
-                :title="getStatutLabel(order)"
-                :type="getStatutType(order)"
-              ></BaseTableStatut>
+              <BaseTableStatut :title="getStatutLabel(order)" :type="getStatutType(order)"></BaseTableStatut>
             </div>
           </template>
         </Order>
@@ -189,95 +155,85 @@ export default defineComponent({
 
     const toast = useToast();
 
-<<<<<<< HEAD
-    async function showItemOrder(element : any){
-        try{
-          const response = await orderStore.fetchOne(element.id)
-          order.value = response
-        }
-        catch(error){
-          toast.error("Suppression impossible")
-        }
-        
-=======
     async function showItemOrder(element: any) {
       try {
-        const response = await orderStore.fetchOne(element.id);
-        order.value = response;
-      } catch (error) {
-        toast.error("T");
+        const response = await orderStore.fetchOne(element.id)
+        order.value = response
       }
->>>>>>> 98c0c58cc30c94af489dcda6623333df1a90f279
+      catch (error) {
+        toast.error("Suppression impossible")
+      }
+
     }
 
     const modal = reactive({
       title: "",
       type: "create" as "create" | "delete" | "update",
       show: false
-     
+
     });
 
-    
 
-   
+
+
 
     const actions = [
       {
-          title: "Modifier",
-          iconClass:"text-tableColor",
-          icon: "edit",
-          action: showItemOrder,
-        },
-        {
-          title: "Dupliquer",
-          iconClass:"text-tableColor",
-          icon: "duplicate",
-          action: duplicateOrder,
-        },
-        {
-          title: "Annuler",
-          iconClass:"text-[#E03A15]",
-          titleClass: "text-[#E03A15]",
-          icon: "close",
-          action: resetOrder,
-        },
-     
+        title: "Modifier",
+        iconClass: "text-tableColor",
+        icon: "edit",
+        action: showItemOrder,
+      },
+      {
+        title: "Dupliquer",
+        iconClass: "text-tableColor",
+        icon: "duplicate",
+        action: duplicateOrder,
+      },
+      {
+        title: "Annuler",
+        iconClass: "text-[#E03A15]",
+        titleClass: "text-[#E03A15]",
+        icon: "close",
+        action: resetOrder,
+      },
+
     ];
 
     const reload = ref(0)
 
     const selectedOrder = ref<IOrder | null>(null)
 
-    function resetOrder(value : IOrder){
-      modal.title =`Êtes-vous sûr de vouloir <br> annuler cette commande  ?`;
+    function resetOrder(value: IOrder) {
+      modal.title = `Êtes-vous sûr de vouloir <br> annuler cette commande  ?`;
       modal.show = true;
       modal.type = "delete";
       selectedOrder.value = value
       reload.value = reload.value + 1
     }
 
-    async function confirmResetOrder(){
-      
+    async function confirmResetOrder() {
+
       loading.value = true
-      try{
+      try {
         const response = await orderStore.delete(selectedOrder.value?.id as string)
         loading.value = false
       }
-      catch(error){
+      catch (error) {
         loading.value = false
         modal.show = false
         toast.error("Suppression impossible")
       }
     }
 
-    
+
     const basketStore = useBasketStore()
 
-    async function duplicateOrder(value : IOrder){
-      console.log("duplicate", );
+    async function duplicateOrder(value: IOrder) {
+      console.log("duplicate",);
       const order = await orderStore.fetchOne(value.id)
       basketStore.createBasketWithOrder(order)
-      router.push({name : 'approsCreate'})
+      router.push({ name: 'approsCreate' })
     }
 
     return {
@@ -290,13 +246,10 @@ export default defineComponent({
       getStatutType,
       helpers,
       actions,
-<<<<<<< HEAD
       resetOrder,
       modal,
       loading,
-      confirmResetOrder
-=======
->>>>>>> 98c0c58cc30c94af489dcda6623333df1a90f279
+      confirmResetOrder, reload
     };
   },
 });
