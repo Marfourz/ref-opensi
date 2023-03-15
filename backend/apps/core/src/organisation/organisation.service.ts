@@ -236,6 +236,7 @@ export class OrganisationService {
   }
 
   async searchForPartners(
+    parentOrganisationId,
     filterParams,
   ): Promise<PagiationPayload<Organisation[]>> {
     try {
@@ -252,6 +253,7 @@ export class OrganisationService {
       const emailConstraint: any = {};
       const turnoverConstraint: any = {};
       const w: any = {};
+      w.parentOrganisationId = parentOrganisationId;
       w.NOT = {
         type: OrganisationTypeEnum.snb,
         status: OrganisationStatusEnum.inactive,

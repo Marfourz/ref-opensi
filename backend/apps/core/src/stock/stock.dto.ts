@@ -25,3 +25,7 @@ export class updateStockDto {
   @IsNumber()
   currentQuantity: number;
 }
+
+export class stockOptions {
+  add: boolean;
+}

@@ -5,15 +5,16 @@ import {
   TransactionStatusEnum,
 } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
-import { stockDto, updateStockDto } from './stock.dto';
+import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
+import { OrderStatusEnum } from '@prisma/client';
 
 @Injectable()
 export class StockService {
   constructor(private prisma: PrismaService) {}
 
-  async createStock(stock: stockDto): Promise<Stock> {
+  async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
       const haveStock = await this.prisma.stock.findFirst({
         where: {
@@ -23,8 +24,14 @@ export class StockService {
       });
 
       if (haveStock) {
+        let newQuantity;
+        if (option.add) {
+          newQuantity = haveStock.currentQuantity + stock.currentQuantity;
+        } else {
+          newQuantity = haveStock.currentQuantity - stock.currentQuantity;
+        }
         return await this.updateSingleStock(haveStock.id, {
-          currentQuantity: stock.currentQuantity,
+          currentQuantity: newQuantity,
         });
       }
 
@@ -194,5 +201,64 @@ export class StockService {
     });
 
     return { totalPackProducts, totalRackProducts, totalCost, lastStock };
+  }
+
+  async getStockEvolution(orgId: string): Promise<any> {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: {
+        id: orgId,
+      },
+      select: {
+        type: true,
+      },
+    });
+
+    if (organisation.type != 'snb') {
+      const data: any = [];
+      const deliveredOrders = await this.prisma.order.findMany({
+        where: {
+          OR: [
+            {
+              organisationId: orgId,
+            },
+            {
+              parentOrganisationId: orgId,
+            },
+          ],
+          status: OrderStatusEnum.delivered,
+        },
+        include: {
+          items: true,
+        },
+      });
+
+      for (let i = 0; i < deliveredOrders.length; i++) {
+        const element = deliveredOrders[i];
+        let type,
+          quantity = 0;
+        if (element.organisationId == orgId) {
+          type = 'Appro';
+        } else {
+          type = 'Vente';
+        }
+
+        for (let j = 0; j < element.items.length; j++) {
+          const e = element.items[j];
+          quantity += e.quantity;
+        }
+
+        data.push({
+          deliveryDate: element.deliveryDate,
+          type,
+          quantity,
+          total: element.totalAmount,
+        });
+
+        console.log('Data : ', data);
+      }
+      return data;
+    } else {
+      return organisation.type;
+    }
   }
 }

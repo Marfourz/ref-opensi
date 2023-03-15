@@ -47,6 +47,11 @@ export class updateOrderDto {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
+  acceptedAt?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
   deliveryMan?: string;
 
   @ApiProperty({ enum: OrderStatusEnum })

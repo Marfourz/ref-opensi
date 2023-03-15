@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { productDto, updateProductDto } from './product.dto';
 import { Product, Image, Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
@@ -106,19 +106,17 @@ export class ProductsService {
 
   async deleteSingleProduct(id: string): Promise<Product> {
     try {
-      await this.prisma.image.deleteMany({
-        where: {
-          productId: id,
-        },
-      });
-
       const deletedProduct = await this.prisma.product.delete({
         where: { id },
       });
       return deletedProduct;
     } catch (error) {
-      throw error;
-      return;
+      throw new HttpException(
+        'Vous ne pouvez pas supprimé ce produit',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+      /*throw new HttpException('') error;
+      return;*/
     }
   }
 

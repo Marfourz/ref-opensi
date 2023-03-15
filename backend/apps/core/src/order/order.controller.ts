@@ -141,7 +141,14 @@ export class OrderController {
     description: 'Contain auth token',
   })
   validateOrder(@Param() params): Promise<Order> {
-    return this.orderService.validateOrder(params.orderId, params.deliveryCode);
+    try {
+      return this.orderService.validateOrder(
+        params.orderId,
+        params.deliveryCode,
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Put(':id')

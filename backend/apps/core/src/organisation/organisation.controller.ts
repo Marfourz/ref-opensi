@@ -86,19 +86,24 @@ export class OrganisationController {
     return this.organisationService.getSingleOrganisation(params.id);
   }
 
-  @Get('partners/search')
+  @Get('partners/search/:parentOrganisationId')
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
+  @ApiParam({ name: 'parentOrganisationId' })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'perPage', type: Number, required: false })
   @ApiQuery({ name: 'q', type: String, required: false })
   @ApiQuery({ name: 'type', enum: OrganisationTypeEnum, required: false })
   searchForOrdersOfOrganisation(
     @Query() filterParams: any,
+    @Param() params,
   ): Promise<PagiationPayload<Organisation[]>> {
-    return this.organisationService.searchForPartners(filterParams);
+    return this.organisationService.searchForPartners(
+      params.parentOrganisationId,
+      filterParams,
+    );
   }
 
   @Get('snb/infos/:orgId')

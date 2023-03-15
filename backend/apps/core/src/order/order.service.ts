@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import {
@@ -18,6 +18,8 @@ import { NotificationService } from 'apps/notification/src/notification.service'
 import { smsDto } from '../../../notification/src/notification.dto';
 import { HttpStatus } from '@nestjs/common';
 import * as dayjs from 'dayjs';
+import { StockService } from '../stock/stock.service';
+import { stockDto } from '../stock/stock.dto';
 @Injectable()
 export class OrderService {
   constructor(
@@ -26,6 +28,7 @@ export class OrderService {
     private productService: ProductsService,
     private wsService: WsNotificationGateway,
     private notifService: NotificationService,
+    private stockService: StockService,
   ) {}
 
   async createOrder(order: orderDto): Promise<Order> {
@@ -129,6 +132,17 @@ export class OrderService {
 
         await this.notifService.sendSms(smsBody);
       }
+
+      if (update.status == 'accepted') {
+        await this.updateSingleOrder(id, {
+          acceptedAt: dayjs().format('YYYY-MM-DD'),
+        });
+      }
+
+      this.wsService.notifyRoom(updatedOrder.organisationId, {
+        event: WS_EVENTS.NEW_ORDER_RECORDED,
+        value: updatedOrder.id,
+      });
       return updatedOrder;
     } catch (error) {
       throw error;
@@ -324,13 +338,73 @@ export class OrderService {
   }
 
   async validateOrder(orderId: string, deliveryCode: string): Promise<any> {
-    const order = await this.getSingleOrder(orderId);
+    const order: any = await this.getSingleOrder(orderId);
+    if (order.deliveryCode == deliveryCode) {
+      const unprocessableOrders: any = [];
 
-    if (order.deliveryCode === deliveryCode) {
-      await this.updateSingleOrder(orderId, {
-        status: OrderStatusEnum.delivered,
-      });
-      return { statusCode: HttpStatus.OK };
+      for (let index = 0; index < order.items.length; index++) {
+        const element = order.items[index];
+        const totalStockForProduct = await this.prisma.stock.aggregate({
+          where: {
+            productId: element.product.id,
+            organisationId: order.parentOrganisationId,
+          },
+          _sum: {
+            currentQuantity: true,
+          },
+        });
+
+        if (totalStockForProduct._sum.currentQuantity < element.quantity) {
+          unprocessableOrders.push(element.product.name);
+        }
+      }
+
+      if (unprocessableOrders.length > 0) {
+        let message = 'Stock de : ';
+        for (let i = 0; i < unprocessableOrders.length; i++) {
+          const element = unprocessableOrders[i];
+          message += element + ', ';
+        }
+        message += 'insuffisant';
+        return {
+          statusCode: HttpStatus.NOT_ACCEPTABLE,
+          message,
+        };
+      } else {
+        for (let index = 0; index < order.items.length; index++) {
+          const element = order.items[index];
+
+          const childStockUpdate: stockDto = {
+            organisationId: order.organisationId,
+            productId: element.product.id,
+            currentQuantity: element.quantity,
+          };
+
+          const parentStockUpdate: stockDto = {
+            organisationId: order.parentOrganisationId,
+            productId: element.product.id,
+            currentQuantity: element.quantity,
+          };
+
+          await this.stockService.createStock(childStockUpdate, { add: true });
+          console.log('Stock added for ', childStockUpdate);
+          await this.stockService.createStock(parentStockUpdate, {
+            add: false,
+          });
+          console.log('Stock added for ', parentStockUpdate);
+        }
+        await this.updateSingleOrder(orderId, {
+          status: OrderStatusEnum.delivered,
+        });
+        await this.updateSingleOrder(orderId, {
+          deliveryDate: dayjs().format('YYYY-MM-DD'),
+        });
+      }
+
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Commande livrée avec success!!',
+      };
     } else {
       return {
         statusCode: HttpStatus.NOT_ACCEPTABLE,
