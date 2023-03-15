@@ -1,5 +1,12 @@
 import { IItem } from "../stores/basket";
-import type { OrderStatus, OrganisationType, PackagingType, Sex, UserAccountStatus, UserRole } from "./enumerations";
+import type {
+  OrderStatus,
+  OrganisationType,
+  PackagingType,
+  Sex,
+  UserAccountStatus,
+  UserRole,
+} from "./enumerations";
 
 export type PrimaryKey = string | null | undefined;
 
@@ -9,35 +16,45 @@ export interface Commun {
   updatedAt?: Date;
 }
 
-export interface IProductCategory extends Commun{
-    name : string,
-    description : string
+export interface IProductCategory extends Commun {
+  name: string;
+  description: string;
 }
 
-export interface IProduct extends Commun{
-    name : string,
-    category? : IProductCategory,
-    categoryId : string,
-    unitPrice : number,
-    packagingType:PackagingType,
-    bulkPrice : number,
-    volume : number,
-    image? : Array<string>,
-    stocks?: Array<any>
-} 
+export interface IProduct extends Commun {
+  name: string;
+  category?: IProductCategory;
+  categoryId: string;
+  unitPrice: number;
+  packagingType: PackagingType;
+  bulkPrice: number;
+  volume: number;
+  image?: Array<string>;
+  stocks?: Array<any>;
+}
 
-export interface IOrganisation extends Commun{
-    name : string,
-    type: OrganisationType,
-    socialReason: string,
-    fiscalId: string,
-    phone: string,
-    email: string,
-    adress: string,
-    ownerName: string,
-    paymentDeadline: 0,
-    status?: string,
-    orders?:Array<ItemsOrder>
+export interface IOrganisation extends Commun {
+  name: string;
+  type: OrganisationType;
+  socialReason: string;
+  fiscalId: string;
+  phone: string;
+  email: string;
+  adress: string;
+  ownerName: string;
+  paymentDeadline: 0;
+  status?: string;
+  orders?: Array<ItemsOrder>;
+  wallet: Wallet;
+}
+export interface Wallet extends Commun {
+  turnover: string;
+}
+
+export interface InfoOrganisation {
+  organisation: IOrganisation;
+  orders: Array<ItemsOrder>;
+  partners: string;
 }
 
 export interface IProduct extends Commun {
@@ -74,15 +91,13 @@ export interface IUser extends Commun {
   email: string;
   sex: Sex;
   role: UserRole;
-  organisation: IOrganisation,
+  organisation: IOrganisation;
   organisationId: string;
-  birthday?:Date,
-  engineId?:PrimaryKey,
-  status?: UserAccountStatus,
-  address?:string
+  birthday?: Date;
+  engineId?: PrimaryKey;
+  status?: UserAccountStatus;
+  address?: string;
 }
-
-
 
 export interface ITransaction extends Commun {}
 

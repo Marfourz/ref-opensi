@@ -23,7 +23,7 @@
     </div>
 
     <div class="mt-6 font-bold text-xl tracking-[-2%]">
-      Évolution du chiffre d’affaire
+      Évolution du chiffre d’affaires
     </div>
 
     <div class="w-full">
@@ -35,10 +35,9 @@
       ></apexchart>
     </div>
 
-   
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">
-        Chiffre d’affaire par produit
+        Chiffre d’affaires par produit
       </div>
       <div class="text-link underline cursor-pointer font-semibold">
         <div
@@ -65,10 +64,7 @@
     </BaseTable>
     <!-- Performance des partenaires -->
     <div class="flex justify-between items-center mt-7">
-      <div class="font-bold text-xl">
-        Performance des partenaires
-        <!-- <BaseTitle title="Performance des partenaires"></BaseTitle> -->
-      </div>
+      <div class="font-bold text-xl">Performance des partenaires</div>
       <div class="text-link underline cursor-pointer font-semibold">
         <div
           class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
@@ -157,7 +153,7 @@ import DashboardCard from "@/components/DashboardCard.vue";
 import helpers from "@/helpers/index";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
 import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
-import BaseTitleVue from "@/components/base/BaseTitle.vue";
+// import BaseTitleVue from "@/components/base/BaseTitle.vue";
 import { useOrganizationStore } from "@/stores/organization";
 import { OrganisationType } from "@/types/enumerations";
 import { useUsersStore } from "@/stores/users";
@@ -173,7 +169,7 @@ export default defineComponent({
             : 0
         } FCFA`,
 
-        subtitle: "Chiffre d’affaire",
+        subtitle: "Chiffre d’affaires",
 
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -188,7 +184,7 @@ export default defineComponent({
             ? helpers.currency(statInfos.value.orders)
             : 0
         } `,
-        subtitle: "Nbre de commandes",
+        subtitle: "Nombre de commandes",
 
         icon: "Papers",
         primaryColor: "#B9212E",
@@ -203,7 +199,7 @@ export default defineComponent({
             ? helpers.currency(statInfos.value.partners)
             : 0
         } `,
-        subtitle: "Nbre de partenaires",
+        subtitle: "Nombre de partenaires",
 
         icon: "dollar",
         primaryColor: "#0060CF",
@@ -231,7 +227,7 @@ export default defineComponent({
       },
 
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "turnover",
         transform: formatPrice,
       },
@@ -249,7 +245,7 @@ export default defineComponent({
       },
 
       {
-        title: "Chiffre d’affaire",
+        title: "Chiffre d’affaires",
         name: "wallet.turnover",
         transform: formatPrice,
       },
@@ -306,7 +302,7 @@ export default defineComponent({
       chart: {
         id: "vuechart-example",
       },
-      colors: ['#259475'],
+      colors: ["#259475"],
       xaxis: {
         categories: [
           "Jan",

@@ -1,16 +1,17 @@
-import DefaultLayout from "@/layouts/default.vue"
-import DeliveryPerson from "@/views/snb/deliveryPerson/index.vue"
-import OrderReceived from "@/views/snb/orderReceived/index.vue"
-import SubDistributors from "@/views/snb/subDistributors/index.vue"
-import Product from "@/views/snb/products/index.vue"
-import Stock from "@/views/snb/stock/index.vue"
-import Parameter from "@/views/parameter/index.vue"
-import Appros from "@/views/snb/appros/index.vue"
-import ApprosCreate from "@/views/snb/appros/create.vue"
-import Users from "@/views/users/index.vue"
-import Category from "@/views/snb/categories/index.vue"
-import UpdateStock from "@/views/snb/stock/update.vue"
-
+import DefaultLayout from "@/layouts/default.vue";
+import DeliveryPerson from "@/views/snb/deliveryPerson/index.vue";
+import LivreursDetails from "@/views/snb/deliveryPerson/details.vue";
+import OrderReceived from "@/views/snb/orderReceived/index.vue";
+import SubDistributors from "@/views/snb/subDistributors/index.vue";
+import DistributorsDetails from "@/views/snb/subDistributors/details.vue";
+import Product from "@/views/snb/products/index.vue";
+import Stock from "@/views/snb/stock/index.vue";
+import Parameter from "@/views/parameter/index.vue";
+import Appros from "@/views/snb/appros/index.vue";
+import ApprosCreate from "@/views/snb/appros/create.vue";
+import Users from "@/views/users/index.vue";
+import Category from "@/views/snb/categories/index.vue";
+import UpdateStock from "@/views/snb/stock/update.vue";
 
 export default [
   {
@@ -71,19 +72,16 @@ export default [
         },
       },
       {
-        path: "sous-distrivuteurs",
+        path: "sous-distributeurs",
         name: "subDistributors",
         component: SubDistributors,
       },
-    // {
-    //   path: "/sous-distrivuteurs/:id",
-    //   name: "details",
-    //   component: VDetail,
-    //   meta: {
-    //     title: "",
-    //     withoutPadding: true,
-    //   },
-    // },
+      {
+        path: "sous-distributeurs/details/:id",
+        name: "sousDistributeursDetails",
+        component: DistributorsDetails,
+      },
+
       {
         path: "produits/categories",
         name: "categories",
@@ -98,6 +96,11 @@ export default [
         path: "livreurs",
         name: "deliveryPerson",
         component: DeliveryPerson,
+      },
+      {
+        path: "livreurs/details/:id",
+        name: "livreursDetails",
+        component: LivreursDetails,
       },
       {
         path: "stock",

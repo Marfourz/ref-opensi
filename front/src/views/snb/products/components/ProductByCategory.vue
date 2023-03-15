@@ -9,7 +9,7 @@
         <div class="font-semibold text-center " >Aucun produit dans le stock</div>
       </div>
 
-      <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0">
+      <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0" :selectedTab="categoryId">
         <template #[tab.name] v-for="tab in tabs">
           <BaseTableWithFilter
             :key="tab.name"
@@ -122,6 +122,7 @@ export default defineComponent({
      
 
     const categoryId = ref("");
+    
 
     watch(categoryId, (newValue)=>{
         context.emit('categoryIdChange', categoryId.value)
