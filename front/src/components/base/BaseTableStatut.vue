@@ -15,13 +15,17 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
     type: {
-      type: String as () => 'success' | 'danger' | 'warning' | 'colorize' | 'blue',
+      type: String as () =>
+        | "success"
+        | "danger"
+        | "warning"
+        | "colorize"
+        | "blue",
       default: "success",
 
     },

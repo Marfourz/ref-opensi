@@ -49,7 +49,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const activeMenu = ref("Accueil");
-    const showOnlyIcon = ref(false)
+    const showOnlyIcon = ref(false);
 
     const bottomMenus = [
       {
@@ -74,7 +74,7 @@ export default defineComponent({
 
 
       },
-    ]
+    ];
 
     const menus: Array<IMenu> = [
       {
@@ -82,7 +82,7 @@ export default defineComponent({
         icon: "dashboard",
         route: "dashboard",
         path: "dashboard",
-        roles: []
+        roles: [],
       },
       {
         title: "Mes appros",
@@ -138,7 +138,7 @@ export default defineComponent({
       }
     ];
 
-    const authStore = useAuthStore()
+    const authStore = useAuthStore();
 
     function changeMenu(menu: any) {
       if (menu.route == 'logout') {
@@ -171,6 +171,7 @@ export default defineComponent({
 
       return false
 
+      return false;
     }
     const activeRouteName = computed(() => {
 
@@ -213,7 +214,7 @@ export default defineComponent({
       showOnlyIcon,
       bottomMenus,
       onMenuClick,
-      showMenu
+      showMenu,
     };
   },
 });

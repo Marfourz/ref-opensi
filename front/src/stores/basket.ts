@@ -2,18 +2,20 @@ import { defineStore } from "pinia";
 import type { IOrder, IProduct, ItemsOrder, PrimaryKey } from "../types/interfaces";
 
 export interface IItem {
-    product : IProduct,
-    quantity : number
+  product: IProduct;
+  quantity: number;
 }
 
-export const useBasketStore = defineStore('basket', {
-    state : () =>({
-        items : [] as Array<IItem>
-    }),
+export const useBasketStore = defineStore("basket", {
+  state: () => ({
+    items: [] as Array<IItem>,
+  }),
 
-    actions: {
-       addToBasket(product: IProduct,quantity : number){
-        const index = this.items.findIndex((item : IItem)=> item.product.id == product.id)
+  actions: {
+    addToBasket(product: IProduct, quantity: number) {
+      const index = this.items.findIndex(
+        (item: IItem) => item.product.id == product.id
+      );
 
         if(index != -1)
             this.items.splice(index,1,{product,quantity})
@@ -48,20 +50,15 @@ export const useBasketStore = defineStore('basket', {
 
       },
 
-     
+  getters: {
+    getItems: (state) => state.items,
+    getBasketPrice: (state) => {
+      let price = 0;
+      state.items.forEach((item: IItem) => {
+        price = price + item.product.bulkPrice * item.quantity;
+      });
 
-      getters: {
-        getItems: (state) => state.items,
-        getBasketPrice: (state)=>{
-            let price = 0
-            state.items.forEach((item : IItem)=> {
-                price = price + (item.product.bulkPrice * item.quantity)
-            })
-           
-            return price
-      },
-     
-    }
-     
-})
-
+      return price;
+    },
+  },
+});

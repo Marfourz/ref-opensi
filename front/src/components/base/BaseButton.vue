@@ -6,11 +6,9 @@
     class="flex items-center justify-center"
     @click="onClick"
   >
-    
     <div v-if="!loading" class="flex space-x-2 items-center">
       <BaseIcon :name="icon" v-if="icon != ''"></BaseIcon>
       <div><slot></slot></div>
-      
     </div>
 
     <img src="@/assets/images/loader.gif" alt="" v-else class="w-5 h-5" />
@@ -28,7 +26,7 @@ interface Props {
   disabled?: boolean;
   loading?: boolean;
   icon?: string;
-  outline? : boolean
+  outline?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   loading: false,
   icon: "",
-  outline : false
+  outline: false,
 });
 
 const classes = computed(() => {
@@ -45,12 +43,13 @@ const classes = computed(() => {
     "py-3.5 rounded-lg px-4": props.size == "large",
     "py-3 rounded px-4": props.size == "medium",
     "py-1.5 rounded-md px-4 text-sm": props.size == "small",
-    [`bg-${props.bgColor || "primary"} text-white`]: !props.disabled && !props.outline,
+    [`bg-${props.bgColor || "primary"} text-white`]:
+      !props.disabled && !props.outline,
     [`bg-fade${_.capitalize(props.bgColor) || "bg-fadePrimary"} text-black`]:
       props.disabled,
-    [`border border-${props.bgColor || "primary"} bg-white text-${props.bgColor} `]: props.outline,
-   
-
+    [`border border-${props.bgColor || "primary"} bg-white text-${
+      props.bgColor
+    } `]: props.outline,
   };
 });
 

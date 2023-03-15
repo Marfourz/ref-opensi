@@ -4,20 +4,20 @@ import DefaultLayout from "@/layouts/default.vue";
 import TableauBord from "@/views/index.vue";
 import AuthRoutes from "@/router/auth";
 import SnbRoutes from "@/router/snb";
-import Login from "@/views/auth/login.vue"
+import Login from "@/views/auth/login.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-
     {
-      path:'',
-      name : 'login1',
-      component : Login,
-      meta:{
-          title : "Connexion",
-          subtitle : "Veuillez  vous connecter en renseignant votre adresse  gmail et votre mot de passe"
-      }
+      path: "",
+      name: "login1",
+      component: Login,
+      meta: {
+        title: "Connexion",
+        subtitle:
+          "Veuillez  vous connecter en renseignant votre adresse  gmail et votre mot de passe",
+      },
     },
     {
       path: "/",
@@ -28,7 +28,6 @@ const router = createRouter({
           name: "dashboard",
           component: TableauBord,
         },
-       
       ],
     },
 

@@ -5,7 +5,11 @@
       <thead>
         <tr class="bg-grey-10 text-tableColor">
           <th v-if="selectable" class="p-2">
-            <input type="checkbox" class="cursor-pointer" v-model="checkedAll" />
+            <input
+              type="checkbox"
+              class="cursor-pointer"
+              v-model="checkedAll"
+            />
           </th>
           <th v-for="title in titles" :key="title.name" class="py-4 border-b text-left pl-2 font-semibold">
             {{ title.title }}
@@ -73,7 +77,7 @@
 export interface ITitle {
   title: string;
   name: string;
-  transform?: Function
+  transform?: Function;
 }
 
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
@@ -109,7 +113,7 @@ export default defineComponent({
 
   },
 
-  expose: ['resetSelection'],
+  expose: ["resetSelection"],
 
 
 
@@ -130,8 +134,8 @@ export default defineComponent({
     }
 
     const resetSelection = () => {
-      onResetSelection()
-    }
+      onResetSelection();
+    };
 
     function onResetSelection() {
       checkedElements.value = []
@@ -140,17 +144,17 @@ export default defineComponent({
     }
 
     function getElementValue(title: ITitle, element: any, index: number) {
-      if (title.transform && typeof title.transform === 'function') {
-        return title.transform(element, index)
+      if (title.transform && typeof title.transform === "function") {
+        return title.transform(element, index);
       }
-      return getValue(element, title.name)
+      return getValue(element, title.name);
     }
 
     function getValue(obj: any, path: string,) {
 
       let current = obj, i;
       if (path) {
-        const paths = path.split('.');
+        const paths = path.split(".");
         for (i = 0; i < paths.length; ++i) {
           if (current[paths[i]] == undefined || current[paths[i]] == null) {
             return "";

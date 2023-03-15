@@ -3,7 +3,7 @@
     <template #firstPart>
       <div class="space-y-8">
         <BaseTitle title="Nouvel appro"></BaseTitle>
-        <div class="flex flex-wrap space-x-3.5 ">
+        <div class="flex flex-wrap space-x-3.5">
           <ProductCategory
             class="my-2"
             :isActive="category.id == categoryId"
@@ -39,8 +39,11 @@ import ProductCategory from "../../../components/ProductCategory.vue";
 import Basket from "../../../components/Basket.vue";
 import { useProductStore } from "../../../stores/product";
 import { useProductCategoryStore } from "../../../stores/product-category";
-import { IProduct, IProductCategory, PrimaryKey } from "../../../types/interfaces";
-
+import {
+  IProduct,
+  IProductCategory,
+  PrimaryKey,
+} from "../../../types/interfaces";
 
 export default defineComponent({
   components: { PageInTwoPart, ProductInput, ProductCategory, Basket },
@@ -53,7 +56,7 @@ export default defineComponent({
 
     const categories = ref<Array<IProductCategory>>([]);
 
-    const products = ref<Array<IProduct>>([])
+    const products = ref<Array<IProduct>>([]);
 
     onMounted(async () => {
       try {
@@ -61,28 +64,28 @@ export default defineComponent({
 
         categoryId.value = response.data[0].id;
 
-       categories.value = response.data
+        categories.value = response.data;
 
-        await loadProduct()
+        await loadProduct();
       } catch (error: any) {}
     });
 
-
-    async function loadProduct(){
-      const response = await productCategoryStore.fetchProducts({page : -1},categoryId.value)
-      products.value = response.data
+    async function loadProduct() {
+      const response = await productCategoryStore.fetchProducts(
+        { page: -1 },
+        categoryId.value
+      );
+      products.value = response.data;
     }
 
-    watch(categoryId, (newValue)=>{
-      loadProduct()
-    })
-
-
+    watch(categoryId, (newValue) => {
+      loadProduct();
+    });
 
     return {
       categories,
       categoryId,
-      products
+      products,
     };
   },
 });
