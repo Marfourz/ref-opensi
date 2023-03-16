@@ -15,6 +15,7 @@ import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [HttpModule],
+  exports: [TransactionService],
   controllers: [TransactionController],
   providers: [
     TransactionService,
@@ -31,8 +32,8 @@ export class TransactionModule implements NestModule {
     consumer
       .apply(AuthenticationMiddleware)
       .forRoutes(
-        { path: 'transactions', method: RequestMethod.ALL },
-        { path: 'transactions/(*)', method: RequestMethod.ALL },
+        //{ path: 'transactions', method: RequestMethod.ALL },
+        //{ path: 'transactions/(*)', method: RequestMethod.ALL },
       );
   }
 }

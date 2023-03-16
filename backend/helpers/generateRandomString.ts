@@ -9,3 +9,7 @@ export const generateRandomString = (myLength) => {
   const randomString = randomArray.join('');
   return randomString;
 };
+
+export const getRandomInt = (min, max) => {
+  return parseInt(Math.random() * (max - min) + min);
+};

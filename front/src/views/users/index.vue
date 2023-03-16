@@ -105,7 +105,7 @@
             <BaseInput
               name="firstname"
               label="Email"
-              rules="required"
+               rules="required|email"
               v-model="user.email"
             ></BaseInput>
             <BaseSelect

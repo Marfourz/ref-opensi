@@ -13,6 +13,9 @@ export class orderDto {
   @ApiProperty({ type: String })
   organisationId?: string;
 
+  @ApiProperty({ type: String })
+  parentOrganisationId?: string;
+
   @ApiProperty()
   @IsArray()
   items: itemOrder[];

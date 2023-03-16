@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full relative overflow-scroll">
+  <div class="w-full h-full relative overflow-scroll ">
     <slot name="title"> </slot>
 
     <BaseTable

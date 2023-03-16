@@ -45,7 +45,7 @@ export default defineComponent({
         ) : 0} `,
         subtitle: "Packs en stock",
 
-        icon: "bottle",
+        icon: "packlocker",
         primaryColor: "#B9212E",
         secondaryColor: "#FFEEED"
       }
@@ -59,9 +59,9 @@ export default defineComponent({
         ) : 0} `,
         subtitle: "Casiers en stock",
 
-        icon: "bottle",
+        icon: "bottleColors",
         primaryColor: "#B9212E",
-        secondaryColor: "#FFEEED"
+        secondaryColor: "#F1EDFF"
       }
     })
 
@@ -80,9 +80,9 @@ export default defineComponent({
         title: `${generalInfos.value && generalInfos.value.lastStock ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
         subtitle: "Date du dernier appro",
 
-        icon: "dollar",
+        icon: "calend",
         primaryColor: "#0060CF",
-        secondaryColor: "#E6EAF6"
+        secondaryColor: "#FFE6CE"
       }
     })
 

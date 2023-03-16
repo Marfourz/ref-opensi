@@ -25,11 +25,6 @@ export enum OrganisationType {
   DP = "dp",
 }
 
-export enum OrderStatus {
-  DELIVERY = "delivered",
-  PENDING = "pending",
-  REJECTED = "aborted",
-}
 
 export enum AccountStatus {
   DELIVERY = "delivered",
@@ -66,7 +61,8 @@ export enum UserAccountStatus {
   export enum OrderStatus {
     NEW = 'new',
     DELIVERED = 'delivered',
-    ACCEPTED = 'accepted'
+    ACCEPTED = 'accepted',
+    REJECTED = "aborted",
   }
 
   export enum StockState{

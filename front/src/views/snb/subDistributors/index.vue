@@ -62,7 +62,7 @@
             </div>
             <div class="flex justify-between space-x-6">
               <BaseInput name="téléphone" label="Téléphone" rules="required" v-model="master.phone"></BaseInput>
-              <BaseInput name="firstname" label="Email" rules="required" v-model="master.email"></BaseInput>
+              <BaseInput name="firstname" label="Email"  rules="required|email" v-model="master.email"></BaseInput>
             </div>
             <div class="flex justify-between space-x-6">
               <BaseInput name="Nom du représentant" label="Nom du représentant" rules="required"

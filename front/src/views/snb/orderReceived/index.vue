@@ -104,7 +104,7 @@
         </div>
       </template>
       <template #secondPart>
-        <Order :order="order" v-if="order">
+        <Order :order="order" v-if="order" >
           <template #title>
             <div class="space-y-4">
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
@@ -137,23 +137,19 @@
                 ></BaseTableStatut>
               </div>
 
-              <div class="font-bold text-sm flex justify-between border-success border-2 py-2.5 px-2 bg-[#E9F9EF] rounded" v-if="order.deliveryCode">
-                <div>Code de livraison : {{ order.deliveryCode }}</div>
-                <BaseIcon name="interrogation"/>
-                
-              </div>
+            
 
               <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
                 <div class="space-y-1">
                   <div class="semi-bold">Livraison</div>
-                  <div class="flex items-center">
-                    <div class="flex items-center space-x-1.5" v-if="order.deliveryDate">
+                  <div class="flex items-center w-full">
+                    <div class="flex items-center space-x-1.5" >
                       <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
                       <span>Date</span>
-                      <span class="font-bold">{{ helpers.formatDateReduce(order.deliveryDate) }}</span>
+                      <span class="font-bold">{{!order.deliveryDate ? "Non défini" : helpers.formatDateReduce(order.deliveryDate) }}</span>
                     </div>
                     <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
-                    <div class="flex items-center space-x-1.5" order.deliveryMan>
+                    <div class="flex items-center space-x-1.5" >
                       <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
                       <span>Livreur : </span>
                       <span class="text-[#0050CF] font-semibold underline cursor-pointer"

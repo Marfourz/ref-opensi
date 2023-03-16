@@ -63,4 +63,9 @@ export class TransactionService {
       return;
     }
   }
+
+  async validateTransaction(body: any): Promise<any> {
+    console.log(body);
+    return body;
+  }
 }
