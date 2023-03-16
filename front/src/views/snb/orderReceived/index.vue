@@ -11,7 +11,12 @@
       ></SuccessInfo>
     </div>
 
-    <BaseModal :show="show" @close="show = false" :title="!justAssign ?  'Accepter la commande' : 'Assigner à un livreur'">
+    <BaseModal
+      :show="show"
+      @close="show = false"
+      :title="!justAssign ? 'Accepter la commande' : 'Assigner à un livreur'"
+    >
+      <div>{{}}</div>
       <FormAssignDeliveryPerson
         :orderId="selectedOrderId"
         :justAssign="justAssign"
@@ -19,6 +24,40 @@
         @reset="show = false"
       ></FormAssignDeliveryPerson>
     </BaseModal>
+
+    <BaseModal
+      title="Rejeter une demande"
+      :show="showReject"
+      @close="showReject = false"
+    >
+      <template #modal>
+        <div class="flex flex-col space-y-6 items-center py-4">
+          <BaseIcon name="warning"></BaseIcon>
+          <div class="text-center font-semibold text-2xl">
+            Êtes vous sur de vouloir rejecter cette commande ?
+          </div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="showReject = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="confirmRejectOrder"
+            >
+              Rejeter
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+    </BaseModal>
+
     <PageInTwoPart>
       <template #firstPart>
         <div class="space-y-8">
@@ -76,14 +115,14 @@
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
                   <div class="">
-                    <div class="text-[#6B7A99]">{{ partenaireTitle }}</div>
+                    <div class="text-[#6B7A99] text-sm font-semibold">{{ partenaireTitle }}</div>
                     <div class="font-bold">
                       {{ order.organisation?.socialReason }}
                     </div>
                   </div>
                 </div>
                 <div
-                  class="border border-[#6B7A99] py-2.5 px-2 rounded font-semibold cursor-pointer"
+                  class="border border-[#6B7A99] py-2.5 px-2 h-fit w-fit rounded font-semibold cursor-pointer text-sm"
                 >
                   Voir le profil
                 </div>
@@ -97,14 +136,43 @@
                   :type="getStatutType(order)"
                 ></BaseTableStatut>
               </div>
+
+              <div class="font-bold text-sm flex justify-between border-success border-2 py-2.5 px-2 bg-[#E9F9EF] rounded" v-if="order.deliveryCode">
+                <div>Code de livraison : {{ order.deliveryCode }}</div>
+                <BaseIcon name="interrogation"/>
+                
+              </div>
+
+              <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
+                <div class="space-y-1">
+                  <div class="semi-bold">Livraison</div>
+                  <div class="flex items-center">
+                    <div class="flex items-center space-x-1.5" v-if="order.deliveryDate">
+                      <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Date</span>
+                      <span class="font-bold">{{ helpers.formatDateReduce(order.deliveryDate) }}</span>
+                    </div>
+                    <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
+                    <div class="flex items-center space-x-1.5" order.deliveryMan>
+                      <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Livreur : </span>
+                      <span class="text-[#0050CF] font-semibold underline cursor-pointer"
+                        >{{order.deliveryMan}}</span
+                      >
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </template>
         </Order>
-        <div class="flex h-full flex-col justify-center" v-else>
-          <EmptyState
-            title="Vous verrez ici les détails  d'une <br> commande"
-            image="/src/assets/images/emptyBasket.png"
-          ></EmptyState>
+        <div class="flex flex-col items-center space-y-4" v-else>
+          <img src="@/assets/images/emptyBasket.png" alt="" />
+          <div class="font-semibold text-center">
+            Vous verrez ici les détails d'une <br />
+            commande
+          </div>
         </div>
       </template>
     </PageInTwoPart>
@@ -136,7 +204,8 @@ export default defineComponent({
     EmptyState,
     FormAssignDeliveryPerson,
     SuccessInfo,
-  },
+    
+},
   setup() {
     const titles = [
       {
@@ -163,7 +232,7 @@ export default defineComponent({
 
     const order = ref();
 
-    const justAssign = ref(false)
+    const justAssign = ref(false);
 
     const orderStore = useOrdersStore();
     const userStore = useUsersStore();
@@ -183,12 +252,14 @@ export default defineComponent({
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
       else if (element.status == OrderStatus.DELIVERED) return "Inactive";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
     function getStatutType(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "colorize";
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
+      else if (element.status == OrderStatus.REJECTED) return "danger";
     }
 
     const toast = useToast();
@@ -212,79 +283,69 @@ export default defineComponent({
       },
     ];
 
-    function filterActions(element : IOrder){
-      let elements = []
+    function filterActions(element: IOrder) {
+      let elements = [];
 
-      if(element.status == OrderStatus.NEW)
-        elements =   [
-     
-        {
-          title: "Accepter",
-          classIcon:"text-tableColor",
-          icon: "edit",
-          action: acceptOrder,
-        },
-        {
-          title: "Rejeter",
-          iconClass:"text-[#E03A15] w-3 h-3",
-          titleClass: "text-[#E03A15] ",
-          icon: "close",
-          action: rejectOrder,
-        },
-     
-    ]
+      if (element.status == OrderStatus.NEW)
+        elements = [
+          {
+            title: "Accepter",
+            classIcon: "text-tableColor",
+            icon: "edit",
+            action: acceptOrder,
+          },
+          {
+            title: "Rejeter",
+            iconClass: "text-[#E03A15] w-3 h-3",
+            titleClass: "text-[#E03A15] ",
+            icon: "close",
+            action: rejectOrder,
+          },
+        ];
+      else if (element.status == OrderStatus.ACCEPTED) {
+        if (!element.deliveryMan) {
+          elements.push({
+            title: "Assigner à un livreur",
+            classIcon: "text-tableColor",
+            icon: "deliveryPerson",
+            action: assignOrder,
+          });
+        }
 
-    else if(element.status == OrderStatus.ACCEPTED) {
-      if(!element.deliveryDate){
         elements.push({
-          title: "Assigner à un livreur",
-          classIcon:"text-tableColor",
-          icon: "deliveryPerson",
-          action: assignOrder,
-        })
-      }
-
-     
-      
-      elements.push({
           title: "Voir facture proforma",
-          classIcon:"text-tableColor",
+          classIcon: "text-tableColor",
           icon: "facture",
           action: acceptOrder,
-        })
+        });
 
         elements.push({
           title: "Voir l'historique",
-          classIcon:"text-tableColor",
+          classIcon: "text-tableColor",
           icon: "history",
           action: acceptOrder,
-        })
+        });
+      }
 
-     
-
+      return elements;
     }
-       
-      return  elements
-    }
-    
 
     async function assignOrder(order: any) {
       show.value = true;
-      justAssign.value = true
+      justAssign.value = true;
       selectedOrderId.value = order.id;
     }
 
     async function acceptOrder(order: any) {
       show.value = true;
-      justAssign.value = false
+      justAssign.value = false;
       selectedOrderId.value = order.id;
     }
 
     async function rejectOrder(order: any) {
-      show.value = true;
+      showReject.value = true;
       selectedOrderId.value = order.id;
     }
-    
 
     async function showItemOrder(element: any) {
       try {
@@ -297,8 +358,6 @@ export default defineComponent({
 
     const selectedOrderId = ref();
 
-    
-
     const reload = ref(1);
 
     function orderAcceptSuccessful() {
@@ -310,6 +369,25 @@ export default defineComponent({
     const show = ref(false);
 
     const showSuccesInfo = ref(false);
+
+    const loading = ref(false);
+
+    const showReject = ref(false);
+
+    async function confirmRejectOrder() {
+      loading.value = true;
+      try {
+        const response = await orderStore.update(selectedOrderId.value, {
+          status: OrderStatus.REJECTED,
+        });
+        showReject.value = false;
+        loading.value = false;
+        reload.value = reload.value + 1;
+        toast.success("Commande rejetée avec succès");
+      } catch (error: any) {
+        toast.success("Rejet impossible");
+      }
+    }
 
     return {
       titles,
@@ -330,7 +408,11 @@ export default defineComponent({
       showSuccesInfo,
       filterActions,
       showItemOrder,
-      justAssign
+      justAssign,
+      showReject,
+      loading,
+      confirmRejectOrder,
+      
     };
   },
 });

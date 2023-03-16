@@ -86,6 +86,8 @@ export interface IOrder extends Commun {
   transaction: ITransaction;
   status: OrderStatus;
   deliveryDate: Date;
+  deliveryMan?:IUser,
+  deliveryCode?: number
 }
 
 export interface IUser extends Commun {

@@ -28,7 +28,7 @@ export enum OrganisationType {
 export enum OrderStatus {
   DELIVERY = "delivered",
   PENDING = "pending",
-  REJECTED = "rejected",
+  REJECTED = "aborted",
 }
 
 export enum AccountStatus {
