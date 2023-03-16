@@ -20,7 +20,17 @@
     </div>
     <BaseTabs :tabs="tabs" class="mt-7">
       <template #dashboard>
-        <div class="font-bold text-xl tracking-[-2%] mt-7">Statistiques</div>
+        <!-- <div class="font-bold text-xl tracking-[-2%] mt-7">Statistiques</div> -->
+        <div class="flex justify-between items-center mt-9">
+      <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
+      <!-- <BaseDateRange></BaseDateRange> -->
+      <div class="text-link underline cursor-pointer font-semibold">
+        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
+          <div class="font-semibold text-sm p-2">Ce mois</div>
+          <BaseIcon name="Top"></BaseIcon>
+        </div>
+      </div>
+    </div>
         <div class="grid grid-cols-4 space-x-6 mt-7">
           <DashboardCard :data="turnover"></DashboardCard>
           <DashboardCard :data="numberOfOrders"></DashboardCard>
