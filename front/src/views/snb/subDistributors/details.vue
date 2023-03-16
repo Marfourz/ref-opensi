@@ -228,7 +228,7 @@ const numberOfOrders = computed(() => {
   return {
     title: `${selectedMaster.value?.orders ? selectedMaster.value?.orders : "0"
       } `,
-    subtitle: "Nbre de commandes",
+    subtitle: "Nombre de commandes",
 
     icon: "Papers",
     primaryColor: "#B9212E",
@@ -239,7 +239,7 @@ const numberOfOrders = computed(() => {
 const numberOfPartners = computed(() => {
   return {
     title: `${selectedMaster.value?.partners}`,
-    subtitle: "Nbre de partenaires",
+    subtitle: "Nombre de partenaires",
 
     icon: "dollar",
     primaryColor: "#0060CF",
