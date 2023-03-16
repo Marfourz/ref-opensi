@@ -153,7 +153,7 @@
                       <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
                       <span>Livreur : </span>
                       <span class="text-[#0050CF] font-semibold underline cursor-pointer"
-                        >{{order.deliveryMan}}</span
+                        >{{order.deliveryMan.name}}</span
                       >
                     </div>
                     <div></div>
