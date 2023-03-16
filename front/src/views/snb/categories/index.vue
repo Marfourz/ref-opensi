@@ -5,35 +5,39 @@
       :show="modal.show"
       @close="modal.show = false"
     >
-         <Form @submit="onSubmit" class="space-y-6" v-if="modal.mode == 'confirm'">
-          <BaseInput
-            name="Nom"
-            rules="required"
-            v-model="category.name"
-            label="Nom de la catégorie"
-          ></BaseInput>
-          <BaseInput
-            name="description"
-            v-model="category.description"
-            type="textarea"
-            label="Description"
-          ></BaseInput>
-          <BaseButton class="w-full" :loading="loading">{{
-            modal.type == "create" ? "Ajouter" : "Modifier"
-          }}</BaseButton>
-        </Form>
-        <template #modal >
-        <div class="flex flex-col space-y-6 items-center py-4" v-if="modal.mode == 'success'">
+      <Form @submit="onSubmit" class="space-y-6" v-if="modal.mode == 'confirm'">
+        <BaseInput
+          name="Nom"
+          rules="required"
+          v-model="category.name"
+          label="Nom de la catégorie"
+        ></BaseInput>
+        <BaseInput
+          name="description"
+          v-model="category.description"
+          type="textarea"
+          label="Description"
+        ></BaseInput>
+        <BaseButton class="w-full" :loading="loading">{{
+          modal.type == "create" ? "Ajouter" : "Modifier"
+        }}</BaseButton>
+      </Form>
+      <template #modal>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'success'"
+        >
           <div
             class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
           >
             <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
           </div>
-          <div class="font-bold text-2xl text-center" v-html="modal.title">
-         
-          </div>
+          <div
+            class="font-bold text-2xl text-center"
+            v-html="modal.title"
+          ></div>
           <BaseButton class="w-full" @click="modal.show = false"
-            >Terminé</BaseButton
+            >Terminer</BaseButton
           >
         </div>
 
@@ -66,9 +70,6 @@
           </div>
         </div>
       </template>
-
-    
-     
     </BaseModal>
     <BaseGoBack></BaseGoBack>
     <div class="flex items-center space-x-6">
@@ -85,19 +86,18 @@
     </div> -->
 
     <BaseTableWithFilter
-     
       :fetchData="productCategoryStore.fetchAll"
       :titles="titles"
       :actions="actions"
       @total="total = $event"
       :key="reload"
     >
-      <template #description="{element}">
+      <template #description="{ element }">
         <div>
-            {{ element.description ? element.description : 'Aucune' }}
+          {{ element.description ? element.description : "Aucune" }}
         </div>
       </template>
-  </BaseTableWithFilter>
+    </BaseTableWithFilter>
   </div>
 </template>
 
@@ -118,7 +118,6 @@ export default defineComponent({
       description: "",
     });
     const actions = [
-     
       {
         title: "Modifier",
         icon: "edit",
@@ -131,8 +130,6 @@ export default defineComponent({
       },
     ];
 
-   
-
     function onUpdate(value: IProductCategory) {
       selectedCategory.value = value;
       category.name = value.name;
@@ -144,11 +141,11 @@ export default defineComponent({
     }
 
     function onDelete(value: IProductCategory) {
-      modal.title =`Êtes-vous sûr de vouloir <br> supprimer la catégorie <br> ${value.name} ?`;
+      modal.title = `Êtes-vous sûr de vouloir <br> supprimer la catégorie <br> ${value.name} ?`;
       modal.show = true;
       modal.mode = "confirm";
       modal.type = "delete";
-      selectedCategory.value = value
+      selectedCategory.value = value;
     }
 
     const selectedCategory = ref();
@@ -158,14 +155,14 @@ export default defineComponent({
       modal.show = true;
       modal.mode = "confirm";
       modal.type = "create";
-      category.name = ""
-      category.description = ""
-      selectedCategory.value = null
+      category.name = "";
+      category.description = "";
+      selectedCategory.value = null;
     }
 
     const loading = ref(false);
 
-    const reload = ref(false)
+    const reload = ref(false);
 
     async function onSubmit() {
       loading.value = true;
@@ -181,7 +178,7 @@ export default defineComponent({
           modal.title = "Catégorie mise à jour avec <br> succès ! ";
         }
 
-        reload.value = !reload.value
+        reload.value = !reload.value;
         modal.show = true;
         modal.mode = "success";
         loading.value = false;
@@ -190,23 +187,20 @@ export default defineComponent({
       }
     }
 
-    const toast = useToast()
+    const toast = useToast();
 
-    async function deleteCategory(){
-      loading.value = true
-      try{
-        await productCategoryStore.delete(selectedCategory.value.id)
-        toast.success("Suppression effectuée avec le succès")
-        loading.value = false
-        modal.show = false
-        reload.value = !reload.value
+    async function deleteCategory() {
+      loading.value = true;
+      try {
+        await productCategoryStore.delete(selectedCategory.value.id);
+        toast.success("Suppression effectuée avec le succès");
+        loading.value = false;
+        modal.show = false;
+        reload.value = !reload.value;
+      } catch (error: any) {
+        toast.error("Suppression impossible");
+        loading.value = false;
       }
-      catch(error : any){
-        toast.error("Suppression impossible")
-        loading.value = false
-      }
-      
-
     }
 
     const titles = [
@@ -244,7 +238,7 @@ export default defineComponent({
       createCategory,
       loading,
       reload,
-      deleteCategory
+      deleteCategory,
     };
   },
 });

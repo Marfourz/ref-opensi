@@ -1,12 +1,16 @@
 <template>
-  <div class="w-full space-y-2 ">
-    <label for="" class="font-semibold w-full text-[#6B7A99] text-[14px]" v-if="label">{{ label }}</label>
+  <div class="w-full space-y-2">
+    <label
+      for=""
+      class="font-semibold w-full text-[#6B7A99] text-[14px]"
+      v-if="label"
+      >{{ label }}</label
+    >
     <div class="relative bg-white">
       <div
         class="flex justify-between items-center px-4 border py-2 rounded-md border-borderColor"
         @click="showElement = !showElement"
       >
-      
         <input
           type="text"
           v-bind="$attrs"
@@ -34,7 +38,7 @@
         v-if="showElement"
       >
         <div
-          class="md:py-3 py-2 px-4 text-left hover:bg-blue-50 cursor-pointer "
+          class="md:py-3 py-2 px-4 text-left hover:bg-blue-50 cursor-pointer"
           v-for="(element, i) in items"
           :key="element.value"
           :class="{
@@ -51,18 +55,16 @@
 </template>
 
 <script lang="ts">
-
 export interface ISelect {
   title: string;
   value: string;
 }
-import { defineComponent, ref, onUpdated,watch,onMounted, toRef } from "vue";
+import { defineComponent, ref, onUpdated, watch, onMounted, toRef } from "vue";
 export default defineComponent({
- 
   props: {
     modelValue: {
       type: String,
-      required:true
+      required: true,
     },
     label: {
       type: String,
@@ -74,11 +76,9 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
 
-
   setup(props, context) {
     const selected = ref();
     const showElement = ref(false);
-   
 
     function selectElement(element: ISelect) {
       showElement.value = !showElement.value;
@@ -86,26 +86,23 @@ export default defineComponent({
       context.emit("update:modelValue", selected.value.value);
     }
 
-    watch(()=>props.modelValue,(newValue)=>{
+    watch(
+      () => props.modelValue,
+      (newValue) => {
+        const elementIndex = props.items.findIndex(
+          (value: ISelect) => value.value == props.modelValue
+        );
 
-      const elementIndex = props.items.findIndex((value:ISelect)=>value.value == props.modelValue)
-    
-      if(elementIndex != -1)
-        selected.value = props.items[elementIndex];
-        
-    })
-
-
-   
+        if (elementIndex != -1) selected.value = props.items[elementIndex];
+      }
+    );
 
     onMounted(() => {
-     
-      if(props.items && props.items.length > 0){
+      if (props.items && props.items.length > 0) {
         selected.value = props.items[0];
         context.emit("update:modelValue", selected.value.value);
       }
-          
-    })
+    });
 
     return {
       selected,

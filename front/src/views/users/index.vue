@@ -43,7 +43,7 @@
             {{ modal.title }}
           </div>
           <BaseButton class="w-full" @click="modal.show = false"
-            >Terminé</BaseButton
+            >Terminer</BaseButton
           >
         </div>
       </template>
@@ -105,7 +105,7 @@
             <BaseInput
               name="firstname"
               label="Email"
-              rules="required"
+               rules="required|email"
               v-model="user.email"
             ></BaseInput>
             <BaseSelect
@@ -242,9 +242,9 @@ export default defineComponent({
       ];
     });
 
-    const organisationId = computed(()=>{
-      return userStore.getCurrentUser?.organisationId
-    })
+    const organisationId = computed(() => {
+      return userStore.getCurrentUser?.organisationId;
+    });
 
     const roles = computed(() => {
       return [
@@ -321,7 +321,7 @@ export default defineComponent({
 
     const reload = ref(false);
 
-    const toast = useToast()
+    const toast = useToast();
 
     async function onSubmit() {
       loading.value = true;
@@ -342,7 +342,7 @@ export default defineComponent({
         reload.value = !reload.value;
       } catch (error: any) {
         loading.value = false;
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       }
     }
 
@@ -361,18 +361,10 @@ export default defineComponent({
       deleteUser,
       loading,
       reload,
-      organisationId
+      organisationId,
     };
   },
 });
 </script>
 
 <style scoped></style>
-
-
-
-
-
-
-
-

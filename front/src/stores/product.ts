@@ -6,9 +6,9 @@ import { PackagingType } from "../types/enumerations";
 import { useUsersStore } from "./users";
 
 interface ICreateStock {
-  organisationId: PrimaryKey,
-  productId: PrimaryKey,
-  currentQuantity: number
+  organisationId: PrimaryKey;
+  productId: PrimaryKey;
+  currentQuantity: number;
 }
 
 export const useProductStore = defineStore("productStore", {
@@ -56,41 +56,41 @@ export const useProductStore = defineStore("productStore", {
       }
     },
 
-    async updateStock(id: PrimaryKey, quantity : number) {
+    async updateStock(id: PrimaryKey, quantity: number) {
       try {
-        const response = await Api.put(`stocks/${id}`,{currentQuantity : quantity});
+        const response = await Api.put(`stocks/${id}`, {
+          currentQuantity: quantity,
+        });
         return response;
       } catch (error) {
         throw error;
       }
     },
 
-    async fetchAllProductsStock(query : any, orgId : PrimaryKey){
+    async fetchAllProductsStock(query: any, orgId: PrimaryKey) {
       try {
-        const response = await Api.get(`stocks/${orgId}/search`,{params : query});
+        const response = await Api.get(`stocks/${orgId}/search`, {
+          params: query,
+        });
 
-       
-        return response.data
-        
+        return response.data;
       } catch (error) {
         throw error;
       }
     },
 
-
-    async createStock(data : ICreateStock){
-     
+    async createStock(data: ICreateStock) {
       try {
-        const response = await Api.post(`stocks`,data);
+        const response = await Api.post(`stocks`, data);
         return response;
       } catch (error) {
         throw error;
       }
     },
 
-    async stockGeneralInfo(){
-      const userStore = useUsersStore()
-      const orgId = userStore.getCurrentUser?.organisationId
+    async stockGeneralInfo() {
+      const userStore = useUsersStore();
+      const orgId = userStore.getCurrentUser?.organisationId;
       try {
         const response = await Api.get(`stocks/${orgId}/generalInfos`);
         return response.data;
@@ -99,22 +99,19 @@ export const useProductStore = defineStore("productStore", {
       }
     },
 
+    getPackageTypeLabel(type: PackagingType): string | undefined {
+      const labels = [
+        {
+          code: PackagingType.PACK,
+          label: "Casier",
+        },
+        {
+          code: PackagingType.RACK,
+          label: "Pack",
+        },
+      ];
 
-
-
-    getPackageTypeLabel(type : PackagingType) : string | undefined{
-      const labels =[
-          {
-            code: PackagingType.PACK,
-            label: "Casier",
-          },
-          {
-            code: PackagingType.RACK,
-            label: "Pack",
-          }
-        ];
-
-      return labels.find((value : any)=>value.code == type)?.label
-  },
+      return labels.find((value: any) => value.code == type)?.label;
+    },
   },
 });

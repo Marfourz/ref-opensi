@@ -43,7 +43,7 @@
             {{ modal.title }}
           </div>
           <BaseButton class="w-full" @click="modal.show = false"
-            >Terminé</BaseButton
+            >Terminer</BaseButton
           >
         </div>
       </template>
@@ -65,13 +65,6 @@
     >
       <template #filter>
         <div class="flex space-x-4 h-full">
-          <!-- <div
-              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-            >
-              <div>Filtré par</div>
-              <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div> -->
-
           <BaseButton icon="upload" size="small">Télécharger</BaseButton>
         </div>
       </template>
@@ -128,7 +121,7 @@
               <BaseInput
                 name="firstname"
                 label="Email"
-                rules="required"
+                rules="required|email"
                 v-model="user.email"
               ></BaseInput>
 
@@ -293,6 +286,10 @@ export default defineComponent({
 
     const titles = [
       {
+        title: "Identifiant",
+        name: "id",
+      },
+      {
         title: "Nom & Prénoms",
         name: "name",
       },
@@ -364,13 +361,13 @@ export default defineComponent({
             ...user,
             role: UserRole.DELIVERY_MAN,
           });
-          modal.title = `Utilisateur modifié avec succès`;
+          modal.title = `Livreur modifier avec succès`;
         } else {
           const response = await userStore.create({
             ...user,
             role: UserRole.DELIVERY_MAN,
           });
-          modal.title = `Utilisateur crée avec succès`;
+          modal.title = `Livreur créer avec succès`;
         }
         modal.show = true;
         modal.subtitle = "";

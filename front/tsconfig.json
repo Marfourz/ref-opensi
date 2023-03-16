@@ -1,17 +1,16 @@
-{ 
+{
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": [
-    "env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "preserveValueImports": false, 
+    "preserveValueImports": false,
     "importsNotUsedAsValues": "preserve",
     "target": "esnext",
-    "module": "esnext",
+    "module": "esnext"
   },
 
   "references": [
@@ -19,6 +18,4 @@
       "path": "./tsconfig.config.json"
     }
   ]
-
 }
-

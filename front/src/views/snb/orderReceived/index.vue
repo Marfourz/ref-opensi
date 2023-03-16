@@ -1,11 +1,21 @@
 <template>
   <div class="" :key="reload">
-    <div class="absolute  top-6 right-0 left-0 flex justify-center" v-if="showSuccesInfo">
-      <SuccessInfo title="Livreur assigné avec succès" class="w-fit " @close="showSuccesInfo = false"></SuccessInfo>
+    <div
+      class="absolute top-6 right-0 left-0 flex justify-center"
+      v-if="showSuccesInfo"
+    >
+      <SuccessInfo
+        title="Livreur assigné avec succès"
+        class="w-fit"
+        @close="showSuccesInfo = false"
+      ></SuccessInfo>
     </div>
-    
-    <BaseModal :show="show" @close="show = false"  title="Accepter la commande">
-      <FormAssignDeliveryPerson :orderId="selectedOrderId" @submitSuccess="orderAcceptSuccessful"></FormAssignDeliveryPerson>
+
+    <BaseModal :show="show" @close="show = false" title="Accepter la commande">
+      <FormAssignDeliveryPerson
+        :orderId="selectedOrderId"
+        @submitSuccess="orderAcceptSuccessful"
+      ></FormAssignDeliveryPerson>
     </BaseModal>
     <PageInTwoPart>
       <template #firstPart>
@@ -13,42 +23,42 @@
           <BaseTitle title="Mes commandes"></BaseTitle>
           <div class="relative">
             <BaseTableWithFilter
-            :titles="titles"
-            :requestId="organisationId"
-            :fetchData="orderStore.fetchAllByOrganizationType"
-            :actions="actions"
-          >
-            <template #status="{ element }">
-              <BaseTableStatut
-                :title="getStatutLabel(element)"
-                :type="getStatutType(element)"
-              ></BaseTableStatut>
-            </template>
+              :titles="titles"
+              :requestId="organisationId"
+              :fetchData="orderStore.fetchAllByOrganizationType"
+              :actions="actions"
+            >
+              <template #status="{ element }">
+                <BaseTableStatut
+                  :title="getStatutLabel(element)"
+                  :type="getStatutType(element)"
+                ></BaseTableStatut>
+              </template>
 
-            <template #totalAmount="{ element }">
-              <div>{{ helpers.currency(element.totalAmount) }} F</div>
-            </template>
-            <template #createdAt="{ element }">
-              <div>
-                {{ helpers.formatDateHour(element.createdAt) }}
-              </div>
-            </template>
-            <template #filter>
-          <div class="flex space-x-4 h-full">
-            <!-- <div
+              <template #totalAmount="{ element }">
+                <div>{{ helpers.currency(element.totalAmount) }} F</div>
+              </template>
+              <template #createdAt="{ element }">
+                <div>
+                  {{ helpers.formatDateHour(element.createdAt) }}
+                </div>
+              </template>
+              <template #filter>
+                <div class="flex space-x-4 h-full">
+                  <!-- <div
               class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
             >
               <div>Filtré par</div>
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
             </div> -->
 
-            <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-           
+                  <BaseButton icon="upload" size="small"
+                    >Télécharger</BaseButton
+                  >
+                </div>
+              </template>
+            </BaseTableWithFilter>
           </div>
-        </template>
-          </BaseTableWithFilter>
-          </div>
-        
         </div>
       </template>
       <template #secondPart>
@@ -57,26 +67,37 @@
             <div class="space-y-4">
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
                 <div class="flex items-center space-x-3">
-                  <div class="rounded-full flex items-center justify-center bg-[#EDEFF3] w-12 h-12">
+                  <div
+                    class="rounded-full flex items-center justify-center bg-[#EDEFF3] w-12 h-12"
+                  >
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
                   <div class="">
                     <div class="text-[#6B7A99]">{{ partenaireTitle }}</div>
-                    <div class="font-bold">{{order.organisation?.socialReason}}</div>
+                    <div class="font-bold">
+                      {{ order.organisation?.socialReason }}
+                    </div>
                   </div>
-
                 </div>
-                <div class="border border-[#6B7A99] py-2.5 px-2 rounded font-semibold cursor-pointer">Voir le profil</div>
+                <div
+                  class="border border-[#6B7A99] py-2.5 px-2 rounded font-semibold cursor-pointer"
+                >
+                  Voir le profil
+                </div>
               </div>
-              <div class="flex space-x-2  items-center">
-                <div class="font-bold text-lg ">Commande {{ order.reference }} </div>
-                <BaseTableStatut :title="getStatutLabel(order)" :type="getStatutType(order)"></BaseTableStatut>
+              <div class="flex space-x-2 items-center">
+                <div class="font-bold text-lg">
+                  Commande {{ order.reference }}
+                </div>
+                <BaseTableStatut
+                  :title="getStatutLabel(order)"
+                  :type="getStatutType(order)"
+                ></BaseTableStatut>
               </div>
             </div>
-           
           </template>
         </Order>
-        <div  class="flex h-full flex-col justify-center" v-else>
+        <div class="flex h-full flex-col justify-center" v-else>
           <EmptyState
             title="Vous verrez ici les détails  d'une <br> commande"
             image="/src/assets/images/emptyBasket.png"
@@ -105,7 +126,13 @@ import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue"
 import SuccessInfo from "../../../components/SuccessInfo.vue";
 
 export default defineComponent({
-  components: { PageInTwoPart, Order,EmptyState,FormAssignDeliveryPerson,SuccessInfo },
+  components: {
+    PageInTwoPart,
+    Order,
+    EmptyState,
+    FormAssignDeliveryPerson,
+    SuccessInfo,
+  },
   setup() {
     const titles = [
       {
@@ -158,64 +185,54 @@ export default defineComponent({
       else if (element.status == OrderStatus.NEW) return "blue";
     }
 
-    const toast = useToast()
+    const toast = useToast();
 
-    
-
-    const partenaireTitle = computed(()=>{
-        if(order.value.organisation.type == OrganisationType.DA)
-          return 'Distributeur agrée'
-        else 
-          return 'Master distributeur'
-    })
+    const partenaireTitle = computed(() => {
+      if (order.value.organisation.type == OrganisationType.DA)
+        return "Distributeur agrée";
+      else return "Master distributeur";
+    });
 
     const actions = [
-        {
-          title: "Voir détails",
-          icon: "eye",
-          action: showItemOrder,
-        },
-        {
-          title: "Accepter",
-          icon: "edit",
-          action: acceptOrder,
-        },
-     
+      {
+        title: "Voir détails",
+        icon: "eye",
+        action: showItemOrder,
+      },
+      {
+        title: "Accepter",
+        icon: "edit",
+        action: acceptOrder,
+      },
     ];
 
-    async function showItemOrder(element : any){
-        try{
-          const response = await orderStore.fetchOne(element.id)
-          order.value = response
-        }
-        catch(error){
-          toast.error("T")
-        }
-        
+    async function showItemOrder(element: any) {
+      try {
+        const response = await orderStore.fetchOne(element.id);
+        order.value = response;
+      } catch (error) {
+        toast.error("T");
+      }
     }
 
-    const selectedOrderId = ref()
+    const selectedOrderId = ref();
 
-    async function acceptOrder(order : any){
-      show.value = true
-      selectedOrderId.value = order.id
+    async function acceptOrder(order: any) {
+      show.value = true;
+      selectedOrderId.value = order.id;
     }
 
+    const reload = ref(1);
 
-    const reload = ref(1)
-
-    function orderAcceptSuccessful(){
-      show.value = false
-      reload.value = reload.value + 1
-      showSuccesInfo.value = true
-      
+    function orderAcceptSuccessful() {
+      show.value = false;
+      reload.value = reload.value + 1;
+      showSuccesInfo.value = true;
     }
 
-    const show = ref(false)
+    const show = ref(false);
 
-    const showSuccesInfo = ref(false)
-
-    
+    const showSuccesInfo = ref(false);
 
     return {
       titles,
@@ -233,7 +250,7 @@ export default defineComponent({
       orderAcceptSuccessful,
       selectedOrderId,
       reload,
-      showSuccesInfo
+      showSuccesInfo,
     };
   },
 });

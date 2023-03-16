@@ -3,99 +3,97 @@
     <div class="flex justify-between items-center">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Stock"></BaseTitle>
-        <BaseButton icon="stock2" size="small">Évolution du stock</BaseButton>
+        <router-link :to="{ name: 'evolutionStock' }">
+          <BaseButton icon="stock2" size="small">Évolution du stock</BaseButton>
+        </router-link>
       </div>
-      <div
-        class="text-link underline cursor-pointer font-semibold"
-        @click="goToUpadateStock"
-      >
+      <div class="text-link underline cursor-pointer font-semibold" @click="goToUpadateStock">
         Gestion de stock
       </div>
     </div>
-    
+
     <div class="grid grid-cols-4 gap-4">
-        <DashboardCard :data="rackStock"></DashboardCard>
-        <DashboardCard :data="packStock"></DashboardCard>
-        <DashboardCard :data="totalCost"></DashboardCard>
-        <DashboardCard :data="approDate"></DashboardCard>
+      <DashboardCard :data="rackStock"></DashboardCard>
+      <DashboardCard :data="packStock"></DashboardCard>
+      <DashboardCard :data="totalCost"></DashboardCard>
+      <DashboardCard :data="approDate"></DashboardCard>
     </div>
 
-   
-    <ProductByCategory  :titles="titles" :actions="actions" :withoutFilter="true"></ProductByCategory>
+
+    <ProductByCategory :titles="titles" :actions="actions" :withoutFilter="true"></ProductByCategory>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent,computed,onMounted, ref, watch } from "vue";
+import { defineComponent, computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import DashboardCard from "../../../components/DashboardCard.vue";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import { IProduct } from "../../../types/interfaces";
 import ProductByCategory from "../products/components/ProductByCategory.vue";
-import helpers from "@/helpers/index"
+import helpers from "@/helpers/index";
 import { useProductStore } from "../../../stores/product";
 import { useUsersStore } from "../../../stores/users";
 
-
-
-
 export default defineComponent({
-    components:{DashboardCard,ProductByCategory},
+  components: { DashboardCard, ProductByCategory },
   setup() {
-    
-    const packStock = computed(()=>{
-        return {
+
+    const packStock = computed(() => {
+      return {
         title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalPackProducts._sum.currentQuantity
-) : 0} `,
+        ) : 0} `,
         subtitle: "Packs en stock",
-       
-        icon: "bottle",
+
+        icon: "packlocker",
         primaryColor: "#B9212E",
         secondaryColor: "#FFEEED"
-    }
-    }) 
+      }
+    })
 
 
 
-    const rackStock = computed(()=>{
-        return {
+    const rackStock = computed(() => {
+      return {
         title: `${generalInfos.value ? helpers.currency(generalInfos.value.totalRackProducts._sum.currentQuantity
-) : 0} `,
+        ) : 0} `,
         subtitle: "Casiers en stock",
-       
-        icon: "bottle",
-        primaryColor: "#B9212E",
-        secondaryColor: "#FFEEED"
-    }
-    }) 
 
-    const totalCost = computed(()=>{
-        return {
-        title: `${generalInfos.value  && generalInfos.value.totalCost ? helpers.currency(generalInfos.value.totalCost) : 0} FCFA`,
+        icon: "bottleColors",
+        primaryColor: "#B9212E",
+        secondaryColor: "#F1EDFF"
+      }
+    })
+
+    const totalCost = computed(() => {
+      return {
+        title: `${generalInfos.value && generalInfos.value.totalCost ? helpers.currency(generalInfos.value.totalCost) : 0} FCFA`,
         subtitle: "Coût total des produits",
         icon: "dollar",
         primaryColor: "#0060CF",
         secondaryColor: "#E6EAF6"
-    }
-    }) 
+      }
+    })
 
-    const approDate = computed(()=>{
-        return {
-        title: `${generalInfos.value  && generalInfos.value.lastStock  ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
+    const approDate = computed(() => {
+      return {
+        title: `${generalInfos.value && generalInfos.value.lastStock ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
         subtitle: "Date du dernier appro",
-       
-        icon: "dollar",
+
+        icon: "calend",
         primaryColor: "#0060CF",
-        secondaryColor: "#E6EAF6"
-    }
-    }) 
+        secondaryColor: "#FFE6CE"
+      }
+    })
 
-    const router = useRouter()
+       
 
-    const product = ref([])
+    const router = useRouter();
 
-    function goToUpadateStock(){
-        router.push({name : "updateStock"})
+    const product = ref([]);
+
+    function goToUpadateStock() {
+      router.push({ name: "updateStock" })
     }
 
     const titles = [
@@ -115,32 +113,32 @@ export default defineComponent({
 
       {
         title: "Quantité en stock",
-        name: "currentQuantity"
+        name: "currentQuantity",
       },
 
       {
         title: "Prix/Casier",
         name: "product.bulkPrice",
         transform: formatPrice
-        
+
       },
       {
         title: "Prix total",
         name: "totalPrice",
-        transform : getTotalPrice
+        transform: getTotalPrice
       }
     ];
 
-   
 
-    function getTotalPrice(element : any){
-        let price = 0
-        price = element.currentQuantity  * element.product.bulkPrice
-        return `${helpers.currency(price)} F`
+
+    function getTotalPrice(element: any) {
+      let price = 0
+      price = element.currentQuantity * element.product.bulkPrice
+      return `${helpers.currency(price)} F`
     }
 
-    function formatPrice(element : any){
-        return `${helpers.currency(element.product.bulkPrice)} F`  
+    function formatPrice(element: any) {
+      return `${helpers.currency(element.product.bulkPrice)} F`
     }
 
     const actions = [
@@ -161,47 +159,47 @@ export default defineComponent({
       },
     ];
 
-    function onView() {}
-    function onUpdate() {}
-    function onDelete() {}
+    function onView() { }
+    function onUpdate() { }
+    function onDelete() { }
 
-    const generalInfos = ref()
+    const generalInfos = ref();
 
-    const productStore = useProductStore()
+    const productStore = useProductStore();
 
-    const userStore = useUsersStore()
+    const userStore = useUsersStore();
 
-    const reload = ref(false)
+    const reload = ref(false);
 
-    const organizationId = computed(()=>{
-        return userStore.getCurrentUser?.organisationId
+    const organizationId = computed(() => {
+      return userStore.getCurrentUser?.organisationId
     })
 
-    watch(()=>organizationId.value,(newValue)=>{
-         loadStockGeneralInfo()
+    watch(() => organizationId.value, (newValue) => {
+      loadStockGeneralInfo()
     })
 
-    async function loadStockGeneralInfo(){
-        const response = await productStore.stockGeneralInfo() 
-       
-        generalInfos.value = response
+    async function loadStockGeneralInfo() {
+      const response = await productStore.stockGeneralInfo()
+
+      generalInfos.value = response
     }
 
-    onMounted(async ()=>{
-        loadStockGeneralInfo()
+    onMounted(async () => {
+      loadStockGeneralInfo()
     })
 
     return {
-        packStock,
-        rackStock,
-        totalCost,
-        approDate,
-        goToUpadateStock,
-        titles,
-        actions,
-        organizationId,
-        generalInfos,
-        reload
+      packStock,
+      rackStock,
+      totalCost,
+      approDate,
+      goToUpadateStock,
+      titles,
+      actions,
+      organizationId,
+      generalInfos,
+      reload
 
     };
   },

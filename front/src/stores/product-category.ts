@@ -20,12 +20,13 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
       }
     },
 
-
-    async fetchProducts(query: any,id:PrimaryKey) {
+    async fetchProducts(query: any, id: PrimaryKey) {
       try {
-        const response = await Api.get(`product-category/${id}/products`, { params: query });
-        console.log("fetchProducts",response.data);
-        
+        const response = await Api.get(`product-category/${id}/products`, {
+          params: query,
+        });
+        console.log("fetchProducts", response.data);
+
         return response.data;
       } catch (error) {
         throw error;

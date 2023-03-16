@@ -1,46 +1,24 @@
 <template>
-  <div >    
-    <div
-      v-if="!hideFilter"
-      class="w-full p-4 border rounded flex items-center justify-between shadow"
-    >
+  <div>
+    <div v-if="!hideFilter" class="w-full p-4 border rounded flex items-center justify-between shadow">
       <div class="space-x-4 flex">
-        <div
-          class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]"
-        >
+        <div class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]">
           <BaseIcon name="search" class="text-grey-50"></BaseIcon>
-          <input
-            type="text"
-            v-model="params.q"
-            @input="onSearch"
+          <input type="text" v-model="params.q" @input="onSearch"
             class="outiline-0 text-gray-700 focus:shadow-outline focus:outline-none w-full bg-transparent"
-            placeholder="Rechercher"
-          />
+            placeholder="Rechercher" />
         </div>
 
         <div class="">
           <slot name="filter">
-            <BaseButton icon="upload" size="small" class="h-full"
-              >Télécharger</BaseButton
-            >
+            <BaseButton icon="upload" size="small" class="h-full">Télécharger</BaseButton>
           </slot>
         </div>
       </div>
-      <BasePagination
-        :peerPage="paginationData.peerPage"
-        :totalElements="paginationData.total"
-        @change="pageChange"
-      />
+      <BasePagination :peerPage="paginationData.peerPage" :totalElements="paginationData.total" @change="pageChange" />
     </div>
-    <BaseTable
-      :titles="titles"
-      :data="items"
-      :loading="loading"
-      :actions="actions"
-      class="mt-6"
-    >
-    
-    <template v-for="(_, name) in slots" v-slot:[name]="slotData">
+    <BaseTable :titles="titles" :data="items" :loading="loading" :actions="actions" class="mt-6">
+      <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
       </template>
     </BaseTable>
@@ -61,7 +39,7 @@ import {
 import type { PropType } from "vue";
 import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
-import { IAction } from "./BaseActions.vue";
+import { IAction } from "@/types/interfaces";
 import { PrimaryKey } from "../../types/interfaces";
 
 export interface QueryParams {
@@ -149,12 +127,9 @@ export default defineComponent({
             { ...params, ...props.params },
             props.requestId
           );
-          console.log("firstn response",response);
+          console.log("firstn response", response);
         }
 
-
-        
-        
         if (Array.isArray(response)) {
           items.value = response;
         } else {
@@ -208,8 +183,7 @@ export default defineComponent({
       return values;
     });
 
-
-    const slots = useSlots()
+    const slots = useSlots();
 
     function onSearch() {
       loadData();
@@ -222,7 +196,7 @@ export default defineComponent({
       items,
       pageChange,
       slotDatas,
-      slots
+      slots,
     };
   },
 });
