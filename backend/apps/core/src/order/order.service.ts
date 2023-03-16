@@ -99,7 +99,7 @@ export class OrderService {
         include: {
           items: { include: { product: true } },
           invoice: true,
-          organisation: true,
+          organisation: true
         },
       });
       return order;
