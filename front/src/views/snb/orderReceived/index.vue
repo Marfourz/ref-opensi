@@ -11,10 +11,12 @@
       ></SuccessInfo>
     </div>
 
-    <BaseModal :show="show" @close="show = false" title="Accepter la commande">
+    <BaseModal :show="show" @close="show = false" :title="!justAssign ?  'Accepter la commande' : 'Assigner à un livreur'">
       <FormAssignDeliveryPerson
         :orderId="selectedOrderId"
+        :justAssign="justAssign"
         @submitSuccess="orderAcceptSuccessful"
+        @reset="show = false"
       ></FormAssignDeliveryPerson>
     </BaseModal>
     <PageInTwoPart>
@@ -26,7 +28,8 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganizationType"
-              :actions="actions"
+              :filterActions="filterActions"
+              @itemClick="showItemOrder"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -124,6 +127,7 @@ import EmptyState from "../../../components/EmptyState.vue";
 import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue";
 
 import SuccessInfo from "../../../components/SuccessInfo.vue";
+import { IOrder } from "../../../types/interfaces";
 
 export default defineComponent({
   components: {
@@ -158,6 +162,8 @@ export default defineComponent({
     ];
 
     const order = ref();
+
+    const justAssign = ref(false)
 
     const orderStore = useOrdersStore();
     const userStore = useUsersStore();
@@ -206,6 +212,80 @@ export default defineComponent({
       },
     ];
 
+    function filterActions(element : IOrder){
+      let elements = []
+
+      if(element.status == OrderStatus.NEW)
+        elements =   [
+     
+        {
+          title: "Accepter",
+          classIcon:"text-tableColor",
+          icon: "edit",
+          action: acceptOrder,
+        },
+        {
+          title: "Rejeter",
+          iconClass:"text-[#E03A15] w-3 h-3",
+          titleClass: "text-[#E03A15] ",
+          icon: "close",
+          action: rejectOrder,
+        },
+     
+    ]
+
+    else if(element.status == OrderStatus.ACCEPTED) {
+      if(!element.deliveryDate){
+        elements.push({
+          title: "Assigner à un livreur",
+          classIcon:"text-tableColor",
+          icon: "deliveryPerson",
+          action: assignOrder,
+        })
+      }
+
+     
+      
+      elements.push({
+          title: "Voir facture proforma",
+          classIcon:"text-tableColor",
+          icon: "facture",
+          action: acceptOrder,
+        })
+
+        elements.push({
+          title: "Voir l'historique",
+          classIcon:"text-tableColor",
+          icon: "history",
+          action: acceptOrder,
+        })
+
+     
+
+    }
+       
+      return  elements
+    }
+    
+
+    async function assignOrder(order: any) {
+      show.value = true;
+      justAssign.value = true
+      selectedOrderId.value = order.id;
+    }
+
+    async function acceptOrder(order: any) {
+      show.value = true;
+      justAssign.value = false
+      selectedOrderId.value = order.id;
+    }
+
+    async function rejectOrder(order: any) {
+      show.value = true;
+      selectedOrderId.value = order.id;
+    }
+    
+
     async function showItemOrder(element: any) {
       try {
         const response = await orderStore.fetchOne(element.id);
@@ -217,10 +297,7 @@ export default defineComponent({
 
     const selectedOrderId = ref();
 
-    async function acceptOrder(order: any) {
-      show.value = true;
-      selectedOrderId.value = order.id;
-    }
+    
 
     const reload = ref(1);
 
@@ -251,6 +328,9 @@ export default defineComponent({
       selectedOrderId,
       reload,
       showSuccesInfo,
+      filterActions,
+      showItemOrder,
+      justAssign
     };
   },
 });

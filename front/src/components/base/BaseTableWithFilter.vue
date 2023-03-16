@@ -37,7 +37,9 @@
       :data="items"
       :loading="loading"
       :actions="actions"
+      :filterActions="filterActions"
       class="mt-6"
+      @itemClick="$emit('itemClick',$event)"
     >
       <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
@@ -78,6 +80,8 @@ export type FetchData<T> = (
   id?: PrimaryKey
 ) => Promise<ResponseData<T>>;
 
+  
+
 export default defineComponent({
   components: { BasePagination },
   props: {
@@ -110,6 +114,11 @@ export default defineComponent({
     hideFilter: {
       type: Boolean,
       default: false,
+    },
+
+    filterActions:{
+      type : Function 
+
     },
 
     params: {
@@ -209,6 +218,8 @@ export default defineComponent({
     function onSearch() {
       loadData();
     }
+
+    
     return {
       paginationData,
       search,

@@ -56,7 +56,8 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganization"
-              :actions="actions"
+              :filterActions="filterActions"
+              @itemClick="showItemOrder"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -170,6 +171,7 @@ export default defineComponent({
 
     const router = useRouter();
     function goToCreateAppros() {
+      basketStore.clearBasket();
       router.push({
         name: "approsCreate",
       });
@@ -210,8 +212,11 @@ export default defineComponent({
     
 
    
+    function filterActions(element : IOrder){
+      let elements = []
 
-    const actions = [
+      if(element.status == OrderStatus.NEW)
+        elements =   [
       {
           title: "Modifier",
           iconClass:"text-tableColor",
@@ -220,19 +225,31 @@ export default defineComponent({
         },
         {
           title: "Dupliquer",
-          iconClass:"text-tableColor",
+          classIcon:"text-tableColor",
           icon: "duplicate",
           action: duplicateOrder,
         },
         {
           title: "Annuler",
-          iconClass:"text-[#E03A15]",
-          titleClass: "text-[#E03A15]",
+          iconClass:"text-[#E03A15] w-3 h-3",
+          titleClass: "text-[#E03A15] ",
           icon: "close",
           action: resetOrder,
         },
      
-    ];
+    ]
+
+    else 
+        elements = [
+        {
+          title: "Dupliquer",
+          classIcon:"text-tableColor",
+          icon: "duplicate",
+          action: duplicateOrder,
+        },
+        ]
+      return  elements
+    }
 
     const reload = ref(0)
 
@@ -270,6 +287,9 @@ export default defineComponent({
       router.push({name : 'approsCreate'})
     }
 
+
+   
+
     return {
       titles,
       goToCreateAppros,
@@ -279,11 +299,13 @@ export default defineComponent({
       getStatutLabel,
       getStatutType,
       helpers,
-      actions,
+      filterActions,
       resetOrder,
       modal,
       loading,
-      confirmResetOrder
+      confirmResetOrder,
+      reload,
+      showItemOrder
     };
   },
 });
