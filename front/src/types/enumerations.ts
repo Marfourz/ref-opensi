@@ -14,7 +14,7 @@ export enum UserRole {
 }
 
 export enum UserPermission {
-  ADMINSTRATOR = "administra tor",
+  ADMINSTRATOR = "administrator",
   DELIVERY_MAN = "deliveryMan",
 }
 
@@ -60,6 +60,7 @@ export enum UserAccountStatus {
 
   export enum OrderStatus {
     NEW = 'new',
+    DELIVERY = 'delivered',
     DELIVERED = 'delivered',
     ACCEPTED = 'accepted',
     REJECTED = "aborted",
