@@ -1,6 +1,5 @@
 import { Injectable, HttpException, Inject, forwardRef } from '@nestjs/common';
 import {
-  Order,
   Prisma,
   OrderStatusEnum,
   InvoiceStatusEnum,
@@ -34,7 +33,7 @@ import { TransactionService } from '../transaction/transaction.service';
 import { InvoiceService } from '../invoice/invoice.service';
 import { invoiceDto } from '../invoice/invoice.dto';
 import { transactionDto } from '../transaction/transaction.dto';
-import { OrganisationTypeEnum } from '@prisma/client';
+import { OrganisationTypeEnum, Order } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -153,9 +152,9 @@ export class OrderService {
     }
   }
 
-  async getSingleOrder(id: string): Promise<Order> {
+  async getSingleOrder(id: string): Promise<any> {
     try {
-      const order = await this.prisma.order.findUnique({
+      const order: any = await this.prisma.order.findUnique({
         where: { id },
         include: {
           items: { include: { product: true } },
@@ -163,6 +162,15 @@ export class OrderService {
           organisation: true,
         },
       });
+      if (order.deliveryMan) {
+        const deliveryMan = await this.prisma.user.findUnique({
+          where: {
+            id: order.deliveryMan,
+          },
+        });
+
+        order.deliveryMan = deliveryMan;
+      }
       return order;
     } catch (error) {
       throw error;

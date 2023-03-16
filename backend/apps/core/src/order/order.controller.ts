@@ -67,7 +67,7 @@ export class OrderController {
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getSingleOrder(@Param() params): Promise<Order> {
+  getSingleOrder(@Param() params): Promise<any> {
     return this.orderService.getSingleOrder(params.id);
   }
 
