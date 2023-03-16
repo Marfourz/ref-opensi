@@ -1,5 +1,12 @@
 import { Injectable, HttpException, Inject, forwardRef } from '@nestjs/common';
-import { Order, Prisma, OrderStatusEnum } from '@prisma/client';
+import {
+  Order,
+  Prisma,
+  OrderStatusEnum,
+  InvoiceStatusEnum,
+  TransactionStatusEnum,
+  PaymentMethodEnum,
+} from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import {
   assignOrderDto,
@@ -8,7 +15,10 @@ import {
   periodOrderDto,
 } from './order.dto';
 import { PagiationPayload } from 'types';
-import { generateRandomString } from '../../../../helpers/generateRandomString';
+import {
+  generateRandomString,
+  getRandomInt,
+} from '../../../../helpers/generateRandomString';
 import { ItemOrderService } from '../item-order/item-order.service';
 import { ProductsService } from '../product/product.service';
 import { getSubTypeOrg } from 'helpers/getPlainStatus';
@@ -20,6 +30,11 @@ import { HttpStatus } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { StockService } from '../stock/stock.service';
 import { stockDto } from '../stock/stock.dto';
+import { TransactionService } from '../transaction/transaction.service';
+import { InvoiceService } from '../invoice/invoice.service';
+import { invoiceDto } from '../invoice/invoice.dto';
+import { transactionDto } from '../transaction/transaction.dto';
+import { OrganisationTypeEnum } from '@prisma/client';
 
 @Injectable()
 export class OrderService {
@@ -29,6 +44,8 @@ export class OrderService {
     private productService: ProductsService,
     private wsService: WsNotificationGateway,
     private notifService: NotificationService,
+    private transactionService: TransactionService,
+    private invoiceService: InvoiceService,
     @Inject(forwardRef(() => StockService))
     private stockService: StockService,
   ) {}
@@ -37,21 +54,33 @@ export class OrderService {
     try {
       const itemsOrders = order.items;
       const Ilength = itemsOrders.length;
+      //get organisation
       const organisation = await this.prisma.organisation.findUnique({
         where: {
           id: order.organisationId,
         },
         select: {
+          id: true,
+          type: true,
+          wallet: true,
           parentOrganisationId: true,
         },
       });
-      const orderPayload = {
+      const orderPayload: any = {
         organisationId: order.organisationId,
-        parentOrganisationId: organisation.parentOrganisationId,
+        parentOrganisationId: order.parentOrganisationId
+          ? order.parentOrganisationId
+          : organisation.parentOrganisationId,
         deliveryCode: generateRandomString(5),
         reference: generateRandomString(7),
-        status: OrderStatusEnum.new,
+        status:
+          organisation.type === OrganisationTypeEnum.snb
+            ? OrderStatusEnum.delivered
+            : OrderStatusEnum.new,
       };
+
+      organisation.type === OrganisationTypeEnum.snb &&
+        (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD'));
       const newOrder = await this.prisma.order.create({
         data: orderPayload as unknown as Prisma.OrderCreateInput,
       });
@@ -69,7 +98,8 @@ export class OrderService {
         });
       });
 
-      itemsOrders.forEach(async (item, i) => {
+      for (let i = 0; i < itemsOrders.length; i++) {
+        const item = itemsOrders[i];
         // eslint-disable-next-line prettier/prettier
         const product = await this.prisma.product.findUnique({
           where: { id: item.productId },
@@ -78,12 +108,43 @@ export class OrderService {
         if (i === Ilength - 1) {
           await this.updateSingleOrder(orderId, { totalAmount });
         }
-      });
+      }
 
       this.wsService.notifyRoom(organisation.parentOrganisationId, {
         event: WS_EVENTS.NEW_ORDER_RECORDED,
         value: orderId,
       });
+
+      console.log('TotalAmount : ', totalAmount);
+
+      // create invoice
+      const deductedInvoice: invoiceDto = {
+        orderId,
+        description: 'Facture de paiement commande : ' + orderId,
+        invoiceNumber: getRandomInt(10000, 99999),
+        amount: totalAmount,
+        source: newOrder.organisationId,
+        destination: newOrder.parentOrganisationId
+          ? newOrder.parentOrganisationId
+          : '',
+        status: InvoiceStatusEnum.unpaid,
+      };
+      console.log('Deducted Invoice : ', deductedInvoice);
+      const invoice = await this.invoiceService.createInvoice(deductedInvoice);
+
+      //create transaction
+      const deductedTransaction: transactionDto = {
+        kkiapayId: '******',
+        walletId: organisation.wallet.id,
+        orderId,
+        organisationId: organisation.id,
+        amount: totalAmount,
+        status: TransactionStatusEnum.pending,
+        paymentMethod: PaymentMethodEnum.kkiapay,
+        invoiceId: invoice.id,
+      };
+
+      await this.transactionService.createTransaction(deductedTransaction);
 
       return await this.getSingleOrder(orderId);
     } catch (error) {
@@ -346,6 +407,9 @@ export class OrderService {
 
       for (let index = 0; index < order.items.length; index++) {
         const element = order.items[index];
+
+        console.log('Parent OrgId : ', order.parentOrganisationId);
+        console.log('Prod Id : ', element.product.id);
         const totalStockForProduct = await this.prisma.stock.aggregate({
           where: {
             productId: element.product.id,
@@ -355,6 +419,8 @@ export class OrderService {
             currentQuantity: true,
           },
         });
+
+        //console.log('TotalStock : ', totalStockForProduct);
 
         if (totalStockForProduct._sum.currentQuantity < element.quantity) {
           unprocessableOrders.push(element.product.name);
@@ -397,8 +463,6 @@ export class OrderService {
         }
         await this.updateSingleOrder(orderId, {
           status: OrderStatusEnum.delivered,
-        });
-        await this.updateSingleOrder(orderId, {
           deliveryDate: dayjs().format('YYYY-MM-DD'),
         });
       }

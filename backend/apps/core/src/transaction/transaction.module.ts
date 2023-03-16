@@ -15,6 +15,7 @@ import { RolesGuard } from 'guards/roles.guard';
 
 @Module({
   imports: [HttpModule],
+  exports: [TransactionService],
   controllers: [TransactionController],
   providers: [
     TransactionService,

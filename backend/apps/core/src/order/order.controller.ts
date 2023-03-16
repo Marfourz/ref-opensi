@@ -166,7 +166,7 @@ export class OrderController {
   }
 
   @Delete(':id')
-  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',

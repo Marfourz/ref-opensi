@@ -275,7 +275,7 @@ model Invoice {
 
   source              String
 
-  destination         String
+  destination         String?
 
   status              InvoiceStatusEnum
 
@@ -364,8 +364,9 @@ enum OrganisationTypeEnum {
 
 enum OrderStatusEnum {
   new
-  delivered
   accepted
+  delivered
+  rejected
   aborted
 }
 
