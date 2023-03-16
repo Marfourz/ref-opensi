@@ -57,14 +57,12 @@ export default defineComponent({
         icon: "user",
         route: "users",
         path: "utitlisateurs",
-
       },
       {
         title: "Paramètres",
         icon: "setting",
         route: "setting",
         path: "parametre",
-
       },
       {
         title: "Déconexion",

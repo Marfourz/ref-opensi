@@ -23,7 +23,6 @@ just all;
             {{ tab.libelle }}
           </span>
           <!-- </div> -->
-
         </li>
       </ul>
       <!-- tabs area -->

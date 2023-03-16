@@ -170,7 +170,6 @@ export default defineComponent({
       return elements.find(
         (value) => JSON.stringify(value) == JSON.stringify(element)
       );
-
     }
 
     function onMounted() {
@@ -193,7 +192,6 @@ export default defineComponent({
       onCheckedElement,
       checkedElements,
       verifyElementExistInArray,
-
     };
   },
 });
