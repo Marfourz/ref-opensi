@@ -42,6 +42,7 @@ deploy_dev_images_staging:
   only:
     - deploy
   script:
-    
-    - docker-compose -f docker-compose.yml pull
+    - docker pull registry.gitlab.com/opensi/snb/snb-backend:staging
+    - docker pull registry.gitlab.com/opensi/snb/snb-frontend:staging
+    #- docker-compose -f docker-compose.yml pull
     - docker-compose -f docker-compose.yml up -d --force-recreate
