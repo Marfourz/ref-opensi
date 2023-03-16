@@ -365,6 +365,7 @@ enum OrganisationTypeEnum {
 enum OrderStatusEnum {
   new
   accepted
+  inProgress
   delivered
   rejected
   aborted

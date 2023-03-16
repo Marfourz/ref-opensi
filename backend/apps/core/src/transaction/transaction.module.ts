@@ -32,8 +32,8 @@ export class TransactionModule implements NestModule {
     consumer
       .apply(AuthenticationMiddleware)
       .forRoutes(
-        { path: 'transactions', method: RequestMethod.ALL },
-        { path: 'transactions/(*)', method: RequestMethod.ALL },
+        //{ path: 'transactions', method: RequestMethod.ALL },
+        //{ path: 'transactions/(*)', method: RequestMethod.ALL },
       );
   }
 }
