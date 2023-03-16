@@ -43,5 +43,5 @@ deploy_dev_images_staging:
     - deploy
   script:
     
-    - docker-compose -f docker-compose.yml pull --no-cache
+    - docker-compose -f docker-compose.yml build --pull --no-cache
     - docker-compose -f docker-compose.yml up -d --force-recreate
