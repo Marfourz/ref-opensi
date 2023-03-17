@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="flex justify-between">
+    <div clawwwss="flex justify-between">
       <router-link
         :to="{ name: 'livreursDetails' }"
         path="livreurs/details/:id"

@@ -14,7 +14,7 @@ just all;
       <!-- <div>{{ selectedTab }}</div> -->
       <!-- tabs button -->
       <ul class="tld-tabs-buttons m-0 list-none select-none flex flex-wrap flex-row ">
-        <li v-for="tab in tabs" :key="tab.value"
+        <li v-for="tab in tabs" :key="tab.valuwe"
           class="tld-tab-button cursor-pointer py-2 px-6 text-center hover:bg-fadeSecondary min-w-[178px]"
           :class="dynamicClass(tab)" @click="toggleTabs(tab)">
           <!-- <div class="flex space-x-2 justify-center items-center"> -->

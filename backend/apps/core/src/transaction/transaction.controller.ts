@@ -48,7 +48,7 @@ export class TransactionController {
   })*/
   @ApiParam({ name: 'transactionId' })
   validateTransaction(@Body() body: any, @Param() params): Promise<any> {
-    return this.transactionService.validateTransaction(params.transactionId);
+    return this.transactionService.validateTransaction(params.transactionId, body.totalAmount);
   }
 
   @Get(':id')

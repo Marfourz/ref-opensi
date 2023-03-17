@@ -9,7 +9,9 @@ just all;
 -->
 
 <template>
+
   <div class="tld-tabs bg-white text-[16px]">
+    
     <div class="w-full">
       <!-- <div>{{ selectedTab }}</div> -->
       <!-- tabs button -->
@@ -107,8 +109,14 @@ export default {
       emit("change", openTab.value);
     };
 
+
+   
+
+   
     onMounted(()=>{
-      openTab.value = selectedTab;
+      
+      openTab.value = selectedTab.value;
+      emit("change", openTab.value);
     })
 
     return {

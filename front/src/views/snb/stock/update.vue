@@ -42,7 +42,7 @@
     <div><BaseGoBack></BaseGoBack></div>
     <div class="flex items-center space-x-6">
       <BaseTitle title="Stock"></BaseTitle>
-      <BaseButton icon="plus" size="small" @click="modal.show = true"
+      <BaseButton icon="plus" size="small" @click="modal.show = true" 
         >Nouveau stock</BaseButton
       >
     </div>
