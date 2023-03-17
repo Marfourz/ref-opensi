@@ -16,7 +16,7 @@
       @close="show = false"
       :title="!justAssign ? 'Accepter la commande' : 'Assigner à un livreur'"
     >
-      <div>{{}}</div>
+    
       <FormAssignDeliveryPerson
         :orderId="selectedOrderId"
         :justAssign="justAssign"

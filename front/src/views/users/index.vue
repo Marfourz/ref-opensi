@@ -192,7 +192,7 @@ export default defineComponent({
 
     function onDelete(value: IUser) {
       selectedUser.value = value;
-      modal.title = w
+      modal.title = "Confirmez-vous la suppression de l'utilisateur ?"
       modal.show = true;
       modal.subtitle = "";
       modal.mode = "confirm";
