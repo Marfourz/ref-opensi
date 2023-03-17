@@ -65,7 +65,7 @@ export class OrderService {
           parentOrganisationId: true,
         },
       });
-
+      // create the correspondind order
       const orderPayload: any = {
         organisationId: order.organisationId,
         parentOrganisationId: order.parentOrganisationId
@@ -78,7 +78,7 @@ export class OrderService {
             ? OrderStatusEnum.delivered
             : OrderStatusEnum.new,
       };
-
+      //if organisation is SNB add delivery date to OrderPayload
       organisation.type === OrganisationTypeEnum.snb &&
         (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD'));
       const newOrder = await this.prisma.order.create({
@@ -89,6 +89,7 @@ export class OrderService {
 
       let totalAmount = 0;
 
+      //create orderItems for order
       itemsOrders.forEach(async (item) => {
         // eslint-disable-next-line prettier/prettier
         return await this.itemOrderService.createItem({
@@ -98,6 +99,7 @@ export class OrderService {
         });
       });
 
+      // get total amount of order and update the order
       for (let i = 0; i < itemsOrders.length; i++) {
         const item = itemsOrders[i];
         // eslint-disable-next-line prettier/prettier
@@ -110,12 +112,13 @@ export class OrderService {
         }
       }
 
+      // notify to parentOrganisationId for a new order created
       this.wsService.notifyRoom(organisation.parentOrganisationId, {
         event: WS_EVENTS.NEW_ORDER_RECORDED,
         value: orderId,
       });
 
-      // create invoice
+      // create corresponding invoice
       const deductedInvoice: invoiceDto = {
         orderId,
         description: 'Facture de paiement commande : ' + orderId,
@@ -129,9 +132,16 @@ export class OrderService {
       };
       const invoice = await this.invoiceService.createInvoice(deductedInvoice);
 
-      //create transaction
-      const transactionStatus: any =
-        this.transactionService.validateTransaction(order.kkiapayTransactionId);
+      let transactionStatus: any = TransactionStatusEnum.pending;
+
+      if (order.kkiapayTransactionId) {
+        transactionStatus = this.transactionService.validateTransaction(
+          order.kkiapayTransactionId,
+          totalAmount,
+        );
+      }
+
+      //create corresponding transaction
 
       const deductedTransaction: transactionDto = {
         kkiapayId: order.kkiapayTransactionId
@@ -160,6 +170,7 @@ export class OrderService {
       const order: any = await this.prisma.order.findUnique({
         where: { id },
         include: {
+          transaction: true,
           items: { include: { product: true } },
           invoice: true,
           organisation: true,
