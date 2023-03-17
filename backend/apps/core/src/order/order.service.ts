@@ -485,7 +485,7 @@ export class OrderService {
         }
         await this.updateSingleOrder(orderId, {
           status: OrderStatusEnum.delivered,
-          deliveryDate: dayjs().format('YYYY-MM-DD'),
+          //deliveryDate: dayjs().format('YYYY-MM-DD'),
         });
       }
 
