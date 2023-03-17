@@ -286,16 +286,10 @@ export class StockService {
       });
     }
 
-    const data: {
-      deliveryDate: string;
-      type: any;
-      quantity: number;
-      total: number;
-    }[] = [];
+    const data = [];
 
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
-      console.log(element);
       let type: string,
         quantity = 0;
       if (
@@ -312,12 +306,21 @@ export class StockService {
         quantity += e.quantity;
       }
 
-      data.push({
+      /*data.push({
         deliveryDate: element.deliveryDate,
         type,
         quantity,
         total: element.totalAmount,
-      });
+      });*/
+
+      const dataItem: any = {};
+      dataItem[element.deliveryDate] = {
+        type,
+        quantity,
+        total: element.totalAmount,
+      };
+
+      data.push(dataItem);
     }
 
     /*if (organisation.type == 'snb') {

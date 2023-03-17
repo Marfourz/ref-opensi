@@ -18,7 +18,7 @@
         <BaseButton @click="enable" size="small" bgColor="success">Activer</BaseButton>
       </template>
     </div>
-    <BaseTabs :tabs="tabs" class="mt-7">
+    <BaseTabs :tabs="tabs" class="mt-7" selectedTab="orders" >
       <template #dashboard>
         <!-- <div class="font-bold text-xl tracking-[-2%] mt-7">Statistiques</div> -->
         <div class="flex justify-between items-center mt-9">
@@ -168,10 +168,10 @@ const series = ref([
 ]);
 
 const tabs = [
-  { value: "dashboard", libelle: "Tableau de board" },
-  { value: "orders", libelle: "Commandes" },
-  { value: "distributors", libelle: "Distributeurs agréés" },
-  { value: "infos", libelle: "Informations générales" },
+  { name: "dashboard", libelle: "Tableau de board" },
+  { name: "orders", libelle: "Commandes" },
+  { name: "distributors", libelle: "Distributeurs agréés" },
+  { name: "infos", libelle: "Informations générales" },
 ];
 
 const titles = [
@@ -262,6 +262,10 @@ function formatPrice(element: any) {
   if (element.wallet) return `${element.wallet.turnover} FCFA`;
   return `0 FCFA`;
 }
+
+
+const selectedTab = ref("")
+
 onMounted(async () => {
   state.organisationId = route.params.id as string;
   console.log(id.value);

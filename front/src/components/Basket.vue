@@ -102,7 +102,7 @@ export default defineComponent({
     const router = useRouter();
 
 
-    async function makeAppro(){
+    async function makeAppro(transactionId : string | undefined){
       const orders = items.value.map((item: IItem) => {
         return {
           productId: item.product.id,
@@ -112,6 +112,7 @@ export default defineComponent({
       const response = await ordersStore.create({
         organisationId: organisationId.value,
         items: orders,
+        transactionId : transactionId
       });
       router.push({ name: "appros" });
         toast.success("Commande effectuée avec succès");
@@ -126,14 +127,14 @@ export default defineComponent({
         kkiapayWidget()
       }
       else{
-        await makeAppro() 
+        await makeAppro(undefined) 
       }
      
       
     }
 
     async function successHandler(paymentResponse: { transactionId: string }) {
-      await makeAppro()
+      await makeAppro(paymentResponse.transactionId)
       }
 
     function kkiapayWidget() {

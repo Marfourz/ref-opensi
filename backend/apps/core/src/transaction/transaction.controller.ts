@@ -39,15 +39,16 @@ export class TransactionController {
     return this.transactionService.createTransaction(transaction);
   }
 
-  @Post('verify-kkp-transaction')
+  @Post('verify-kkp-transaction/:transactionId')
   //@Roles(Role.ADMINISTRATOR, Role.SUPER_USER, Role.ACCOUNTANT)
   //@ApiBody({ type: transactionDto })
   /*@ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })*/
-  validateTransaction(@Body() body: any): Promise<any> {
-    return this.transactionService.validateTransaction(body);
+  @ApiParam({ name: 'transactionId' })
+  validateTransaction(@Body() body: any, @Param() params): Promise<any> {
+    return this.transactionService.validateTransaction(params.transactionId, body.totalAmount);
   }
 
   @Get(':id')
