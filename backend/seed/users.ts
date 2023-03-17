@@ -1,8 +1,8 @@
 export const user = {
   name: 'Adinistrateur SNB',
-  phone: '+22990020408',
+  phone: '90020408',
   email: 'admin@admin.com',
-  address: 'Adress SNB 1',
+  address: 'Cotonou - Bénin',
   birthday: '1998-02-16',
   sex: 'male',
   status: 'active',

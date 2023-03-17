@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 async function main() {
   try {
     // create user for users-managers
-    axios
+    /*axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
         email: 'admin@admin.com',
         username: 'admin@admin.com',
@@ -25,23 +25,33 @@ async function main() {
       })
       .catch(function (error) {
         console.log('Users manager respond: ' + error.response.statusText);
+      });*/
+
+    const existingEngine = await prisma.engine.count();
+
+    if (existingEngine == 0) {
+      const newEngine = await prisma.engine.create({
+        data: engines[0],
       });
+      console.info('ENGINE created : ', newEngine);
+    } else {
+      console.info('ENGINE already exist in DB');
+    }
 
-    // create engines for main postgres db
-    const newEngine = await prisma.engine.create({
-      data: engines[0],
-    });
-    console.info('ENGINE created : ', newEngine);
+    const existingProduct = await prisma.product.count();
 
-    const newPCategory = await prisma.productCategory.create({
-      data: categories[0],
-    });
-    console.info('CATEGORY created : ', newPCategory);
-
-    const newProduct = await prisma.product.create({
-      data: { ...products[0], categoryId: newPCategory.id },
-    });
-    console.info('PRODUCT created : ', newPCategory);
+    if (existingProduct == 0) {
+      const newPCategory = await prisma.productCategory.create({
+        data: categories[0],
+      });
+      console.info('CATEGORY created : ', newPCategory);
+      const newProduct = await prisma.product.create({
+        data: { ...products[0], categoryId: newPCategory.id },
+      });
+      console.info('PRODUCT created : ', newProduct);
+    } else {
+      console.info('PRODUCT CATEGORY & PRODUCT already exist in DB');
+    }
 
     // create organisation if not exist
     const organisation = organisations[0];
@@ -89,11 +99,13 @@ async function main() {
       },
     });
 
+    const firstEngine = await prisma.engine.findFirst({});
+
     if (!existingUser) {
       const newUser = await prisma.user.create({
         data: {
           organisationId: orgId,
-          engineId: newEngine.id,
+          engineId: firstEngine.id,
           ...user,
         },
       });
