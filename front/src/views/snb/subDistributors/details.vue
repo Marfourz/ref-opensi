@@ -250,7 +250,7 @@ const numberOfPartners = computed(() => {
 const ranking = computed(() => {
   return {
     title: `${selectedMaster.value} `,
-    subtitle: "Nbre de partenaires",
+    subtitle: "Nombre de partenaires",
 
     icon: "star",
     primaryColor: "#0060CF",
