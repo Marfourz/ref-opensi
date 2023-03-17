@@ -50,7 +50,8 @@
       </div>
       <div class="flex flex-col">
         <span class="font-semibold text-base">Engin </span>
-        <!-- <span class="font-medium text-sm"> {{ user?.engine.name }} </span> -->
+        
+         <span class="font-medium text-sm"> {{ user?.engine?.name}} </span> 
       </div>
       <div class="flex flex-col">
         <span class="font-semibold text-base">Adresse</span>
@@ -60,7 +61,6 @@
   </div>
 </template>
 <script lang="ts">
-import BaseButton from "@/components/base/BaseButton.vue";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
 import { useUsersStore } from "@/stores/users";
 import { UserAccountStatus } from "@/types/enumerations";
@@ -69,7 +69,7 @@ import { defineComponent, onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
-  components: { BaseTableStatut, BaseButton },
+  components: { BaseTableStatut },
   setup() {
     const userStore = useUsersStore();
     const user = ref<IUser | null>();
