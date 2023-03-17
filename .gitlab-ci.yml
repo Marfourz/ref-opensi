@@ -27,7 +27,7 @@ build_frontend_page_staging:
   script:
     - echo "VITE_APP_API_URL=http://api-snb.opensi.co" >> .env
     - docker build -t registry.gitlab.com/opensi/snb/snb-frontend:staging front
-    - docker push registry.gitlab.com/opensi/snb/snb-frontend:staging
+    - docker push registry.gitlab.com/opensi/snb/snb-frontend:staging 
   tags:
     # - shell-runner-snb
     - shell-1
@@ -43,6 +43,6 @@ deploy_dev_images_staging:
     - deploy
   script:
     - docker-compose -f docker-compose.yml down
-    - docker-compose -f docker-compose.yml build --pull --no-cache #--ignore-pull-failures 
+    - docker-compose -f docker-compose.yml pull --no-cache 
     - docker-compose -f docker-compose.yml up -d --force-recreate
     
