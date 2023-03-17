@@ -89,7 +89,7 @@ services:
   frontend:
     build:
       context: ./front
-    image: registry.gitlab.com/opensi/snb-frontend:staging
+    image: registry.gitlab.com/opensi/snb/snb-frontend:staging
     ports:
       - 9812:80
     container_name: frontend-snb-staging
