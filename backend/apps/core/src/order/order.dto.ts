@@ -14,6 +14,9 @@ export class orderDto {
   organisationId?: string;
 
   @ApiProperty({ type: String })
+  kkiapayTransactionId?: string;
+
+  @ApiProperty({ type: String })
   parentOrganisationId?: string;
 
   @ApiProperty()

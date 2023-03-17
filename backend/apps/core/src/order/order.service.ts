@@ -65,6 +65,7 @@ export class OrderService {
           parentOrganisationId: true,
         },
       });
+
       const orderPayload: any = {
         organisationId: order.organisationId,
         parentOrganisationId: order.parentOrganisationId
@@ -114,8 +115,6 @@ export class OrderService {
         value: orderId,
       });
 
-      console.log('TotalAmount : ', totalAmount);
-
       // create invoice
       const deductedInvoice: invoiceDto = {
         orderId,
@@ -128,17 +127,21 @@ export class OrderService {
           : '',
         status: InvoiceStatusEnum.unpaid,
       };
-      console.log('Deducted Invoice : ', deductedInvoice);
       const invoice = await this.invoiceService.createInvoice(deductedInvoice);
 
       //create transaction
+      const transactionStatus: any =
+        this.transactionService.validateTransaction(order.kkiapayTransactionId);
+
       const deductedTransaction: transactionDto = {
-        kkiapayId: '******',
+        kkiapayId: order.kkiapayTransactionId
+          ? order.kkiapayTransactionId
+          : '******',
         walletId: organisation.wallet.id,
         orderId,
         organisationId: organisation.id,
         amount: totalAmount,
-        status: TransactionStatusEnum.pending,
+        status: transactionStatus,
         paymentMethod: PaymentMethodEnum.kkiapay,
         invoiceId: invoice.id,
       };
