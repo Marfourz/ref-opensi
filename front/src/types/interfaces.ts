@@ -46,7 +46,7 @@ export interface IOrganisation extends Commun {
   status?: string;
   orders?: Array<ItemsOrder>;
   wallet: Wallet;
-  parentOrganisationId?:string
+  parentOrganisationId?: string;
 }
 export interface Wallet extends Commun {
   turnover: string;
@@ -57,7 +57,7 @@ export interface InfoOrganisation {
   organisation: IOrganisation;
   orders: Array<ItemsOrder>;
   partners: string;
-  productsInfos:Record<any,any>
+  productsInfos: Record<any, any>;
 }
 
 export interface IProduct extends Commun {
@@ -100,8 +100,14 @@ export interface IUser extends Commun {
   organisationId: string;
   birthday?: Date;
   engineId?: PrimaryKey;
+  engine?: IEngine;
   status?: UserAccountStatus;
   address?: string;
+}
+
+export interface IEngine extends Commun {
+  name: string;
+  description: string;
 }
 
 export interface ITransaction extends Commun {}
