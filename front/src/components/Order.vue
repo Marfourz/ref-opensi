@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full h-full relative overflow-scroll ">
+  <div class="w-full h-full relative overflow-hidden ">
     <slot name="title"> </slot>
 
     <BaseTable
       :titles="titles"
       :data="order.items"
+      
       class="mt-2 h-[calc(100vh-200px)] overflow-scroll"
       v-if="order"
     >

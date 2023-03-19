@@ -147,13 +147,21 @@ export default defineComponent({
 
         if (Array.isArray(response)) {
           items.value = response;
+          
         } else {
           items.value = response.data;
           paginationData.total = response.count;
         }
+
+        
+
+        loading.value = false;
+        
         context.emit("total", items.value.length);
+        
       } catch (error: any) {
         console.log({ ...error });
+        loading.value = false;
       }
     }
 
@@ -214,6 +222,7 @@ export default defineComponent({
       pageChange,
       slotDatas,
       slots,
+      loading
     };
   },
 });

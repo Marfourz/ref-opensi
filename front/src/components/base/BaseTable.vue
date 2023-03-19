@@ -1,5 +1,6 @@
 <template>
   <div class="w-full overflow-auto flex-1 bg-white text-[14px]">
+   
     <table class="table-auto w-full text-md">
       <thead>
         <tr class="bg-grey-10 text-tableColor">
@@ -19,6 +20,7 @@
           </th>
         </tr>
       </thead>
+
       <tbody v-if="loading">
         <tr>
           <td :colspan="titles.length">
@@ -31,7 +33,7 @@
       <tbody class="bg-white" v-else-if="data && data.length != 0">
         <tr
           v-for="(element, i) in data"
-          class="font-semibold"
+          class="font-semibold cursor-default"
           :key="i"
           :class="{
             'bg-[#F8F9FB]': isEqual(element, currentElement) && actions,

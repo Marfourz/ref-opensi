@@ -4,7 +4,7 @@
       class="flex items-center justify-between w-full text-grey-70 font-semibold text-sm border border-gray-400 rounded-lg py-2 px-3"
     >
       <div class="flex space-x-2">
-        <BaseIcon icon="calendar"></BaseIcon>
+        <!-- <BaseIcon name="calendar"></BaseIcon> -->
 
         <div v-if="!selectedDate.value">
           Du {{ formatDate(dateChoice.start) }} au
@@ -15,13 +15,13 @@
         </div>
       </div>
 
-      <div><BaseIcon icon="chevron-down"></BaseIcon></div>
+      <div><BaseIcon name="chevronDown"></BaseIcon></div>
     </div>
 
     <div
       v-if="show"
       @click.stop=""
-      class="flex bg-white shadow-4xl absolute rounded top-14 -left-72"
+      class="flex bg-white shadow-xl absolute rounded top-14 right-4"
       style="z-index: 200"
     >
       <div class="py-8 border-r-2" style="width: 220px">
@@ -73,12 +73,12 @@ export default {
           value: "lastWeek",
         },
         {
-          label: "Mois passé",
-          value: "lastMonth",
+          label: "Ce mois",
+          value: "month",
         },
         {
-          label: "Année passée",
-          value: "lastYear",
+          label: "Cette année",
+          value: "year",
         },
         {
           label: "Depuis le début",
@@ -112,7 +112,7 @@ export default {
           start: start,
           end: end,
         };
-      } else if (this.selectedDate.value == "lastMonth") {
+      } else if (this.selectedDate.value == "month") {
         start.setMonth(start.getMonth() - 1);
         start.setDate(1);
         end.setMonth(end.getMonth());
@@ -122,7 +122,7 @@ export default {
           start: start,
           end: end,
         };
-      } else if (this.selectedDate.value == "lastYear") {
+      } else if (this.selectedDate.value == "year") {
         const start = new Date();
         start.setFullYear(start.getFullYear() - 1);
         start.setDate(1);
@@ -170,7 +170,7 @@ export default {
   },
 
   mounted() {
-    this.selectedDate = this.dates[0];
+    this.selectedDate = this.dates[2];
   },
 };
 </script>

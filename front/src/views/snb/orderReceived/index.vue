@@ -121,11 +121,12 @@
                     </div>
                   </div>
                 </div>
-                <div
+                <a
+                  @click="goToViewMD(order.organisation.id)"
                   class="border border-[#6B7A99] py-2.5 px-2 h-fit w-fit rounded font-semibold cursor-pointer text-sm"
                 >
                   Voir le profil
-                </div>
+                </a>
               </div>
               <div class="flex space-x-2 items-center">
                 <div class="font-bold text-lg">
@@ -152,8 +153,8 @@
                     <div class="flex items-center space-x-1.5" >
                       <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
                       <span>Livreur : </span>
-                      <span class="text-[#0050CF] font-semibold underline cursor-pointer"
-                        >{{order.deliveryMan}}</span
+                      <a class="text-[#0050CF] font-semibold underline cursor-pointer" @click="goToViewDeliveryMan(order.deliveryMan.id)"
+                        >{{order.deliveryMan.name}}</a
                       >
                     </div>
                     <div></div>
@@ -163,7 +164,7 @@
             </div>
           </template>
         </Order>
-        <div class="flex flex-col items-center space-y-4" v-else>
+        <div class="flex flex-col items-center space-y-4 h-full justify-center" v-else>
           <img src="@/assets/images/emptyBasket.png" alt="" />
           <div class="font-semibold text-center">
             Vous verrez ici les détails d'une <br />
@@ -312,7 +313,7 @@ export default defineComponent({
           title: "Voir facture proforma",
           classIcon: "text-tableColor",
           icon: "facture",
-          action: acceptOrder,
+          action: viewInvoice,
         });
 
         elements.push({
@@ -324,6 +325,15 @@ export default defineComponent({
       }
 
       return elements;
+    }
+
+    async function viewInvoice(order: IOrder){
+      router.push({
+        name:"pdfViewer",
+        params:{
+          link:encodeURIComponent(order.id as string)
+        }
+      })
     }
 
     async function assignOrder(order: any) {
@@ -385,6 +395,25 @@ export default defineComponent({
       }
     }
 
+    function goToViewMD(id: string){
+      router.push({
+        name : "sousDistributeursDetails",
+        params:{
+          id : id
+        }
+      })
+    }
+
+
+    function goToViewDeliveryMan(id:string){
+      router.push({
+        name : "livreursDetails",
+        params:{
+          id : id
+        }
+      })
+    }
+
     return {
       titles,
       goToCreateAppros,
@@ -408,6 +437,8 @@ export default defineComponent({
       showReject,
       loading,
       confirmRejectOrder,
+      goToViewMD,
+      goToViewDeliveryMan
       
     };
   },

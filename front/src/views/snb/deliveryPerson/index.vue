@@ -189,12 +189,12 @@ export default defineComponent({
 
     const router = useRouter();
     function details(row: IUser) {
-      // router.push({
-      //   name: "livreursDetails",
-      //   params: {
-      //     id: row.id,
-      //   },
-      // });
+      router.push({
+        name: "livreursDetails",
+        params: {
+          id: row.id,
+        },
+      });
     }
     const modal = reactive({
       title: "",
