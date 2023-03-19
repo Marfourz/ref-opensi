@@ -98,7 +98,7 @@ export class ProductCategoryService {
       return deletedCategory;
     } catch (error) {
       throw new HttpException(
-        'Vous ne pouvez pas supprimé ce produit',
+        'Vous ne pouvez pas supprimé cette categorie',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }

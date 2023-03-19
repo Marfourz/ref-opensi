@@ -18,6 +18,8 @@ import { ProductsModule } from '../product/product.module';
 import { WsNotificationModule } from '../ws-notification/ws-notification.module';
 import { NotificationModule } from 'apps/notification/src/notification.module';
 import { StockModule } from '../stock/stock.module';
+import { TransactionModule } from '../transaction/transaction.module';
+import { InvoiceModule } from '../invoice/invoice.module';
 @Module({
   imports: [
     forwardRef(() => StockModule),
@@ -26,6 +28,8 @@ import { StockModule } from '../stock/stock.module';
     ProductsModule,
     WsNotificationModule,
     NotificationModule,
+    TransactionModule,
+    InvoiceModule,
   ],
   controllers: [OrderController],
   exports: [OrderService],

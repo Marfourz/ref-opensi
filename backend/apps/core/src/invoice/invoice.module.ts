@@ -13,6 +13,7 @@ import { InvoiceService } from './invoice.service';
 
 @Module({
   imports: [HttpModule],
+  exports: [InvoiceService],
   controllers: [InvoiceController],
   providers: [PrismaService, InvoiceService, JwtService],
 })

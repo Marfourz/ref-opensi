@@ -12,9 +12,16 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'guards/roles.guard';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule],
+  imports: [
+    HttpModule,
+    ConfigModule.forRoot({
+      envFilePath: ['.env.production', '.env.development'],
+    }),
+  ],
+  exports: [TransactionService],
   controllers: [TransactionController],
   providers: [
     TransactionService,
@@ -28,11 +35,9 @@ import { RolesGuard } from 'guards/roles.guard';
 })
 export class TransactionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthenticationMiddleware)
-      .forRoutes(
-        { path: 'transactions', method: RequestMethod.ALL },
-        { path: 'transactions/(*)', method: RequestMethod.ALL },
-      );
+    consumer.apply(AuthenticationMiddleware).forRoutes();
+    //{ path: 'transactions', method: RequestMethod.ALL },
+    //{ path: 'transactions/(*)', method: RequestMethod.ALL },
+    //();
   }
 }

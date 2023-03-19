@@ -8,7 +8,7 @@ import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
-import { OrderStatusEnum } from '@prisma/client';
+import { OrderStatusEnum, OrganisationTypeEnum } from '@prisma/client';
 import { orderDto } from '../order/order.dto';
 import { OrderService } from '../order/order.service';
 
@@ -22,6 +22,15 @@ export class StockService {
 
   async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
+      const organisation = await this.prisma.organisation.findUnique({
+        where: {
+          id: stock.organisationId,
+        },
+        select: {
+          type: true,
+        },
+      });
+
       const haveStock = await this.prisma.stock.findFirst({
         where: {
           organisationId: stock.organisationId,
@@ -29,42 +38,52 @@ export class StockService {
         },
       });
 
+      let returnedStock: Stock | PromiseLike<Stock>;
+
       if (haveStock) {
-        let newQuantity;
-        if (option.add) {
-          newQuantity = haveStock.currentQuantity + stock.currentQuantity;
-        } else {
+        let newQuantity: number;
+        if (option && !option.add) {
           newQuantity = haveStock.currentQuantity - stock.currentQuantity;
+        } else {
+          newQuantity = haveStock.currentQuantity + stock.currentQuantity;
         }
-        await this.updateSingleStock(haveStock.id, {
+        returnedStock = await this.updateSingleStock(haveStock.id, {
           currentQuantity: newQuantity,
+        });
+      } else {
+        const Nstock: any = stock;
+        Nstock.originalQuantity = stock.currentQuantity;
+
+        returnedStock = await this.prisma.stock.create({
+          data: Nstock,
         });
       }
 
-      const Nstock: any = stock;
-      Nstock.originalQuantity = stock.currentQuantity;
+      if (organisation.type == OrganisationTypeEnum.snb) {
+        const order: orderDto = {
+          organisationId: stock.organisationId,
+          items: [
+            {
+              productId: stock.productId,
+              quantity: stock.currentQuantity,
+            },
+          ],
+        };
 
-      await this.prisma.stock.create({
-        data: Nstock,
-      });
+        if (option && !option.add) {
+          order.parentOrganisationId = stock.organisationId;
+        }
 
-      const order: orderDto = {
-        organisationId: stock.organisationId,
-        items: [
-          {
-            productId: stock.productId,
-            quantity: stock.currentQuantity,
-          },
-        ],
-      };
+        console.log('OPTIONS FOR SUBSTRATION STOCK', order);
 
-      const Norder = await this.orderService.createOrder(order);
+        const Norder = await this.orderService.createOrder(order);
 
-      await this.orderService.updateSingleOrder(Norder.id, {
-        status: OrderStatusEnum.delivered,
-      });
+        await this.orderService.updateSingleOrder(Norder.id, {
+          status: OrderStatusEnum.delivered,
+        });
+      }
 
-      return Nstock;
+      return returnedStock;
     } catch (error) {
       throw error;
       return;
@@ -112,7 +131,7 @@ export class StockService {
   }
 
   async searchForStocksOfOrganisation(
-    filterParams,
+    filterParams: { page: any; perPage: any; q: any; categoryId: any; },
     orgId: string,
   ): Promise<PagiationPayload<any[]>> {
     try {
@@ -227,41 +246,59 @@ export class StockService {
   }
 
   async getStockEvolution(orgId: string): Promise<any> {
-    /*const organisation = await this.prisma.organisation.findUnique({
+    const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
       },
       select: {
         type: true,
       },
-    });*/
-
-    const data: any = [];
-    const deliveredOrders = await this.prisma.order.findMany({
-      where: {
-        OR: [
-          {
-            organisationId: orgId,
-          },
-          {
-            parentOrganisationId: orgId,
-          },
-        ],
-        status: OrderStatusEnum.delivered,
-      },
-      include: {
-        items: true,
-      },
     });
+
+    let deliveredOrders;
+
+    if (organisation.type == OrganisationTypeEnum.snb) {
+      deliveredOrders = await this.prisma.order.findMany({
+        where: {
+          organisationId: orgId,
+          status: OrderStatusEnum.delivered,
+        },
+        include: {
+          items: true,
+        },
+      });
+    } else {
+      deliveredOrders = await this.prisma.order.findMany({
+        where: {
+          OR: [
+            {
+              organisationId: orgId,
+            },
+            {
+              parentOrganisationId: orgId,
+            },
+          ],
+          status: OrderStatusEnum.delivered,
+        },
+        include: {
+          items: true,
+        },
+      });
+    }
+
+    const data = [];
 
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
-      let type,
+      let type: string,
         quantity = 0;
-      if (element.organisationId == orgId) {
-        type = 'Appro';
-      } else {
+      if (
+        element.parentOrganisationId == element.organisationId ||
+        element.parentOrganisationId == orgId
+      ) {
         type = 'Vente';
+      } else {
+        type = 'Appro';
       }
 
       for (let j = 0; j < element.items.length; j++) {
@@ -269,12 +306,21 @@ export class StockService {
         quantity += e.quantity;
       }
 
-      data.push({
+      /*data.push({
         deliveryDate: element.deliveryDate,
         type,
         quantity,
         total: element.totalAmount,
-      });
+      });*/
+
+      const dataItem: any = {};
+      dataItem[element.deliveryDate] = {
+        type,
+        quantity,
+        total: element.totalAmount,
+      };
+
+      data.push(dataItem);
     }
 
     /*if (organisation.type == 'snb') {

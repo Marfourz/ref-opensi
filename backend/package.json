@@ -37,6 +37,7 @@
         "class-validator": "^0.14.0",
         "dayjs": "^1.11.7",
         "dotenv": "^16.0.3",
+        "kkiapay-nodejs-sdk": "github:kkiapay/nodejs-sdk",
         "mailgen": "^2.0.27",
         "passport-jwt": "^4.0.1",
         "prisma": "^4.9.0",

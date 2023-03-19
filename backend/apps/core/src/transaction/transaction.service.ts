@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { transactionDto, updateTransactionDto } from './transaction.dto';
 import { PrismaService } from 'libs/prisma/src';
-import { Transaction } from '@prisma/client';
+import { Transaction, TransactionStatusEnum } from '@prisma/client';
+import * as kkiapay from 'kkiapay-nodejs-sdk';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TransactionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
 
   async createTransaction(transaction: transactionDto): Promise<Transaction> {
     try {
@@ -62,5 +67,25 @@ export class TransactionService {
       throw error;
       return;
     }
+  }
+
+  async validateTransaction(id: string, totalAmount) {
+    const k_payment = kkiapay({
+      privatekey: this.configService.get('KKIAPAY_PRIVATE_KEY'),
+      publickey: this.configService.get('KKIAPAY_PUBLIC_KEY'),
+      secretkey: this.configService.get('KKIAPAY_SECRET_KEY'),
+      sandbox: true,
+    });
+
+    k_payment.verify(id).
+      then((response) => {
+        console.log('Response : ', response);
+        if (response.isPaymentSucces) return 'success';
+        return 'pending';
+      }).
+      catch((error) => {
+        return 'pending';
+        //throw new HttpException('Error : Transaction not found', 406);
+      });
   }
 }
