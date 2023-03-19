@@ -2,6 +2,9 @@
   <PageInTwoPart>
     <template #firstPart>
       <div class="space-y-8">
+        <router-link :to="{ name: 'appros' }" path="appros">
+          <BaseGoBack> </BaseGoBack>
+        </router-link>
         <BaseTitle title="Nouvel appro"></BaseTitle>
         <div class="flex flex-wrap space-x-3.5">
           <ProductCategory
