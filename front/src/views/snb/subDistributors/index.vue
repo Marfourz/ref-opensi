@@ -105,10 +105,9 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-import BaseActions from "@/components/base/BaseActions.vue";
 
 export default defineComponent({
-  components: { Form, VPanel, BaseActions },
+  components: { Form, VPanel },
   setup() {
     const etats = ref([
       { name: "Master distributeur", value: OrganisationType.MD },

@@ -186,7 +186,6 @@ import { useRouter } from "vue-router";
 import { useUsersStore } from "../../../stores/users";
 import helpers from "@/helpers/index";
 import { useToast } from "vue-toastification";
-
 import EmptyState from "../../../components/EmptyState.vue";
 
 import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue";
