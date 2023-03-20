@@ -120,6 +120,19 @@ export class OrderController {
     );
   }
 
+  /*@Get(':orderId/invoice')
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  @ApiParam({ name: 'orderId' })
+  // @ApiQuery({ name: 'lte', type: String, required: false })
+  // @ApiQuery({ name: 'gte', type: String, required: false })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getInvoiceOfOrder(@Param() params): Promise<any> {
+    return this.orderService.getInvoiceOfOrder(params.orderId);
+  }*/
+
   @Put('/:orderId/assignTo/:deliveryManId')
   //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'orderId' })
@@ -152,7 +165,7 @@ export class OrderController {
   }
 
   @Put(':id')
-  @Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
+  //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'id' })
   @ApiHeader({
     name: 'x-auth-token',

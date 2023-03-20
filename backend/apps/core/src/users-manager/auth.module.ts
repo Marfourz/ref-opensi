@@ -15,6 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
+import { NotificationModule } from '../../../notification/src/notification.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
       }),
       inject: [ConfigService],
     }),
+    NotificationModule,
   ],
   controllers: [AuthController, RolesController, PermissionsController],
   providers: [
