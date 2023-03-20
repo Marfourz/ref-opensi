@@ -6,14 +6,25 @@
         <!-- Panel -->
         <div class="flex mt-8 space-x-4">
           <div v-for="(etat, index) in etats" :key="index">
-            <VPanel :labels="etat.name" @click="master.type = etat.value" :class="{
-              'text-white bg-primary': etat.value === master.type,
-            }" />
+            <VPanel
+              :labels="etat.name"
+              @click="master.type = etat.value"
+              :class="{
+                'text-white bg-primary': etat.value === master.type,
+              }"
+            />
           </div>
         </div>
       </div>
-      <BaseTableWithFilter class="flex flex-col flex-1" :titles="titles" :fetchData="organizationStore.fetchAllParteners"
-        :params="{ type: master.type }" :actions="actions" :requestId="organisationId" :key="reload">
+      <BaseTableWithFilter
+        class="flex flex-col flex-1"
+        :titles="titles"
+        :fetchData="organizationStore.fetchAllParteners"
+        :params="{ type: master.type }"
+        :actions="actions"
+        :requestId="organisationId"
+        :key="reload"
+      >
         <template #filter>
           <div class="flex space-x-4 h-full">
             <!-- <div
@@ -24,20 +35,27 @@
             </div> -->
 
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-            <BaseButton icon="plus" size="small" @click="createMaster">Nouveau {{ partenaireTitle }}</BaseButton>
+            <BaseButton
+              icon="plus"
+              size="small"
+              @click="createMaster"
+              v-if="showNewSubDistributor"
+              >Nouveau {{ partenaireTitle }}</BaseButton
+            >
           </div>
         </template>
         <template #status="{ element }">
-          <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
+          <BaseTableStatut
+            :title="getStatutLabel(element)"
+            :type="getStatutType(element)"
+          ></BaseTableStatut>
         </template>
 
         <template #action="{ element }">
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
-        <template #wallet="{element}">
-          <div>
-            {{ element.wallet.turnover }} FCFA
-          </div>
+        <template #wallet="{ element }">
+          <div>{{ element.wallet.turnover }} FCFA</div>
         </template>
       </BaseTableWithFilter>
     </div>
@@ -47,34 +65,73 @@
           <div class="font-bold text-2xl">
             {{
               !selectedMaster
-              ? `Ajouter un ${partenaireTitle}`
-              : "Mettre à jour"
+                ? `Ajouter un ${partenaireTitle}`
+                : "Mettre à jour"
             }}
           </div>
-          <BaseIcon name="close" class="w-5 h-5" @click="showModal = false"></BaseIcon>
+          <BaseIcon
+            name="close"
+            class="w-5 h-5"
+            @click="showModal = false"
+          ></BaseIcon>
         </div>
         <div class="flex justify-center pt-6">
           <Form class="w-3/4 space-y-6" @submit="onSubmit">
             <div class="flex justify-between space-x-6">
-              <BaseInput name="raison sociale" label="Raison Sociale" rules="required" v-model="master.socialReason">
+              <BaseInput
+                name="raison sociale"
+                label="Raison Sociale"
+                rules="required"
+                v-model="master.socialReason"
+              >
               </BaseInput>
-              <BaseInput name="numéro ifu" label="Numéro IFU" rules="required" v-model="master.fiscalId"></BaseInput>
+              <BaseInput
+                name="numéro ifu"
+                label="Numéro IFU"
+                rules="required|min:10|max:13"
+                v-model="master.fiscalId"
+              ></BaseInput>
             </div>
             <div class="flex justify-between space-x-6">
-              <BaseInput name="téléphone" label="Téléphone" rules="required" v-model="master.phone"></BaseInput>
-              <BaseInput name="firstname" label="Email"  rules="required|email" v-model="master.email"></BaseInput>
+              <BaseInput
+                name="téléphone"
+                label="Téléphone"
+                rules="required"
+                v-model="master.phone"
+              ></BaseInput>
+              <BaseInput
+                name="firstname"
+                label="Email"
+                rules="required|email"
+                v-model="master.email"
+              ></BaseInput>
             </div>
             <div class="flex justify-between space-x-6">
-              <BaseInput name="Nom du représentant" label="Nom du représentant" rules="required"
-                v-model="master.ownerName"></BaseInput>
-              <BaseInput name="adresse" label="Adresse" rules="required" v-model="master.adress"></BaseInput>
+              <BaseInput
+                name="Nom du représentant"
+                label="Nom du représentant"
+                rules="required"
+                v-model="master.ownerName"
+              ></BaseInput>
+              <BaseInput
+                name="adresse"
+                label="Adresse"
+                rules="required"
+                v-model="master.adress"
+              ></BaseInput>
             </div>
 
             <div class="text-[#0F0F14]">Méthode de paiement</div>
             <div class="flex items-center space-x-6">
-              <div class="flex items-center space-x-2" v-for="method in paymentMethods" :key="method.title">
-                <BaseSelectedCard :selected="master.paymentDeadline == method.value"
-                  @click="master.paymentDeadline = +method.value">
+              <div
+                class="flex items-center space-x-2"
+                v-for="method in paymentMethods"
+                :key="method.title"
+              >
+                <BaseSelectedCard
+                  :selected="master.paymentDeadline == method.value"
+                  @click="master.paymentDeadline = +method.value"
+                >
                   <BaseIcon :name="method.icon"></BaseIcon>
                 </BaseSelectedCard>
                 <div class="text-[14px] font-semibold">{{ method.title }}</div>
@@ -109,11 +166,28 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   components: { Form, VPanel },
   setup() {
-    const etats = ref([
-      { name: "Master distributeur", value: OrganisationType.MD },
-      { name: "Distributeurs agréés", value: OrganisationType.DA },
-      //{ name: "Dépots", value: OrganisationType.DA },
-    ]);
+    const etats = computed(() => {
+      const items = [{ name: "Dépots", value: OrganisationType.DP }];
+
+      if (organisationType.value == OrganisationType.MD || organisationType.value == OrganisationType.SNB){
+        master.type = OrganisationType.DA
+        items.unshift({
+          name: "Distributeurs agréés",
+          value: OrganisationType.DA,
+        });
+      }
+       
+      if (organisationType.value == OrganisationType.SNB){
+        master.type = OrganisationType.MD
+        items.unshift({
+          name: "Master distributeur",
+          value: OrganisationType.MD,
+        });
+      }
+       
+
+      return items
+    });
 
     const paymentMethods = ref([
       {
@@ -144,7 +218,9 @@ export default defineComponent({
 
     const userStore = useUsersStore();
 
-    const customActions: (el: { status: string; }) => IAction[] = (el: { status: string; }) => {
+    const customActions: (el: { status: string }) => IAction[] = (el: {
+      status: string;
+    }) => {
       const actions = [
         {
           title: "Voir détail",
@@ -155,24 +231,23 @@ export default defineComponent({
           title: "Modifier",
           icon: "edit",
           action: onUpdate,
-        }
+        },
       ];
-      if (el.status === 'active') {
+      if (el.status === "active") {
         actions.push({
           title: "Désactiver",
           icon: "removeRedd",
           action: onDelete,
-        })
+        });
         return actions;
       }
       actions.push({
         title: "Activer",
         icon: "removeRedd",
         action: onDelete,
-      })
+      });
       return actions;
-
-    }
+    };
 
     const actions = [
       {
@@ -245,7 +320,7 @@ export default defineComponent({
           modal.subtitle = "";
           modal.mode = "success";
         }
-      } catch (error) { }
+      } catch (error) {}
     }
     const router = useRouter();
     function details(row: IOrganisation) {
@@ -259,6 +334,7 @@ export default defineComponent({
 
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
+      else if (master.type == OrganisationType.DP) return "dépôt";
       else return "master distributeur";
     });
 
@@ -326,8 +402,6 @@ export default defineComponent({
       else if (element.status == UserAccountStatus.SUSPENDED) return "warning";
     }
 
-
-
     const organisationId = computed(() => {
       return userStore.getCurrentUser?.organisationId;
     });
@@ -348,7 +422,10 @@ export default defineComponent({
           );
           modal.title = `Organisation modifié avec succès`;
         } else {
-          const response = await organizationStore.create({ ...master, parentOrganisationId: organisationId.value });
+          const response = await organizationStore.create({
+            ...master,
+            parentOrganisationId: organisationId.value,
+          });
           modal.title = `Organisation crée avec succès`;
         }
         modal.show = true;
@@ -362,6 +439,24 @@ export default defineComponent({
         toast.error(error.response.data.message);
       }
     }
+
+    const organisationType = computed(() => {
+      if (userStore.getCurrentUser?.organisation)
+        return userStore.getCurrentUser?.organisation.type;
+    });
+
+    const showNewSubDistributor = computed(() => {
+      if (master.type == OrganisationType.MD) {
+        if (organisationType.value == OrganisationType.SNB) return true;
+        return false;
+      } else if (master.type == OrganisationType.DA) {
+        if (organisationType.value == OrganisationType.MD) return true;
+        return false;
+      } else if (master.type == OrganisationType.DP) {
+        if (organisationType.value == OrganisationType.DA) return true;
+        return false;
+      }
+    });
 
     return {
       organizationStore,
@@ -384,7 +479,9 @@ export default defineComponent({
       getStatutType,
       partenaireTitle,
       details,
-      organisationId, customActions
+      organisationId,
+      customActions,
+      showNewSubDistributor,
     };
   },
 });
