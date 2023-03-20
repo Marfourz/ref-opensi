@@ -92,7 +92,7 @@
                   :src="`${
                     element.image && element.image[0]
                       ? element.image[0].url
-                      : '/assets/images/beverage.png'
+                      : '@/assets/images/beverage.png'
                   }`"
                   alt=""
                 />
@@ -381,11 +381,16 @@ export default defineComponent({
             );
           }
            
-          console.log("submit call", image.value);
+         
           const response = await productStore.update(
             selectedProduct.value.id,
-            selectedProduct.value
+            product
           );
+
+          toast.success("La boisson a été mise à jour avec succès");
+            reload.value = reload.value + 1;
+            showModal.value = false;
+            router.push({ name: "products" });
           
          
         } else {
