@@ -4,13 +4,8 @@
     <!-- Statistiques -->
     <div class="flex justify-between items-center mt-9">
       <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
-      <!-- <BaseDateRange></BaseDateRange> -->
-      <div class="text-link underline cursor-pointer font-semibold">
-        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
-          <div class="font-semibold text-sm p-2">Ce mois</div>
-          <BaseIcon name="Top"></BaseIcon>
-        </div>
-      </div>
+      <BaseDateRange></BaseDateRange>
+     
     </div>
 
     <!-- DashboardCard -->

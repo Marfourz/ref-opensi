@@ -163,9 +163,9 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
 import { UserAccountStatus } from "../../../types/enumerations";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-
+import VHistorical from "@/components/VHistorical.vue";
 export default defineComponent({
-  components: { Form, BaseTableStatut },
+  components: { Form, BaseTableStatut, VHistorical },
   setup() {
     const userStore = useUsersStore();
 
@@ -189,12 +189,12 @@ export default defineComponent({
 
     const router = useRouter();
     function details(row: IUser) {
-      // router.push({
-      //   name: "livreursDetails",
-      //   params: {
-      //     id: row.id,
-      //   },
-      // });
+      router.push({
+        name: "livreursDetails",
+        params: {
+          id: row.id,
+        },
+      });
     }
     const modal = reactive({
       title: "",

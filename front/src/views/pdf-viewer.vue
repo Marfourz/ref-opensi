@@ -1,16 +1,19 @@
 <template>
-    <div class="h-sreen w-screen flex flex-col">
+    <div class="h-screen w-screen flex flex-col ">
         <div class="h-16 py-2.5 px-8 bg-white flex items-center justify-between">
 
-            <div class="flex items-center space-x-2">
-                <BaseIcon icon="arrow-left" class="cursor-pointer" @click="goBack"></BaseIcon>
-                <BaseIcon icon="pdf"></BaseIcon>
-                <div class="text-grey-30 font-semibold text-[16px]">Affichage du contrat</div>
+            <div class="flex items-center space-x-4">
+                <BaseIcon name="arrowLeft" class="cursor-pointer" @click="goBack"></BaseIcon>
+                <BaseIcon name="pdf"></BaseIcon>
+                <div class="text-grey-30 font-semibold text-[16px]">Facture proforma</div>
             </div>
-            <a :href="link" ><BaseButton icon="download-pdf" type="success" >Télécharger</BaseButton></a>
+            <a :href="link" class="" ><div class="space-x-2 py-3 bg-primary text-white flex items-center justify-center px-6 rounded" type="success" >
+                <BaseIcon name="download"></BaseIcon>
+                <span class="text-sm">Télécharger</span>
+                </div></a>
 
         </div>
-        <div class="bg-[#E5E5E5] flex items-center flex-1 justify-center pt-7">
+        <div class="bg-[#E5E5E5] flex items-center h-full flex-1 justify-center pt-7">
             <div class="bg-white h-full w-1/2 ">
                 <vue-pdf-embed :source='link' />
 

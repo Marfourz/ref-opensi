@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full h-full relative overflow-scroll ">
+  <div class="w-full h-full relative overflow-hidden ">
     <slot name="title"> </slot>
 
     <BaseTable
       :titles="titles"
       :data="order.items"
+      
       class="mt-2 h-[calc(100vh-200px)] overflow-scroll"
       v-if="order"
     >
@@ -41,6 +42,19 @@
       <div>Total</div>
       <div>{{ order.totalAmount }} F</div>
     </div>
+
+    <!-- <BaseRightModal :show="true" >
+      <div class="py-8 px-6">
+        <div class="flex justify-between items-center mb-8">
+          <div class="text-2xl font-semibold">Historique</div>
+          <div><BaseIcon name="close" class="w-5 h-5"></BaseIcon></div>
+          
+        </div>
+
+        <VHistorical></VHistorical>
+
+      </div>
+    </BaseRightModal> -->
   </div>
 </template>
 
@@ -49,35 +63,37 @@ import { defineComponent } from "vue";
 import type { PropType } from "vue";
 import type { IOrder } from "../types/interfaces";
 import helpers from "@/helpers/index";
+import BaseRightModal from "./base/BaseRightModal.vue";
+import VHistorical from "./VHistorical.vue";
 
 export default defineComponent({
-  props: {
-    order: {
-      type: Object as PropType<IOrder>,
-      required: true,
+    props: {
+        order: {
+            type: Object as PropType<IOrder>,
+            required: true,
+        },
     },
-  },
-  setup() {
-    const titles = [
-      {
-        title: "Produit",
-        name: "product",
-      },
-      {
-        title: "Quantité",
-        name: "quantity",
-      },
-      {
-        title: "Prix",
-        name: "price",
-      },
-    ];
-
-    return {
-      titles,
-      helpers,
-    };
-  },
+    setup() {
+        const titles = [
+            {
+                title: "Produit",
+                name: "product",
+            },
+            {
+                title: "Quantité",
+                name: "quantity",
+            },
+            {
+                title: "Prix",
+                name: "price",
+            },
+        ];
+        return {
+            titles,
+            helpers,
+        };
+    },
+    components: { BaseRightModal, VHistorical }
 });
 </script>
 
