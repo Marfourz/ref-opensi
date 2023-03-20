@@ -48,10 +48,11 @@ export class ImageController {
   @ApiCreatedResponse({
     description: 'The image of product has been successfully updated.',
   })
-  uploadNewProductImage(
+  async uploadNewProductImage(
     @Body() body: FileUploadDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Image> {
+    await this.imageService.deleteAllProductImages(body.productId);
     const image = {
       url: getProductImageLink(file.filename),
       productId: body.productId,

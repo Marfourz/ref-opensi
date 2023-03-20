@@ -38,6 +38,30 @@ export class UserGetResetDto {
   username: string;
 }
 
+export class UserResetPasswordOtp {
+  @ApiProperty()
+  @IsString()
+  otp: string;
+
+  @ApiProperty()
+  @IsString()
+  password: string;
+
+  @ApiProperty()
+  @IsString()
+  username: string;
+}
+
+export class VerifyOtpDto {
+  @ApiProperty()
+  @IsString()
+  otp: string;
+
+  @ApiProperty()
+  @IsString()
+  username: string;
+}
+
 export class UserResetPasswordDto {
   @ApiProperty()
   @IsString()

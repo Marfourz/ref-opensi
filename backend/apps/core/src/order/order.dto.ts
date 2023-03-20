@@ -72,6 +72,16 @@ export class updateOrderDto {
     message: '$property format must be YYYY-MM-DD',
   })
   deliveryDate?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  deliveryStartedAt?: string;
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  deliveredAt?: string;
 }
 
 export class assignOrderDto {

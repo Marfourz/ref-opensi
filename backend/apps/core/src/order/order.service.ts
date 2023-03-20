@@ -218,14 +218,20 @@ export class OrderService {
         await this.notifService.sendSms(smsBody);
       }
 
-      if (update.status == 'accepted') {
+      if (update.status == OrderStatusEnum.accepted) {
         await this.updateSingleOrder(id, {
           acceptedAt: dayjs().format('YYYY-MM-DD'),
         });
       }
 
+      if (update.status == OrderStatusEnum.inProgress) {
+        await this.updateSingleOrder(id, {
+          deliveryStartedAt: dayjs().format('YYYY-MM-DD'),
+        });
+      }
+
       this.wsService.notifyRoom(updatedOrder.organisationId, {
-        event: WS_EVENTS.NEW_ORDER_RECORDED,
+        event: WS_EVENTS.ORDER_UPDATED,
         value: updatedOrder.id,
       });
       return updatedOrder;
@@ -485,6 +491,7 @@ export class OrderService {
         }
         await this.updateSingleOrder(orderId, {
           status: OrderStatusEnum.delivered,
+          deliveredAt: dayjs().format('YYYY-MM-DD'),
           //deliveryDate: dayjs().format('YYYY-MM-DD'),
         });
       }
