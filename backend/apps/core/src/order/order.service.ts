@@ -594,4 +594,44 @@ export class OrderService {
       },
     });
   }
+
+  async getOrderHistory(id: string): Promise<any> {
+    const data: any = {};
+    const order = await this.getSingleOrder(id);
+
+    const parentOrganisation = await this.prisma.organisation.findUnique({
+      where: {
+        id: order.parentOrganisationId,
+      },
+      select: {
+        ownerName: true,
+      },
+    });
+
+    data['order_created'] = {
+      date: order.createdAt,
+      actor: order.organisation.ownerName,
+    };
+
+    data['order_accepted'] = {
+      date: order.acceptedAt,
+      actor: parentOrganisation.ownerName,
+    };
+
+    if (order.deliveryMan) {
+      const deliveryMan = await this.prisma.user.findUnique({
+        where: {
+          id: order.deliveryMan,
+        },
+        select: {
+          name: true,
+        },
+      });
+      data['order_delivered'] = {
+        date: order.deliveredAt,
+        actor: deliveryMan.name,
+      };
+    }
+    return data;
+  }
 }

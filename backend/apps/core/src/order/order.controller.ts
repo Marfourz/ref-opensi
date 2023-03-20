@@ -71,6 +71,16 @@ export class OrderController {
     return this.orderService.getSingleOrder(params.id);
   }
 
+  @Get(':id/history')
+  @ApiParam({ name: 'id' })
+  @ApiHeader({
+    name: 'x-auth-token',
+    description: 'Contain auth token',
+  })
+  getOrderHistory(@Param() params): Promise<any> {
+    return this.orderService.getOrderHistory(params.id);
+  }
+
   @Get(':orgId/search')
   @ApiParam({ name: 'orgId' })
   @ApiHeader({
