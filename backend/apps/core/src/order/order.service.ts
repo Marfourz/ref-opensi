@@ -613,10 +613,12 @@ export class OrderService {
       actor: order.organisation.ownerName,
     };
 
-    data['order_accepted'] = {
-      date: order.acceptedAt,
-      actor: parentOrganisation.ownerName,
-    };
+    if (order.acceptedAt) {
+      data['order_accepted'] = {
+        date: order.acceptedAt,
+        actor: parentOrganisation.ownerName,
+      };
+    }
 
     if (order.deliveryMan) {
       const deliveryMan = await this.prisma.user.findUnique({
