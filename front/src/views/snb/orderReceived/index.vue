@@ -11,12 +11,53 @@
       ></SuccessInfo>
     </div>
 
-    <BaseModal :show="show" @close="show = false" title="Accepter la commande">
+    <BaseModal
+      :show="show"
+      @close="show = false"
+      :title="!justAssign ? 'Accepter la commande' : 'Assigner à un livreur'"
+    >
+    
       <FormAssignDeliveryPerson
         :orderId="selectedOrderId"
+        :justAssign="justAssign"
         @submitSuccess="orderAcceptSuccessful"
+        @reset="show = false"
       ></FormAssignDeliveryPerson>
     </BaseModal>
+
+    <BaseModal
+      title="Rejeter une demande"
+      :show="showReject"
+      @close="showReject = false"
+    >
+      <template #modal>
+        <div class="flex flex-col space-y-6 items-center py-4">
+          <BaseIcon name="warning"></BaseIcon>
+          <div class="text-center font-semibold text-2xl">
+            Êtes vous sur de vouloir rejecter cette commande ?
+          </div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="showReject = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="confirmRejectOrder"
+            >
+              Rejeter
+            </BaseButton>
+          </div>
+        </div>
+      </template>
+    </BaseModal>
+
     <PageInTwoPart>
       <template #firstPart>
         <div class="space-y-8">
@@ -26,7 +67,8 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganizationType"
-              :actions="actions"
+              :filterActions="filterActions"
+              @itemClick="showItemOrder"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -62,7 +104,7 @@
         </div>
       </template>
       <template #secondPart>
-        <Order :order="order" v-if="order">
+        <Order :order="order" v-if="order" >
           <template #title>
             <div class="space-y-4">
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
@@ -73,17 +115,18 @@
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
                   <div class="">
-                    <div class="text-[#6B7A99]">{{ partenaireTitle }}</div>
+                    <div class="text-[#6B7A99] text-sm font-semibold">{{ partenaireTitle }}</div>
                     <div class="font-bold">
                       {{ order.organisation?.socialReason }}
                     </div>
                   </div>
                 </div>
-                <div
-                  class="border border-[#6B7A99] py-2.5 px-2 rounded font-semibold cursor-pointer"
+                <a
+                  @click="goToViewMD(order.organisation.id)"
+                  class="border border-[#6B7A99] py-2.5 px-2 h-fit w-fit rounded font-semibold cursor-pointer text-sm"
                 >
                   Voir le profil
-                </div>
+                </a>
               </div>
               <div class="flex space-x-2 items-center">
                 <div class="font-bold text-lg">
@@ -94,14 +137,39 @@
                   :type="getStatutType(order)"
                 ></BaseTableStatut>
               </div>
+
+            
+
+              <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
+                <div class="space-y-1">
+                  <div class="semi-bold">Livraison</div>
+                  <div class="flex items-center w-full">
+                    <div class="flex items-center space-x-1.5" >
+                      <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Date</span>
+                      <span class="font-bold">{{!order.deliveryDate ? "Non défini" : helpers.formatDateReduce(order.deliveryDate) }}</span>
+                    </div>
+                    <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
+                    <div class="flex items-center space-x-1.5" >
+                      <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Livreur : </span>
+                      <a class="text-[#0050CF] font-semibold underline cursor-pointer" @click="goToViewDeliveryMan(order.deliveryMan.id)"
+                        >{{order.deliveryMan.name}}</a
+                      >
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </template>
         </Order>
-        <div class="flex h-full flex-col justify-center" v-else>
-          <EmptyState
-            title="Vous verrez ici les détails  d'une <br> commande"
-            image="/src/assets/images/emptyBasket.png"
-          ></EmptyState>
+        <div class="flex flex-col items-center space-y-4 h-full justify-center" v-else>
+          <img src="@/assets/images/emptyBasket.png" alt="" />
+          <div class="font-semibold text-center">
+            Vous verrez ici les détails d'une <br />
+            commande
+          </div>
         </div>
       </template>
     </PageInTwoPart>
@@ -123,6 +191,7 @@ import EmptyState from "../../../components/EmptyState.vue";
 import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue";
 
 import SuccessInfo from "../../../components/SuccessInfo.vue";
+import { IOrder } from "../../../types/interfaces";
 
 export default defineComponent({
   components: {
@@ -131,7 +200,8 @@ export default defineComponent({
     EmptyState,
     FormAssignDeliveryPerson,
     SuccessInfo,
-  },
+    
+},
   setup() {
     const titles = [
       {
@@ -158,6 +228,8 @@ export default defineComponent({
 
     const order = ref();
 
+    const justAssign = ref(false);
+
     const orderStore = useOrdersStore();
     const userStore = useUsersStore();
 
@@ -176,12 +248,14 @@ export default defineComponent({
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
       else if (element.status == OrderStatus.DELIVERED) return "Inactive";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
     function getStatutType(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "colorize";
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
+      else if (element.status == OrderStatus.REJECTED) return "danger";
     }
 
     const toast = useToast();
@@ -205,6 +279,79 @@ export default defineComponent({
       },
     ];
 
+    function filterActions(element: IOrder) {
+      let elements = [];
+
+      if (element.status == OrderStatus.NEW)
+        elements = [
+          {
+            title: "Accepter",
+            classIcon: "text-tableColor",
+            icon: "edit",
+            action: acceptOrder,
+          },
+          {
+            title: "Rejeter",
+            iconClass: "text-[#E03A15] w-3 h-3",
+            titleClass: "text-[#E03A15] ",
+            icon: "close",
+            action: rejectOrder,
+          },
+        ];
+      else if (element.status == OrderStatus.ACCEPTED) {
+        if (!element.deliveryMan) {
+          elements.push({
+            title: "Assigner à un livreur",
+            classIcon: "text-tableColor",
+            icon: "deliveryPerson",
+            action: assignOrder,
+          });
+        }
+
+        elements.push({
+          title: "Voir facture proforma",
+          classIcon: "text-tableColor",
+          icon: "facture",
+          action: viewInvoice,
+        });
+
+        elements.push({
+          title: "Voir l'historique",
+          classIcon: "text-tableColor",
+          icon: "history",
+          action: acceptOrder,
+        });
+      }
+
+      return elements;
+    }
+
+    async function viewInvoice(order: IOrder){
+      router.push({
+        name:"pdfViewer",
+        params:{
+          link:encodeURIComponent(order.id as string)
+        }
+      })
+    }
+
+    async function assignOrder(order: any) {
+      show.value = true;
+      justAssign.value = true;
+      selectedOrderId.value = order.id;
+    }
+
+    async function acceptOrder(order: any) {
+      show.value = true;
+      justAssign.value = false;
+      selectedOrderId.value = order.id;
+    }
+
+    async function rejectOrder(order: any) {
+      showReject.value = true;
+      selectedOrderId.value = order.id;
+    }
+
     async function showItemOrder(element: any) {
       try {
         const response = await orderStore.fetchOne(element.id);
@@ -215,11 +362,6 @@ export default defineComponent({
     }
 
     const selectedOrderId = ref();
-
-    async function acceptOrder(order: any) {
-      show.value = true;
-      selectedOrderId.value = order.id;
-    }
 
     const reload = ref(1);
 
@@ -232,6 +374,44 @@ export default defineComponent({
     const show = ref(false);
 
     const showSuccesInfo = ref(false);
+
+    const loading = ref(false);
+
+    const showReject = ref(false);
+
+    async function confirmRejectOrder() {
+      loading.value = true;
+      try {
+        const response = await orderStore.update(selectedOrderId.value, {
+          status: OrderStatus.REJECTED,
+        });
+        showReject.value = false;
+        loading.value = false;
+        reload.value = reload.value + 1;
+        toast.success("Commande rejetée avec succès");
+      } catch (error: any) {
+        toast.success("Rejet impossible");
+      }
+    }
+
+    function goToViewMD(id: string){
+      router.push({
+        name : "sousDistributeursDetails",
+        params:{
+          id : id
+        }
+      })
+    }
+
+
+    function goToViewDeliveryMan(id:string){
+      router.push({
+        name : "livreursDetails",
+        params:{
+          id : id
+        }
+      })
+    }
 
     return {
       titles,
@@ -250,6 +430,15 @@ export default defineComponent({
       selectedOrderId,
       reload,
       showSuccesInfo,
+      filterActions,
+      showItemOrder,
+      justAssign,
+      showReject,
+      loading,
+      confirmRejectOrder,
+      goToViewMD,
+      goToViewDeliveryMan
+      
     };
   },
 });

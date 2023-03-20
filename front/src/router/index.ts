@@ -5,6 +5,7 @@ import TableauBord from "@/views/index.vue";
 import AuthRoutes from "@/router/auth";
 import SnbRoutes from "@/router/snb";
 import Login from "@/views/auth/login.vue";
+import PdfViewer from '@/views/pdf-viewer.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,6 +30,11 @@ const router = createRouter({
           component: TableauBord,
         },
       ],
+    },
+    {
+      path: "/pdf/viewer/:link",
+      name: "pdfViewer",
+      component: PdfViewer,
     },
 
     ...AuthRoutes,

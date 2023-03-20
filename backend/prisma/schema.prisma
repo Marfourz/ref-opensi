@@ -25,6 +25,8 @@ model User {
 
   birthday            String?
 
+  otp                 String?
+
   sex                 SexEnum
 
   engine              Engine? @relation(fields: [engineId], references: [id])
@@ -102,6 +104,10 @@ model Order {
   reference           String?
 
   deliveryMan         String?
+
+  deliveredAt         String?
+
+  deliveryStartedAt   String?
 
   status              OrderStatusEnum
 

@@ -106,7 +106,6 @@ export default defineComponent({
     function onSelectFile() {
       file.value.click();
     }
-
     return {
       uploadFile,
       selectedFile,

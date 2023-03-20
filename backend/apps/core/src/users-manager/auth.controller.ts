@@ -7,6 +7,8 @@ import {
   UserResetPasswordDto,
   UserUpdateDto,
   UserChangePasswordDto,
+  UserResetPasswordOtp,
+  VerifyOtpDto,
 } from './auth.dto';
 import {
   ApiTags,
@@ -57,7 +59,19 @@ export class AuthController {
     return user;
   }
 
-  @Post('getResetPasswordToken')
+  @Post('getResetPasswordCode')
+  @ApiBody({ type: UserGetResetDto })
+  getCode(@Body() user: UserGetResetDto) {
+    return this.authService.getResetPasswordCode(user);
+  }
+
+  @Post('verifyOtpCode')
+  @ApiBody({ type: VerifyOtpDto })
+  verifyOtpCode(@Body() user: VerifyOtpDto) {
+    return this.authService.verifyOtpCode(user);
+  }
+
+  /*@Get('getResetPasswordToken')
   @ApiBody({ type: UserGetResetDto })
   @ApiCreatedResponse({
     description: 'The user pasword token is generated.',
@@ -68,12 +82,18 @@ export class AuthController {
   })
   getToken(@Body() user: UserGetResetDto) {
     return this.authService.getResetPasswordToken(user);
-  }
+  }*/
 
   @Put('resetPassword')
   @ApiBody({ type: UserResetPasswordDto })
   reset(@Body() user: UserResetPasswordDto) {
     return this.authService.resetPassword(user);
+  }
+
+  @Put('resetPasswordWithOtp')
+  @ApiBody({ type: UserResetPasswordOtp })
+  resetPasswordWithOtp(@Body() user: UserResetPasswordOtp) {
+    return this.authService.resetPasswordWithOtp(user);
   }
 
   @Put('changePassword/:userId')

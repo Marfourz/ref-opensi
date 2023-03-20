@@ -69,7 +69,7 @@ export class TransactionService {
     }
   }
 
-  async validateTransaction(id: string, totalAmount) {
+  async validateTransaction(id: string, totalAmount:number) {
     const k_payment = kkiapay({
       privatekey: this.configService.get('KKIAPAY_PRIVATE_KEY'),
       publickey: this.configService.get('KKIAPAY_PUBLIC_KEY'),

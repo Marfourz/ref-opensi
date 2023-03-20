@@ -7,7 +7,7 @@
           <BaseButton icon="stock2" size="small">Évolution du stock</BaseButton>
         </router-link>
       </div>
-      <div class="text-link underline cursor-pointer font-semibold" @click="goToUpadateStock">
+      <div class="text-link underline cursor-pointer font-semibold" @click="goToUpadateStock" v-if="isSnb">
         Gestion de stock
       </div>
     </div>
@@ -34,6 +34,7 @@ import ProductByCategory from "../products/components/ProductByCategory.vue";
 import helpers from "@/helpers/index";
 import { useProductStore } from "../../../stores/product";
 import { useUsersStore } from "../../../stores/users";
+import { OrganisationType } from "../../../types/enumerations";
 
 export default defineComponent({
   components: { DashboardCard, ProductByCategory },
@@ -86,7 +87,6 @@ export default defineComponent({
       }
     })
 
-       
 
     const router = useRouter();
 
@@ -185,6 +185,12 @@ export default defineComponent({
       generalInfos.value = response
     }
 
+    const isSnb = computed(()=>{
+      if(userStore.getCurrentUser?.organisation && userStore.getCurrentUser?.organisation.type == OrganisationType.SNB)
+        return true
+      return false
+    })
+
     onMounted(async () => {
       loadStockGeneralInfo()
     })
@@ -199,7 +205,8 @@ export default defineComponent({
       actions,
       organizationId,
       generalInfos,
-      reload
+      reload,
+      isSnb
 
     };
   },

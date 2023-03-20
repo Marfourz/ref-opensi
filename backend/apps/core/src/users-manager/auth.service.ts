@@ -6,16 +6,23 @@ import {
   UserResetPasswordDto,
   UserUpdateDto,
   UserChangePasswordDto,
+  UserResetPasswordOtp,
+  VerifyOtpDto,
 } from './auth.dto';
 import { HttpService } from '@nestjs/axios';
 import { generateRandomString } from 'helpers/generateRandomString';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
+import { getRandomInt } from '../../../../helpers/generateRandomString';
+import { NotificationService } from 'apps/notification/src/notification.service';
+import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
+import { user } from '../../../../seed/users';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly httpService: HttpService,
     private readonly prismaService: PrismaService,
+    private readonly notifService: NotificationService,
   ) {}
 
   allUsers() {
@@ -89,9 +96,10 @@ export class AuthService {
         return res.data;
       })
       .catch((err) => {
+        console.log('ERROR : ', err);
         throw new HttpException(
           "Quelque chose s'est mal passé",
-          HttpStatus.UNAUTHORIZED,
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       });
 
@@ -204,5 +212,63 @@ export class AuthService {
       });
 
     return data;
+  }
+
+  async getResetPasswordCode(user: UserGetResetDto) {
+    const otp = getRandomInt(10000, 99999).toString();
+
+    await this.prismaService.user.update({
+      where: {
+        email: user.username,
+      },
+      data: { otp },
+    });
+
+    this.notifService.sendEmail({
+      email: user.username,
+      object: 'Reset password',
+      body: NOTIFICATION_MESSAGES.getResetPasswordCodeMail({
+        email: user.username,
+        otp,
+      }),
+      sender: 'SNB',
+    });
+
+    return {
+      statusCode: 200,
+      message: 'Code OTP envoyé par mail',
+    };
+
+    //throw new Error('Method not implemented.');
+  }
+
+  async resetPasswordWithOtp(data: UserResetPasswordOtp) {
+    const token = await this.getResetPasswordToken({ username: data.username });
+
+    await this.resetPassword({
+      token: token.token,
+      username: data.username,
+      password: data.password,
+    });
+    return {
+      statusCode: 200,
+      message: 'OK',
+    };
+  }
+
+  async verifyOtpCode(data: VerifyOtpDto) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        email: data.username,
+        otp: data.otp,
+      },
+    });
+
+    if (!user)
+      throw new HttpException('Utilisateur introuvable', HttpStatus.NOT_FOUND);
+    return {
+      statusCode: 200,
+      message: 'OK',
+    };
   }
 }

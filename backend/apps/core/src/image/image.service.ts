@@ -18,6 +18,20 @@ export class ImageService {
       return;
     }
   }
+
+  async deleteAllProductImages(prodId: string) {
+    try {
+      await this.prisma.image.deleteMany({
+        where: {
+          productId: prodId,
+        },
+      });
+      return;
+    } catch (error) {
+      throw error;
+      return;
+    }
+  }
   /*
   async deleteSingleCategory(id: string): Promise<ProductCategory> {
     try {

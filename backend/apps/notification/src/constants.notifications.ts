@@ -31,4 +31,24 @@ export const NOTIFICATION_MESSAGES = {
       },
     });
   },
+  getResetPasswordCodeMail: ({ email, otp }) => {
+    const FRONT_APP_URL = new ConfigService().get('FRONTEND_BASE_URL');
+    return mailGenerator.generate({
+      body: {
+        name: email,
+        intro: 'Votre code OTP de réinitialisation de votre mot de passe.',
+        action: {
+          instructions:
+            "Copiez ce code au niveau de  l'interface web pour mettre à jour votre mot de passe",
+          button: {
+            color: '#22BC66',
+            text: otp,
+            link: `${FRONT_APP_URL}/resetCode/${otp}`,
+          },
+        },
+        outro:
+          "Pour plus de renseignements, contactez nous à l'adresse suivante : contact@snb.io",
+      },
+    });
+  },
 };

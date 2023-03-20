@@ -17,7 +17,15 @@
       </div>
       <BasePagination :peerPage="paginationData.peerPage" :totalElements="paginationData.total" @change="pageChange" />
     </div>
-    <BaseTable :titles="titles" :data="items" :loading="loading" :actions="actions" class="mt-6">
+    <BaseTable
+      :titles="titles"
+      :data="items"
+      :loading="loading"
+      :actions="actions"
+      :filterActions="filterActions"
+      class="mt-6"
+      @itemClick="$emit('itemClick',$event)"
+    >
       <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
       </template>
@@ -57,6 +65,8 @@ export type FetchData<T> = (
   id?: PrimaryKey
 ) => Promise<ResponseData<T>>;
 
+  
+
 export default defineComponent({
   components: { BasePagination },
   props: {
@@ -89,6 +99,11 @@ export default defineComponent({
     hideFilter: {
       type: Boolean,
       default: false,
+    },
+
+    filterActions:{
+      type : Function 
+
     },
 
     params: {
@@ -132,13 +147,21 @@ export default defineComponent({
 
         if (Array.isArray(response)) {
           items.value = response;
+          
         } else {
           items.value = response.data;
           paginationData.total = response.count;
         }
+
+        
+
+        loading.value = false;
+        
         context.emit("total", items.value.length);
+        
       } catch (error: any) {
         console.log({ ...error });
+        loading.value = false;
       }
     }
 
@@ -188,6 +211,8 @@ export default defineComponent({
     function onSearch() {
       loadData();
     }
+
+    
     return {
       paginationData,
       search,
@@ -197,6 +222,7 @@ export default defineComponent({
       pageChange,
       slotDatas,
       slots,
+      loading
     };
   },
 });
