@@ -30,8 +30,13 @@
             <BaseButton icon="plus" size="small" @click="goToCreateAppros">Nouvel appro</BaseButton>
           </div>
           <div class="relative">
-            <BaseTableWithFilter :titles="titles" :requestId="organisationId"
-              :fetchData="orderStore.fetchAllByOrganization" :actions="actions">
+            <BaseTableWithFilter
+              :titles="titles"
+              :requestId="organisationId"
+              :fetchData="orderStore.fetchAllByOrganization"
+              :filterActions="filterActions"
+              @itemClick="showItemOrder"
+            >
               <template #status="{ element }">
                 <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
               </template>
@@ -63,10 +68,44 @@
       <template #secondPart>
         <Order :order="order" v-if="order" :key="reload">
           <template #title>
-            <div class="flex space-x-2 items-center">
+
+            <div class="space-y-4">
+              <div class="flex space-x-2 items-center">
               <div class="font-bold text-lg">Appro {{ order.reference }}</div>
               <BaseTableStatut :title="getStatutLabel(order)" :type="getStatutType(order)"></BaseTableStatut>
             </div>
+
+          
+              <div class="font-bold text-sm flex justify-between border-success border-2 py-2.5 px-2 bg-[#E9F9EF] rounded" v-if=" order.deliveryMan && order.deliveryCode">
+                <div>Code de livraison : {{ order.deliveryCode }}</div>
+                <BaseIcon name="interrogation"/>
+                
+              </div>
+
+              <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
+                <div class="space-y-1">
+                  <div class="semi-bold">Livraison</div>
+                  <div class="flex items-center w-full">
+                    <div class="flex items-center space-x-1.5" >
+                      <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Date</span>
+                      <span class="font-bold">{{!order.deliveryDate ? "Non défini" : helpers.formatDateReduce(order.deliveryDate) }}</span>
+                    </div>
+                    <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
+                    <div class="flex items-center space-x-1.5" >
+                      <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                      <span>Livreur : </span>
+                      <span class="text-[#0050CF] font-semibold underline cursor-pointer"
+                        >{{order.deliveryMan.name}}</span
+                      >
+                    </div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
           </template>
         </Order>
 
@@ -136,6 +175,7 @@ export default defineComponent({
 
     const router = useRouter();
     function goToCreateAppros() {
+      basketStore.clearBasket();
       router.push({
         name: "approsCreate",
       });
@@ -145,25 +185,27 @@ export default defineComponent({
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
       else if (element.status == OrderStatus.DELIVERED) return "Inactive";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
     function getStatutType(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "colorize";
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
+      else if (element.status == OrderStatus.REJECTED) return "danger";
     }
 
     const toast = useToast();
 
-    async function showItemOrder(element: any) {
-      try {
-        const response = await orderStore.fetchOne(element.id)
-        order.value = response
-      }
-      catch (error) {
-        toast.error("Suppression impossible")
-      }
-
+    async function showItemOrder(element : any){
+        try{
+          const response = await orderStore.fetchOne(element.id)
+          order.value = response
+        }
+        catch(error){
+          toast.error("Suppression impossible")
+        }
+        
     }
 
     const modal = reactive({
@@ -174,31 +216,45 @@ export default defineComponent({
     });
 
 
+   
+    function filterActions(element : IOrder){
+      let elements = []
 
-
-
-    const actions = [
+      if(element.status == OrderStatus.NEW)
+        elements =   [
       {
-        title: "Modifier",
-        iconClass: "text-tableColor",
-        icon: "edit",
-        action: showItemOrder,
-      },
-      {
-        title: "Dupliquer",
-        iconClass: "text-tableColor",
-        icon: "duplicate",
-        action: duplicateOrder,
-      },
-      {
-        title: "Annuler",
-        iconClass: "text-[#E03A15]",
-        titleClass: "text-[#E03A15]",
-        icon: "close",
-        action: resetOrder,
-      },
+          title: "Modifier",
+          iconClass:"text-tableColor",
+          icon: "edit",
+          action: showItemOrder,
+        },
+        {
+          title: "Dupliquer",
+          classIcon:"text-tableColor",
+          icon: "duplicate",
+          action: duplicateOrder,
+        },
+        {
+          title: "Annuler",
+          iconClass:"text-[#E03A15] w-3 h-3",
+          titleClass: "text-[#E03A15] ",
+          icon: "close",
+          action: resetOrder,
+        },
+     
+    ]
 
-    ];
+    else 
+        elements = [
+        {
+          title: "Dupliquer",
+          classIcon:"text-tableColor",
+          icon: "duplicate",
+          action: duplicateOrder,
+        },
+        ]
+      return  elements
+    }
 
     const reload = ref(0)
 
@@ -236,6 +292,9 @@ export default defineComponent({
       router.push({ name: 'approsCreate' })
     }
 
+
+   
+
     return {
       titles,
       goToCreateAppros,
@@ -245,11 +304,13 @@ export default defineComponent({
       getStatutLabel,
       getStatutType,
       helpers,
-      actions,
+      filterActions,
       resetOrder,
       modal,
       loading,
-      confirmResetOrder, reload
+      confirmResetOrder,
+      reload,
+      showItemOrder
     };
   },
 });

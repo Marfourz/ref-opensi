@@ -92,7 +92,7 @@
                   :src="`${
                     element.image && element.image[0]
                       ? element.image[0].url
-                      : '/assets/images/beverage.png'
+                      : '@/assets/images/beverage.png'
                   }`"
                   alt=""
                 />
@@ -372,17 +372,30 @@ export default defineComponent({
 
     async function onSubmit() {
       try {
-        if (selectedProduct) {
-          const response = await productStore.update(
-            selectedProduct.value.id,
-            selectedProduct.value
-          );
-          if (image.value)
-            await fileStore.updloadProductImage(
-              response.data.id,
+       
+        if (selectedProduct.value) {
+          if (image.value){
+            const responseImage = await fileStore.updloadProductImage(
+              selectedProduct.value.id,
               image.value as File
             );
+          }
+           
+         
+          const response = await productStore.update(
+            selectedProduct.value.id,
+            product
+          );
+
+          toast.success("La boisson a été mise à jour avec succès");
+            reload.value = reload.value + 1;
+            showModal.value = false;
+            router.push({ name: "products" });
+          
+         
         } else {
+         
+          
           if (!image.value) toast.error("Vous devez choisir une image");
           else {
             const response = await productStore.create(product);
@@ -392,11 +405,12 @@ export default defineComponent({
             );
             toast.success("La boisson a été crée avec succès");
             reload.value = reload.value + 1;
+            showModal.value = false;
+            router.push({ name: "products" });
           }
         }
 
-        showModal.value = false;
-        router.push({ name: "products" });
+       
       } catch (error: any) {}
     }
 

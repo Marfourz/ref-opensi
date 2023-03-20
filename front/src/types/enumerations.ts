@@ -14,7 +14,7 @@ export enum UserRole {
 }
 
 export enum UserPermission {
-  ADMINSTRATOR = "administra tor",
+  ADMINSTRATOR = "administrator",
   DELIVERY_MAN = "deliveryMan",
 }
 
@@ -25,11 +25,6 @@ export enum OrganisationType {
   DP = "dp",
 }
 
-export enum OrderStatus {
-  DELIVERY = "delivered",
-  PENDING = "pending",
-  REJECTED = "rejected",
-}
 
 export enum AccountStatus {
   DELIVERY = "delivered",
@@ -65,8 +60,10 @@ export enum UserAccountStatus {
 
   export enum OrderStatus {
     NEW = 'new',
+    DELIVERY = 'delivered',
     DELIVERED = 'delivered',
-    ACCEPTED = 'accepted'
+    ACCEPTED = 'accepted',
+    REJECTED = "aborted",
   }
 
   export enum StockState{

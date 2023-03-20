@@ -58,8 +58,13 @@ async function onSubmit() {
     router.push({ name: "dashboard" });
 
     loading.value = false;
-  } catch (error) {
-    toast.error("Vos identifiants sont incorrects");
+  } catch (error:any) {
+    if(error.response.status == 401){
+      toast.error("Vos identifiants sont incorrects");
+    }
+    else
+      toast.error("Un problème est survenu.Contactez l'administrateur.");
+    
     console.log("error", error);
     loading.value = false;
   }

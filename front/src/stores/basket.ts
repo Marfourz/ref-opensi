@@ -30,13 +30,16 @@ export const useBasketStore = defineStore("basket", {
         },
 
         createBasketWithOrder(order : IOrder){
-            console.log("order", order);
+            
             
             this.clearBasket()
             
             order.items.forEach((value : ItemsOrder)=>{
                 this.addToBasket(value.product,value.quantity)
             })
+
+            console.log("order", this.items
+            );
         },
 
 

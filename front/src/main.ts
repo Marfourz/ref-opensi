@@ -31,6 +31,7 @@ import "./assets/main.css";
 import AllRules from "@vee-validate/rules";
 import { defineRule, configure } from "vee-validate";
 import { localize } from "@vee-validate/i18n";
+import './locales';
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -45,6 +46,8 @@ configure({
     },
   }),
 });
+
+
 
 const app = createApp(App);
 

@@ -43,7 +43,8 @@ export const useOrdersStore = defineStore("ordersStore", {
     },
 
     async create(data: {
-      organisationId: PrimaryKey | undefined;
+      organisationId: PrimaryKey | undefined,
+      transactionId? : string,
       items: Array<{ productId: PrimaryKey; quantity: number }>;
     }) {
       try {

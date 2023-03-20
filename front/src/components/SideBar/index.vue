@@ -106,7 +106,7 @@ export default defineComponent({
         route: "subDistributors",
         path: "sous-distributeurs",
         roles: [UserRole.ADMIN, UserRole.SUPER_USER],
-        organizations: [OrganisationType.SNB]
+        organizations: [OrganisationType.SNB,OrganisationType.DA,OrganisationType.MD]
       },
       {
         title: "Livreurs",

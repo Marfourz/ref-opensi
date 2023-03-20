@@ -173,7 +173,7 @@ export class OrderService {
           transaction: true,
           items: { include: { product: true } },
           invoice: true,
-          organisation: true,
+          organisation: true
         },
       });
       if (order.deliveryMan) {

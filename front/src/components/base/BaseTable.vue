@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full overflow-auto  flex-1 bg-white text-[14px] ">
-
-    <table class="table-auto w-full  text-md">
+  <div class="w-full overflow-auto flex-1 bg-white text-[14px]">
+   
+    <table class="table-auto w-full text-md">
       <thead>
         <tr class="bg-grey-10 text-tableColor">
           <th v-if="selectable" class="p-2">
@@ -11,11 +11,16 @@
               v-model="checkedAll"
             />
           </th>
-          <th v-for="title in titles" :key="title.name" class="py-4 border-b text-left pl-2 font-semibold">
+          <th
+            v-for="title in titles"
+            :key="title.name"
+            class="py-4 border-b text-left pl-2 font-semibold"
+          >
             {{ title.title }}
           </th>
         </tr>
       </thead>
+
       <tbody v-if="loading">
         <tr>
           <td :colspan="titles.length">
@@ -26,35 +31,52 @@
         </tr>
       </tbody>
       <tbody class="bg-white" v-else-if="data && data.length != 0">
-        <tr v-for="(element, i) in data" class="font-semibold" :key="i" :class="{
-          'bg-[#F8F9FB]': isEqual(element, currentElement),
-          'border-b font-semibold': i != data.length - 1,
-        }" @mouseenter="currentElement = element">
+        <tr
+          v-for="(element, i) in data"
+          class="font-semibold cursor-default"
+          :key="i"
+          :class="{
+            'bg-[#F8F9FB]': isEqual(element, currentElement) && actions,
+            'border-b font-semibold ': i != data.length - 1,
+          }"
+          @mouseenter="currentElement = element"
+          @click="onItemClick(element)"
+        >
           <td v-if="selectable">
             <div class="p-2 flex justify-center items-center">
-              <input type="checkbox" class="cursor-pointer" @change="onCheckedElement(element, $event)" :checked="
-                verifyElementExistInArray(element, checkedElements)
-                  ? true
-                  : false" />
+              <input
+                type="checkbox"
+                class="cursor-pointer"
+                @change="onCheckedElement(element, $event)"
+                :checked="
+                  verifyElementExistInArray(element, checkedElements)
+                    ? true
+                    : false
+                "
+              />
             </div>
           </td>
-          <td v-for="title in titles" :key="title.name" class="py-4 text-left pl-2 ">
-            <div v-if="title.name != 'action'" class="max-w-xs">
+          <td
+            v-for="title in titles"
+            :key="title.name"
+            class="py-4 text-left pl-2 "
+          >
+            <div v-if="title.name != 'action'" class="max-w-xs ">
               <slot :name="title.name" :element="{ ...element, index: i }">
                 <!-- {{ element[title.name] }} -->
                 <div v-html="getElementValue(title, element, i)"></div>
-
               </slot>
             </div>
 
-
-            <div v-else-if="isEqual(element, currentElement)">
-
+            <div v-else-if="isEqual(element, currentElement)" class="max-h-4 ">
               <slot name="action" :element="element">
-                <div>
-                  <BaseActions :actions="actions" :data="element">
+                <div class="flex items-center justify-center">
+                  <div class=" absolute">
+                  <BaseActions :actions="getActions(element)" :data="element">
                   </BaseActions>
                 </div>
+                </div>
+               
               </slot>
             </div>
           </td>
@@ -80,10 +102,15 @@ export interface ITitle {
   transform?: Function;
 }
 
+
+
+
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import isEqual from "lodash/isEqual";
 import { IAction } from "@/types/interfaces";
-import BaseActions from '../../components/base/BaseActions.vue'
+import BaseActions from "../../components/base/BaseActions.vue";
+
+type FilterActions<T> = (item : any) => Array<IAction>
 
 export default defineComponent({
   components: { BaseActions },
@@ -108,14 +135,15 @@ export default defineComponent({
       default: false,
     },
     actions: {
-      type: Array as PropType<Array<IAction>>
-    }
+      type: Array as PropType<Array<IAction>>,
+    },
+    filterActions:{
+      type : Function as PropType<FilterActions<any>>
 
+    },
   },
 
-  expose: ["resetSelection"],
-
-
+  expose: ["resetSelection","itemClick"],
 
   setup(props, context) {
     const currentElement = ref();
@@ -127,10 +155,8 @@ export default defineComponent({
         checkedElements.value = checkedElements.value.filter(
           (value) => JSON.stringify(value) != JSON.stringify(element)
         );
-      }
-      else checkedElements.value.push(element);
-      context.emit('checkedElement', checkedElements.value)
-
+      } else checkedElements.value.push(element);
+      context.emit("checkedElement", checkedElements.value);
     }
 
     const resetSelection = () => {
@@ -138,9 +164,8 @@ export default defineComponent({
     };
 
     function onResetSelection() {
-      checkedElements.value = []
-      context.emit('checkedElement', checkedElements.value)
-
+      checkedElements.value = [];
+      context.emit("checkedElement", checkedElements.value);
     }
 
     function getElementValue(title: ITitle, element: any, index: number) {
@@ -150,9 +175,9 @@ export default defineComponent({
       return getValue(element, title.name);
     }
 
-    function getValue(obj: any, path: string,) {
-
-      let current = obj, i;
+    function getValue(obj: any, path: string) {
+      let current = obj,
+        i;
       if (path) {
         const paths = path.split(".");
         for (i = 0; i < paths.length; ++i) {
@@ -176,12 +201,25 @@ export default defineComponent({
       if (props.data.length != 0) currentElement.value = props.data[0];
     }
 
+    function onItemClick(element: any) {
+      console.log("yoy yoy");
+      
+      context.emit("itemClick",element)
+    }
+
     //watchers
     watch(checkedAll, (newValue) => {
       if (newValue) checkedElements.value = props.data;
       else checkedElements.value = [];
-      context.emit('checkedElement', checkedElements.value)
+      context.emit("checkedElement", checkedElements.value);
     });
+
+    function getActions(element : any){
+      if(props.filterActions)
+        return props.filterActions(element)
+      else
+        return props.actions
+    }
 
     return {
       currentElement,
@@ -192,6 +230,8 @@ export default defineComponent({
       onCheckedElement,
       checkedElements,
       verifyElementExistInArray,
+      onItemClick,
+      getActions
     };
   },
 });

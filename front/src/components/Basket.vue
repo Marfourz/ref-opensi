@@ -101,7 +101,8 @@ export default defineComponent({
 
     const router = useRouter();
 
-    async function onSubmit() {
+
+    async function makeAppro(transactionId : string | undefined){
       const orders = items.value.map((item: IItem) => {
         return {
           productId: item.product.id,
@@ -111,23 +112,44 @@ export default defineComponent({
       const response = await ordersStore.create({
         organisationId: organisationId.value,
         items: orders,
+        transactionId : transactionId
       });
-
       router.push({ name: "appros" });
+        toast.success("Commande effectuée avec succès");
+        basketStore.clearBasket();
+      }
 
-      toast.success("Commande effectuée avec succès");
 
-      basketStore.clearBasket();
+    
+
+    async function onSubmit() {
+      if(selectedPaymentMethod.value == PaymentMethod.KKIAPAY){
+        kkiapayWidget()
+      }
+      else{
+        await makeAppro(undefined) 
+      }
+     
+      
     }
+
+    async function successHandler(paymentResponse: { transactionId: string }) {
+      await makeAppro(paymentResponse.transactionId)
+      }
 
     function kkiapayWidget() {
       openKkiapayWidget({
-        amount: 4000,
-        api_key: "",
+        amount: 10000,
+        api_key: import.meta.env.VITE_APP_KKIAPAY_KEY,
         sandbox: true,
         phone: "97000000",
       });
     }
+
+
+   
+
+
 
     const selectedPaymentMethod = ref<PaymentMethod>(PaymentMethod.KKIAPAY);
 
@@ -139,8 +161,11 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisation.paymentDeadline
     })
 
+    
+
     onMounted(() => {
-      basketStore.clearBasket();
+      //basketStore.clearBasket();
+      addKkiapayListener('success', successHandler);
     });
     return {
       items,

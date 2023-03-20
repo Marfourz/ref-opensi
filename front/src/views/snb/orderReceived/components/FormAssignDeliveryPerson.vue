@@ -1,6 +1,7 @@
 <template>
   <div class="space-y-6 mt-4">
-    <div>
+    
+    <div v-if="!justAssign">
       <div class="font-[#0F0F14] text-[14px] mb-1">Date de livraison</div>
       <BaseInput
         type="date"
@@ -8,7 +9,7 @@
         v-model="assignData.deliveryDate"
       ></BaseInput>
       <div class="text-xs text-[#7C89A3] mt-1">
-        Vous pouvez le faire ultérieurememnt
+        Vous pouvez le faire ultérieuremement
       </div>
     </div>
 
@@ -23,12 +24,12 @@
         @change="onSelecteDeliveryPersonChange"
       >
       </base-auto-complete>
-      <div class="text-xs text-[#7C89A3] mt-1">
-        Vous pouvez le faire ultérieurememnt
+      <div class="text-xs text-[#7C89A3] mt-1" v-if="!justAssign">
+        Vous pouvez le faire ultérieuremement
       </div>
     </div>
 
-    <div class="rounded bg-[#F0F5FF] p-4 flex items-center space-x-5">
+    <div class="rounded bg-[#F0F5FF] p-4 flex items-center space-x-5" v-if="!justAssign">
       <BaseIcon name="info" class="w-4.5 h-4.5"></BaseIcon>
       <div class="font-semibold text-[#002D6E]" style="line-height: 20px">
         Nous enverrons la facture proforma de la commande au client
@@ -43,7 +44,7 @@
         size="medium"
         >Valider</BaseButton
       >
-      <BaseButton outline="true" size="medium" class="w-full"
+      <BaseButton outline="true" size="medium" class="w-full" @click="$emit('reset')"
         >Annuler</BaseButton
       >
     </div>
@@ -67,6 +68,12 @@ export default defineComponent({
       type: String,
       required: true,
     },
+
+    justAssign : {
+      type: Boolean,
+      default : false
+    }
+   
   },
   setup(props, context) {
     const assignData = reactive({
@@ -86,8 +93,8 @@ export default defineComponent({
     async function onSearchDeliveryPerson(search: string) {
       const response = await organisationStore.fetchAllDeliveryMen(
         { limit: -1, q: search },
-        "0a28f57d-438b-4811-a629-3448c90fefe1"
-      ); //organisationId.value)
+        organisationId.value
+      ); //)
       return response.data;
     }
 
@@ -108,6 +115,10 @@ export default defineComponent({
     async function onSubmit() {
       loading.value = true;
       try {
+        const body = props.justAssign ? {
+          ...assignData,
+          status: OrderStatus.ACCEPTED,
+        } : { deliveryMan : assignData.deliveryMan}
         const response = await ordersStore.update(props.orderId, {
           ...assignData,
           status: OrderStatus.ACCEPTED,
@@ -125,7 +136,7 @@ export default defineComponent({
       deliveryPersonFullName,
       onSelecteDeliveryPersonChange,
       onSubmit,
-      loading,
+      loading
     };
   },
 });
