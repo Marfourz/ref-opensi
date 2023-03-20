@@ -67,7 +67,7 @@ services:
     container_name: backend-snb-staging
     environment:
       - DATABASE_URL=postgresql://opensiuser:opensi@db_postgres:5432/snb-staging
-      - APP_URL=http://localhost:3000
+      - APP_URL=https://snb.opensi.co/api
       - APP_CORE_PORT=3000
       - USERS_MANAGER_URL=http://api_users
       - PRODUCT_IMAGES_DEST=./uploads/products-images

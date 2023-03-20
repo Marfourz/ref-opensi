@@ -372,17 +372,25 @@ export default defineComponent({
 
     async function onSubmit() {
       try {
-        if (selectedProduct) {
+       
+        if (selectedProduct.value) {
+          if (image.value){
+            const responseImage = await fileStore.updloadProductImage(
+              selectedProduct.value.id,
+              image.value as File
+            );
+          }
+           
+          console.log("submit call", image.value);
           const response = await productStore.update(
             selectedProduct.value.id,
             selectedProduct.value
           );
-          if (image.value)
-            await fileStore.updloadProductImage(
-              response.data.id,
-              image.value as File
-            );
+          
+         
         } else {
+         
+          
           if (!image.value) toast.error("Vous devez choisir une image");
           else {
             const response = await productStore.create(product);
@@ -392,11 +400,12 @@ export default defineComponent({
             );
             toast.success("La boisson a été crée avec succès");
             reload.value = reload.value + 1;
+            showModal.value = false;
+            router.push({ name: "products" });
           }
         }
 
-        showModal.value = false;
-        router.push({ name: "products" });
+       
       } catch (error: any) {}
     }
 
