@@ -243,10 +243,52 @@ export class OrderService {
 
   async deleteSingleOrder(id: string): Promise<Order> {
     try {
-      const deletedOrder = await this.prisma.order.delete({
+      const order = await this.prisma.order.findUnique({
         where: { id },
+        select: {
+          id: true,
+          status: true,
+          invoice: true,
+        },
       });
-      return deletedOrder;
+
+      console.log('STATUS TRANSACTION : ', order.status);
+
+      if (order.status == OrderStatusEnum.new) {
+        /*await this.prisma.receipt.delete({
+          where: {
+            invoiceId: order.invoice.id,
+          },
+        });*/
+
+        await this.prisma.transaction.delete({
+          where: {
+            orderId: order.id,
+          },
+        });
+
+        await this.prisma.invoice.delete({
+          where: {
+            id: order.invoice.id,
+          },
+        });
+
+        await this.prisma.itemOrder.deleteMany({
+          where: {
+            orderId: id,
+          },
+        });
+
+        const deletedOrder = await this.prisma.order.delete({
+          where: { id },
+        });
+        return deletedOrder;
+      } else {
+        throw new HttpException(
+          'Vous ne pouvez pas supprimé cette commande',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     } catch (error) {
       throw error;
       return;
