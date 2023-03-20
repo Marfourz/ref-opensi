@@ -61,7 +61,7 @@ export interface ConsumerMailMessage {
   salutation?: string;
   intro?: string | string[];
   outro?: string | string[];
-  action?: ConsumerIntructionForm | ConsumerIntructionForm[]
+  action?: ConsumerIntructionForm | ConsumerIntructionForm[];
 }
 
 export interface ConsumerIntructionForm {
