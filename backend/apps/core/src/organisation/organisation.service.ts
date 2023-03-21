@@ -313,6 +313,7 @@ export class OrganisationService {
   }
 
   async getOrganisationDashboardInfos(orgId: string): Promise<any> {
+    //get organisation
     const organisation = await this.prisma.organisation.findUnique({
       where: { id: orgId },
       include: {
@@ -320,12 +321,14 @@ export class OrganisationService {
       },
     });
 
+    //get orders of organisation
     const orders = await this.prisma.order.count({
       where: {
         organisationId: orgId,
       },
     });
 
+    //get all organisation by type
     const MDs = await this.prisma.organisation.count({
       where: {
         type: OrganisationTypeEnum.md,
@@ -344,6 +347,7 @@ export class OrganisationService {
       },
     });
 
+    //get partners according to organisation type
     let partners = 0;
 
     switch (organisation.type) {
@@ -371,6 +375,7 @@ export class OrganisationService {
       }),
     );*/
 
+    //get stock of the organisation
     const stocks: any = await this.prisma.stock.findMany({
       where: {
         organisationId: orgId,
