@@ -45,6 +45,7 @@
         </template>
 
         <template #action="{ element }">
+          
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
         <template #wallet="{ element }">
@@ -117,13 +118,14 @@
             <div class="text-[#0F0F14]">Méthode de paiement</div>
             <div class="flex items-center space-x-6">
               <div
-                class="flex items-center space-x-2"
+                class="flex items-center space-x-2 cursor-pointer"
                 v-for="method in paymentMethods"
                 :key="method.title"
+                @click="master.paymentDeadline = +method.value"
               >
                 <BaseSelectedCard
                   :selected="master.paymentDeadline == method.value"
-                  @click="master.paymentDeadline = +method.value"
+                  
                 >
                   <BaseIcon :name="method.icon"></BaseIcon>
                 </BaseSelectedCard>
@@ -155,9 +157,10 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
+import BaseActions from "../../../components/base/BaseActions.vue";
 
 export default defineComponent({
-  components: { Form, VPanel },
+  components: { Form, VPanel,BaseActions },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -384,8 +387,8 @@ export default defineComponent({
     }
 
     function getStatutLabel(element: IOrganisation) {
-      if (element.status == UserAccountStatus.ACTIVE) return "Active";
-      else if (element.status == UserAccountStatus.INACTIVE) return "Inactive";
+      if (element.status == UserAccountStatus.ACTIVE) return "Actif";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactif";
       else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
     }
 

@@ -390,7 +390,7 @@ export default defineComponent({
         const response = await orderStore.fetchOne(element.id);
         order.value = response;
       } catch (error) {
-        toast.error("T");
+       
       }
     }
 
