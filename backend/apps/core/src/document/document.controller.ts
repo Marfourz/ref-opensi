@@ -2,7 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { ApiParam, ApiTags, ApiQuery } from '@nestjs/swagger';
 
-@ApiTags('documents')
+@ApiTags('Téléchargement de documents')
 @Controller('documents')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}

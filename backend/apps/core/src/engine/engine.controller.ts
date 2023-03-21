@@ -21,7 +21,7 @@ import {
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 
-@ApiTags('engines')
+@ApiTags('Engins')
 @Controller('engines')
 export class EngineController {
   constructor(private readonly engineService: EngineService) {}

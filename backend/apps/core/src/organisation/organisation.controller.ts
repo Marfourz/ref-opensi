@@ -26,7 +26,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('organisations')
+@ApiTags('Organisations - Partenaires')
 @Controller('organisations')
 export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}

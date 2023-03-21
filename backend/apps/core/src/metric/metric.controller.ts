@@ -13,7 +13,7 @@ import { ApiTags, ApiParam, ApiHeader } from '@nestjs/swagger';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 
-@ApiTags('metrics')
+@ApiTags('Métrics SNB')
 @Controller('metrics')
 export class MetricController {
   constructor(private readonly metricService: MetricService) {}

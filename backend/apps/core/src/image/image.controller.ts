@@ -25,7 +25,7 @@ import { diskStorage } from 'multer';
 import { editFileName, getProductImageLink } from './image.helper';
 import { PRODUCT_IMAGES_DEST } from './image.constant';
 
-@ApiTags('product-image')
+@ApiTags('Image de produits')
 @Controller('product-image')
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}

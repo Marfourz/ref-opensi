@@ -21,7 +21,7 @@ import {
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 
-@ApiTags('wallets')
+@ApiTags('Portefeuille organisation')
 @Controller('wallets')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}

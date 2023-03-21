@@ -23,7 +23,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('orders')
+@ApiTags('Commande')
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

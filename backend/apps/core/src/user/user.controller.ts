@@ -31,7 +31,7 @@ import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 import { AuthService } from '../users-manager/auth.service';
 
-@ApiTags('users')
+@ApiTags('Utilisateur')
 @Controller('users')
 export class UserController {
   constructor(

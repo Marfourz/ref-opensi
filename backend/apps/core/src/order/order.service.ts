@@ -343,7 +343,7 @@ export class OrderService {
       });
 
       const count = await this.prisma.order.count({
-        where: { organisationId: orgId },
+        where: { ...w },
       });
 
       return { data: orders, count };

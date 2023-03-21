@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 async function main() {
   try {
     // create user for users-managers
-    /*axios
+    axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
         email: 'admin@admin.com',
         username: 'admin@admin.com',
@@ -25,7 +25,7 @@ async function main() {
       })
       .catch(function (error) {
         console.log('Users manager respond: ' + error.response.statusText);
-      });*/
+      });
 
     const existingEngine = await prisma.engine.count();
 

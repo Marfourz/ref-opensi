@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'supertest';
 
-@ApiTags('auth')
+@ApiTags('Authentification')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

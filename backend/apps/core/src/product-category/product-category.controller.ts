@@ -26,7 +26,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('product-category')
+@ApiTags('Catégories de produits')
 @Controller('product-category')
 export class ProductCategoryController {
   constructor(

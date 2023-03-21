@@ -19,7 +19,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
-@ApiTags('receipts')
+@ApiTags('Reçus')
 @Controller('receipts')
 export class ReceiptController {
   constructor(private readonly receiptService: ReceiptService) {}
