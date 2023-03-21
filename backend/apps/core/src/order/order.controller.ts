@@ -23,7 +23,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('orders')
+@ApiTags('Commande')
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
@@ -103,12 +103,21 @@ export class OrderController {
   @Get('getOrders/:orgId')
   //@Roles(Role.ACCOUNTANT, Role.COMMERCIAL, Role.SUPER_USER)
   @ApiParam({ name: 'orgId' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
   @ApiHeader({
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getOrdersOfSubOrganisations(@Param() params): Promise<Order[]> {
-    return this.orderService.getOrdersOfSubOrganisations(params.orgId);
+  getOrdersOfSubOrganisations(
+    @Param() params,
+    @Query() filterParams: any,
+  ): Promise<Order[]> {
+    return this.orderService.getOrdersOfSubOrganisations(
+      filterParams,
+      params.orgId,
+    );
   }
 
   @Get(':deliveryManId/statistics')

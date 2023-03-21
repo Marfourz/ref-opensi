@@ -26,7 +26,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('organisations')
+@ApiTags('Organisations - Partenaires')
 @Controller('organisations')
 export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}
@@ -112,8 +112,16 @@ export class OrganisationController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'orgId' })
-  getOrganisationDashboardInfos(@Param() params): any {
-    return this.organisationService.getOrganisationDashboardInfos(params.orgId);
+  @ApiQuery({ name: 'lte', type: String, required: false })
+  @ApiQuery({ name: 'gte', type: String, required: false })
+  getOrganisationDashboardInfos(
+    @Param() params,
+    @Query() filterParams: any,
+  ): any {
+    return this.organisationService.getOrganisationDashboardInfos(
+      params.orgId,
+      //filterParams,
+    );
   }
 
   @Get(':id/users')

@@ -9,7 +9,7 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 
-@ApiTags('permissions')
+@ApiTags('Gestion des utilisateurs - Permissions')
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}

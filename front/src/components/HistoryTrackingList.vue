@@ -29,6 +29,7 @@
         v-if="order_delivered"
       ></history-tracking>
     </div>
+    <!-- <div class="mt-4"><history-tracking :type="validated" :date="order.updatedAt"></history-tracking></div>  -->
   </div>
 </template>
 

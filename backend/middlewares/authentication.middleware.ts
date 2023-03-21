@@ -3,7 +3,7 @@ import {
   NestMiddleware,
   HttpStatus,
   Scope,
-  Inject
+  Inject,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { REQUEST } from '@nestjs/core';

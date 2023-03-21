@@ -20,7 +20,7 @@ import { ActivityService } from './activity.service';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 
-@ApiTags('activities')
+@ApiTags('Activités - Logs')
 @Controller('activities')
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}

@@ -193,6 +193,9 @@
     <BaseRightModal :show="showModal" v-if="showModal">
       <HistoryTrackingList ></HistoryTrackingList>
     </BaseRightModal>
+
+   
+
   </div>
 </template>
 
@@ -247,6 +250,7 @@ export default defineComponent({
     ];
 
     const order = ref();
+    const infoHistoryOrder = ref();
 
     const justAssign = ref(false);
 
@@ -400,6 +404,7 @@ export default defineComponent({
     //     toast.error("T");
     //   }
     // }
+  
 
     const reload = ref(1);
 
@@ -452,6 +457,10 @@ export default defineComponent({
 
    
 
+    // onMounted(async () => {
+    //   const response = await orderStore.historyOrder("");
+    //   infoHistoryOrder.value = response;
+    // });
     return {
       titles,
       goToCreateAppros,

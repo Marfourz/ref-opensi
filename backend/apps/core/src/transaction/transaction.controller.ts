@@ -20,7 +20,7 @@ import { TransactionService } from './transaction.service';
 import { Roles } from 'guards/roles.decorator';
 import { Role } from 'guards/roles.enum';
 
-@ApiTags('transactions')
+@ApiTags('Transactions')
 @Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}

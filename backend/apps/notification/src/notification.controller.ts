@@ -4,7 +4,7 @@ import { emailDto, smsDto } from './notification.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('notifications')
-@ApiTags('notifications')
+@ApiTags('Notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 

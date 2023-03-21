@@ -9,6 +9,17 @@ export const user = {
   role: 'superUser',
 };
 
+export const deliveryMan = {
+  name: 'Livreur FULBERTO SNB',
+  phone: '62 45 56 85',
+  email: 'delivery-snb@yopmail.com',
+  address: 'Cotonou - Bénin',
+  birthday: '1998-02-18',
+  sex: 'male',
+  status: 'active',
+  role: 'deliveryMan',
+};
+
 export const MUsers = [
   {
     username: 'User1',

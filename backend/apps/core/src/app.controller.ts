@@ -10,7 +10,7 @@ import {
 import { NotificationService } from './consumer/notification/notification.service';
 import { EmailPayload } from '../../../types/index';
 
-@ApiTags('core')
+@ApiTags('Acceuil')
 @Controller('core')
 export class AppController {
   constructor(

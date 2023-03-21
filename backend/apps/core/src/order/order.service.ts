@@ -343,7 +343,7 @@ export class OrderService {
       });
 
       const count = await this.prisma.order.count({
-        where: { organisationId: orgId },
+        where: { ...w },
       });
 
       return { data: orders, count };
@@ -353,7 +353,7 @@ export class OrderService {
     }
   }
 
-  async getOrdersOfSubOrganisations(orgId): Promise<Order[]> {
+  async getOrdersOfSubOrganisations(filterParams, orgId): Promise<Order[]> {
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -366,11 +366,46 @@ export class OrderService {
       return [];
     } else {
       try {
+        const { page, perPage, q } = filterParams;
+
+        const paginateConstraints: any = {};
+        if (!isNaN(page) && !isNaN(perPage)) {
+          paginateConstraints.skip = Number((page - 1) * perPage);
+          paginateConstraints.take = Number(perPage);
+        }
+
+        const totalAmountConstraint: any = {};
+        const orderIdConstraint: any = {};
+        const orderReferenceConstraint: any = {};
+        const w: any = {
+          organisation: {
+            type: subType,
+          },
+        };
+        if (q != undefined && q != '') {
+          orderIdConstraint.id = {
+            contains: q,
+            mode: 'insensitive',
+          };
+
+          orderReferenceConstraint.reference = {
+            contains: q,
+            mode: 'insensitive',
+          };
+
+          if (!isNaN(q)) {
+            totalAmountConstraint.totalAmount = Number(q);
+          }
+
+          w.OR = [
+            orderIdConstraint,
+            totalAmountConstraint,
+            orderReferenceConstraint,
+          ];
+        }
         const orders = await this.prisma.order.findMany({
           where: {
-            organisation: {
-              type: subType,
-            },
+            ...w,
           },
         });
 
@@ -633,6 +668,13 @@ export class OrderService {
         date: order.deliveredAt,
         actor: deliveryMan.name,
       };
+
+      /*if (order.deliveryStartedAt) {
+        data['order_inProgress'] = {
+          date: order.deliveryStartedAt,
+          actor: deliveryMan.name,
+        };
+      }*/
     }
     return data;
   }

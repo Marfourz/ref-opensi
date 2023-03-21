@@ -1,4 +1,4 @@
-import { user } from './users';
+import { user, deliveryMan } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
 import { categories } from './p-categories';
@@ -6,6 +6,7 @@ import { products } from './products';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { PrismaClient } = require('@prisma/client');
 import axios from 'axios';
 
@@ -14,7 +15,7 @@ const prisma = new PrismaClient();
 async function main() {
   try {
     // create user for users-managers
-    /*axios
+    axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
         email: 'admin@admin.com',
         username: 'admin@admin.com',
@@ -25,7 +26,7 @@ async function main() {
       })
       .catch(function (error) {
         console.log('Users manager respond: ' + error.response.statusText);
-      });*/
+      });
 
     const existingEngine = await prisma.engine.count();
 
@@ -105,13 +106,32 @@ async function main() {
       const newUser = await prisma.user.create({
         data: {
           organisationId: orgId,
-          engineId: firstEngine.id,
           ...user,
         },
       });
       console.info('User new created : ', newUser);
     } else {
       console.info('User was already created : ', existingUser);
+    }
+
+    // create DELIVERYmAN if not exist
+    const existingDeliveryMan = await prisma.user.findUnique({
+      where: {
+        email: deliveryMan.email,
+      },
+    });
+
+    if (!existingDeliveryMan) {
+      const newDeliveryMan = await prisma.user.create({
+        data: {
+          organisationId: orgId,
+          engineId: firstEngine.id,
+          ...deliveryMan,
+        },
+      });
+      console.info('DeliveryMan new created : ', newDeliveryMan);
+    } else {
+      console.info('DeliveryMan was already created : ', existingDeliveryMan);
     }
 
     console.info('Database seed successfully!!');

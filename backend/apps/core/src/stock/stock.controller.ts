@@ -26,7 +26,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 
-@ApiTags('stocks')
+@ApiTags('Stocks')
 @Controller('stocks')
 export class StockController {
   constructor(private readonly stockService: StockService) {}
