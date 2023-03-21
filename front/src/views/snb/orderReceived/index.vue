@@ -190,10 +190,9 @@
         </div>
       </template>
     </PageInTwoPart>
-
     <BaseRightModal :show="showModal" v-if="showModal">
+      <HistoryTrackingList :order-id=""></HistoryTrackingList>
     </BaseRightModal>
-
   </div>
 </template>
 
@@ -213,7 +212,6 @@ import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue"
 
 import SuccessInfo from "../../../components/SuccessInfo.vue";
 import { IOrder } from "../../../types/interfaces";
-import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
 import BaseRightModal from "@/components/base/BaseRightModal.vue";
 export default defineComponent({
   components: {
@@ -222,7 +220,6 @@ export default defineComponent({
     EmptyState,
     FormAssignDeliveryPerson,
     SuccessInfo,
-    HistoryTrackingList,
     BaseRightModal,
   },
   setup() {
@@ -250,7 +247,6 @@ export default defineComponent({
     ];
 
     const order = ref();
-    const infoHistoryOrder = ref();
 
     const justAssign = ref(false);
 
@@ -270,8 +266,10 @@ export default defineComponent({
 
     function getStatutLabel(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
-      else if (element.status == OrderStatus.DELIVERED) return "Inactive";
+      else if (element.status == OrderStatus.DELIVERED) return "Inactif";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.INPROGRESS) return "En cours";
+
       else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
@@ -280,6 +278,7 @@ export default defineComponent({
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
       else if (element.status == OrderStatus.REJECTED) return "danger";
+      else if (element.status == OrderStatus.INPROGRESS) return "colorize";
     }
 
     const toast = useToast();
@@ -322,7 +321,7 @@ export default defineComponent({
             action: rejectOrder,
           },
         ];
-      else if (element.status == OrderStatus.ACCEPTED) {
+      else if (element.status == OrderStatus.ACCEPTED || element.status == OrderStatus.INPROGRESS) {
         if (!element.deliveryMan) {
           elements.push({
             title: "Assigner à un livreur",
@@ -391,15 +390,16 @@ export default defineComponent({
         toast.error("T");
       }
     }
+    // const infoHistoryOrder = ref();
 
-    async function getHistoryOrder(id: any) {
-      try {
-        const response = await orderStore.historyOrder(id);
-        infoHistoryOrder.value = response;
-      } catch (error) {
-        toast.error("T");
-      }
-    }
+    // async function getHistoryOrder(id: any) {
+    //   try {
+    //     const response = await orderStore.historyOrder(id);
+    //     infoHistoryOrder.value = response;
+    //   } catch (error) {
+    //     toast.error("T");
+    //   }
+    // }
 
     const reload = ref(1);
 
@@ -450,10 +450,8 @@ export default defineComponent({
       });
     }
 
-    // onMounted(async () => {
-    //   const response = await orderStore.historyOrder("");
-    //   infoHistoryOrder.value = response;
-    // });
+   
+
     return {
       titles,
       goToCreateAppros,
@@ -481,8 +479,8 @@ export default defineComponent({
       goToViewDeliveryMan,
       showHistoric,
       showModal,
-      infoHistoryOrder,
-      getHistoryOrder,
+      // infoHistoryOrder,
+      // getHistoryOrder,
     };
   },
 });
