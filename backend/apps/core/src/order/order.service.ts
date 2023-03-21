@@ -634,12 +634,12 @@ export class OrderService {
         actor: deliveryMan.name,
       };
 
-      if (order.deliveryStartedAt) {
-        data['order_accepted'] = {
+      /*if (order.deliveryStartedAt) {
+        data['order_inProgress'] = {
           date: order.deliveryStartedAt,
           actor: deliveryMan.name,
         };
-      }
+      }*/
     }
     return data;
   }
