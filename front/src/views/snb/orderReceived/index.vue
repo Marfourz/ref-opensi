@@ -191,7 +191,7 @@
       </template>
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
-      <HistoryTrackingList :order-id=""></HistoryTrackingList>
+      <HistoryTrackingList ></HistoryTrackingList>
     </BaseRightModal>
   </div>
 </template>
