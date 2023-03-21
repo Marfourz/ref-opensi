@@ -109,7 +109,7 @@ export class UserService {
         where: { id },
       });
 
-      await this.authService.deleteUser(user.uid);
+      //await this.authService.deleteUser(user.uid);
       return deletedUser;
     } catch (error) {
       throw error;
