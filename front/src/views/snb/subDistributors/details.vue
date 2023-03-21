@@ -8,29 +8,36 @@
         <div class="font-bold text-xl tracking-[-2%]">
           {{ selectedMaster?.organisation.socialReason }}
         </div>
-        <BaseTableStatut :title="selectedMaster?.organisation.status"
-          :type="selectedMaster?.organisation.status === 'active' ? 'success' : 'danger'"></BaseTableStatut>
+        <BaseTableStatut
+          :title="selectedMaster?.organisation.status"
+          :type="
+            selectedMaster?.organisation.status === 'active'
+              ? 'success'
+              : 'danger'
+          "
+        ></BaseTableStatut>
       </div>
-      <template v-if="selectedMaster && selectedMaster.organisation.status === 'active'">
-        <BaseButton @click="disable" size="small" bgColor="danger">Désactiver</BaseButton>
+      <template
+        v-if="selectedMaster && selectedMaster.organisation.status === 'active'"
+      >
+        <BaseButton @click="disable" size="small" bgColor="danger"
+          >Désactiver</BaseButton
+        >
       </template>
       <template v-else>
-        <BaseButton @click="enable" size="small" bgColor="success">Activer</BaseButton>
+        <BaseButton @click="enable" size="small" bgColor="success"
+          >Activer</BaseButton
+        >
       </template>
     </div>
-    <BaseTabs :tabs="tabs" class="mt-7" selectedTab="orders" >
+    <BaseTabs :tabs="tabs" class="mt-7" selectedTab="orders">
       <template #dashboard>
         <!-- <div class="font-bold text-xl tracking-[-2%] mt-7">Statistiques</div> -->
         <div class="flex justify-between items-center mt-9">
-      <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
-      <!-- <BaseDateRange></BaseDateRange> -->
-      <div class="text-link underline cursor-pointer font-semibold">
-        <div class="flex border rounded items-center justify-center px-4 font-semibold space-x-2">
-          <div class="font-semibold text-sm p-2">Ce mois</div>
-          <BaseIcon name="Top"></BaseIcon>
+          <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
+          <!-- <BaseDateRange></BaseDateRange> -->
+          <BaseDateRange></BaseDateRange>
         </div>
-      </div>
-    </div>
         <div class="grid grid-cols-4 space-x-6 mt-7">
           <DashboardCard :data="turnover"></DashboardCard>
           <DashboardCard :data="numberOfOrders"></DashboardCard>
@@ -42,14 +49,20 @@
             Évolution du chiffre d’affaire
           </div>
           <div class="w-full">
-            <apexchart height="400px" type="line" :options="chartOptions" :series="series"></apexchart>
+            <apexchart
+              height="400px"
+              type="line"
+              :options="chartOptions"
+              :series="series"
+            ></apexchart>
           </div>
         </div>
         <div>
           <div class="font-bold text-xl tracking-[-2%] mt-6">
             Performance des produits
           </div>
-          <BaseTable :titles="titles" :data="selectedMaster?.productsInfos"> </BaseTable>
+          <BaseTable :titles="titles" :data="selectedMaster?.productsInfos">
+          </BaseTable>
         </div>
       </template>
       <template #orders>
@@ -149,7 +162,7 @@ const chartOptions = ref({
 
 const series = ref([
   {
-    name: "series-1",
+    name: "Chiffre d'affaires -1",
     data: [
       "100k",
       "300k",
@@ -211,10 +224,11 @@ const state = reactive<State>({
 
 const turnover = computed(() => {
   return {
-    title: `${selectedMaster.value?.organisation.wallet.turnover
-      ? selectedMaster.value?.organisation.wallet.turnover
-      : "0"
-      } FCFA`,
+    title: `${
+      selectedMaster.value?.organisation.wallet.turnover
+        ? selectedMaster.value?.organisation.wallet.turnover
+        : "0"
+    } FCFA`,
 
     subtitle: "Chiffre d’affaire",
 
@@ -226,8 +240,9 @@ const turnover = computed(() => {
 
 const numberOfOrders = computed(() => {
   return {
-    title: `${selectedMaster.value?.orders ? selectedMaster.value?.orders : "0"
-      } `,
+    title: `${
+      selectedMaster.value?.orders ? selectedMaster.value?.orders : "0"
+    } `,
     subtitle: "Nombre de commandes",
 
     icon: "Papers",
@@ -241,7 +256,7 @@ const numberOfPartners = computed(() => {
     title: `${selectedMaster.value?.partners}`,
     subtitle: "Nombre de partenaires",
 
-    icon: "dollar",
+    icon: "partners",
     primaryColor: "#0060CF",
     secondaryColor: "#E6EAF6",
   };
@@ -263,8 +278,7 @@ function formatPrice(element: any) {
   return `0 FCFA`;
 }
 
-
-const selectedTab = ref("")
+const selectedTab = ref("");
 
 onMounted(async () => {
   state.organisationId = route.params.id as string;
@@ -276,38 +290,36 @@ onMounted(async () => {
 
       console.log(selectedMaster.value);
     }
-  } catch (error) { }
+  } catch (error) {}
 });
 
 const disable = async () => {
-
   try {
     if (selectedMaster.value && selectedMaster.value.organisation.id) {
-
       const response = await organizationStore.disable(state.organisationId);
-      selectedMaster.value.organisation = { ...selectedMaster.value.organisation, ...response };
+      selectedMaster.value.organisation = {
+        ...selectedMaster.value.organisation,
+        ...response,
+      };
     }
   } catch (error) {
     console.log(error);
-
   }
-}
+};
 
 const enable = async () => {
-
   try {
     if (selectedMaster.value && selectedMaster.value.organisation.id) {
-
       const response = await organizationStore.enable(state.organisationId);
       console.log(response);
 
-      selectedMaster.value.organisation = { ...selectedMaster.value.organisation, ...response };
+      selectedMaster.value.organisation = {
+        ...selectedMaster.value.organisation,
+        ...response,
+      };
     }
   } catch (error) {
     console.log(error);
-
   }
-}
-
-
+};
 </script>

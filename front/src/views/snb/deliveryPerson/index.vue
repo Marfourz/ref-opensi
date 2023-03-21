@@ -163,9 +163,8 @@ import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
 import { UserAccountStatus } from "../../../types/enumerations";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-import VHistorical from "@/components/VHistorical.vue";
 export default defineComponent({
-  components: { Form, BaseTableStatut, VHistorical },
+  components: { Form, BaseTableStatut },
   setup() {
     const userStore = useUsersStore();
 
