@@ -1,4 +1,4 @@
-import { user } from './users';
+import { user, deliveryMan } from './users';
 import { organisations } from './organisations';
 import { engines } from './engines';
 import { categories } from './p-categories';
@@ -105,13 +105,32 @@ async function main() {
       const newUser = await prisma.user.create({
         data: {
           organisationId: orgId,
-          engineId: firstEngine.id,
           ...user,
         },
       });
       console.info('User new created : ', newUser);
     } else {
       console.info('User was already created : ', existingUser);
+    }
+
+    // create DELIVERYmAN if not exist
+    const existingDeliveryMan = await prisma.user.findUnique({
+      where: {
+        email: deliveryMan.email,
+      },
+    });
+
+    if (!existingDeliveryMan) {
+      const newDeliveryMan = await prisma.user.create({
+        data: {
+          organisationId: orgId,
+          engineId: firstEngine.id,
+          ...deliveryMan,
+        },
+      });
+      console.info('DeliveryMan new created : ', newDeliveryMan);
+    } else {
+      console.info('DeliveryMan was already created : ', existingDeliveryMan);
     }
 
     console.info('Database seed successfully!!');
