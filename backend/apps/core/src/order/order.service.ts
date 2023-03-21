@@ -354,7 +354,6 @@ export class OrderService {
   }
 
   async getOrdersOfSubOrganisations(filterParams, orgId): Promise<Order[]> {
-
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
