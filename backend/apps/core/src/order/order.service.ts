@@ -362,12 +362,15 @@ export class OrderService {
       },
     });
 
+    console.log('Organisation mom', organisation);
+
     const subType = getSubTypeOrg(organisation.type);
 
     if (subType === 'none') {
       return [];
     } else {
       try {
+        console.log(subType);
         const { page, perPage, q } = filterParams;
 
         const paginateConstraints: any = {};
@@ -391,14 +394,14 @@ export class OrderService {
             mode: 'insensitive',
           };
 
+          if (!isNaN(q)) {
+            totalAmountConstraint.totalAmount = Number(q);
+          }
+
           orderReferenceConstraint.reference = {
             contains: q,
             mode: 'insensitive',
           };
-
-          if (!isNaN(q)) {
-            totalAmountConstraint.totalAmount = Number(q);
-          }
 
           w.OR = [
             orderIdConstraint,
