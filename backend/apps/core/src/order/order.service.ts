@@ -633,6 +633,13 @@ export class OrderService {
         date: order.deliveredAt,
         actor: deliveryMan.name,
       };
+
+      if (order.deliveryStartedAt) {
+        data['order_accepted'] = {
+          date: order.deliveryStartedAt,
+          actor: deliveryMan.name,
+        };
+      }
     }
     return data;
   }
