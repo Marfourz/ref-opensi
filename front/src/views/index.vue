@@ -106,6 +106,9 @@
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top dépôts
           </div>
+          <div>
+
+          </div>
           <BaseTable :titles="title" :data="statPartners.dp" class="py-3"
             ><template #id="{ element }">
               <div>
@@ -277,7 +280,16 @@ export default defineComponent({
     });
 
     const chartOptions = ref({
+      tooltip:{
+        marker: {
+          show: false,
+      },
+        },
       chart: {
+        toolbar: {
+          show: false,
+        },
+        
         id: "vuechart-example",
       },
       colors: ["#259475"],
@@ -301,7 +313,7 @@ export default defineComponent({
 
     const series = ref([
       {
-        name: "Chiffre d’affaires-1",
+        name: "Chiffre d’affaires",
         data: [
           "100k",
           "300k",

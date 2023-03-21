@@ -68,6 +68,7 @@
               :fetchData="orderStore.fetchAllByOrganizationType"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
+              @onFetch="onFetch"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -367,6 +368,7 @@ export default defineComponent({
     }
 
     async function assignOrder(order: any) {
+      
       show.value = true;
       justAssign.value = true;
       selectedOrderId.value = order.id;
@@ -450,6 +452,11 @@ export default defineComponent({
       });
     }
 
+    function onFetch(items:any){
+      showItemOrder(items[0])
+      
+    }
+
     // onMounted(async () => {
     //   const response = await orderStore.historyOrder("");
     //   infoHistoryOrder.value = response;
@@ -483,6 +490,7 @@ export default defineComponent({
       showModal,
       infoHistoryOrder,
       getHistoryOrder,
+      onFetch
     };
   },
 });
