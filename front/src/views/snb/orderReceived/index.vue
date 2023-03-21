@@ -16,7 +16,6 @@
       @close="show = false"
       :title="!justAssign ? 'Accepter la commande' : 'Assigner à un livreur'"
     >
-    
       <FormAssignDeliveryPerson
         :orderId="selectedOrderId"
         :justAssign="justAssign"
@@ -104,7 +103,7 @@
         </div>
       </template>
       <template #secondPart>
-        <Order :order="order" v-if="order" >
+        <Order :order="order" v-if="order">
           <template #title>
             <div class="space-y-4">
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
@@ -115,7 +114,9 @@
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
                   <div class="">
-                    <div class="text-[#6B7A99] text-sm font-semibold">{{ partenaireTitle }}</div>
+                    <div class="text-[#6B7A99] text-sm font-semibold">
+                      {{ partenaireTitle }}
+                    </div>
                     <div class="font-bold">
                       {{ order.organisation?.socialReason }}
                     </div>
@@ -138,23 +139,36 @@
                 ></BaseTableStatut>
               </div>
 
-            
-
-              <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
+              <div
+                class="bg-[#FFEEED] flex px-4 justify-center py-2 text-sm rounded"
+                v-if="order.deliveryMan || order.deliveryDate"
+              >
                 <div class="space-y-1">
                   <div class="semi-bold">Livraison</div>
                   <div class="flex items-center w-full">
-                    <div class="flex items-center space-x-1.5" >
-                      <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                    <div class="flex items-center space-x-1.5">
+                      <BaseIcon
+                        name="date"
+                        class="w-4 h-4 text-[#6B7A99]"
+                      ></BaseIcon>
                       <span>Date</span>
-                      <span class="font-bold">{{!order.deliveryDate ? "Non défini" : helpers.formatDateReduce(order.deliveryDate) }}</span>
+                      <span class="font-bold">{{
+                        !order.deliveryDate
+                          ? "Non défini"
+                          : helpers.formatDateReduce(order.deliveryDate)
+                      }}</span>
                     </div>
                     <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
-                    <div class="flex items-center space-x-1.5" >
-                      <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                    <div class="flex items-center space-x-1.5">
+                      <BaseIcon
+                        name="user"
+                        class="w-4 h-4 text-[#6B7A99]"
+                      ></BaseIcon>
                       <span>Livreur : </span>
-                      <a class="text-[#0050CF] font-semibold underline cursor-pointer" @click="goToViewDeliveryMan(order.deliveryMan.id)"
-                        >{{order.deliveryMan.name}}</a
+                      <a
+                        class="text-[#0050CF] font-semibold underline cursor-pointer"
+                        @click="goToViewDeliveryMan(order.deliveryMan.id)"
+                        >{{ order.deliveryMan.name }}</a
                       >
                     </div>
                     <div></div>
@@ -164,7 +178,10 @@
             </div>
           </template>
         </Order>
-        <div class="flex flex-col items-center space-y-4 h-full justify-center" v-else>
+        <div
+          class="flex flex-col items-center space-y-4 h-full justify-center"
+          v-else
+        >
           <img src="@/assets/images/emptyBasket.png" alt="" />
           <div class="font-semibold text-center">
             Vous verrez ici les détails d'une <br />
@@ -173,11 +190,15 @@
         </div>
       </template>
     </PageInTwoPart>
+
+    <BaseRightModal :show="showModal" v-if="showModal">
+    </BaseRightModal>
+
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, onMounted } from "vue";
 import PageInTwoPart from "../../../components/PageInTwoPart.vue";
 import { useOrdersStore } from "@/stores/orders";
 import Order from "@/components/Order.vue";
@@ -192,7 +213,8 @@ import FormAssignDeliveryPerson from "./components/FormAssignDeliveryPerson.vue"
 
 import SuccessInfo from "../../../components/SuccessInfo.vue";
 import { IOrder } from "../../../types/interfaces";
-
+import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
+import BaseRightModal from "@/components/base/BaseRightModal.vue";
 export default defineComponent({
   components: {
     PageInTwoPart,
@@ -200,8 +222,9 @@ export default defineComponent({
     EmptyState,
     FormAssignDeliveryPerson,
     SuccessInfo,
-    
-},
+    HistoryTrackingList,
+    BaseRightModal,
+  },
   setup() {
     const titles = [
       {
@@ -227,6 +250,7 @@ export default defineComponent({
     ];
 
     const order = ref();
+    const infoHistoryOrder = ref();
 
     const justAssign = ref(false);
 
@@ -319,20 +343,27 @@ export default defineComponent({
           title: "Voir l'historique",
           classIcon: "text-tableColor",
           icon: "history",
-          action: acceptOrder,
+          action: showHistoric,
         });
       }
 
       return elements;
     }
+    const selectedOrderId = ref();
 
-    async function viewInvoice(order: IOrder){
+    const showModal = ref(false);
+
+    function showHistoric() {
+      showModal.value = true;
+    }
+
+    async function viewInvoice(order: IOrder) {
       router.push({
-        name:"pdfViewer",
-        params:{
-          link:encodeURIComponent(order.id as string)
-        }
-      })
+        name: "pdfViewer",
+        params: {
+          link: encodeURIComponent(order.id as string),
+        },
+      });
     }
 
     async function assignOrder(order: any) {
@@ -361,7 +392,14 @@ export default defineComponent({
       }
     }
 
-    const selectedOrderId = ref();
+    async function getHistoryOrder(id: any) {
+      try {
+        const response = await orderStore.historyOrder(id);
+        infoHistoryOrder.value = response;
+      } catch (error) {
+        toast.error("T");
+      }
+    }
 
     const reload = ref(1);
 
@@ -394,25 +432,28 @@ export default defineComponent({
       }
     }
 
-    function goToViewMD(id: string){
+    function goToViewMD(id: string) {
       router.push({
-        name : "sousDistributeursDetails",
-        params:{
-          id : id
-        }
-      })
+        name: "sousDistributeursDetails",
+        params: {
+          id: id,
+        },
+      });
     }
 
-
-    function goToViewDeliveryMan(id:string){
+    function goToViewDeliveryMan(id: string) {
       router.push({
-        name : "livreursDetails",
-        params:{
-          id : id
-        }
-      })
+        name: "livreursDetails",
+        params: {
+          id: id,
+        },
+      });
     }
 
+    // onMounted(async () => {
+    //   const response = await orderStore.historyOrder("");
+    //   infoHistoryOrder.value = response;
+    // });
     return {
       titles,
       goToCreateAppros,
@@ -437,8 +478,11 @@ export default defineComponent({
       loading,
       confirmRejectOrder,
       goToViewMD,
-      goToViewDeliveryMan
-      
+      goToViewDeliveryMan,
+      showHistoric,
+      showModal,
+      infoHistoryOrder,
+      getHistoryOrder,
     };
   },
 });

@@ -1,11 +1,10 @@
 <template>
-  <div class="w-full h-full relative overflow-hidden ">
+  <div class="w-full h-full relative overflow-hidden">
     <slot name="title"> </slot>
 
     <BaseTable
       :titles="titles"
       :data="order.items"
-      
       class="mt-2 h-[calc(100vh-200px)] overflow-scroll"
       v-if="order"
     >
@@ -42,58 +41,63 @@
       <div>Total</div>
       <div>{{ order.totalAmount }} F</div>
     </div>
-
-    <!-- <BaseRightModal :show="true" >
+  
+    <!-- <BaseRightModal :show="true">
       <div class="py-8 px-6">
         <div class="flex justify-between items-center mb-8">
           <div class="text-2xl font-semibold">Historique</div>
-          <div><BaseIcon name="close" class="w-5 h-5"></BaseIcon></div>
-          
+          <div class="cursor-pointer"><BaseIcon name="close" class="w-5 h-5"  @click="showModal = false"></BaseIcon></div>
         </div>
-
-        <VHistorical></VHistorical>
-
-      </div>
-    </BaseRightModal> -->
+        <div class="flex mt-8">
+          <div class=" font-semibold text-base">
+            Commande 
+          </div> 
+           {{ order.reference }} 
+           <BaseTableStatut :title="order.status" class="ml-2"></BaseTableStatut> 
+         </div> 
+          <div class="mt-4"><history-tracking :type="validated" :date="order.updatedAt"></history-tracking></div> 
+       </div> 
+     </BaseRightModal>  -->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import type { PropType } from "vue";
 import type { IOrder } from "../types/interfaces";
 import helpers from "@/helpers/index";
 import BaseRightModal from "./base/BaseRightModal.vue";
-import VHistorical from "./VHistorical.vue";
+import HistoryTracking from "./HistoryTracking.vue";
 
 export default defineComponent({
-    props: {
-        order: {
-            type: Object as PropType<IOrder>,
-            required: true,
-        },
+  props: {
+    order: {
+      type: Object as PropType<IOrder>,
+      required: true,
     },
-    setup() {
-        const titles = [
-            {
-                title: "Produit",
-                name: "product",
-            },
-            {
-                title: "Quantité",
-                name: "quantity",
-            },
-            {
-                title: "Prix",
-                name: "price",
-            },
-        ];
-        return {
-            titles,
-            helpers,
-        };
-    },
-    components: { BaseRightModal, VHistorical }
+  },
+  setup() {
+    const titles = [
+      {
+        title: "Produit",
+        name: "product",
+      },
+      {
+        title: "Quantité",
+        name: "quantity",
+      },
+      {
+        title: "Prix",
+        name: "price",
+      },
+    ];
+
+    return {
+      titles,
+      helpers,
+    };
+  },
+  components: { BaseRightModal, HistoryTracking },
 });
 </script>
 
