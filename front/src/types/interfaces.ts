@@ -123,3 +123,8 @@ export interface IAction {
   iconClass?: string;
   action: Function;
 }
+
+export interface IOrderHistory {
+  date: string,
+  actor: string,
+}
