@@ -103,7 +103,7 @@ export default defineComponent({
 
     function getStatutLabel(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
-      else if (element.status == OrderStatus.DELIVERED) return "Inactive";
+      else if (element.status == OrderStatus.DELIVERED) return "Inactif";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
     }
     function getStatutType(element: any) {
