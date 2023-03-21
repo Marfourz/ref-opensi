@@ -59,11 +59,12 @@ export enum UserAccountStatus {
 }
 
   export enum OrderStatus {
-    NEW = 'new',
-    DELIVERY = 'delivered',
-    DELIVERED = 'delivered',
-    ACCEPTED = 'accepted',
+    NEW = "new",
+    DELIVERY = "delivered",
+    DELIVERED = "delivered",
+    ACCEPTED = "accepted",
     REJECTED = "aborted",
+    INPROGRESS = "inProgress",
   }
 
   export enum StockState{
