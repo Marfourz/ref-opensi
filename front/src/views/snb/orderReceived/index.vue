@@ -493,6 +493,7 @@ export default defineComponent({
       goToViewDeliveryMan,
       showHistoric,
       showModal,
+      onFetch
       // infoHistoryOrder,
       // getHistoryOrder,
     };
