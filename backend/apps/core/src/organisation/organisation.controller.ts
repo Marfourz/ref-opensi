@@ -120,7 +120,7 @@ export class OrganisationController {
   ): any {
     return this.organisationService.getOrganisationDashboardInfos(
       params.orgId,
-      filterParams,
+      //filterParams,
     );
   }
 
