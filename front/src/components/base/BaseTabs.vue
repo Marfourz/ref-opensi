@@ -109,9 +109,6 @@ export default {
       emit("change", openTab.value);
     };
 
-
-   
-
    
     onMounted(()=>{
       
