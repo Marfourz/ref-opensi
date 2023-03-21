@@ -105,11 +105,14 @@ export default defineComponent({
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
       else if (element.status == OrderStatus.DELIVERED) return "Inactif";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.INPROGRESS) return "En cours";
+
     }
     function getStatutType(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "colorize";
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
+      else if (element.status == OrderStatus.INPROGRESS) return "colorize";
     }
     const toast = useToast();
     const partenaireTitle = computed(() => {

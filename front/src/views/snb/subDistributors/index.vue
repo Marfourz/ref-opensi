@@ -2,7 +2,7 @@
   <div class="">
     <div class="space-y-6 flex flex-col h-full">
       <div class="">
-        <BaseTitle title="Sous distributeur"></BaseTitle>
+        <BaseTitle title="Partenaires"></BaseTitle>
         <!-- Panel -->
         <div class="flex mt-8 space-x-4">
           <div v-for="(etat, index) in etats" :key="index">
@@ -90,7 +90,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="numeric"
+                rules="numeric|required"
                 v-model="master.phone"
               ></BaseInput>
               <BaseInput
@@ -176,7 +176,7 @@ export default defineComponent({
       if (organisationType.value == OrganisationType.SNB){
         master.type = OrganisationType.MD
         items.unshift({
-          name: "Master distributeur",
+          name: "Masters distributeurs",
           value: OrganisationType.MD,
         });
       }
@@ -417,12 +417,14 @@ export default defineComponent({
             master
           );
           modal.title = `Organisation modifié avec succès`;
+          toast.success("Partenaire modifié avec succès")
         } else {
           const response = await organizationStore.create({
             ...master,
             parentOrganisationId: organisationId.value,
           });
           modal.title = `Organisation crée avec succès`;
+          toast.success("Partenaire crée avec succès")
         }
         modal.show = true;
         modal.subtitle = "";
@@ -430,6 +432,7 @@ export default defineComponent({
         showModal.value = false;
         loading.value = false;
         reload.value = !reload.value;
+        
       } catch (error: any) {
         loading.value = false;
         toast.error(error.response.data.message);

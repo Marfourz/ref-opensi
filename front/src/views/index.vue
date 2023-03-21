@@ -19,12 +19,7 @@
     </div>
 
     <div class="w-full">
-      <apexchart
-        height="400px"
-        type="line"
-        :options="chartOptions"
-        :series="series"
-      ></apexchart>
+      <OrgnaisationTurnoverEvolution :organisationId="organisationId"/>
     </div>
 
     <div class="flex justify-between items-center mt-7">
@@ -138,8 +133,11 @@ import BaseTableWithFilter from "@/components/base/BaseTableWithFilter.vue";
 import { useOrganizationStore } from "@/stores/organization";
 import { OrganisationType } from "@/types/enumerations";
 import { useUsersStore } from "@/stores/users";
+import OrgnaisationTurnoverEvolution from "../components/OrgnaisationTurnoverEvolution.vue";
+
+
 export default defineComponent({
-  components: { DashboardCard, BaseTableStatut, BaseTableWithFilter },
+  components: { DashboardCard, BaseTableStatut, BaseTableWithFilter,OrgnaisationTurnoverEvolution },
 
   setup() {
     const turnover = computed(() => {
@@ -253,6 +251,10 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisation?.type;
     });
 
+    const organisationId = computed(()=>{
+      return userStore.getCurrentUser?.organisationId
+    })
+
     onMounted(async () => {
       try {
         const response = await organisationStore.statInfo();
@@ -279,57 +281,7 @@ export default defineComponent({
       } catch (error) {}
     });
 
-    const chartOptions = ref({
-      tooltip:{
-        marker: {
-          show: false,
-      },
-        },
-      chart: {
-        toolbar: {
-          show: false,
-        },
-        
-        id: "vuechart-example",
-      },
-      colors: ["#259475"],
-      xaxis: {
-        categories: [
-          "Jan",
-          "Fev",
-          "Mar",
-          "Avr",
-          "Mai",
-          "Jun",
-          "Jui",
-          "Aou",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-      },
-    });
 
-    const series = ref([
-      {
-        name: "Chiffre d’affaires",
-        data: [
-          "100k",
-          "300k",
-          "400k",
-          "100k",
-          "100k",
-          "300k",
-          "250k",
-          "300k",
-          "400k",
-          "200k",
-          "100k",
-          "100k",
-        ],
-      },
-    ]);
 
     return {
       numberOfOrders,
@@ -343,8 +295,7 @@ export default defineComponent({
       statPartners,
       orgType,
       OrganisationType,
-      chartOptions,
-      series,
+      organisationId
     };
   },
 });
