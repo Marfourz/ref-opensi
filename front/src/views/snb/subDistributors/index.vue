@@ -27,13 +27,6 @@
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
-            <!-- <div
-              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-            >
-              <div>Filtré par</div>
-              <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div> -->
-
             <BaseButton icon="upload" size="small">Télécharger</BaseButton>
             <BaseButton
               icon="plus"
@@ -88,7 +81,7 @@
               <BaseInput
                 name="numéro ifu"
                 label="Numéro IFU"
-                rules="required|min:10|max:13"
+                rules="required|min:10|max:13|numeric"
                 v-model="master.fiscalId"
               ></BaseInput>
             </div>
@@ -96,7 +89,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="required"
+                rules="numeric"
                 v-model="master.phone"
               ></BaseInput>
               <BaseInput

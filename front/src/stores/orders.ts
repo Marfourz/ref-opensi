@@ -43,8 +43,8 @@ export const useOrdersStore = defineStore("ordersStore", {
     },
 
     async create(data: {
-      organisationId: PrimaryKey | undefined,
-      transactionId? : string,
+      organisationId: PrimaryKey | undefined;
+      transactionId?: string;
       items: Array<{ productId: PrimaryKey; quantity: number }>;
     }) {
       try {
@@ -68,6 +68,17 @@ export const useOrdersStore = defineStore("ordersStore", {
       try {
         const response = await Api.delete(`orders/${id}`);
         return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async historyOrder(id: PrimaryKey) {
+      try {
+        const response = await Api.get(
+          `orders/${id}/history`
+        );
+        return response.data;
       } catch (error) {
         throw error;
       }

@@ -32,6 +32,10 @@ import AllRules from "@vee-validate/rules";
 import { defineRule, configure } from "vee-validate";
 import { localize } from "@vee-validate/i18n";
 import './locales';
+import BaseRightModal from "@/components/base/BaseRightModal.vue";
+import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
+
+
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -65,6 +69,9 @@ app.component("BaseModal", BaseModal);
 app.component("BaseTabs", BaseTabs);
 app.component("BaseGoBack", BaseGoBack);
 app.component("BaseDateRange", BaseDateRange);
+app.component("BaseRightModal", BaseRightModal);
+app.component("HistoryTrackingList", HistoryTrackingList);
+
 
 app.use(createPinia());
 app.use(router);

@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="w-full flex space-x-4 mt-4">
-          <BaseButton type="outline" class="rounded-full" @click="reset()"
+          <BaseButton type="outline" class="rounded-full "    @click="reset()"
             >Annuler</BaseButton
           >
           <BaseButton type="primary" @click="apply()" class="rounded-full"
