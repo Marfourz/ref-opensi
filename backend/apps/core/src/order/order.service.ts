@@ -682,14 +682,18 @@ export class OrderService {
     const data: any = {};
     const order = await this.getSingleOrder(id);
 
-    const parentOrganisation = await this.prisma.organisation.findUnique({
-      where: {
-        id: order.parentOrganisationId,
-      },
-      select: {
-        ownerName: true,
-      },
-    });
+    let parentOrganisation: any = { ownerName: 'SNB' };
+
+    if (order.parentOrganisationId) {
+      parentOrganisation = await this.prisma.organisation.findUnique({
+        where: {
+          id: order.parentOrganisationId,
+        },
+        select: {
+          ownerName: true,
+        },
+      });
+    }
 
     data['order_created'] = {
       date: order.createdAt,
