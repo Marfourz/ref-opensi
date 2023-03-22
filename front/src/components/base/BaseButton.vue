@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
 const classes = computed(() => {
   return {
     "py-3.5 rounded-lg px-4": props.size == "large",
-    "py-3 rounded px-4": props.size == "medium",
+    "py-3 rounded-lg px-4": props.size == "medium",
     "py-1.5 rounded-md px-4 text-sm": props.size == "small",
     [`bg-${props.bgColor || "primary"} text-white`]:
       !props.disabled && !props.outline,

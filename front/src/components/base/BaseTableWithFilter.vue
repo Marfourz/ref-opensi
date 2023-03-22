@@ -137,6 +137,7 @@ export default defineComponent({
         let response;
         if (!props.requestId) {
           response = await props.fetchData({ ...params, ...props.params });
+          
         } else {
           response = await props.fetchData(
             { ...params, ...props.params },
@@ -158,6 +159,7 @@ export default defineComponent({
         loading.value = false;
         
         context.emit("total", items.value.length);
+        context.emit("onFetch", items.value);
         
       } catch (error: any) {
         console.log({ ...error });

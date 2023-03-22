@@ -2,7 +2,7 @@
   <div class="">
     <div class="space-y-6 flex flex-col h-full">
       <div class="">
-        <BaseTitle title="Sous distributeur"></BaseTitle>
+        <BaseTitle title="Partenaires"></BaseTitle>
         <!-- Panel -->
         <div class="flex mt-8 space-x-4">
           <div v-for="(etat, index) in etats" :key="index">
@@ -45,6 +45,7 @@
         </template>
 
         <template #action="{ element }">
+          
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
         <template #wallet="{ element }">
@@ -89,7 +90,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="numeric"
+                rules="numeric|required"
                 v-model="master.phone"
               ></BaseInput>
               <BaseInput
@@ -117,13 +118,14 @@
             <div class="text-[#0F0F14]">Méthode de paiement</div>
             <div class="flex items-center space-x-6">
               <div
-                class="flex items-center space-x-2"
+                class="flex items-center space-x-2 cursor-pointer"
                 v-for="method in paymentMethods"
                 :key="method.title"
+                @click="master.paymentDeadline = +method.value"
               >
                 <BaseSelectedCard
                   :selected="master.paymentDeadline == method.value"
-                  @click="master.paymentDeadline = +method.value"
+                  
                 >
                   <BaseIcon :name="method.icon"></BaseIcon>
                 </BaseSelectedCard>
@@ -155,9 +157,10 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
+import BaseActions from "../../../components/base/BaseActions.vue";
 
 export default defineComponent({
-  components: { Form, VPanel },
+  components: { Form, VPanel,BaseActions },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -173,7 +176,7 @@ export default defineComponent({
       if (organisationType.value == OrganisationType.SNB){
         master.type = OrganisationType.MD
         items.unshift({
-          name: "Master distributeur",
+          name: "Masters distributeurs",
           value: OrganisationType.MD,
         });
       }
@@ -384,8 +387,8 @@ export default defineComponent({
     }
 
     function getStatutLabel(element: IOrganisation) {
-      if (element.status == UserAccountStatus.ACTIVE) return "Active";
-      else if (element.status == UserAccountStatus.INACTIVE) return "Inactive";
+      if (element.status == UserAccountStatus.ACTIVE) return "Actif";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactif";
       else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
     }
 
@@ -414,12 +417,14 @@ export default defineComponent({
             master
           );
           modal.title = `Organisation modifié avec succès`;
+          toast.success("Partenaire modifié avec succès")
         } else {
           const response = await organizationStore.create({
             ...master,
             parentOrganisationId: organisationId.value,
           });
           modal.title = `Organisation crée avec succès`;
+          toast.success("Partenaire crée avec succès")
         }
         modal.show = true;
         modal.subtitle = "";
@@ -427,6 +432,7 @@ export default defineComponent({
         showModal.value = false;
         loading.value = false;
         reload.value = !reload.value;
+        
       } catch (error: any) {
         loading.value = false;
         toast.error(error.response.data.message);

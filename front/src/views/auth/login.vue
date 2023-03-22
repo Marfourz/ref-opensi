@@ -4,13 +4,13 @@
       <BaseInput
         name="email"
         label="Email"
-        rules="required"
+       
         v-model="username"
       ></BaseInput>
       <div>
         <BaseInput
           name="mot de passe"
-          rules="required"
+          
           label="Mot de passe"
           type="password"
           v-model="password"

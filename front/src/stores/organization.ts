@@ -105,6 +105,17 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+
+
+    async turnoverEvolution(organisationId:string) {
+      try {
+        const response = await Api.get(`organisations/turnover-chart/${organisationId}`);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async statPartners(type: OrganisationType) {
       try {
         const response = await Api.get(
