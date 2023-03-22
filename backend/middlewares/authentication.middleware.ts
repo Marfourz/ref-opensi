@@ -45,7 +45,10 @@ export class AuthenticationMiddleware implements NestMiddleware {
               .then(async (user) => {
                 console.log('<<<<<<<<<<<<<<<: ', user);
 
-                if (user.status != 'active') {
+                if (
+                  user.status != 'active' ||
+                  user.organisation.status != 'active'
+                ) {
                   console.log('Inctive account');
                   res
                     .status(HttpStatus.UNAUTHORIZED)
