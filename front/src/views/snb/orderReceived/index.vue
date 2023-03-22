@@ -332,7 +332,7 @@ export default defineComponent({
             title: "Assigner à un livreur",
             classIcon: "text-tableColor",
             icon: "deliveryPerson",
-            action: assignOrder,
+            // action: assignOrder,
           });
         }
 
