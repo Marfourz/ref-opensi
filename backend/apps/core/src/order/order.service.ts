@@ -197,35 +197,7 @@ export class OrderService {
     update: updateOrderDto,
   ): Promise<Order | any> {
     try {
-      const updatedOrder = await this.prisma.order.update({
-        where: { id },
-        data: update as Prisma.OrderUpdateInput,
-      });
-
-      if (update.deliveryMan) {
-        const deliveryMan = await this.prisma.user.findUnique({
-          where: {
-            id: update.deliveryMan,
-          },
-          select: {
-            phone: true,
-          },
-        });
-
-        const smsBody: smsDto = {
-          to: deliveryMan.phone,
-          body: "Une nouvelle commande vient de vous être attribuée!! Rdv sur l'application SNB pour plus de détails.",
-          sender: 'SNB',
-        };
-
-        await this.notifService.sendSms(smsBody);
-      }
-
       if (update.status == OrderStatusEnum.accepted) {
-        await this.updateSingleOrder(id, {
-          acceptedAt: dayjs().format('YYYY-MM-DD'),
-        });
-
         const unprocessableOrders: any = [];
 
         const order = await this.getSingleOrder(id);
@@ -259,11 +231,40 @@ export class OrderService {
             message += element + ', ';
           }
           message += 'insuffisant';
-          return {
+          /*return {
             statusCode: HttpStatus.NOT_ACCEPTABLE,
             message,
-          };
+          };*/
+          throw new HttpException(message, HttpStatus.NOT_ACCEPTABLE);
+        } else {
+          await this.updateSingleOrder(id, {
+            acceptedAt: dayjs().format('YYYY-MM-DD'),
+          });
         }
+      }
+
+      const updatedOrder = await this.prisma.order.update({
+        where: { id },
+        data: update as Prisma.OrderUpdateInput,
+      });
+
+      if (update.deliveryMan) {
+        const deliveryMan = await this.prisma.user.findUnique({
+          where: {
+            id: update.deliveryMan,
+          },
+          select: {
+            phone: true,
+          },
+        });
+
+        const smsBody: smsDto = {
+          to: deliveryMan.phone,
+          body: "Une nouvelle commande vient de vous être attribuée!! Rdv sur l'application SNB pour plus de détails.",
+          sender: 'SNB',
+        };
+
+        await this.notifService.sendSms(smsBody);
       }
 
       if (update.status == OrderStatusEnum.inProgress) {
