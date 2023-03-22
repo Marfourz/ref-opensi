@@ -34,7 +34,8 @@ import { localize } from "@vee-validate/i18n";
 import './locales';
 import BaseRightModal from "@/components/base/BaseRightModal.vue";
 import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
-
+import BaseActions from "@/components/base/BaseActions.vue";
+import VPanel from "@/components/VPanel.vue";
 
 
 Object.keys(AllRules).forEach((rule) => {
@@ -71,6 +72,8 @@ app.component("BaseGoBack", BaseGoBack);
 app.component("BaseDateRange", BaseDateRange);
 app.component("BaseRightModal", BaseRightModal);
 app.component("HistoryTrackingList", HistoryTrackingList);
+app.component("BaseActions", BaseActions);
+app.component("VPanel", VPanel);
 
 
 app.use(createPinia());
