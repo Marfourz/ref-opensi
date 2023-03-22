@@ -16,7 +16,7 @@ export default [
         meta: {
           title: "Bienvenue sur la plateforme SNB",
           subtitle:
-            "Veuillez entrer les identifiants (Email et mot de  passe) que vous avez reçu par email",
+            "Veuillez entrer les identifiants (Mail et mot de  passe) que vous avez reçu par mail",
         },
       },
       {
@@ -26,7 +26,7 @@ export default [
         meta: {
           title: "Connexion",
           subtitle:
-            "Veuillez  vous connecter en renseignant votre adresse  gmail et votre mot de passe",
+            "Veuillez  vous connecter en renseignant votre mail et votre mot de passe",
         },
       },
       {
@@ -36,7 +36,7 @@ export default [
         meta: {
           title: "Connexion",
           subtitle:
-            "Veuillez  vous connecter en renseignant votre adresse  gmail et votre mot de passe",
+            "Veuillez  vous connecter en renseignant votre mail et votre mot de passe",
         },
       },
       {

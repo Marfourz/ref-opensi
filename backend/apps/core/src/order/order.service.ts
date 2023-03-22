@@ -354,6 +354,8 @@ export class OrderService {
   }
 
   async getOrdersOfSubOrganisations(filterParams, orgId): Promise<Order[]> {
+
+    console.log('hgfdxcvbn vcxcvbn ')
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -385,7 +387,8 @@ export class OrderService {
             type: subType,
           },
         };
-        if (q != undefined && q != '') {
+        console.log(q);
+          /*if (q != undefined && q != '') {
           orderIdConstraint.id = {
             contains: q,
             mode: 'insensitive',
@@ -405,7 +408,7 @@ export class OrderService {
             totalAmountConstraint,
             orderReferenceConstraint,
           ];
-        }
+        }*/
         const orders = await this.prisma.order.findMany({
           where: {
             ...w,

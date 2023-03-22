@@ -45,10 +45,10 @@
           </div>
         </div>
         <div class="w-full flex space-x-4 mt-4">
-          <BaseButton type="outline" class="rounded-full "    @click="reset()"
+          <BaseButton outline="true" size="medium"  class=" w-full" @click="reset()"
             >Annuler</BaseButton
           >
-          <BaseButton type="primary" @click="apply()" class="rounded-full"
+          <BaseButton type="primary" size="medium" @click="apply()" class=" w-full"
             >Appliquer</BaseButton
           >
         </div>

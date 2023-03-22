@@ -171,6 +171,7 @@ export default defineComponent({
         toast.success("Stock mise à jour avec succès");
         loading.value = false;
         modal.show = false;
+        stock.currentQuantity = 0
         reload.value = reload.value + 1;
       } catch (error) {
         loading.value = false;

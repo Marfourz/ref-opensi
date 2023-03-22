@@ -247,7 +247,7 @@ export default defineComponent({
       loading.value = true;
       try {
         await productStore.delete(selectedProduct.value.id);
-        toast.success("Suppression effectuée avec le succès");
+        toast.success("Suppression effectuée avec succès");
         loading.value = false;
         modal.show = false;
         reload.value = reload.value + 1;

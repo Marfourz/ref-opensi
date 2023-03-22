@@ -229,7 +229,7 @@ export default defineComponent({
 
     function onDelete(value: IUser) {
       selectedUser.value = value;
-      modal.title = `Êtes-vous sûr de vouloir <br> supprimer l’utilisateur <br> ${selectedUser.value.name} ?`;
+      modal.title = `Êtes-vous sûr de vouloir <br> supprimer le livreur <br> ${selectedUser.value.name} ?`;
       modal.show = true;
       modal.subtitle = "";
       modal.mode = "confirm";
@@ -241,7 +241,7 @@ export default defineComponent({
         if (selectedUser.value) {
           const response = await userStore.delete(selectedUser.value.id);
           reload.value = !reload.value;
-          modal.title = `Utilisateur supprimé avec succès`;
+          modal.title = `Livreur supprimé avec succès`;
           modal.show = true;
           modal.subtitle = "";
           modal.mode = "success";

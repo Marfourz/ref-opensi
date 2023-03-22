@@ -33,7 +33,7 @@
         <div class="flex flex-col space-y-6 items-center py-4">
           <BaseIcon name="warning"></BaseIcon>
           <div class="text-center font-semibold text-2xl">
-            Êtes vous sur de vouloir rejecter cette commande ?
+            Êtes vous sur de vouloir rejeter cette commande ?
           </div>
           <div class="flex items-center space-x-2 w-full">
             <BaseButton
@@ -68,6 +68,7 @@
               :fetchData="orderStore.fetchAllByOrganizationType"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
+              @onFetch="onFetch"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -370,6 +371,7 @@ export default defineComponent({
     }
 
     async function assignOrder(order: any) {
+      
       show.value = true;
       justAssign.value = true;
       selectedOrderId.value = order.id;
@@ -391,7 +393,7 @@ export default defineComponent({
         const response = await orderStore.fetchOne(element.id);
         order.value = response;
       } catch (error) {
-        toast.error("T");
+       
       }
     }
     // const infoHistoryOrder = ref();
@@ -455,7 +457,10 @@ export default defineComponent({
       });
     }
 
-   
+    function onFetch(items:any){
+      showItemOrder(items[0])
+      
+    }
 
     // onMounted(async () => {
     //   const response = await orderStore.historyOrder("");
@@ -488,6 +493,7 @@ export default defineComponent({
       goToViewDeliveryMan,
       showHistoric,
       showModal,
+      onFetch
       // infoHistoryOrder,
       // getHistoryOrder,
     };

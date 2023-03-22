@@ -185,6 +185,7 @@ export default defineComponent({
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
       else if (element.status == OrderStatus.DELIVERED) return "Inactive";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
+      else if (element.status == OrderStatus.INPROGRESS) return "En cours";
       else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
@@ -193,6 +194,7 @@ export default defineComponent({
       else if (element.status == OrderStatus.DELIVERED) return "success";
       else if (element.status == OrderStatus.NEW) return "blue";
       else if (element.status == OrderStatus.REJECTED) return "danger";
+      else if (element.status == OrderStatus.INPROGRESS) return "colorize";
     }
 
     const toast = useToast();
