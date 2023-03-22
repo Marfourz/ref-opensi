@@ -124,7 +124,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted, reactive } from "vue";
+import { defineComponent, computed, ref, onMounted, reactive, watch } from "vue";
 import DashboardCard from "@/components/DashboardCard.vue";
 import helpers from "@/helpers/index";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
@@ -255,12 +255,21 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisationId
     })
 
-    onMounted(async () => {
+
+    watch(()=>organisationId.value,(newValue)=>{
+      loadStat()
+    })
+
+    async function loadStat(){
       try {
-        const response = await organisationStore.statInfo();
+        const response = await organisationStore.statInfo(organisationId.value as string);
         statInfos.value = response.data;
       } catch (error) {}
 
+    }
+
+    onMounted(async () => {
+     await loadStat()
       try {
         const response = await organisationStore.statPartners(
           OrganisationType.MD

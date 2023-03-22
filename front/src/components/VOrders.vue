@@ -252,7 +252,7 @@ export default defineComponent({
 
     function getStatutLabel(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
-      else if (element.status == OrderStatus.DELIVERED) return "Inactif";
+      else if (element.status == OrderStatus.DELIVERED) return "Livré";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
       else if (element.status == OrderStatus.INPROGRESS) return "En cours";
 
@@ -307,7 +307,7 @@ export default defineComponent({
             action: rejectOrder,
           },
         ];
-      else if (element.status == OrderStatus.ACCEPTED || element.status == OrderStatus.INPROGRESS) {
+        else if (element.status == OrderStatus.ACCEPTED || element.status == OrderStatus.INPROGRESS || element.status == OrderStatus.DELIVERED) {
         if (!element.deliveryMan) {
           elements.push({
             title: "Assigner à un livreur",

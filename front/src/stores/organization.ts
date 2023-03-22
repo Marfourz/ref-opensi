@@ -96,9 +96,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
 
-    async statInfo() {
+    async statInfo(organisationId:string) {
       try {
-        const response = await Api.get(`organisations/snb/infos`);
+        const response = await Api.get(`organisations/snb/infos/${organisationId}`);
         return response;
       } catch (error) {
         throw error;
