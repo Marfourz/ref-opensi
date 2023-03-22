@@ -2,7 +2,7 @@
   <div class="py-8 px-6">
     <div class="flex justify-between items-center mb-8">
       <div class="text-2xl font-semibold">Historique</div>
-      <BaseIcon name="close" class="w-5 h-5 cursor-pointer" @click="$emit()"></BaseIcon>
+      <BaseIcon name="close" class="w-5 h-5 cursor-pointer" @click="$emit('close')"></BaseIcon>
     </div>
     <div class="flex mt-8">
       <div class="font-semibold text-base">Commande</div>
@@ -47,7 +47,7 @@ export default defineComponent({
     order_created: Object as PropType<IOrderHistory>,
     order_accepted: Object as PropType<IOrderHistory>,
     order_delivered: Object as PropType<IOrderHistory>,
-    orderId: { type: String, required: true},
+    orderId: { type: String},
   },
 
   setup(props) {
