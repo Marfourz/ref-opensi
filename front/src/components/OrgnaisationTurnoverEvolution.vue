@@ -9,6 +9,9 @@
     </div>
 </template>
 
+
+
+
 <script lang="ts">
 import { defineComponent, ref,onMounted, computed, watch } from 'vue'
 import { useOrganizationStore } from '../stores/organization';
@@ -86,7 +89,7 @@ export default defineComponent({
 
     watch((organisationId),()=>{
         const response = organisationStore.turnoverEvolution(organisationId.value as string)
-        console.log("response", response);
+        
     })
 
     onMounted(() => {

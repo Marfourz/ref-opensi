@@ -192,7 +192,7 @@
       </template>
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
-      <HistoryTrackingList :orderId="selectedOrderId"></HistoryTrackingList>
+      <HistoryTrackingList :orderId="selectedOrderId" @close="showModal = false"></HistoryTrackingList>
     </BaseRightModal>
 
    
@@ -357,15 +357,17 @@ export default defineComponent({
 
     const showModal = ref(false);
 
-    function showHistoric() {
+    function showHistoric(value : IOrder) {
       showModal.value = true;
+      selectedOrderId.value = value.id
     }
 
     async function viewInvoice(order: IOrder) {
+      const response = await orderStore.generateInvoice(order.id)
       router.push({
         name: "pdfViewer",
         params: {
-          link: encodeURIComponent(order.id as string),
+          link: encodeURIComponent(response.url as string),
         },
       });
     }

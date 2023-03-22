@@ -2,7 +2,7 @@
   <Menu as="div" class="relative inline-block" data-test="action-button">
     <div class="">
       <MenuButton class="p-1 cursor-pointer rounded-md">
-        <BaseIcon name="triplePoints" class="cursor-pointer" />
+        <BaseIcon name="triplePoints" class="cursor-pointer" v-if="actions && actions.length != 0" />
       </MenuButton>
     </div>
 

@@ -13,8 +13,8 @@
                 </div></a>
 
         </div>
-        <div class="bg-[#E5E5E5] flex items-center h-full flex-1 justify-center pt-7">
-            <div class="bg-white h-full w-1/2 ">
+        <div class="bg-[#E5E5E5] flex items-center h-full flex-1 justify-center py-7">
+            <div class="bg-white h-full w-1/2 overflow-scroll">
                 <vue-pdf-embed :source='link' />
 
             </div>

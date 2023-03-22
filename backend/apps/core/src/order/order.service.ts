@@ -396,8 +396,6 @@ export class OrderService {
   }
 
   async getOrdersOfSubOrganisations(filterParams, orgId): Promise<Order[]> {
-
-    console.log('hgfdxcvbn vcxcvbn ')
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -430,7 +428,7 @@ export class OrderService {
           },
         };
         console.log(q);
-          /*if (q != undefined && q != '') {
+        /*if (q != undefined && q != '') {
           orderIdConstraint.id = {
             contains: q,
             mode: 'insensitive',
@@ -680,7 +678,15 @@ export class OrderService {
 
   async getOrderHistory(id: string): Promise<any> {
     const data: any = {};
-    const order = await this.getSingleOrder(id);
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: {
+        transaction: true,
+        items: { include: { product: true } },
+        invoice: true,
+        organisation: true,
+      },
+    });
 
     let parentOrganisation: any = { ownerName: 'SNB' };
 

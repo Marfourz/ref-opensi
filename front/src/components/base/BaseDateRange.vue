@@ -113,9 +113,9 @@ export default {
           end: end,
         };
       } else if (this.selectedDate.value == "month") {
-        start.setMonth(start.getMonth() - 1);
+        start.setMonth(start.getMonth());
         start.setDate(1);
-        end.setMonth(end.getMonth());
+        end.setMonth(end.getMonth() + 1);
         end.setDate(0);
 
         this.dateChoice = {
@@ -124,12 +124,12 @@ export default {
         };
       } else if (this.selectedDate.value == "year") {
         const start = new Date();
-        start.setFullYear(start.getFullYear() - 1);
+        start.setFullYear(start.getFullYear());
         start.setDate(1);
         start.setMonth(0);
 
         const end = new Date();
-        end.setFullYear(end.getFullYear() - 1);
+        end.setFullYear(end.getFullYear());
         end.setMonth(11);
         end.setDate(31);
 
@@ -171,6 +171,7 @@ export default {
 
   mounted() {
     this.selectedDate = this.dates[2];
+    this.setDate()
   },
 };
 </script>
