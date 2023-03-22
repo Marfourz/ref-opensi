@@ -8,6 +8,7 @@ import {
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { NonSnbOrganisations, PagiationPayload } from 'types';
+import * as dayjs from 'dayjs';
 import {
   UserRoleEnum,
   OrderStatusEnum,
@@ -18,6 +19,7 @@ import { AuthService } from '../users-manager/auth.service';
 import { NotificationService } from 'apps/notification/src/notification.service';
 import { Role } from '../../../../guards/roles.enum';
 import { UserService } from '../user/user.service';
+import { constants } from 'buffer';
 
 @Injectable()
 export class OrganisationService {
@@ -464,7 +466,34 @@ export class OrganisationService {
   }
 
   async getTurnoverEvolution(id: string): Promise<any> {
-    const orders = await this.prisma.order.findMany({
+    const monthsOfYear: any = [];
+    const data: any = [];
+
+    const year = new Date().getFullYear();
+
+    monthsOfYear.push(year + '-01-01');
+
+    for (let index = 1; index <= 12; index++) {
+      monthsOfYear.push(dayjs().format(year + '-' + index + '-30'));
+    }
+
+    for (let i = 0; i < monthsOfYear.length; i++) {
+      if (i === monthsOfYear.length - 1) {
+        break;
+      }
+      const totalAmount = await this.getTurnoverOfPeriod(
+        {
+          gte: monthsOfYear[i],
+          lte: monthsOfYear[i + 1],
+        },
+        id,
+      );
+      data.push({ month: monthsOfYear[i + 1], total: totalAmount });
+    }
+
+    return data;
+
+    /*const orders = await this.prisma.order.findMany({
       where: {
         parentOrganisationId: id,
         status: OrderStatusEnum.delivered,
@@ -474,6 +503,21 @@ export class OrganisationService {
         totalAmount: true,
       },
     });
-    return orders;
+    return orders;*/
+  }
+
+  async getTurnoverOfPeriod(period, parentOrganisationId) {
+    return await this.prisma.order.aggregate({
+      where: {
+        parentOrganisationId,
+        createdAt: {
+          gte: new Date(period.gte).toISOString(),
+          lte: new Date(period.lte).toISOString(),
+        },
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    });
   }
 }

@@ -121,7 +121,7 @@ export class ProductsController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'id' })
-  deleteSingleProduct(@Param() params): Promise<Product> {
+  deleteSingleProduct(@Param() params): Promise<any> {
     return this.productsService.deleteSingleProduct(params.id);
   }
 }

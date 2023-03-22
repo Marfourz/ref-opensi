@@ -193,7 +193,7 @@ export class OrderController {
   updateSingleOrder(
     @Param() params,
     @Body() update: updateOrderDto,
-  ): Promise<Order> {
+  ): Promise<Order | any> {
     return this.orderService.updateSingleOrder(params.id, update);
   }
 
