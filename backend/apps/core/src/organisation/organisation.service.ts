@@ -19,6 +19,7 @@ import { AuthService } from '../users-manager/auth.service';
 import { NotificationService } from 'apps/notification/src/notification.service';
 import { Role } from '../../../../guards/roles.enum';
 import { UserService } from '../user/user.service';
+import { constants } from 'buffer';
 
 @Injectable()
 export class OrganisationService {
@@ -465,32 +466,32 @@ export class OrganisationService {
   }
 
   async getTurnoverEvolution(id: string): Promise<any> {
-    const pastMonths: any = [];
+    const monthsOfYear: any = [];
     const data: any = [];
 
-    let year = new Date().getFullYear();
+    const year = new Date().getFullYear();
 
-    return year;
+    monthsOfYear.push(year + '-01-01');
 
-    /*for (let index = 12; index >= 0; index--) {
-      pastMonths.push(dayjs().subtract(index, 'month').format('YYYY-MM-30'));
+    for (let index = 1; index <= 12; index++) {
+      monthsOfYear.push(dayjs().format(year + '-' + index + '-30'));
     }
 
-    for (let i = 0; i < pastMonths.length; i++) {
-      if (i === pastMonths.length - 1) {
+    for (let i = 0; i < monthsOfYear.length; i++) {
+      if (i === monthsOfYear.length - 1) {
         break;
       }
       const totalAmount = await this.getTurnoverOfPeriod(
         {
-          gte: pastMonths[i],
-          lte: pastMonths[i + 1],
+          gte: monthsOfYear[i],
+          lte: monthsOfYear[i + 1],
         },
         id,
       );
-      data.push({ month: pastMonths[i + 1], total: totalAmount });
+      data.push({ month: monthsOfYear[i + 1], total: totalAmount });
     }
 
-    return data;*/
+    return data;
 
     /*const orders = await this.prisma.order.findMany({
       where: {
