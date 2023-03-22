@@ -115,7 +115,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="required"
+                rules="required|numeric"
                 v-model="user.phone"
               ></BaseInput>
               <BaseInput

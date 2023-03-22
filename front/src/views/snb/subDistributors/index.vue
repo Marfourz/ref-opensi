@@ -2,7 +2,7 @@
   <div class="">
     <div class="space-y-6 flex flex-col h-full">
       <div class="">
-        <BaseTitle title="Sous distributeur"></BaseTitle>
+        <BaseTitle title="Partenaires"></BaseTitle>
         <!-- Panel -->
         <div class="flex mt-8 space-x-4">
           <div v-for="(etat, index) in etats" :key="index">
@@ -89,7 +89,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="numeric"
+                rules="required|numeric"
                 v-model="master.phone"
               ></BaseInput>
               <BaseInput
