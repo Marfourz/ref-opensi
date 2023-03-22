@@ -330,6 +330,17 @@ export class OrganisationService {
       },
     });
 
+    //get orders of organisation
+    const turnover = await this.prisma.order.aggregate({
+      where: {
+        parentOrganisationId: orgId,
+        status: OrderStatusEnum.delivered,
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    });
+
     //get all organisation by type
     const MDs = await this.prisma.organisation.count({
       where: {
@@ -395,7 +406,7 @@ export class OrganisationService {
         (element.originalQuantity - element.currentQuantity);
     });
 
-    return { organisation, orders, partners, productsInfos: stocks };
+    return { organisation, turnover, orders, partners, productsInfos: stocks };
   }
 
   async getAllProductsIds(): Promise<any> {
