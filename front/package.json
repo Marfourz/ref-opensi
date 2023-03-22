@@ -30,7 +30,7 @@
     "eslint-plugin-vue": "^9.9.0",
     "kkiapay": "^2.0.16",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
+    "luxon": "^3.3.0",
     "pinia": "^2.0.30",
     "v-calendar": "^3.0.0-alpha.8",
     "vee-validate": "^4.7.4",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
+    "@types/luxon": "^3.2.0",
     "@types/node": "^18.11.12",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/tsconfig": "^0.1.3",

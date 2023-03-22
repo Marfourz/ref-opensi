@@ -1,20 +1,20 @@
-import moment from "moment";
-import "moment/locale/fr";
+import { DateTime } from "luxon";
+
 
 export default {
-  formatDate(value: Date) {
-    moment.locale("fr");
-    return moment(value).format("D/MM/YYYY");
+  formatDate(value: string) {
+   
+    return DateTime.fromISO(value).setLocale("fr").toLocaleString() 
   },
 
-  formatDateHour(value: Date) {
-    moment.locale("fr");
-    return moment(value).format("D/MM/YYYY, HH:mm");
+  formatDateHour(value: string) {
+   
+    return DateTime.fromISO(value).setLocale("fr").toFormat("D, HH:mm");
   },
 
-  formatDateReduce(value: Date) {
-    moment.locale("fr");
-    return moment(value).format("d MMMM YYYY");
+  formatDateReduce(value: string) {
+  
+    return DateTime.fromISO(value).setLocale("fr").toFormat("d MMMM yyyy");
   },
 
   truncate(value: string, max: number) {
