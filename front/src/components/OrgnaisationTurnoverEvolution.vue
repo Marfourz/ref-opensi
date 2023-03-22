@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref,onMounted, computed } from 'vue'
+import { defineComponent, ref,onMounted, computed, watch } from 'vue'
 import { useOrganizationStore } from '../stores/organization';
 import { useUsersStore } from '../stores/users';
 
@@ -84,9 +84,13 @@ export default defineComponent({
         return userStore.getCurrentUser?.organisationId
     })
 
+    watch((organisationId),()=>{
+        const response = organisationStore.turnoverEvolution(organisationId.value as string)
+        console.log("response", response);
+    })
+
     onMounted(() => {
         const response = organisationStore.turnoverEvolution(organisationId.value as string)
-
         console.log("response", response);
         
     })

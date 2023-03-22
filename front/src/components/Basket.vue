@@ -139,7 +139,7 @@ export default defineComponent({
 
     function kkiapayWidget() {
       openKkiapayWidget({
-        amount: 10000,
+        amount: totalAmount.value,
         api_key: import.meta.env.VITE_APP_KKIAPAY_KEY,
         sandbox: true,
         phone: "97000000",

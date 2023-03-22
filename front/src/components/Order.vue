@@ -2,10 +2,11 @@
   <div class="w-full h-full relative overflow-hidden">
     <slot name="title"> </slot>
 
-    <BaseTable
+    <div class="overflow-scroll bg-black h-full">
+      <BaseTable
       :titles="titles"
       :data="order.items"
-      class="mt-2 h-[calc(100vh-200px)] overflow-scroll"
+      class="mt-2 h-[calc(100vh-200px)] "
       v-if="order"
     >
       <template #product="{ element }">
@@ -34,6 +35,9 @@
         </div>
       </template>
     </BaseTable>
+    </div>
+
+  
 
     <div
       class="absolute bottom-0 left-0 right-0 border-t pt-4 border-borderColor font-bold flex items-center justify-between"

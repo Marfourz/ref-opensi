@@ -33,7 +33,7 @@
         <div class="flex flex-col space-y-6 items-center py-4">
           <BaseIcon name="warning"></BaseIcon>
           <div class="text-center font-semibold text-2xl">
-            Êtes vous sur de vouloir rejecter cette commande ?
+            Êtes vous sur de vouloir rejeter cette commande ?
           </div>
           <div class="flex items-center space-x-2 w-full">
             <BaseButton

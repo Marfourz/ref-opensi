@@ -88,7 +88,7 @@ export default defineComponent({
         path: "appros",
         route: "appros",
         roles: [UserRole.ADMIN, UserRole.SUPER_USER],
-        organizations: [OrganisationType.MD]
+        organizations: [OrganisationType.MD,OrganisationType.DA,OrganisationType.DP]
       },
 
       {
@@ -97,7 +97,7 @@ export default defineComponent({
         path: "commandes",
         route: "orderReceived",
         roles: [UserRole.ADMIN, UserRole.SUPER_USER],
-        organizations: [OrganisationType.MD, OrganisationType.SNB]
+        organizations: [OrganisationType.MD, OrganisationType.SNB,OrganisationType.DA]
       },
 
       {
@@ -132,7 +132,7 @@ export default defineComponent({
         route: "stock",
         path: "stock",
         roles: [UserRole.ADMIN, UserRole.SUPER_USER],
-        organizations: [OrganisationType.SNB, OrganisationType.MD]
+        organizations: [OrganisationType.SNB, OrganisationType.MD,OrganisationType.DA,OrganisationType.DP]
       }
     ];
 
