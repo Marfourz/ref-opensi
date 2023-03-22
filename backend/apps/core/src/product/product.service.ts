@@ -104,15 +104,34 @@ export class ProductsService {
     }
   }
 
-  async deleteSingleProduct(id: string): Promise<Product> {
+  async deleteSingleProduct(id: string): Promise<any> {
     try {
-      const deletedProduct = await this.prisma.product.delete({
+      /*const deletedProduct = await this.prisma.product.delete({
         where: { id },
+      });*/
+
+      const itemOrders = await this.prisma.itemOrder.findMany({
+        where: {
+          productId: id,
+        },
       });
-      return deletedProduct;
+
+      console.log(itemOrders);
+
+      if (itemOrders.length == 0) {
+        return await this.prisma.product.delete({
+          where: { id },
+        });
+      } else {
+        throw new HttpException(
+          'Vous ne pouvez pas supprimé ce produit',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
     } catch (error) {
+      console.log(error);
       throw new HttpException(
-        'Vous ne pouvez pas supprimé ce produit',
+        "Vous ne pouvez pas supprimé ce produit a cause d'une erreur serveur",
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
       /*throw new HttpException('') error;

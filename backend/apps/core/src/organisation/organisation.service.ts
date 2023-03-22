@@ -8,6 +8,7 @@ import {
 import { organisationDto, updateOrganisationDto } from './organisation.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { NonSnbOrganisations, PagiationPayload } from 'types';
+import * as dayjs from 'dayjs';
 import {
   UserRoleEnum,
   OrderStatusEnum,
@@ -464,7 +465,34 @@ export class OrganisationService {
   }
 
   async getTurnoverEvolution(id: string): Promise<any> {
-    const orders = await this.prisma.order.findMany({
+    const pastMonths: any = [];
+    const data: any = [];
+
+    let year = new Date().getFullYear();
+
+    return year;
+
+    /*for (let index = 12; index >= 0; index--) {
+      pastMonths.push(dayjs().subtract(index, 'month').format('YYYY-MM-30'));
+    }
+
+    for (let i = 0; i < pastMonths.length; i++) {
+      if (i === pastMonths.length - 1) {
+        break;
+      }
+      const totalAmount = await this.getTurnoverOfPeriod(
+        {
+          gte: pastMonths[i],
+          lte: pastMonths[i + 1],
+        },
+        id,
+      );
+      data.push({ month: pastMonths[i + 1], total: totalAmount });
+    }
+
+    return data;*/
+
+    /*const orders = await this.prisma.order.findMany({
       where: {
         parentOrganisationId: id,
         status: OrderStatusEnum.delivered,
@@ -474,6 +502,21 @@ export class OrganisationService {
         totalAmount: true,
       },
     });
-    return orders;
+    return orders;*/
+  }
+
+  async getTurnoverOfPeriod(period, parentOrganisationId) {
+    return await this.prisma.order.aggregate({
+      where: {
+        parentOrganisationId,
+        createdAt: {
+          gte: new Date(period.gte).toISOString(),
+          lte: new Date(period.lte).toISOString(),
+        },
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    });
   }
 }

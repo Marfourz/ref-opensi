@@ -192,7 +192,10 @@ export class OrderService {
     }
   }
 
-  async updateSingleOrder(id: string, update: updateOrderDto): Promise<Order> {
+  async updateSingleOrder(
+    id: string,
+    update: updateOrderDto,
+  ): Promise<Order | any> {
     try {
       const updatedOrder = await this.prisma.order.update({
         where: { id },
@@ -222,6 +225,45 @@ export class OrderService {
         await this.updateSingleOrder(id, {
           acceptedAt: dayjs().format('YYYY-MM-DD'),
         });
+
+        const unprocessableOrders: any = [];
+
+        const order = await this.getSingleOrder(id);
+
+        for (let index = 0; index < order.items.length; index++) {
+          const element = order.items[index];
+
+          console.log('Parent OrgId : ', order.parentOrganisationId);
+          console.log('Prod Id : ', element.product.id);
+          const totalStockForProduct = await this.prisma.stock.aggregate({
+            where: {
+              productId: element.product.id,
+              organisationId: order.parentOrganisationId,
+            },
+            _sum: {
+              currentQuantity: true,
+            },
+          });
+
+          //console.log('TotalStock : ', totalStockForProduct);
+
+          if (totalStockForProduct._sum.currentQuantity < element.quantity) {
+            unprocessableOrders.push(element.product.name);
+          }
+        }
+
+        if (unprocessableOrders.length > 0) {
+          let message = 'Stock de : ';
+          for (let i = 0; i < unprocessableOrders.length; i++) {
+            const element = unprocessableOrders[i];
+            message += element + ', ';
+          }
+          message += 'insuffisant';
+          return {
+            statusCode: HttpStatus.NOT_ACCEPTABLE,
+            message,
+          };
+        }
       }
 
       if (update.status == OrderStatusEnum.inProgress) {

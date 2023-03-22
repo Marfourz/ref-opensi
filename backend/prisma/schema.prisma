@@ -129,7 +129,7 @@ model ItemOrder {
 
   orderId             String
 
-  product             Product @relation(fields: [productId], references: [id])
+  product             Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   productId           String
 
@@ -187,7 +187,7 @@ model Image {
 
   url                 String
 
-  product             Product @relation(fields: [productId], references: [id])
+  product             Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   productId           String
 
@@ -203,7 +203,7 @@ model Stock {
 
   organisationId      String
 
-  product             Product @relation(fields: [productId], references: [id])
+  product             Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   productId           String
 
