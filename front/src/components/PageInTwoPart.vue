@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full">
-    <div class="lg:w-[63%] border-r-2 py-10 px-6 overflow-scroll">
+    <div class="lg:w-[63%] border-r-2 py-10 px-6 overflow-scroll" :class="firstPartClass">
       <slot name="firstPart"></slot>
     </div>
     <div class="lg:w-[37%] py-10 px-6 ">
@@ -13,6 +13,11 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  props:{
+    firstPartClass:{
+      type: String
+    }
+  },
   setup() {
     return {};
   },

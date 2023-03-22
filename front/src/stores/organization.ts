@@ -107,10 +107,10 @@ export const useOrganizationStore = defineStore("organizationStore", {
 
 
 
-    async turnoverEvolution(organisationId:string) {
+    async turnoverEvolution(organisationId:string){
       try {
         const response = await Api.get(`organisations/turnover-chart/${organisationId}`);
-        return response;
+        return response.data;
       } catch (error) {
         throw error;
       }

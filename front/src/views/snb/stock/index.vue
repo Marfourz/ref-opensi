@@ -78,7 +78,7 @@ export default defineComponent({
 
     const approDate = computed(() => {
       return {
-        title: `${generalInfos.value && generalInfos.value.lastStock ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
+        title: `${generalInfos.value && generalInfos.value.lastStock.createdAt ? helpers.formatDate(generalInfos.value.lastStock.createdAt) : "Aucun"}`,
         subtitle: "Date du dernier appro",
 
         icon: "calend",
