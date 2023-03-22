@@ -231,10 +231,11 @@ export class OrderService {
             message += element + ', ';
           }
           message += 'insuffisant';
-          return {
+          /*return {
             statusCode: HttpStatus.NOT_ACCEPTABLE,
             message,
-          };
+          };*/
+          throw new HttpException(message, HttpStatus.NOT_ACCEPTABLE);
         } else {
           await this.updateSingleOrder(id, {
             acceptedAt: dayjs().format('YYYY-MM-DD'),
