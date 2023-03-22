@@ -1,19 +1,19 @@
 <template>
   <div class="">
-    <div clawwwss="flex justify-between">
-      <router-link
+    <div class="flex justify-between">
+      <div><router-link
         :to="{ name: 'livreursDetails' }"
         path="livreurs/details/:id"
       >
         <BaseGoBack> </BaseGoBack>
-      </router-link>
-      <BaseButton
+      </router-link></div>
+      <div><BaseButton
         size="small"
         @click="toggleState"
         :bg-color="stateTitle === 'Désactiver' ? 'danger' : 'primary'"
       >
         {{ stateTitle }}
-      </BaseButton>
+      </BaseButton></div>
     </div>
     <div class="mt-5 space-x-4 flex">
       <span class="font-semibold text-xl">{{ user?.id }}</span>
