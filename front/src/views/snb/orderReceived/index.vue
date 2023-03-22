@@ -297,7 +297,7 @@ export default defineComponent({
       },
       {
         title: "Accepter",
-        icon: "edit",
+        icon: "yes",
         action: acceptOrder,
       },
     ];
@@ -310,7 +310,7 @@ export default defineComponent({
           {
             title: "Accepter",
             classIcon: "text-tableColor",
-            icon: "edit",
+            icon: "yes",
             action: acceptOrder,
           },
           {

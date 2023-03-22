@@ -236,7 +236,7 @@ export default defineComponent({
       }
       actions.push({
         title: "Activer",
-        icon: "cancel",
+        icon: "yes",
         action: toogleStatus,
       });
       return actions;
