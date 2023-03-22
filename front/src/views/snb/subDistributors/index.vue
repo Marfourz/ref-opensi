@@ -146,7 +146,6 @@ import { computed, defineComponent, reactive, ref } from "vue";
 import { useOrganizationStore } from "@/stores/organization";
 import { Form } from "vee-validate";
 import { IAction, IOrganisation } from "@/types/interfaces";
-import VPanel from "@/components/VPanel.vue";
 import { useUsersStore } from "../../../stores/users";
 import {
   OrganisationType,
@@ -155,9 +154,8 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-import BaseActions from "@/components/base/BaseActions.vue";
 export default defineComponent({
-  components: { Form, VPanel, BaseActions},
+  components: { Form},
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
