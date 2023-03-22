@@ -146,7 +146,6 @@ import { computed, defineComponent, reactive, ref } from "vue";
 import { useOrganizationStore } from "@/stores/organization";
 import { Form } from "vee-validate";
 import { IAction, IOrganisation } from "@/types/interfaces";
-import VPanel from "@/components/VPanel.vue";
 import { useUsersStore } from "../../../stores/users";
 import {
   OrganisationType,
@@ -155,9 +154,8 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-
 export default defineComponent({
-  components: { Form, VPanel },
+  components: { Form},
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -219,12 +217,12 @@ export default defineComponent({
       const actions = [
         {
           title: "Voir détail",
-          icon: "eye",
+          icon: "eyefine",
           action: details,
         },
         {
           title: "Modifier",
-          icon: "edit",
+          icon: "editfine",
           action: onUpdate,
         },
       ];
@@ -333,9 +331,7 @@ export default defineComponent({
       if (element.status === "inactive") return (element.status = "active");
     }
 
-    // const toogleStatus = computed (() => {
-
-    // })
+    
 
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
