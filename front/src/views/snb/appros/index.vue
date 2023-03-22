@@ -1,33 +1,50 @@
 <template>
   <div class="">
-
-    <BaseModal :title="modal.title" :show="modal.show" @close="modal.show = false">
+    <BaseModal
+      :title="modal.title"
+      :show="modal.show"
+      @close="modal.show = false"
+    >
       <template #modal>
-        <div class="flex flex-col space-y-6 items-center py-4" v-if="modal.type == 'delete'">
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.type == 'delete'"
+        >
           <BaseIcon name="warning"></BaseIcon>
-          <div class="text-center font-semibold text-2xl" v-html="modal.title"></div>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
           <div class="flex items-center space-x-2 w-full">
-            <BaseButton bgColor="danger" :outline="true" class="w-1/2" @click="modal.show = false">
+            <BaseButton
+              bgColor="danger"
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
               Annuler
             </BaseButton>
-            <BaseButton bgColor="danger" :loading="loading" class="w-1/2 bg-danger" @click="confirmResetOrder">
+            <BaseButton
+              bgColor="danger"
+              :loading="loading"
+              class="w-1/2 bg-danger"
+              @click="confirmResetOrder"
+            >
               Supprimer
             </BaseButton>
           </div>
         </div>
       </template>
-
-
-
     </BaseModal>
-
 
     <PageInTwoPart>
       <template #firstPart>
-        <div class="space-y-8 ">
+        <div class="space-y-8">
           <div class="flex space-x-6 items-center">
             <BaseTitle title="Mes appros"></BaseTitle>
-            <BaseButton icon="plus" size="small" @click="goToCreateAppros">Nouvel appro</BaseButton>
+            <BaseButton icon="plus" size="small" @click="goToCreateAppros"
+              >Nouvel appro</BaseButton
+            >
           </div>
           <div class="relative">
             <BaseTableWithFilter
@@ -38,7 +55,10 @@
               @itemClick="showItemOrder"
             >
               <template #status="{ element }">
-                <BaseTableStatut :title="getStatutLabel(element)" :type="getStatutType(element)"></BaseTableStatut>
+                <BaseTableStatut
+                  :title="getStatutLabel(element)"
+                  :type="getStatutType(element)"
+                ></BaseTableStatut>
               </template>
 
               <template #totalAmount="{ element }">
@@ -58,7 +78,9 @@
               <BaseIcon name="simpleArrowBottom"></BaseIcon>
             </div> -->
 
-                  <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+                  <BaseButton icon="upload" size="small"
+                    >Télécharger</BaseButton
+                  >
                 </div>
               </template>
             </BaseTableWithFilter>
@@ -68,35 +90,62 @@
       <template #secondPart>
         <Order :order="order" v-if="order" :key="reload">
           <template #title>
-
             <div class="space-y-4">
               <div class="flex space-x-2 items-center">
-              <div class="font-bold text-lg">Appro {{ order.reference }}</div>
-              <BaseTableStatut :title="getStatutLabel(order)" :type="getStatutType(order)"></BaseTableStatut>
-            </div>
-
-          
-              <div class="font-bold text-sm flex justify-between border-success border-2 py-2.5 px-2 bg-[#E9F9EF] rounded" v-if=" order.deliveryMan && order.deliveryCode">
-                <div>Code de livraison : {{ order.deliveryCode }}</div>
-                <BaseIcon name="interrogation"/>
-                
+                <div class="font-bold text-lg">Appro {{ order.reference }}</div>
+                <BaseTableStatut
+                  :title="getStatutLabel(order)"
+                  :type="getStatutType(order)"
+                ></BaseTableStatut>
               </div>
 
-              <div class="bg-[#FFEEED] flex  px-4 justify-center py-2 text-sm rounded" v-if="order.deliveryMan || order.deliveryDate">
+
+              
+                <div
+                  class="font-bold text-sm flex justify-between border-success border-2 py-2.5 px-2 bg-[#E9F9EF] rounded relative"
+                  v-if="order.deliveryMan && order.deliveryCode"
+                >
+                  <div>Code de livraison : {{ order.deliveryCode }}</div>
+                  <BaseIcon name="interrogation" @click="show = !show"/>
+                  <Transition class="absolute top-full left-[18%]">
+                  <div
+                    class="bg-white border rounded-lg absolute p-4 gap-3 font-medium text-base w-[75%] " v-if="show"
+                  >
+                    Le code de livraison doit être communiqué au livreur. Il
+                    sert à confirmer la livraison de votre commande.
+                  </div>
+                  </Transition>
+                </div>
+
+              <div
+                class="bg-[#FFEEED] flex px-4 justify-center py-2 text-sm rounded"
+                v-if="order.deliveryMan || order.deliveryDate"
+              >
                 <div class="space-y-1">
                   <div class="semi-bold">Livraison</div>
                   <div class="flex items-center w-full">
-                    <div class="flex items-center space-x-1.5" >
-                      <BaseIcon name="date" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                    <div class="flex items-center space-x-1.5">
+                      <BaseIcon
+                        name="date"
+                        class="w-4 h-4 text-[#6B7A99]"
+                      ></BaseIcon>
                       <span>Date</span>
-                      <span class="font-bold">{{!order.deliveryDate ? "Non défini" : helpers.formatDateReduce(order.deliveryDate) }}</span>
+                      <span class="font-bold">{{
+                        !order.deliveryDate
+                          ? "Non défini"
+                          : helpers.formatDateReduce(order.deliveryDate)
+                      }}</span>
                     </div>
                     <div class="h-6 bg-[#D9D9D9] w-[1px] mx-1"></div>
-                    <div class="flex items-center space-x-1.5" >
-                      <BaseIcon name="user" class="w-4 h-4 text-[#6B7A99]"></BaseIcon>
+                    <div class="flex items-center space-x-1.5">
+                      <BaseIcon
+                        name="user"
+                        class="w-4 h-4 text-[#6B7A99]"
+                      ></BaseIcon>
                       <span>Livreur : </span>
-                      <span class="text-[#0050CF] font-semibold underline cursor-pointer"
-                        >{{order.deliveryMan.name}}</span
+                      <span
+                        class="text-[#0050CF] font-semibold underline cursor-pointer"
+                        >{{ order.deliveryMan.name }}</span
                       >
                     </div>
                     <div></div>
@@ -104,8 +153,6 @@
                 </div>
               </div>
             </div>
-
-            
           </template>
         </Order>
 
@@ -161,10 +208,11 @@ export default defineComponent({
         name: "action",
       },
     ];
+const show = ref(false);
 
     const order = ref();
 
-    const loading = ref(false)
+    const loading = ref(false);
 
     const orderStore = useOrdersStore();
     const userStore = useUsersStore();
@@ -199,103 +247,92 @@ export default defineComponent({
 
     const toast = useToast();
 
-    async function showItemOrder(element : any){
-        try{
-          const response = await orderStore.fetchOne(element.id)
-          order.value = response
-        }
-        catch(error){
-          toast.error("Suppression impossible")
-        }
-        
+    async function showItemOrder(element: any) {
+      try {
+        const response = await orderStore.fetchOne(element.id);
+        order.value = response;
+      } catch (error) {
+        toast.error("Suppression impossible");
+      }
     }
 
     const modal = reactive({
       title: "",
       type: "create" as "create" | "delete" | "update",
-      show: false
-
+      show: false,
     });
 
+    function filterActions(element: IOrder) {
+      let elements = [];
 
-   
-    function filterActions(element : IOrder){
-      let elements = []
-
-      if(element.status == OrderStatus.NEW)
-        elements =   [
-      {
-          title: "Modifier",
-          iconClass:"text-tableColor",
-          icon: "edit",
-          action: showItemOrder,
-        },
-        {
-          title: "Dupliquer",
-          classIcon:"text-tableColor",
-          icon: "duplicate",
-          action: duplicateOrder,
-        },
-        {
-          title: "Annuler",
-          iconClass:"text-[#E03A15] w-3 h-3",
-          titleClass: "text-[#E03A15] ",
-          icon: "close",
-          action: resetOrder,
-        },
-     
-    ]
-
-    else 
+      if (element.status == OrderStatus.NEW)
         elements = [
-        {
-          title: "Dupliquer",
-          classIcon:"text-tableColor",
-          icon: "duplicate",
-          action: duplicateOrder,
-        },
-        ]
-      return  elements
+          {
+            title: "Modifier",
+            iconClass: "text-tableColor",
+            icon: "edit",
+            action: showItemOrder,
+          },
+          {
+            title: "Dupliquer",
+            classIcon: "text-tableColor",
+            icon: "duplicate",
+            action: duplicateOrder,
+          },
+          {
+            title: "Annuler",
+            iconClass: "text-[#E03A15] w-3 h-3",
+            titleClass: "text-[#E03A15] ",
+            icon: "close",
+            action: resetOrder,
+          },
+        ];
+      else
+        elements = [
+          {
+            title: "Dupliquer",
+            classIcon: "text-tableColor",
+            icon: "duplicate",
+            action: duplicateOrder,
+          },
+        ];
+      return elements;
     }
 
-    const reload = ref(0)
+    const reload = ref(0);
 
-    const selectedOrder = ref<IOrder | null>(null)
+    const selectedOrder = ref<IOrder | null>(null);
 
     function resetOrder(value: IOrder) {
       modal.title = `Êtes-vous sûr de vouloir <br> annuler cette commande  ?`;
       modal.show = true;
       modal.type = "delete";
-      selectedOrder.value = value
-      reload.value = reload.value + 1
+      selectedOrder.value = value;
+      reload.value = reload.value + 1;
     }
 
     async function confirmResetOrder() {
-
-      loading.value = true
+      loading.value = true;
       try {
-        const response = await orderStore.delete(selectedOrder.value?.id as string)
-        loading.value = false
-      }
-      catch (error) {
-        loading.value = false
-        modal.show = false
-        toast.error("Suppression impossible")
+        const response = await orderStore.delete(
+          selectedOrder.value?.id as string
+        );
+        loading.value = false;
+      } catch (error) {
+        loading.value = false;
+        modal.show = false;
+        toast.error("Suppression impossible");
       }
     }
 
-
-    const basketStore = useBasketStore()
+    const basketStore = useBasketStore();
 
     async function duplicateOrder(value: IOrder) {
-      console.log("duplicate",);
-      const order = await orderStore.fetchOne(value.id)
-      basketStore.createBasketWithOrder(order)
-      router.push({ name: 'approsCreate' })
+      console.log("duplicate");
+      const order = await orderStore.fetchOne(value.id);
+      basketStore.createBasketWithOrder(order);
+      router.push({ name: "approsCreate" });
     }
-
-
-   
 
     return {
       titles,
@@ -312,7 +349,8 @@ export default defineComponent({
       loading,
       confirmResetOrder,
       reload,
-      showItemOrder
+      showItemOrder,
+      show,
     };
   },
 });

@@ -88,12 +88,7 @@
               </template>
               <template #filter>
                 <div class="flex space-x-4 h-full">
-                  <!-- <div
-              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-            >
-              <div>Filtré par</div>
-              <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div> -->
+                
 
                   <BaseButton icon="upload" size="small"
                     >Télécharger</BaseButton
@@ -400,16 +395,7 @@ export default defineComponent({
        
       }
     }
-    // const infoHistoryOrder = ref();
-
-    // async function getHistoryOrder(id: any) {
-    //   try {
-    //     const response = await orderStore.historyOrder(id);
-    //     infoHistoryOrder.value = response;
-    //   } catch (error) {
-    //     toast.error("T");
-    //   }
-    // }
+ 
   
 
     const reload = ref(1);
@@ -466,10 +452,7 @@ export default defineComponent({
       
     }
 
-    // onMounted(async () => {
-    //   const response = await orderStore.historyOrder("");
-    //   infoHistoryOrder.value = response;
-    // });
+   
     return {
       titles,
       goToCreateAppros,
