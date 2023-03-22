@@ -54,6 +54,7 @@
 <script lang="ts">
 import { Form } from "vee-validate";
 import { defineComponent, reactive, computed, ref, PropType } from "vue";
+import { useToast } from "vue-toastification";
 import BaseAutoComplete from "../../../../components/base/BaseAutoComplete.vue";
 import { useOrdersStore } from "../../../../stores/orders";
 import { useOrganizationStore } from "../../../../stores/organization";
@@ -111,6 +112,8 @@ export default defineComponent({
 
     const ordersStore = useOrdersStore();
 
+    const toast = useToast()
+
     const loading = ref(false);
     async function onSubmit() {
       loading.value = true;
@@ -125,8 +128,11 @@ export default defineComponent({
         });
         context.emit("submitSuccess");
         loading.value = false;
-      } catch (error) {
+      } catch (error:any) {
         loading.value = false;
+        context.emit("close");
+        toast.error(error.response.data.message)
+        
       }
     }
 

@@ -20,6 +20,7 @@
         :orderId="selectedOrderId"
         :justAssign="justAssign"
         @submitSuccess="orderAcceptSuccessful"
+        @close="show = false"
         @reset="show = false"
       ></FormAssignDeliveryPerson>
     </BaseModal>
