@@ -2,7 +2,7 @@
   <div class="py-8 px-6">
     <div class="flex justify-between items-center mb-8">
       <div class="text-2xl font-semibold">Historique</div>
-      <BaseIcon name="close" class="w-5 h-5 cursor-pointer"></BaseIcon>
+      <BaseIcon name="close" class="w-5 h-5 cursor-pointer" @click="$emit()"></BaseIcon>
     </div>
     <div class="flex mt-8">
       <div class="font-semibold text-base">Commande</div>

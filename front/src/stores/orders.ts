@@ -83,5 +83,17 @@ export const useOrdersStore = defineStore("ordersStore", {
         throw error;
       }
     },
+
+
+    async generateInvoice(id: PrimaryKey) {
+      try {
+        const response = await Api.get(
+          `documents/generate-invoice/${id}`
+        );
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
 });
