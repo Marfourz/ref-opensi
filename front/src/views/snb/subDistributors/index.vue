@@ -45,7 +45,6 @@
         </template>
 
         <template #action="{ element }">
-          
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
         <template #wallet="{ element }">
@@ -90,7 +89,7 @@
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
-                rules="numeric|required"
+                rules="required|numeric"
                 v-model="master.phone"
               ></BaseInput>
               <BaseInput
@@ -125,7 +124,6 @@
               >
                 <BaseSelectedCard
                   :selected="master.paymentDeadline == method.value"
-                  
                 >
                   <BaseIcon :name="method.icon"></BaseIcon>
                 </BaseSelectedCard>
@@ -157,32 +155,33 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-import BaseActions from "../../../components/base/BaseActions.vue";
 
 export default defineComponent({
-  components: { Form, VPanel,BaseActions },
+  components: { Form, VPanel },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
 
-      if (organisationType.value == OrganisationType.MD || organisationType.value == OrganisationType.SNB){
-        master.type = OrganisationType.DA
+      if (
+        organisationType.value == OrganisationType.MD ||
+        organisationType.value == OrganisationType.SNB
+      ) {
+        master.type = OrganisationType.DA;
         items.unshift({
           name: "Distributeurs agréés",
           value: OrganisationType.DA,
         });
       }
-       
-      if (organisationType.value == OrganisationType.SNB){
-        master.type = OrganisationType.MD
+
+      if (organisationType.value == OrganisationType.SNB) {
+        master.type = OrganisationType.MD;
         items.unshift({
           name: "Masters distributeurs",
           value: OrganisationType.MD,
         });
       }
-       
 
-      return items
+      return items;
     });
 
     const paymentMethods = ref([
@@ -232,15 +231,15 @@ export default defineComponent({
       if (el.status === "active") {
         actions.push({
           title: "Désactiver",
-          icon: "removeRedd",
-          action: onDelete,
+          icon: "cancel",
+          action: toogleStatus,
         });
         return actions;
       }
       actions.push({
         title: "Activer",
-        icon: "removeRedd",
-        action: onDelete,
+        icon: "cancel",
+        action: toogleStatus,
       });
       return actions;
     };
@@ -327,6 +326,16 @@ export default defineComponent({
         },
       });
     }
+
+    function toogleStatus(element: IOrganisation) {
+      if (element.status === "active") return (element.status = "inactive");
+
+      if (element.status === "inactive") return (element.status = "active");
+    }
+
+    // const toogleStatus = computed (() => {
+
+    // })
 
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
@@ -417,14 +426,14 @@ export default defineComponent({
             master
           );
           modal.title = `Organisation modifié avec succès`;
-          toast.success("Partenaire modifié avec succès")
+          toast.success("Partenaire modifié avec succès");
         } else {
           const response = await organizationStore.create({
             ...master,
             parentOrganisationId: organisationId.value,
           });
           modal.title = `Organisation crée avec succès`;
-          toast.success("Partenaire crée avec succès")
+          toast.success("Partenaire crée avec succès");
         }
         modal.show = true;
         modal.subtitle = "";
@@ -432,7 +441,6 @@ export default defineComponent({
         showModal.value = false;
         loading.value = false;
         reload.value = !reload.value;
-        
       } catch (error: any) {
         loading.value = false;
         toast.error(error.response.data.message);
@@ -481,6 +489,7 @@ export default defineComponent({
       organisationId,
       customActions,
       showNewSubDistributor,
+      toogleStatus,
     };
   },
 });
