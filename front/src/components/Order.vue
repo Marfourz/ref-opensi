@@ -46,22 +46,7 @@
       <div>{{ order.totalAmount }} F</div>
     </div>
   
-    <!-- <BaseRightModal :show="true">
-      <div class="py-8 px-6">
-        <div class="flex justify-between items-center mb-8">
-          <div class="text-2xl font-semibold">Historique</div>
-          <div class="cursor-pointer"><BaseIcon name="close" class="w-5 h-5"  @click="showModal = false"></BaseIcon></div>
-        </div>
-        <div class="flex mt-8">
-          <div class=" font-semibold text-base">
-            Commande 
-          </div> 
-           {{ order.reference }} 
-           <BaseTableStatut :title="order.status" class="ml-2"></BaseTableStatut> 
-         </div> 
-          <div class="mt-4"><history-tracking :type="validated" :date="order.updatedAt"></history-tracking></div> 
-       </div> 
-     </BaseRightModal>  -->
+   
   </div>
 </template>
 
