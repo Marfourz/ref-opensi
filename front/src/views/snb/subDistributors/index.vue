@@ -155,9 +155,10 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
+import BaseActions from "../../../components/base/BaseActions.vue";
 
 export default defineComponent({
-  components: { Form, VPanel },
+  components: { Form, VPanel,BaseActions },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
