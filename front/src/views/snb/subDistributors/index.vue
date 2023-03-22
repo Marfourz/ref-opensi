@@ -155,9 +155,9 @@ import {
 import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
-
+import BaseActions from "@/components/base/BaseActions.vue";
 export default defineComponent({
-  components: { Form, VPanel },
+  components: { Form, VPanel, BaseActions},
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -219,12 +219,12 @@ export default defineComponent({
       const actions = [
         {
           title: "Voir détail",
-          icon: "eye",
+          icon: "eyefine",
           action: details,
         },
         {
           title: "Modifier",
-          icon: "edit",
+          icon: "editfine",
           action: onUpdate,
         },
       ];
@@ -333,9 +333,7 @@ export default defineComponent({
       if (element.status === "inactive") return (element.status = "active");
     }
 
-    // const toogleStatus = computed (() => {
-
-    // })
+    
 
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
