@@ -109,14 +109,24 @@ export default defineComponent({
           quantity: item.quantity,
         };
       });
-      const response = await ordersStore.create({
+
+      try{
+        const response = await ordersStore.create({
         organisationId: organisationId.value,
         items: orders,
         transactionId : transactionId
       });
+
       router.push({ name: "appros" });
         toast.success("Commande effectuée avec succès");
         basketStore.clearBasket();
+      }
+      catch(error:any){
+        toast.error(error.response.data.message)
+      }
+
+      
+     
       }
 
 
