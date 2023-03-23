@@ -314,8 +314,22 @@ export class OrganisationService {
     }
   }
 
-  async getOrganisationDashboardInfos(orgId: string): Promise<any> {
+  async getOrganisationDashboardInfos(
+    orgId: string,
+    filterParams: any,
+  ): Promise<any> {
     //get organisation
+    let dateRange: any = {};
+
+    if (filterParams.startDate && filterParams.endDate) {
+      dateRange = {
+        createdAt: {
+          gte: new Date(filterParams.startDate).toISOString(),
+          lte: new Date(filterParams.endDate).toISOString(),
+        },
+      };
+    }
+
     const organisation = await this.prisma.organisation.findUnique({
       where: { id: orgId },
       include: {
@@ -323,10 +337,11 @@ export class OrganisationService {
       },
     });
 
-    //get orders of organisation
+    //get orders of organisation for deduct turnover
     const orders = await this.prisma.order.count({
       where: {
         organisationId: orgId,
+        ...dateRange,
       },
     });
 
@@ -335,6 +350,7 @@ export class OrganisationService {
       where: {
         parentOrganisationId: orgId,
         status: OrderStatusEnum.delivered,
+        //...dateRange,
       },
       _sum: {
         totalAmount: true,
@@ -392,6 +408,7 @@ export class OrganisationService {
     const stocks: any = await this.prisma.stock.findMany({
       where: {
         organisationId: orgId,
+        ...dateRange,
       },
       include: {
         product: true,
@@ -458,10 +475,24 @@ export class OrganisationService {
     return { id, name, images, totalBulk, turnover };
   }
 
-  async getTopPartners(type: NonSnbOrganisations): Promise<Organisation[]> {
+  async getTopPartners(
+    type: NonSnbOrganisations,
+    filterParams: any,
+  ): Promise<Organisation[]> {
+    let dateRange: any = {};
+    if (filterParams.startDate && filterParams.endDate) {
+      dateRange = {
+        createdAt: {
+          gte: new Date(filterParams.startDate).toISOString(),
+          lte: new Date(filterParams.endDate).toISOString(),
+        },
+      };
+    }
+
     const organisations = await this.prisma.organisation.findMany({
       where: {
         type: type,
+        ...dateRange,
       },
       include: {
         wallet: true,

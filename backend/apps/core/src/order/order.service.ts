@@ -80,7 +80,11 @@ export class OrderService {
       };
       //if organisation is SNB add delivery date to OrderPayload
       organisation.type === OrganisationTypeEnum.snb &&
-        (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD'));
+        (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD HH:mm:ss'));
+      console.log(
+        'TIMESTAMP DELIVERY DATE : ',
+        dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      );
       const newOrder = await this.prisma.order.create({
         data: orderPayload as unknown as Prisma.OrderCreateInput,
       });
@@ -98,7 +102,6 @@ export class OrderService {
           quantity: item.quantity,
         });
       });
-
       // get total amount of order and update the order
       for (let i = 0; i < itemsOrders.length; i++) {
         const item = itemsOrders[i];
@@ -238,7 +241,7 @@ export class OrderService {
           throw new HttpException(message, HttpStatus.NOT_ACCEPTABLE);
         } else {
           await this.updateSingleOrder(id, {
-            acceptedAt: dayjs().format('YYYY-MM-DD'),
+            acceptedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           });
         }
       }
@@ -269,7 +272,7 @@ export class OrderService {
 
       if (update.status == OrderStatusEnum.inProgress) {
         await this.updateSingleOrder(id, {
-          deliveryStartedAt: dayjs().format('YYYY-MM-DD'),
+          deliveryStartedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         });
       }
 
@@ -383,6 +386,9 @@ export class OrderService {
         where: {
           ...w,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const count = await this.prisma.order.count({
@@ -453,6 +459,9 @@ export class OrderService {
         const orders = await this.prisma.order.findMany({
           where: {
             ...w,
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         });
 
@@ -539,6 +548,9 @@ export class OrderService {
         where: {
           ...w,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const count = await this.prisma.order.count({
@@ -615,8 +627,8 @@ export class OrderService {
         }
         await this.updateSingleOrder(orderId, {
           status: OrderStatusEnum.delivered,
-          deliveredAt: dayjs().format('YYYY-MM-DD'),
-          //deliveryDate: dayjs().format('YYYY-MM-DD'),
+          deliveredAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          //deliveryDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         });
       }
 
