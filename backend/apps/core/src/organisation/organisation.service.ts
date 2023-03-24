@@ -314,6 +314,66 @@ export class OrganisationService {
     }
   }
 
+  async getOrganisationTurnover(orgId: string) {
+    const additionalConstraints: any = {};
+
+    const organisation = await this.prisma.organisation.findUnique({
+      where: {
+        id: orgId,
+      },
+    });
+
+    if (organisation.type == OrganisationTypeEnum.snb) {
+      additionalConstraints.organisationId = orgId;
+    }
+
+    //get orders of organisation
+    const turnover = await this.prisma.order.aggregate({
+      where: {
+        parentOrganisationId: orgId,
+        status: OrderStatusEnum.delivered,
+        ...additionalConstraints,
+        //...dateRange,
+      },
+      _sum: {
+        totalAmount: true,
+      },
+    });
+
+    return turnover._sum.totalAmount;
+  }
+
+  async getOrganisationRanking(orgId: string, type: OrganisationTypeEnum) {
+    const sistersOrganisation: any = await this.prisma.organisation.findMany({
+      where: {
+        type,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const organisationTurnover = await this.getOrganisationTurnover(orgId);
+
+    const countOrganisations = sistersOrganisation.length;
+
+    for (let i = 0; i < sistersOrganisation.length; i++) {
+      const element = sistersOrganisation[i];
+      element.turnover = await this.getOrganisationTurnover(element.id);
+    }
+
+    let rank = countOrganisations;
+
+    for (let i = 0; i < sistersOrganisation.length; i++) {
+      const element = sistersOrganisation[i];
+      if (element.turnover < organisationTurnover) {
+        rank--;
+      }
+    }
+
+    return { type, total: countOrganisations, rank };
+  }
+
   async getOrganisationDashboardInfos(
     orgId: string,
     filterParams: any,
@@ -346,16 +406,10 @@ export class OrganisationService {
     });
 
     //get orders of organisation
-    const turnover = await this.prisma.order.aggregate({
-      where: {
-        parentOrganisationId: orgId,
-        status: OrderStatusEnum.delivered,
-        //...dateRange,
-      },
-      _sum: {
-        totalAmount: true,
-      },
-    });
+    const turnover = await this.getOrganisationTurnover(orgId);
+
+    //get organisation ranking
+    const ranking = await this.getOrganisationRanking(orgId, organisation.type);
 
     //get all organisation by type
     const MDs = await this.prisma.organisation.count({
@@ -377,6 +431,10 @@ export class OrganisationService {
     });
 
     //get partners according to organisation type
+    // MDs : count of all "master distributeurs"
+    // DAs : count of all "distributeurs agrées"
+    // DPs : count of all "dépots"
+
     let partners = 0;
 
     switch (organisation.type) {
@@ -395,14 +453,6 @@ export class OrganisationService {
       default:
         break;
     }
-
-    //const pIds = await this.getAllProductsIds();
-
-    /*const productsInfos = await Promise.all(
-      pIds.map(async (id: string) => {
-        return await this.getProdInfos(id);
-      }),
-    );*/
 
     //get stock of the organisation
     const stocks: any = await this.prisma.stock.findMany({
@@ -423,7 +473,14 @@ export class OrganisationService {
         (element.originalQuantity - element.currentQuantity);
     });
 
-    return { organisation, turnover, orders, partners, productsInfos: stocks };
+    return {
+      organisation,
+      turnover,
+      orders,
+      partners,
+      ranking,
+      productsInfos: stocks,
+    };
   }
 
   async getAllProductsIds(): Promise<any> {
