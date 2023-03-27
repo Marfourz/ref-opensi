@@ -262,16 +262,16 @@ const numberOfPartners = computed(() => {
   };
 });
 
-const ranking = computed(() => {
-  return {
-    title: `${selectedMaster.value} `,
-    subtitle: "Nombre de partenaires",
+// const ranking = computed(() => {
+//   return {
+//     title: `${selectedMaster.value.ranking.rank} `,
+//     subtitle: "Classement",
 
-    icon: "star",
-    primaryColor: "#0060CF",
-    secondaryColor: "#E6EAF6",
-  };
-});
+//     icon: "star",
+//     primaryColor: "#0060CF",
+//     secondaryColor: "#E6EAF6",
+//   };
+// });
 
 function formatPrice(element: any) {
   if (element.wallet) return `${element.wallet.turnover} FCFA`;
