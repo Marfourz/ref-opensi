@@ -7,12 +7,7 @@ import {
   PaymentMethodEnum,
 } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
-import {
-  assignOrderDto,
-  orderDto,
-  updateOrderDto,
-  periodOrderDto,
-} from './order.dto';
+import { orderDto, updateOrderDto } from './order.dto';
 import { PagiationPayload } from 'types';
 import {
   generateRandomString,
@@ -34,13 +29,13 @@ import { InvoiceService } from '../invoice/invoice.service';
 import { invoiceDto } from '../invoice/invoice.dto';
 import { transactionDto } from '../transaction/transaction.dto';
 import { OrganisationTypeEnum, Order } from '@prisma/client';
+import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
 
 @Injectable()
 export class OrderService {
   constructor(
     private prisma: PrismaService,
     private itemOrderService: ItemOrderService,
-    private productService: ProductsService,
     private wsService: WsNotificationGateway,
     private notifService: NotificationService,
     private transactionService: TransactionService,
@@ -80,7 +75,11 @@ export class OrderService {
       };
       //if organisation is SNB add delivery date to OrderPayload
       organisation.type === OrganisationTypeEnum.snb &&
-        (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD'));
+        (orderPayload.deliveryDate = dayjs().format('YYYY-MM-DD HH:mm:ss'));
+      console.log(
+        'TIMESTAMP DELIVERY DATE : ',
+        dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      );
       const newOrder = await this.prisma.order.create({
         data: orderPayload as unknown as Prisma.OrderCreateInput,
       });
@@ -98,7 +97,6 @@ export class OrderService {
           quantity: item.quantity,
         });
       });
-
       // get total amount of order and update the order
       for (let i = 0; i < itemsOrders.length; i++) {
         const item = itemsOrders[i];
@@ -173,7 +171,7 @@ export class OrderService {
           transaction: true,
           items: { include: { product: true } },
           invoice: true,
-          organisation: true
+          organisation: true,
         },
       });
       if (order.deliveryMan) {
@@ -237,8 +235,45 @@ export class OrderService {
           };*/
           throw new HttpException(message, HttpStatus.NOT_ACCEPTABLE);
         } else {
-          await this.updateSingleOrder(id, {
-            acceptedAt: dayjs().format('YYYY-MM-DD'),
+          const aOrder = await this.prisma.order.update({
+            where: {
+              id,
+            },
+            data: {
+              acceptedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            },
+          });
+
+          const organisation = await this.prisma.organisation.findUnique({
+            where: {
+              id: aOrder.organisationId,
+            },
+            select: {
+              phone: true,
+              ownerName: true,
+              email: true,
+            },
+          });
+
+          //send sms notifications
+          const smsNotificationBody: smsDto = {
+            to: organisation.phone,
+            body:
+              'Bonjour Mr ' +
+              organisation.ownerName +
+              ". Une commande que vous avez initialisée vient d'être acceptée. Rdv sur la plateforme SNB pour plus de détails.",
+            sender: 'SNB',
+          };
+          await this.notifService.sendSms(smsNotificationBody);
+
+          console.log('Organisation Email: ', organisation.email);
+
+          //send email notification
+          this.notifService.sendEmail({
+            email: organisation.email,
+            object: 'Commande  #' + aOrder.reference + ' acceptée.',
+            body: NOTIFICATION_MESSAGES.acceptedOrderMail(organisation, aOrder),
+            sender: 'SNB',
           });
         }
       }
@@ -269,7 +304,7 @@ export class OrderService {
 
       if (update.status == OrderStatusEnum.inProgress) {
         await this.updateSingleOrder(id, {
-          deliveryStartedAt: dayjs().format('YYYY-MM-DD'),
+          deliveryStartedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         });
       }
 
@@ -383,6 +418,9 @@ export class OrderService {
         where: {
           ...w,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const count = await this.prisma.order.count({
@@ -453,6 +491,9 @@ export class OrderService {
         const orders = await this.prisma.order.findMany({
           where: {
             ...w,
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         });
 
@@ -539,6 +580,9 @@ export class OrderService {
         where: {
           ...w,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
 
       const count = await this.prisma.order.count({
@@ -615,8 +659,8 @@ export class OrderService {
         }
         await this.updateSingleOrder(orderId, {
           status: OrderStatusEnum.delivered,
-          deliveredAt: dayjs().format('YYYY-MM-DD'),
-          //deliveryDate: dayjs().format('YYYY-MM-DD'),
+          deliveredAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          //deliveryDate: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         });
       }
 

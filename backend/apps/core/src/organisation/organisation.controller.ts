@@ -62,8 +62,13 @@ export class OrganisationController {
     description: 'Contain auth token',
   })
   @ApiQuery({ name: 'type', enum: NonSnbOrganisations, required: true })
-  getTopPartners(@Query('type') type: NonSnbOrganisations): any {
-    return this.organisationService.getTopPartners(type);
+  @ApiQuery({ name: 'startDate', type: String, required: false })
+  @ApiQuery({ name: 'endDate', type: String, required: false })
+  getTopPartners(
+    @Query('type') type: NonSnbOrganisations,
+    @Query() filterParams: any,
+  ): any {
+    return this.organisationService.getTopPartners(type, filterParams);
   }
 
   @Get('turnover-chart/:id')
@@ -112,15 +117,15 @@ export class OrganisationController {
     description: 'Contain auth token',
   })
   @ApiParam({ name: 'orgId' })
-  @ApiQuery({ name: 'lte', type: String, required: false })
-  @ApiQuery({ name: 'gte', type: String, required: false })
+  @ApiQuery({ name: 'startDate', type: String, required: false })
+  @ApiQuery({ name: 'endDate', type: String, required: false })
   getOrganisationDashboardInfos(
     @Param() params,
     @Query() filterParams: any,
   ): any {
     return this.organisationService.getOrganisationDashboardInfos(
       params.orgId,
-      //filterParams,
+      filterParams,
     );
   }
 

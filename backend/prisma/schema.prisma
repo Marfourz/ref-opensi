@@ -105,15 +105,15 @@ model Order {
 
   deliveryMan         String?
 
-  deliveredAt         String?
-
-  deliveryStartedAt   String?
-
   status              OrderStatusEnum
 
   invoice             Invoice?
 
   acceptedAt          String?
+
+  deliveryStartedAt   String?
+
+  deliveredAt         String?
 
   deliveryDate        String?
 
