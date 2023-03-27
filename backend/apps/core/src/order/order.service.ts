@@ -722,7 +722,7 @@ export class OrderService {
   }
 
   async getOrderHistory(id: string): Promise<any> {
-    const data: any = {};
+    const data: any = [];
     const order = await this.prisma.order.findUnique({
       where: { id },
       include: {
@@ -733,52 +733,57 @@ export class OrderService {
       },
     });
 
-    let parentOrganisation: any = { ownerName: 'SNB' };
+    let parentOrganisation: any = await this.prisma.organisation.findFirst({
+      where: {
+        type: OrganisationTypeEnum.snb,
+      },
+    });
 
     if (order.parentOrganisationId) {
       parentOrganisation = await this.prisma.organisation.findUnique({
         where: {
           id: order.parentOrganisationId,
         },
-        select: {
-          ownerName: true,
-        },
       });
     }
 
-    data['order_created'] = {
-      date: order.createdAt,
-      actor: order.organisation.ownerName,
-    };
+    data.push({
+      status: 'created',
+      label: 'Commande créée',
+      date: dayjs(order.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+      actor: order.organisation,
+    });
 
     if (order.acceptedAt) {
-      data['order_accepted'] = {
+      data.push({
+        status: 'accepted',
+        label: 'Commande acceptée',
         date: order.acceptedAt,
-        actor: parentOrganisation.ownerName,
-      };
+        actor: parentOrganisation,
+      });
     }
 
-    if (order.deliveryMan) {
+    if (order.deliveryMan && order.deliveredAt) {
       const deliveryMan = await this.prisma.user.findUnique({
         where: {
           id: order.deliveryMan,
         },
-        select: {
-          name: true,
-        },
       });
-      data['order_delivered'] = {
-        date: order.deliveredAt,
-        actor: deliveryMan.name,
-      };
 
-      /*if (order.deliveryStartedAt) {
-        data['order_inProgress'] = {
-          date: order.deliveryStartedAt,
-          actor: deliveryMan.name,
-        };
-      }*/
+      data.push({
+        status: 'delivered',
+        label: 'Commande livrée',
+        date: order.deliveredAt,
+        actor: deliveryMan,
+      });
     }
     return data;
   }
 }
+
+/*if (order.deliveryStartedAt) {
+  data['order_inProgress'] = {
+    date: order.deliveryStartedAt,
+    actor: deliveryMan.name,
+  };
+}*/

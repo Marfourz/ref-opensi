@@ -32,6 +32,8 @@ export class UserService {
     let token;
     const Dpassword = generateRandomString(15);
 
+    user.identifier = generateRandomString(7);
+
     const newUser = await this.prisma.user.create({
       data: user,
     });
@@ -51,7 +53,7 @@ export class UserService {
             token = Tdata.token;
             this.notifService.sendEmail({
               email: user.email,
-              object: 'Registration to SNB',
+              object: 'Inscription sur SNB',
               body: NOTIFICATION_MESSAGES.registrationMail({
                 name: user.name,
                 email: user.email,
@@ -146,6 +148,7 @@ export class UserService {
       const userNameConstraint: any = {};
       const userEmailConstraint: any = {};
       const userPhoneConstraint: any = {};
+      const userIdentifierConstraint: any = {};
       const w: any = {};
       w.organisationId = orgId;
       if (q != undefined && q != '') {
@@ -155,6 +158,11 @@ export class UserService {
         };
 
         userNameConstraint.name = {
+          contains: q,
+          mode: 'insensitive',
+        };
+
+        userIdentifierConstraint.identifier = {
           contains: q,
           mode: 'insensitive',
         };
@@ -174,6 +182,7 @@ export class UserService {
           userNameConstraint,
           userEmailConstraint,
           userPhoneConstraint,
+          userIdentifierConstraint,
         ];
       }
 
@@ -183,7 +192,7 @@ export class UserService {
       });
 
       const count = await this.prisma.user.count({
-        where: { organisationId: orgId },
+        where: { ...w },
       });
 
       return { data: users, count };

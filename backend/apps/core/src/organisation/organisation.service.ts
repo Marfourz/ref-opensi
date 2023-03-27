@@ -546,7 +546,25 @@ export class OrganisationService {
       };
     }
 
+    const sistersOrganisation: any = await this.prisma.organisation.findMany({
+      where: {
+        type,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    for (let i = 0; i < sistersOrganisation.length; i++) {
+      const element = sistersOrganisation[i];
+      element.turnover = await this.getOrganisationTurnover(element.id);
+      await this.walletService.updateSingleWallet(element.id, {
+        turnover: element.turnover,
+      });
+    }
+
     const organisations = await this.prisma.organisation.findMany({
+      take: 10,
       where: {
         type: type,
         ...dateRange,
