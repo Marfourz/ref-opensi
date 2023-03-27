@@ -15,10 +15,10 @@ export class updateWalletDto {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
-  organisationId: string;
+  organisationId?: string;
 
   @ApiProperty({ type: Number })
   @IsOptional()
   @IsNumber()
-  turnover: number;
+  turnover?: number;
 }
