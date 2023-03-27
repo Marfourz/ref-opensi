@@ -1,5 +1,6 @@
 export const user = {
   name: 'Adinistrateur SNB',
+  identifier: 'dg54g5df5',
   phone: '90020408',
   email: 'admin@admin.com',
   address: 'Cotonou - Bénin',
@@ -11,6 +12,7 @@ export const user = {
 
 export const deliveryMan = {
   name: 'Livreur FULBERTO SNB',
+  identifier: '7fchyu5ds5',
   phone: '62 45 56 85',
   email: 'delivery-snb@yopmail.com',
   address: 'Cotonou - Bénin',
