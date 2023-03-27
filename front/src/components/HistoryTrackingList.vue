@@ -13,28 +13,15 @@
       <BaseTableStatut
         :title="orderStatusLabel"
         :type="orderStatus"
-        ></BaseTableStatut
-      >
+      ></BaseTableStatut>
     </div>
     <div class="mt-4">
       <HistoryTracking
-        type="created"
-        :date="order_created.date"
-        v-if="order_created"
-      ></HistoryTracking>
-    </div>
-    <div class="mt-4">
-      <HistoryTracking
-        type="validated"
-        :date="order_accepted.date"
-        v-if="order_accepted"
-      ></HistoryTracking>
-    </div>
-    <div class="mt-4">
-      <HistoryTracking
-        type="submitted"
-        :date="order_delivered.date"
-        v-if="order_delivered"
+        v-for="history in infoHistoryOrder"
+        :type="history.status"
+        :key="history.actor.id"
+        :date="history.date"
+        :name="history.actor.ownerName"
       ></HistoryTracking>
     </div>
   </div>
@@ -46,15 +33,11 @@ import HistoryTracking from "@/components/HistoryTracking.vue";
 import { IOrderHistory } from "@/types/interfaces";
 import { useOrdersStore } from "@/stores/orders";
 import BaseTableStatut from "./base/BaseTableStatut.vue";
-``;
 
 export default defineComponent({
   components: { HistoryTracking, BaseTableStatut },
 
   props: {
-    order_created: Object as PropType<IOrderHistory>,
-    order_accepted: Object as PropType<IOrderHistory>,
-    order_delivered: Object as PropType<IOrderHistory>,
     orderId: { type: String, required: true },
     orderStatus: { type: String },
     orderStatusLabel: { type: String },
@@ -62,14 +45,14 @@ export default defineComponent({
 
   setup(props) {
     const orderStore = useOrdersStore();
-    const infoHistoryOrder = ref();
+    const infoHistoryOrder = ref<Array<IOrderHistory>>([]);
 
     onMounted(async () => {
       const response = await orderStore.historyOrder(props.orderId);
       infoHistoryOrder.value = response;
     });
 
-    return {};
+    return { infoHistoryOrder };
   },
 });
 </script>

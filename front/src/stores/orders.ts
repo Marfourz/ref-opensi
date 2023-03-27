@@ -60,7 +60,7 @@ export const useOrdersStore = defineStore("ordersStore", {
       //   return response;
       // })
       // .catch((error: AxiosError) => {
-      //  return error?.response ?? {};
+      //  return error?.response;
       // });
     },
 

@@ -135,7 +135,7 @@
 
               <div
                 class="bg-[#FFEEED] flex px-4 justify-center py-2 text-sm rounded"
-                v-if="order.deliveryMan || order.deliveryDate"
+                v-if="order.deliveryMan && order.deliveryDate"
               >
                 <div class="space-y-1">
                   <div class="semi-bold">Livraison</div>
