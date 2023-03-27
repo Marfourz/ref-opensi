@@ -302,7 +302,8 @@ export default defineComponent({
     ];
 
     function formatDate(element: IProduct) {
-      return helpers.formatDate(element.createdAt as Date);
+     
+        return helpers.formatDate(element.createdAt as any);
     }
 
     function getVolume(elememnt: IProduct) {

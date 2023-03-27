@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col  items-center space-y-4">
         
-        <img src="@/assets/images/emptyProduct.png" alt="">
+        <img src="@/assets/images/emptyState.png" alt="">
         <div class="font-semibold text-center " v-html="title"></div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
     props:{
@@ -23,14 +23,20 @@ export default defineComponent({
     },
     setup (props) {
 
-        //const imageUrl = ref(new URL("/assets/images/emptyProduct.png", import.meta.url).href)
-        
-        onMounted(()=>{
-            //imageUrl.value = new URL(props.image, import.meta.url).href
+        const imageUrl = ref("")
+
+
+        onMounted(async ()=>{
+
+            imageUrl.value = await import(props.image).then((module) => imageUrl.value = module.default);
         })
 
+    
+        //const imageUrl = ref(new URL("/assets/images/emptyProduct.png", import.meta.url).href)
+        
+     
         return {
-            //imageUrl
+            imageUrl
         }
     }
 })

@@ -33,6 +33,8 @@ import HistoryTracking from "@/components/HistoryTracking.vue";
 import { IOrderHistory } from "@/types/interfaces";
 import { useOrdersStore } from "@/stores/orders";
 import BaseTableStatut from "./base/BaseTableStatut.vue";
+import { OrderStatus } from "../types/enumerations";
+``;
 
 export default defineComponent({
   components: { HistoryTracking, BaseTableStatut },

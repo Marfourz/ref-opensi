@@ -111,6 +111,8 @@ export default defineComponent({
       });
 
       try{
+        
+        
         const response = await ordersStore.create({
         organisationId: organisationId.value,
         items: orders,
@@ -122,7 +124,10 @@ export default defineComponent({
         basketStore.clearBasket();
       }
       catch(error:any){
+        console.log("error.response",error.response.data);
+        
         toast.error(error.response.data.message)
+        router.push({ name: "appros" });
       }
 
       

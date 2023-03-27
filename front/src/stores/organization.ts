@@ -99,21 +99,22 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async statInfo() {
+
+    async statInfo(organisationId:string) {
       try {
-        const response = await Api.get(`organisations/snb/infos`);
+        const response = await Api.get(`organisations/snb/infos/${organisationId}`);
         return response;
       } catch (error) {
         throw error;
       }
     },
 
-    async turnoverEvolution(organisationId: string) {
+
+
+    async turnoverEvolution(organisationId:string){
       try {
-        const response = await Api.get(
-          `organisations/turnover-chart/${organisationId}`
-        );
-        return response;
+        const response = await Api.get(`organisations/turnover-chart/${organisationId}`);
+        return response.data;
       } catch (error) {
         throw error;
       }
