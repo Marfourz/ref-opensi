@@ -20,6 +20,7 @@
         :orderId="selectedOrderId"
         :justAssign="justAssign"
         @submitSuccess="orderAcceptSuccessful"
+        @close="show = false"
         @reset="show = false"
       ></FormAssignDeliveryPerson>
     </BaseModal>
@@ -186,13 +187,10 @@
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
       <HistoryTrackingList
-        :orderId=""
         :orderReference="order.reference"
         :orderStatus="getStatutType(order)"
         :orderStatusLabel="getStatutLabel(order)"
-        :order_created="order"
-        :order_accepted="order"
-        :order_delivered="order"
+        :order="order"
         @close="showModal = false"
       ></HistoryTrackingList>
     </BaseRightModal>
@@ -270,7 +268,7 @@ export default defineComponent({
 
     function getStatutLabel(element: any) {
       if (element.status == OrderStatus.ACCEPTED) return "Accepté";
-      else if (element.status == OrderStatus.DELIVERED) return "Inactif";
+      else if (element.status == OrderStatus.DELIVERED) return "Livré";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
       else if (element.status == OrderStatus.INPROGRESS) return "En cours";
       else if (element.status == OrderStatus.REJECTED) return "Rejetée";
@@ -326,7 +324,8 @@ export default defineComponent({
         ];
       else if (
         element.status == OrderStatus.ACCEPTED ||
-        element.status == OrderStatus.INPROGRESS
+        element.status == OrderStatus.INPROGRESS ||
+        element.status == OrderStatus.DELIVERED
       ) {
         if (!element.deliveryMan) {
           elements.push({

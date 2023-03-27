@@ -20,11 +20,11 @@ import { useUsersStore } from '../stores/users';
 export default defineComponent({
     props:{
         organisationId:{
-           
+          
             type: String
         }
     },
-    setup () {
+    setup (props) {
 
     const organisationStore = useOrganizationStore()
 
@@ -65,36 +65,42 @@ export default defineComponent({
       {
         name: "Chiffre d’affaires",
         data: [
-          "100k",
-          "300k",
-          "400k",
-          "100k",
-          "100k",
-          "300k",
-          "250k",
-          "300k",
-          "400k",
-          "200k",
-          "100k",
-          "100k",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
         ],
       },
     ]);
 
     const userStore = useUsersStore()
 
-    const organisationId = computed(()=>{
-        return userStore.getCurrentUser?.organisationId
-    })
+   
 
-    watch((organisationId),()=>{
-        const response = organisationStore.turnoverEvolution(organisationId.value as string)
-        
-    })
+    async function  loadData(){
+        let response = await organisationStore.turnoverEvolution(props.organisationId as string) as any
 
-    onMounted(() => {
-        const response = organisationStore.turnoverEvolution(organisationId.value as string)
-        console.log("response", response);
+        series.value[0].data = response.map((value:any)=>{
+            return value.total._sum.totalAmount ? value.total._sum.totalAmount : 0
+        })
+
+    }
+
+   watch(()=>props.organisationId, (newValue)=>{
+    loadData()
+   })
+
+    onMounted(async () => {
+       
+        await loadData()
         
     })
 

@@ -9,13 +9,13 @@
       ></BaseIcon>
     </div>
     <div class="flex mt-8 space-x-2">
-      <div class="font-semibold text-base">Commande {{ order }}</div>
+      <div class="font-semibold text-base">Commande {{ order.reference }}</div>
       <BaseTableStatut
         :title="orderStatusLabel"
         :type="orderStatus"
       ></BaseTableStatut>
     </div>
-    <div class="mt-4">
+    <div class="space-y-4 mt-4">
       <HistoryTracking
         v-for="history in infoHistoryOrder"
         :type="history.status"
@@ -32,22 +32,22 @@ import { defineComponent, onMounted, PropType, ref } from "vue";
 import HistoryTracking from "@/components/HistoryTracking.vue";
 import { IOrderHistory, IOrder } from "@/types/interfaces";
 import { useOrdersStore } from "@/stores/orders";
-import BaseTableStatut from "./base/BaseTableStatut.vue";
 
 export default defineComponent({
-  components: { HistoryTracking, BaseTableStatut },
+  components: { HistoryTracking },
 
   props: {
-    // orderReference: { type: String, required: true },
-    // orderReference: { type: String, required: true },
-    orderStatus: { type: String },
+    orderId: { type: String, required: true },
+    orderStatus: {type : String as ()=> | "success"
+        | "danger"
+        | "warning"
+        | "colorize"
+        | "blue",},
     orderStatusLabel: { type: String },
     order : { 
       required: true,
       type: Object as PropType <IOrder> ,
     }
-          // type: String as PropType <IOrder> ,
-    // {type: IOrder,  required: true}
   },
 // OrderStatus
   setup(props) {
@@ -55,6 +55,7 @@ export default defineComponent({
     const infoHistoryOrder = ref<Array<IOrderHistory>>([]);
 
     onMounted(async () => {
+      console.log("dvfvfgbfbrthfhyhrhyh")
       const response = await orderStore.historyOrder(props.order.id);
       infoHistoryOrder.value = response;
     });

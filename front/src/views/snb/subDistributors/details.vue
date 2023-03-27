@@ -30,7 +30,7 @@
         >
       </template>
     </div>
-    <BaseTabs :tabs="tabs" class="mt-7" selectedTab="orders">
+    <BaseTabs :tabs="tabs" class="mt-7" selectedTab="dashboard">
       <template #dashboard>
         <!-- <div class="font-bold text-xl tracking-[-2%] mt-7">Statistiques</div> -->
         <div class="flex justify-between items-center mt-9">
@@ -49,12 +49,8 @@
             Évolution du chiffre d’affaire
           </div>
           <div class="w-full">
-            <apexchart
-              height="400px"
-              type="line"
-              :options="chartOptions"
-              :series="series"
-            ></apexchart>
+            
+            <OrgnaisationTurnoverEvolution :organisationId="state.organisationId"/>
           </div>
         </div>
         <div>
@@ -66,9 +62,9 @@
         </div>
       </template>
       <template #orders>
-        <div class="mt-7">
+        <div class="mt-7 space-y-6">
           <BaseTitle title="Commandes"></BaseTitle>
-          <VOrders />
+          <VOrders :organisationId="state.organisationId"/>
         </div>
       </template>
       <template #distributors>
@@ -136,49 +132,9 @@ import DashboardCard from "@/components/DashboardCard.vue";
 import VOrders from "@/components/VOrders.vue";
 import VOrganisation from "@/components/VOrganisation.vue";
 import BaseGoBack from "@/components/base/BaseGoBack.vue";
+import OrgnaisationTurnoverEvolution from "@/components/OrgnaisationTurnoverEvolution.vue";
 
-const chartOptions = ref({
-  chart: {
-    id: "vuechart-example",
-  },
-  colors: ["#259475"],
-  xaxis: {
-    categories: [
-      "Jan",
-      "Fev",
-      "Mar",
-      "Avr",
-      "Mai",
-      "Jun",
-      "Jui",
-      "Aou",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-  },
-});
 
-const series = ref([
-  {
-    name: "Chiffre d'affaires -1",
-    data: [
-      "100k",
-      "300k",
-      "400k",
-      "100k",
-      "100k",
-      "300k",
-      "250k",
-      "300k",
-      "400k",
-      "200k",
-      "100k",
-      "100k",
-    ],
-  },
-]);
 
 const tabs = [
   { name: "dashboard", libelle: "Tableau de board" },
