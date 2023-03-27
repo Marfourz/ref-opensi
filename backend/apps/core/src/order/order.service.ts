@@ -748,7 +748,7 @@ export class OrderService {
     }
 
     data.push({
-      status: 'order_created',
+      status: 'created',
       label: 'Commande créée',
       date: dayjs(order.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       actor: order.organisation,
@@ -756,7 +756,7 @@ export class OrderService {
 
     if (order.acceptedAt) {
       data.push({
-        status: 'order_accepted',
+        status: 'accepted',
         label: 'Commande acceptée',
         date: order.acceptedAt,
         actor: parentOrganisation,
@@ -771,7 +771,7 @@ export class OrderService {
       });
 
       data.push({
-        status: 'order_delivered',
+        status: 'delivered',
         label: 'Commande livrée',
         date: order.deliveredAt,
         actor: deliveryMan,
