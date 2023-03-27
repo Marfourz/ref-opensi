@@ -733,15 +733,16 @@ export class OrderService {
       },
     });
 
-    let parentOrganisation: any = { ownerName: 'SNB' };
+    let parentOrganisation: any = await this.prisma.organisation.findFirst({
+      where: {
+        type: OrganisationTypeEnum.snb,
+      },
+    });
 
     if (order.parentOrganisationId) {
       parentOrganisation = await this.prisma.organisation.findUnique({
         where: {
           id: order.parentOrganisationId,
-        },
-        select: {
-          ownerName: true,
         },
       });
     }
@@ -750,7 +751,7 @@ export class OrderService {
       status: 'order_created',
       label: 'Commande créée',
       date: dayjs(order.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-      actor: order.organisation.ownerName,
+      actor: order.organisation,
     });
 
     if (order.acceptedAt) {
@@ -758,7 +759,7 @@ export class OrderService {
         status: 'order_accepted',
         label: 'Commande acceptée',
         date: order.acceptedAt,
-        actor: parentOrganisation.ownerName,
+        actor: parentOrganisation,
       });
     }
 
@@ -767,25 +768,22 @@ export class OrderService {
         where: {
           id: order.deliveryMan,
         },
-        select: {
-          name: true,
-        },
       });
 
       data.push({
         status: 'order_delivered',
         label: 'Commande livrée',
         date: order.deliveredAt,
-        actor: deliveryMan.name,
+        actor: deliveryMan,
       });
-
-      /*if (order.deliveryStartedAt) {
-        data['order_inProgress'] = {
-          date: order.deliveryStartedAt,
-          actor: deliveryMan.name,
-        };
-      }*/
     }
     return data;
   }
 }
+
+/*if (order.deliveryStartedAt) {
+  data['order_inProgress'] = {
+    date: order.deliveryStartedAt,
+    actor: deliveryMan.name,
+  };
+}*/
