@@ -55,8 +55,6 @@ import { defineComponent, ref } from "vue";
 import type { PropType } from "vue";
 import type { IOrder } from "../types/interfaces";
 import helpers from "@/helpers/index";
-import BaseRightModal from "./base/BaseRightModal.vue";
-import HistoryTracking from "./HistoryTracking.vue";
 
 export default defineComponent({
   props: {
@@ -86,7 +84,6 @@ export default defineComponent({
       helpers,
     };
   },
-  components: { BaseRightModal, HistoryTracking },
 });
 </script>
 

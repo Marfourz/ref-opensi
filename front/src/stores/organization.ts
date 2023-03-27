@@ -21,7 +21,7 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async fetchAllParteners(query: any,id:string) {
+    async fetchAllParteners(query: any, id: string) {
       try {
         const response = await Api.get(`organisations/partners/search/${id}`, {
           params: query,
@@ -78,8 +78,10 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
     async disable(id: PrimaryKey) {
-       try {
-        const response = await Api.put(`organisations/${id}`,{status:'inactive'});
+      try {
+        const response = await Api.put(`organisations/${id}`, {
+          status: "inactive",
+        });
         return response.data;
       } catch (error) {
         throw error;
@@ -87,14 +89,15 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
     async enable(id: PrimaryKey) {
-       try {
-        const response = await Api.put(`organisations/${id}`,{status:'active'});
+      try {
+        const response = await Api.put(`organisations/${id}`, {
+          status: "active",
+        });
         return response.data;
       } catch (error) {
         throw error;
       }
     },
-
 
     async statInfo() {
       try {
@@ -105,11 +108,11 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-
-
-    async turnoverEvolution(organisationId:string) {
+    async turnoverEvolution(organisationId: string) {
       try {
-        const response = await Api.get(`organisations/turnover-chart/${organisationId}`);
+        const response = await Api.get(
+          `organisations/turnover-chart/${organisationId}`
+        );
         return response;
       } catch (error) {
         throw error;
@@ -126,6 +129,5 @@ export const useOrganizationStore = defineStore("organizationStore", {
         throw error;
       }
     },
-
   },
 });
