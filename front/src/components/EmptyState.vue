@@ -1,8 +1,8 @@
 <template>
     <div class="flex flex-col  items-center space-y-4">
-        
-        <img src="@/assets/images/emptyState.png" alt="">
         <div class="font-semibold text-center " v-html="title"></div>
+        <img src="@/assets/images/emptyState.png" alt="">
+       
     </div>
 </template>
 

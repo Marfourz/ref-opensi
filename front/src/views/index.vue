@@ -29,9 +29,11 @@
       <BaseDateRange></BaseDateRange>
     </div>
     <BaseTable :titles="titles" :data="productsInfos">
-      <template #image="{ element }">
-        <div class="bg-grey-75 gap-2 p-1 rounded-lg">
-          <img
+      <template #produit="{ element }">
+        <div class="flex items-center space-x-2.5"
+        >
+          <div class="bg-grey-75 gap-2 p-1 rounded-lg w-12 h-12">
+            <img
             :src="`${
               element.images && element.images[0]
                 ? element.images[0].url
@@ -39,7 +41,13 @@
             }`"
             alt=""
           />
+        
+         
         </div>
+          <div>{{ element.name }}</div>
+        </div>
+       
+
       </template>
     </BaseTable>
     <!-- Performance des partenaires -->
@@ -51,14 +59,17 @@
     <div>
       <div class="grid grid-cols-3 gap-6 mt-7">
         <div
-          class="border rounded-lg p-4"
+          class="border rounded-lg p-4 min-h-[520px] "
           v-if="orgType === OrganisationType.SNB"
         >
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top masters distributeurs
           </div>
-
-          <BaseTable :titles="title" :data="statPartners.md" class="py-3">
+          <div v-if="statPartners.md.length == 0" class=" h-full flex flex-col justify-center">
+            <EmptyState title="Vos top masters distributeurs <br> apparaîtront ici" image="" ></EmptyState>
+          </div>
+          
+          <BaseTable :titles="title" :data="statPartners.md" class="py-3" v-else>
             <template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
@@ -82,8 +93,12 @@
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top distributeurs agréés
           </div>
+          <div v-if="statPartners.da.length == 0" class=" h-full flex flex-col justify-center">
+            <EmptyState title="Vos top distributeurs agréés  <br> apparaîtront ici " image="" ></EmptyState>
+          </div>
+          
           <BaseTable :titles="title" :data="statPartners.da" class="py-3"
-            ><template #id="{ element }">
+          v-else  ><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -101,11 +116,13 @@
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top dépôts
           </div>
-          <div>
 
+          <div v-if="statPartners.dp.length == 0" class=" h-full flex flex-col justify-center">
+            <EmptyState title="Vos top dépôts <br> apparaîtront ici" image=""></EmptyState>
           </div>
+          
           <BaseTable :titles="title" :data="statPartners.dp" class="py-3"
-            ><template #id="{ element }">
+            v-else><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -134,10 +151,11 @@ import { useOrganizationStore } from "@/stores/organization";
 import { OrganisationType } from "@/types/enumerations";
 import { useUsersStore } from "@/stores/users";
 import OrgnaisationTurnoverEvolution from "../components/OrgnaisationTurnoverEvolution.vue";
+import EmptyState from "../components/EmptyState.vue";
 
 
 export default defineComponent({
-  components: { DashboardCard, BaseTableStatut, BaseTableWithFilter,OrgnaisationTurnoverEvolution },
+  components: { DashboardCard, BaseTableStatut, BaseTableWithFilter,OrgnaisationTurnoverEvolution, EmptyState },
 
   setup() {
     const turnover = computed(() => {
@@ -191,13 +209,10 @@ export default defineComponent({
     });
 
     const titles = [
-      {
-        title: "",
-        name: "image",
-      },
+      
       {
         title: "Produit",
-        name: "Nom",
+        name: "produit",
       },
 
       {

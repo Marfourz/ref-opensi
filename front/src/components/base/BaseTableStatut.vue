@@ -17,15 +17,18 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+export enum BaseTableStatutType {
+  SUCCESS = "success",
+  WARNING = "warning",
+  DANGER = "danger",
+  BLUE = "blue",
+  COLORIZE = "colorize"
+}
+
 export default defineComponent({
   props: {
     type: {
-      type: String as () =>
-        | "success"
-        | "danger"
-        | "warning"
-        | "colorize"
-        | "blue",
+      type: String as () => BaseTableStatutType,
       default: "success",
 
     },
