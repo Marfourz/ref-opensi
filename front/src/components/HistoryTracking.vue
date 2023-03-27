@@ -1,7 +1,6 @@
 <template>
   <div class="flex gap-4">
     <div class="flex justify-center flex-col">
-      <!-- :style="`background-color: ${i.secondaryColor}`" -->
       <div class="p-1.5 rounded-full bg-fadePrimary">
         <div
           class="w-4 h-4 rounded-full"
@@ -11,7 +10,7 @@
       <div class="flex-1 relative mt-2">
         <div
           class="absolute h-full border-r-2 translate-x-1/2 right-1/2"
-          :style="`border-color: ${paramToUse.primaryColor}`"
+          :style="`border-color: ${paramToUse?.primaryColor}`"
         ></div>
       </div>
     </div>
@@ -49,6 +48,7 @@ import { defineComponent } from "vue";
 import IconLivrer from "./icons/IconLivrer.vue";
 import IconAccepter from "./icons/IconAccepter.vue";
 import IconCreer from "./icons/IconCreer.vue";
+import { HistoricalOrderStatus } from "@/types/enumerations";
 
 type Params = {
     title: string,
@@ -57,7 +57,7 @@ type Params = {
     primaryColor: String,
   }
 
-const MAPPING_OBJ: Record<"submitted" | "validated" | "created", Params> = {
+const MAPPING_OBJ:  Record<HistoricalOrderStatus, Params> = {
   
   created: {
     title: "Commande créé",
@@ -65,13 +65,13 @@ const MAPPING_OBJ: Record<"submitted" | "validated" | "created", Params> = {
     message: "Créer par ",
     primaryColor: "#0050CF",
   },
-  validated: {
+  accepted: {
     title: "Commande acceptée",
     icon: IconAccepter,
     message: "Acceptée par ",
     primaryColor: "#6929C4",
   },
-  submitted: {
+  delivered: {
     title: "Commande Livrée",
     icon: IconLivrer,
     message: "Livrée par ",
@@ -83,7 +83,7 @@ export default defineComponent({
   props: {
     type: {
       required: true,
-      type: String as () => "submitted" | "validated" | "created",
+      type: String as () => HistoricalOrderStatus,
     },
     
     name: {

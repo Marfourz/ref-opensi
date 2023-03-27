@@ -67,6 +67,14 @@ export enum UserAccountStatus {
     INPROGRESS = "inProgress",
   }
 
+  export enum HistoricalOrderStatus {
+    CREATED = "created | order_created",
+    DELIVERED = "delivered | order_delivered",
+    ACCEPTED = "accepted | order_accepted",
+  }
+
+
+
   export enum StockState{
     ALL = '',
     SUPPLY = 'supply',

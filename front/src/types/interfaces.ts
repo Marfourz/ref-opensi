@@ -1,5 +1,6 @@
 import { IItem } from "../stores/basket";
 import type {
+  HistoricalOrderStatus,
   OrderStatus,
   OrganisationType,
   PackagingType,
@@ -126,6 +127,7 @@ export interface IAction {
 }
 
 export interface IOrderHistory {
-  date: string,
-  actor: string,
+  date: string;
+  actor: IOrganisation;
+  status: HistoricalOrderStatus;
 }
