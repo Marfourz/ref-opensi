@@ -88,8 +88,6 @@
               </template>
               <template #filter>
                 <div class="flex space-x-4 h-full">
-                
-
                   <BaseButton icon="upload" size="small"
                     >Télécharger</BaseButton
                   >
@@ -188,11 +186,16 @@
       </template>
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
-      <HistoryTrackingList :orderId="selectedOrderId" @close="showModal = false"></HistoryTrackingList>
+      <HistoryTrackingList
+        :orderId="order.reference"
+        :orderStatus="getStatutType(order)"
+        :orderStatusLabel="getStatutLabel(order)"
+        :order_created="order"
+        :order_accepted="order"
+        :order_delivered="order"
+        @close="showModal = false"
+      ></HistoryTrackingList>
     </BaseRightModal>
-
-   
-
   </div>
 </template>
 
@@ -270,7 +273,6 @@ export default defineComponent({
       else if (element.status == OrderStatus.DELIVERED) return "Livré";
       else if (element.status == OrderStatus.NEW) return "Nouveau";
       else if (element.status == OrderStatus.INPROGRESS) return "En cours";
-
       else if (element.status == OrderStatus.REJECTED) return "Rejetée";
     }
 
@@ -298,7 +300,7 @@ export default defineComponent({
       },
       {
         title: "Accepter",
-        icon: "edit",
+        icon: "yes",
         action: acceptOrder,
       },
     ];
@@ -311,7 +313,7 @@ export default defineComponent({
           {
             title: "Accepter",
             classIcon: "text-tableColor",
-            icon: "edit",
+            icon: "yes",
             action: acceptOrder,
           },
           {
@@ -354,13 +356,13 @@ export default defineComponent({
 
     const showModal = ref(false);
 
-    function showHistoric(value : IOrder) {
+    function showHistoric(value: IOrder) {
       showModal.value = true;
-      selectedOrderId.value = value.id
+      selectedOrderId.value = value.id;
     }
 
     async function viewInvoice(order: IOrder) {
-      const response = await orderStore.generateInvoice(order.id)
+      const response = await orderStore.generateInvoice(order.id);
       router.push({
         name: "pdfViewer",
         params: {
@@ -370,7 +372,6 @@ export default defineComponent({
     }
 
     async function assignOrder(order: any) {
-      
       show.value = true;
       justAssign.value = true;
       selectedOrderId.value = order.id;
@@ -391,12 +392,8 @@ export default defineComponent({
       try {
         const response = await orderStore.fetchOne(element.id);
         order.value = response;
-      } catch (error) {
-       
-      }
+      } catch (error) {}
     }
- 
-  
 
     const reload = ref(1);
 
@@ -447,12 +444,10 @@ export default defineComponent({
       });
     }
 
-    function onFetch(items:any){
-      showItemOrder(items[0])
-      
+    function onFetch(items: any) {
+      showItemOrder(items[0]);
     }
 
-   
     return {
       titles,
       goToCreateAppros,
@@ -480,7 +475,7 @@ export default defineComponent({
       goToViewDeliveryMan,
       showHistoric,
       showModal,
-      onFetch
+      onFetch,
       // infoHistoryOrder,
       // getHistoryOrder,
     };

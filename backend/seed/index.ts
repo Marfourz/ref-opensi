@@ -76,6 +76,7 @@ async function main() {
       orgId = existingOrganisation.id;
     }
 
+    //create corresponding wallet
     const existingWallet = await prisma.wallet.findUnique({
       where: {
         organisationId: orgId,
@@ -100,6 +101,7 @@ async function main() {
       },
     });
 
+    // get the first engine & put on the dliveryMan
     const firstEngine = await prisma.engine.findFirst({});
 
     if (!existingUser) {

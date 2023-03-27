@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from "axios";
 import { defineStore } from "pinia";
 import Api from "../api";
 import { PrimaryKey } from "../types/interfaces";
@@ -53,6 +54,14 @@ export const useOrdersStore = defineStore("ordersStore", {
       } catch (error) {
         throw error;
       }
+      // const response = await Api.post("orders", data)
+      // .then((response: AxiosResponse) => {
+        // do something
+      //   return response;
+      // })
+      // .catch((error: AxiosError) => {
+      //  return error?.response ?? {};
+      // });
     },
 
     async update(id: PrimaryKey, data: any) {
@@ -78,6 +87,7 @@ export const useOrdersStore = defineStore("ordersStore", {
         const response = await Api.get(
           `orders/${id}/history`
         );
+        console.log(response);
         return response.data;
       } catch (error) {
         throw error;
