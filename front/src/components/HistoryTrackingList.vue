@@ -32,16 +32,19 @@ import { defineComponent, onMounted, PropType, ref } from "vue";
 import HistoryTracking from "@/components/HistoryTracking.vue";
 import { IOrderHistory } from "@/types/interfaces";
 import { useOrdersStore } from "@/stores/orders";
-import BaseTableStatut, { BaseTableStatutType } from "./base/BaseTableStatut.vue";
 import { OrderStatus } from "../types/enumerations";
 ``;
 
 export default defineComponent({
-  components: { HistoryTracking, BaseTableStatut },
+  components: { HistoryTracking },
 
   props: {
     orderId: { type: String, required: true },
-    orderStatus: {type : String as ()=> BaseTableStatutType},
+    orderStatus: {type : String as ()=> | "success"
+        | "danger"
+        | "warning"
+        | "colorize"
+        | "blue",},
     orderStatusLabel: { type: String },
   },
 
