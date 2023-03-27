@@ -41,7 +41,7 @@ export default defineComponent({
 
   props: {
     orderId: { type: String, required: true },
-    orderStatus: { type: BaseTableStatutType },
+    orderStatus: {type : String as ()=> BaseTableStatutType},
     orderStatusLabel: { type: String },
   },
 
