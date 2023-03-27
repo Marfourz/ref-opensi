@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, Prop, PropType } from "vue";
 import IconLivrer from "./icons/IconLivrer.vue";
 import IconAccepter from "./icons/IconAccepter.vue";
 import IconCreer from "./icons/IconCreer.vue";
@@ -83,7 +83,7 @@ export default defineComponent({
   props: {
     type: {
       required: true,
-      type: String as () => HistoricalOrderStatus,
+      type: String as PropType <HistoricalOrderStatus> ,
     },
     
     name: {

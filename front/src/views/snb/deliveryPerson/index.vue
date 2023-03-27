@@ -60,7 +60,6 @@
       :titles="titles"
       :fetchData="organizationStore.fetchAllDeliveryMen"
       :requestId="organisationId"
-      :actions="actions"
       :key="reload"
     >
       <template #filter>
@@ -68,6 +67,9 @@
           <BaseButton icon="upload" size="small">Télécharger</BaseButton>
         </div>
       </template>
+        <template #action="{ element }">
+          <BaseActions :actions="customActions(element)" :data="element" />
+        </template>
       <template #status="{ element }">
         <BaseTableStatut
           :title="getStatutLabel(element)"
@@ -156,7 +158,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useUsersStore } from "@/stores/users";
 import { Sex, UserRole } from "@/types/enumerations";
 import { Form } from "vee-validate";
-import { IUser } from "@/types/interfaces";
+import { IAction, IUser } from "@/types/interfaces";
 import { useEnginesStore } from "../../../stores/engines";
 import { useOrganizationStore } from "../../../stores/organization";
 import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
@@ -168,23 +170,37 @@ export default defineComponent({
   setup() {
     const userStore = useUsersStore();
 
+     const customActions: (el: { status: string }) => IAction[] = (el: {
+      status: string;
+    }) => {
     const actions = [
       {
         title: "Voir détail",
-        icon: "eye",
+        icon: "details",
         action: details,
       },
-      {
-        title: "Modifier",
-        icon: "edit",
-        action: onUpdate,
-      },
-      {
-        title: "Supprimer",
-        icon: "removeRed",
-        action: onDelete,
-      },
     ];
+    if (el.status === UserAccountStatus.ACTIVE) {
+        actions.push({
+          title: "Désactiver",
+          icon: "cancel",
+          action: toogleStatus,
+        });
+        return actions;
+      }
+      actions.push({
+        title: "Activer",
+        icon: "yes",
+        action: toogleStatus,
+      });
+      return actions;
+    };
+
+     function toogleStatus(element: IUser) {
+      if (element.status === "active") return (element.status = UserAccountStatus.INACTIVE);
+
+      if (element.status === "inactive") return (element.status = UserAccountStatus.ACTIVE);
+    }
 
     const router = useRouter();
     function details(row: IUser) {
@@ -387,7 +403,6 @@ export default defineComponent({
       sexes,
       user,
       onSubmit,
-      actions,
       selectedUser,
       createUser,
       modal,
@@ -399,6 +414,7 @@ export default defineComponent({
       organisationId,
       getStatutLabel,
       getStatutType,
+      customActions
     };
   },
 });

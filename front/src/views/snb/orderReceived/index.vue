@@ -186,7 +186,8 @@
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
       <HistoryTrackingList
-        :orderId="order.reference"
+        :orderId=""
+        :orderReference="order.reference"
         :orderStatus="getStatutType(order)"
         :orderStatusLabel="getStatutLabel(order)"
         :order_created="order"
