@@ -722,7 +722,7 @@ export class OrderService {
   }
 
   async getOrderHistory(id: string): Promise<any> {
-    const data: any = {};
+    const data: any = [];
     const order = await this.prisma.order.findUnique({
       where: { id },
       include: {
@@ -746,19 +746,23 @@ export class OrderService {
       });
     }
 
-    data['order_created'] = {
-      date: order.createdAt,
+    data.push({
+      status: 'order_created',
+      label: 'Commande créée',
+      date: dayjs(order.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       actor: order.organisation.ownerName,
-    };
+    });
 
     if (order.acceptedAt) {
-      data['order_accepted'] = {
+      data.push({
+        status: 'order_accepted',
+        label: 'Commande acceptée',
         date: order.acceptedAt,
         actor: parentOrganisation.ownerName,
-      };
+      });
     }
 
-    if (order.deliveryMan) {
+    if (order.deliveryMan && order.deliveredAt) {
       const deliveryMan = await this.prisma.user.findUnique({
         where: {
           id: order.deliveryMan,
@@ -767,10 +771,13 @@ export class OrderService {
           name: true,
         },
       });
-      data['order_delivered'] = {
+
+      data.push({
+        status: 'order_delivered',
+        label: 'Commande livrée',
         date: order.deliveredAt,
         actor: deliveryMan.name,
-      };
+      });
 
       /*if (order.deliveryStartedAt) {
         data['order_inProgress'] = {
