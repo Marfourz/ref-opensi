@@ -733,6 +733,8 @@ export class OrderService {
       },
     });
 
+    console.log('ORDER LOG : ', order);
+
     let parentOrganisation: any = await this.prisma.organisation.findFirst({
       where: {
         type: OrganisationTypeEnum.snb,
