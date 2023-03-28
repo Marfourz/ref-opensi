@@ -1,7 +1,7 @@
 export enum Sex {
-  MALE = "male",
-  FEMALE = "female",
-  OTHERS = "others",
+  MALE = "Homme",
+  FEMALE = "Femme",
+  OTHERS = "Autre",
 }
 
 export enum UserRole {

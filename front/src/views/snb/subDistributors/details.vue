@@ -42,7 +42,7 @@
           <DashboardCard :data="turnover"></DashboardCard>
           <DashboardCard :data="numberOfOrders"></DashboardCard>
           <DashboardCard :data="numberOfPartners"></DashboardCard>
-          <DashboardCard :data="turnover"></DashboardCard>
+          <DashboardCard :data="ranking"></DashboardCard>
         </div>
         <div>
           <div class="font-bold text-xl tracking-[-2%] mt-6">
@@ -218,16 +218,16 @@ const numberOfPartners = computed(() => {
   };
 });
 
-// const ranking = computed(() => {
-//   return {
-//     title: `${selectedMaster.value.ranking.rank} `,
-//     subtitle: "Classement",
+ const ranking = computed(() => {
+   return {
+     title: `${selectedMaster.value?.ranking.rank} `,
+     subtitle: "Classement",
 
-//     icon: "star",
-//     primaryColor: "#0060CF",
-//     secondaryColor: "#E6EAF6",
-//   };
-// });
+     icon: "star",
+     primaryColor: "#0060CF",
+     secondaryColor: "#E6EAF6",
+   };
+ });
 
 function formatPrice(element: any) {
   if (element.wallet) return `${element.wallet.turnover} FCFA`;
