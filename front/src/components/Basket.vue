@@ -45,7 +45,7 @@
             <div class="font-semibold">Paiement sur 30 jours</div>
           </div>
         </div>
-        <div class="flex justify-between font-semibold text-xl">
+        <div class="flex justify-between font-semibold text-xl mt-1">
           <div>Total</div>
           <div>{{ totalAmount }} F</div>
         </div>
