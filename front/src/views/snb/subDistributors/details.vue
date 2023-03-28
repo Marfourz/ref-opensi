@@ -49,8 +49,9 @@
             Évolution du chiffre d’affaire
           </div>
           <div class="w-full">
-            
-            <OrgnaisationTurnoverEvolution :organisationId="state.organisationId"/>
+            <OrgnaisationTurnoverEvolution
+              :organisationId="state.organisationId"
+            />
           </div>
         </div>
         <div>
@@ -64,7 +65,7 @@
       <template #orders>
         <div class="mt-7 space-y-6">
           <BaseTitle title="Commandes"></BaseTitle>
-          <VOrders :organisationId="state.organisationId"/>
+          <VOrders :organisationId="state.organisationId" />
         </div>
       </template>
       <template #distributors>
@@ -133,8 +134,6 @@ import VOrders from "@/components/VOrders.vue";
 import VOrganisation from "@/components/VOrganisation.vue";
 import BaseGoBack from "@/components/base/BaseGoBack.vue";
 import OrgnaisationTurnoverEvolution from "@/components/OrgnaisationTurnoverEvolution.vue";
-
-
 
 const tabs = [
   { name: "dashboard", libelle: "Tableau de board" },
@@ -218,16 +217,20 @@ const numberOfPartners = computed(() => {
   };
 });
 
- const ranking = computed(() => {
-   return {
-     title: `${selectedMaster.value?.ranking.rank} `,
-     subtitle: "Classement",
+const ranking = computed(() => {
+  return {
+    title: `${
+      selectedMaster.value?.ranking.rank
+        ? selectedMaster.value?.ranking.rank
+        : "0"
+    } `,
+    subtitle: "Classement",
 
-     icon: "star",
-     primaryColor: "#0060CF",
-     secondaryColor: "#E6EAF6",
-   };
- });
+    icon: "star",
+    primaryColor: "#0060CF",
+    secondaryColor: "#E6EAF6",
+  };
+});
 
 function formatPrice(element: any) {
   if (element.wallet) return `${element.wallet.turnover} FCFA`;

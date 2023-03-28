@@ -131,7 +131,7 @@ export class StockService {
   }
 
   async searchForStocksOfOrganisation(
-    filterParams: { page: any; perPage: any; q: any; categoryId: any; },
+    filterParams: { page: any; perPage: any; q: any; categoryId: any },
     orgId: string,
   ): Promise<PagiationPayload<any[]>> {
     try {

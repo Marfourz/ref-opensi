@@ -84,10 +84,11 @@
             :titles="titles"
             :actions="actions"
             :requestId="categoryId"
-            class="mt-6"
+            class="mt-6" 
+            :downloadData="productCategoryStore.downloadProduct"
           >
             <template #image="{ element }">
-              <div>
+              <div class="w-8 h-8">
                 <img
                   :src="`${
                     element.image && element.image[0]
@@ -439,6 +440,9 @@ export default defineComponent({
         return "Prix du pack (en FCFA)";
       else return "Prix du casier (en FCFA)";
     });
+
+
+    
 
     onMounted(async () => {
       try {

@@ -58,15 +58,13 @@
     <BaseTableWithFilter
       :titles="titles"
       :fetchData="userStore.fetchByOrganization"
+      :downloadData="userStore.downloadUsers"
       :requestId="organisationId"
       :actions="actions"
       :key="reload"
+
     >
-      <template #filter>
-        <div class="flex space-x-4 h-full">
-          <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-        </div>
-      </template>
+     
     </BaseTableWithFilter>
 
     <BaseBottomModal :show="showModal">
@@ -222,15 +220,15 @@ export default defineComponent({
       return [
         {
           title: "Homme",
-          value: Sex.MALE,
+          value: Sex.male,
         },
         {
           title: "Femme",
-          value: Sex.FEMALE,
+          value: Sex.female,
         },
         {
           title: "Autre",
-          value: Sex.OTHERS,
+          value: Sex.others,
         },
       ];
     });
