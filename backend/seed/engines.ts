@@ -1,6 +1,6 @@
 export const engines = [
   {
-    name: 'Moto 2 roues',
+    name: 'Moto',
     description: 'Engin motorisé avec 02 roues',
   },
   {
@@ -10,5 +10,9 @@ export const engines = [
   {
     name: 'Voiture',
     description: 'Engin motorisé avec 04 roues',
+  },
+  {
+    name: 'Camion',
+    description: 'Engin motorisé avec plus de 06 roues',
   },
 ];

@@ -18,6 +18,7 @@
           :value="selected.title"
           class="focus:outline-none text-grey-70 w-full"
           style="font-weight: 600"
+          :placeholder="placeholder"
           v-if="selected"
         />
         <input
@@ -28,6 +29,7 @@
           readonly
           class="focus:outline-none text-grey-70 w-full"
           style="font-weight: 600"
+          :placeholder="placeholder"
         />
         <BaseIcon name="chevronDown"></BaseIcon>
       </div>
@@ -66,6 +68,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    placeholder: {
+      type: String,
+      required: true,
+    },
     label: {
       type: String,
     },
@@ -97,12 +103,12 @@ export default defineComponent({
       }
     );
 
-    onMounted(() => {
-      if (props.items && props.items.length > 0) {
-        selected.value = props.items[0];
-        context.emit("update:modelValue", selected.value.value);
-      }
-    });
+    // onMounted(() => {
+    //   if (props.items && props.items.length > 0) {
+    //     selected.value = props.items[0];
+    //     context.emit("update:modelValue", selected.value.value);
+    //   }
+    // });
 
     return {
       selected,

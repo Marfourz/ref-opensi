@@ -187,12 +187,10 @@
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
       <HistoryTrackingList
-        :orderId="order.reference"
+        :orderReference="order.reference"
         :orderStatus="getStatutType(order)"
         :orderStatusLabel="getStatutLabel(order)"
-        :order_created="order"
-        :order_accepted="order"
-        :order_delivered="order"
+        :order="order"
         @close="showModal = false"
       ></HistoryTrackingList>
     </BaseRightModal>
@@ -324,8 +322,11 @@ export default defineComponent({
             action: rejectOrder,
           },
         ];
-        else if (element.status == OrderStatus.ACCEPTED || element.status == OrderStatus.INPROGRESS || element.status == OrderStatus.DELIVERED) {
-
+      else if (
+        element.status == OrderStatus.ACCEPTED ||
+        element.status == OrderStatus.INPROGRESS ||
+        element.status == OrderStatus.DELIVERED
+      ) {
         if (!element.deliveryMan) {
           elements.push({
             title: "Assigner à un livreur",
@@ -476,8 +477,6 @@ export default defineComponent({
       showHistoric,
       showModal,
       onFetch,
-      // infoHistoryOrder,
-      // getHistoryOrder,
     };
   },
 });

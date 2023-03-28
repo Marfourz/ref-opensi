@@ -28,7 +28,13 @@ async function main() {
         console.log('Users manager respond: ' + error.response.statusText);
       });
 
-    const existingEngine = await prisma.engine.count();
+    //create engines
+    await prisma.engine.deleteMany({});
+
+    await prisma.engine.createMany({
+      data: engines,
+    });
+    /*const existingEngine = await prisma.engine.count();
 
     if (existingEngine == 0) {
       const newEngine = await prisma.engine.create({
@@ -37,7 +43,7 @@ async function main() {
       console.info('ENGINE created : ', newEngine);
     } else {
       console.info('ENGINE already exist in DB');
-    }
+    }*/
 
     const existingProduct = await prisma.product.count();
 
