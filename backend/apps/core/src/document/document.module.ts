@@ -9,6 +9,7 @@ import { StockModule } from '../stock/stock.module';
 import { UserModule } from '../user/user.module';
 import { ProductsModule } from '../product/product.module';
 import { ProductCategoryModule } from '../product-category/product-category.module';
+import { OrganisationModule } from '../organisation/organisation.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProductCategoryModule } from '../product-category/product-category.modu
     UserModule,
     ProductsModule,
     ProductCategoryModule,
+    OrganisationModule,
   ],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService],

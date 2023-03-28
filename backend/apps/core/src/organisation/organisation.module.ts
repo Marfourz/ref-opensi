@@ -35,6 +35,7 @@ import { UserModule } from '../user/user.module';
       useClass: RolesGuard,
     },
   ],
+  exports: [OrganisationService],
 })
 export class OrganisationModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
