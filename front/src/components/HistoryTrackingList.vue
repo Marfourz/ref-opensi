@@ -21,7 +21,7 @@
         :type="history.status"
         :key="history.actor.id"
         :date="history.date"
-        :name="history.actor.ownerName"
+        :name="history.actor.ownerName || history.actor.name"
       ></HistoryTracking>
     </div>
   </div>
