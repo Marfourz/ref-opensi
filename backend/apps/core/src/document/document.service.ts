@@ -182,7 +182,7 @@ export class DocumentService {
       id,
     );
 
-    const payload: any = data;
+    const payload: any = data.data;
 
     payload.map((element) => {
       element.createdAt = element.createdAt.toLocaleDateString();

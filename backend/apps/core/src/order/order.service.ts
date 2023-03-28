@@ -434,7 +434,10 @@ export class OrderService {
     }
   }
 
-  async getOrdersOfSubOrganisations(filterParams, orgId): Promise<Order[]> {
+  async getOrdersOfSubOrganisations(
+    filterParams,
+    orgId,
+  ): Promise<PagiationPayload<Order[]>> {
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -446,7 +449,7 @@ export class OrderService {
     const subType = getSubTypeOrg(organisation.type);
 
     if (subType === 'none') {
-      return [];
+      return { data: null, count: 0 };
     } else {
       try {
         console.log(subType);
@@ -467,7 +470,7 @@ export class OrderService {
           },
         };
         console.log(q);
-        /*if (q != undefined && q != '') {
+        if (q != undefined && q != '') {
           orderIdConstraint.id = {
             contains: q,
             mode: 'insensitive',
@@ -487,7 +490,7 @@ export class OrderService {
             totalAmountConstraint,
             orderReferenceConstraint,
           ];
-        }*/
+        }
         const orders = await this.prisma.order.findMany({
           where: {
             ...w,
@@ -497,7 +500,13 @@ export class OrderService {
           },
         });
 
-        return orders;
+        const count = await this.prisma.order.count({
+          where: {
+            ...w,
+          },
+        });
+
+        return { data: orders, count };
       } catch (error) {
         throw error;
         return;
