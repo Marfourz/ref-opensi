@@ -40,4 +40,13 @@ export class DocumentController {
   downloadStocks(@Param() params, @Query() filterParams: any) {
     return this.documentService.downloadStocks(filterParams, params.id);
   }
+
+  @Get('download-products/:id')
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  @ApiQuery({ name: 'categoryId', type: String, required: false })
+  downloadProducts(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadProducts(filterParams);
+  }
 }
