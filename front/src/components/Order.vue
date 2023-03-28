@@ -38,7 +38,7 @@
     <div
       class="bg-white pt-1 absolute bottom-0 left-0 right-0 border-t border-borderColor font-bold flex items-center justify-between"
     >
-      <div class="mt-4 flex font-bold  items-center justify-between">
+      <div class="mt-4 flex font-bold  items-center justify-between w-full">
         <div>Total</div>
         <div>{{ order.totalAmount }} F</div>
       </div>

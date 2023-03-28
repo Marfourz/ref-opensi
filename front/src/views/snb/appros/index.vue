@@ -51,8 +51,10 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganization"
+              :downloadData="orderStore.downloadOrder"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
+              @onFetch="onFetch"
             >
               <template #status="{ element }">
                 <BaseTableStatut
@@ -69,20 +71,7 @@
                   {{ helpers.formatDateHour(element.createdAt) }}
                 </div>
               </template>
-              <template #filter>
-                <div class="flex space-x-4 h-full">
-                  <!-- <div
-              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-            >
-              <div>Filtré par</div>
-              <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div> -->
-
-                  <BaseButton icon="upload" size="small"
-                    >Télécharger</BaseButton
-                  >
-                </div>
-              </template>
+             
             </BaseTableWithFilter>
           </div>
         </div>
@@ -156,7 +145,7 @@
           </template>
         </Order>
 
-        <div class="flex flex-col items-center space-y-4" v-else>
+        <div class="flex flex-col items-center space-y-4 h-full justify-center" v-else>
           <img src="@/assets/images/emptyBasket.png" alt="" />
           <div class="font-semibold text-center">
             Vous verrez ici les détails d'une <br />
@@ -252,7 +241,7 @@ const show = ref(false);
         const response = await orderStore.fetchOne(element.id);
         order.value = response;
       } catch (error) {
-        toast.error("Suppression impossible");
+        
       }
     }
 
@@ -334,6 +323,10 @@ const show = ref(false);
       router.push({ name: "approsCreate" });
     }
 
+    function onFetch(items: any) {
+      showItemOrder(items[0]);
+    }
+
     return {
       titles,
       goToCreateAppros,
@@ -351,6 +344,7 @@ const show = ref(false);
       reload,
       showItemOrder,
       show,
+      onFetch
     };
   },
 });

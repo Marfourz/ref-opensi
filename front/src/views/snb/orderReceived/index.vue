@@ -67,6 +67,7 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganizationType"
+              :downloadData="orderStore.downloadOrder"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
               @onFetch="onFetch"
@@ -86,13 +87,7 @@
                   {{ helpers.formatDateHour(element.createdAt) }}
                 </div>
               </template>
-              <template #filter>
-                <div class="flex space-x-4 h-full">
-                  <BaseButton icon="upload" size="small" @click="downloadOrder"
-                    >Télécharger</BaseButton
-                  >
-                </div>
-              </template>
+             
             </BaseTableWithFilter>
           </div>
         </div>

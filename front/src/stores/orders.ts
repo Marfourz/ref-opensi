@@ -108,7 +108,7 @@ export const useOrdersStore = defineStore("ordersStore", {
 
 
 
-    async downloadOrder(id: PrimaryKey) {
+    async downloadOrder(query: any,id: PrimaryKey) {
       try {
         const response = await Api.get(
           `documents/download-orders/${id}`

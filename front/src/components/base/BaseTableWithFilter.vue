@@ -40,7 +40,7 @@
 
     <div
       v-if="items && items.length == 0"
-      class="h-full flex flex-col justify-center"
+      class="h-full flex flex-col justify-center mt-6"
     >
       <EmptyState :title="emptyMessage" image=""></EmptyState>
     </div>

@@ -46,7 +46,7 @@ export const useOrganizationStore = defineStore("organizationStore", {
 
     async downloadDeliveryMen(query: any, id: PrimaryKey) {
       try {
-        const response = await Api.get(`organisations/${id}/deliveryMen`, {
+        const response = await Api.get(`documents/download-deliveryMen/${id}`, {
           params: query,
         });
         return response.data;
