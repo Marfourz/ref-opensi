@@ -21,6 +21,10 @@ export class userDto {
 
   @ApiProperty()
   @IsString()
+  firstName: string;
+
+  @ApiProperty()
+  @IsString()
   phone: string;
 
   @ApiProperty()
@@ -57,6 +61,11 @@ export class updateUserDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  firstName?: string;
 
   @ApiProperty()
   @IsOptional()
