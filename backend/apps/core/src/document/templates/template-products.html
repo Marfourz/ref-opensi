@@ -188,7 +188,6 @@
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Nom</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Volume</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Prix/Casier</th>
-                    <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Qté en stock</th>
                     <th style="font-weight: 600; font-size: 12px; padding: 10px 0px">Date de création</th>
                 </tr>
             </thead>
@@ -196,6 +195,7 @@
             <tbody>
                 {{#each data}}
                 <tr style="border-bottom: 1px solid rgba(37, 61, 52, 0.2)">
+                    <td style="font-weight: 400; font-size: 14px">{{this.id}}</td>
                     <td style="
                         font-size: 13px;
                         color: #121212;
@@ -204,9 +204,9 @@
                     ">
                         #{{this.name}}
                     </td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.phone}}</td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.email}}</td>
-                    <td style="font-weight: 400; font-size: 14px">{{this.role}}</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.volume}} CL</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.bulkPrice}} XOF</td>
+                    <td style="font-weight: 400; font-size: 14px">{{this.createdAt}}</td>
                 </tr>
                 {{/each}}
             </tbody>
