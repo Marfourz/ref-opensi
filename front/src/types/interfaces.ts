@@ -63,7 +63,7 @@ export interface InfoOrganisation {
 }
 
 export interface IRanking extends Commun {
-  type: string;
+  type: OrganisationType;
   rank: number;
   total: number;
 }

@@ -16,6 +16,7 @@
           </div>
         </div>
       </div>
+
       <BaseTableWithFilter
         class="flex flex-col flex-1"
         :titles="titles"
@@ -37,13 +38,13 @@
             >
           </div>
         </template>
+
         <template #status="{ element }">
           <BaseTableStatut
             :title="getStatutLabel(element)"
             :type="getStatutType(element)"
           ></BaseTableStatut>
         </template>
-
         <template #action="{ element }">
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
@@ -155,7 +156,7 @@ import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 export default defineComponent({
-  components: { Form},
+  components: { Form },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -330,8 +331,6 @@ export default defineComponent({
 
       if (element.status === "inactive") return (element.status = "active");
     }
-
-    
 
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
