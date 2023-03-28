@@ -1,5 +1,6 @@
 export const user = {
   name: 'Adinistrateur SNB',
+  firstName: 'ADMIN USER',
   identifier: 'dg54g5df5',
   phone: '90020408',
   email: 'admin@admin.com',
@@ -13,7 +14,7 @@ export const user = {
 export const deliveryMan = {
   name: 'Livreur FULBERTO SNB',
   identifier: '7fchyu5ds5',
-  phone: '62 45 56 85',
+  phone: '62455685',
   email: 'delivery-snb@yopmail.com',
   address: 'Cotonou - Bénin',
   birthday: '1998-02-18',
