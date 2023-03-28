@@ -16,7 +16,7 @@
       </BaseButton></div>
     </div>
     <div class="mt-5 space-x-4 flex">
-      <span class="font-semibold text-xl">{{ user?.id }}</span>
+      <span class="font-semibold text-xl">{{ user?.identifier }}</span>
       <span class="font-semibold text-xl">{{ user?.name }}</span>
       <BaseTableStatut
         :type="stateTitle === 'Désactiver' ? 'success' : 'danger'"
@@ -28,13 +28,14 @@
         <span class="font-semibold text-base">Nom</span>
         <span class="font-medium text-sm">{{ user?.name }}</span>
       </div>
-      <!-- <div class="flex flex-col">
+       <div class="flex flex-col">
         <span class="font-semibold text-base">Prénom(s)</span>
-        <span class="font-medium text-sm"> jh </span>
-      </div> -->
+         <span class="font-medium text-sm"> {{ user?.firstName }} </span> 
+      </div> 
+
       <div class="flex flex-col">
         <span class="font-semibold text-base">Sexe</span>
-        <span class="font-medium text-sm"> {{ user?.sex }} </span>
+        <span class="font-medium text-sm" v-if="user && user.sex"> {{Sex[user.sex.toLocaleUpperCase()] }} </span>
       </div>
       <div class="flex flex-col">
         <span class="font-semibold text-base">Email</span>
@@ -46,7 +47,7 @@
       </div>
       <div class="flex flex-col">
         <span class="font-semibold text-base">Date de naissance</span>
-        <span class="font-medium text-sm"> {{ user?.birthday }} </span>
+        <span class="font-medium text-sm"> {{ !user?.birthday ? "Non défini" : helpers.formatDateReduce(String(user?.birthday)) }} </span>
       </div>
       <div class="flex flex-col">
         <span class="font-semibold text-base">Engin </span>
@@ -67,7 +68,8 @@ import { UserAccountStatus } from "@/types/enumerations";
 import { IUser } from "@/types/interfaces";
 import { defineComponent, onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
-
+import helpers from "@/helpers/index";
+import  { Sex } from "@/types/enumerations";
 export default defineComponent({
   components: { BaseTableStatut },
   setup() {
@@ -105,9 +107,11 @@ export default defineComponent({
       } catch (error) {}
     });
     return {
+      Sex,
       user,
       stateTitle,
       toggleState,
+      helpers,
     };
   },
 });
