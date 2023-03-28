@@ -477,8 +477,6 @@ export default defineComponent({
       showHistoric,
       showModal,
       onFetch,
-      // infoHistoryOrder,
-      // getHistoryOrder,
     };
   },
 });

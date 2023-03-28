@@ -67,9 +67,9 @@
           <BaseButton icon="upload" size="small">Télécharger</BaseButton>
         </div>
       </template>
-        <template #action="{ element }">
-          <BaseActions :actions="customActions(element)" :data="element" />
-        </template>
+      <template #action="{ element }">
+        <BaseActions :actions="customActions(element)" :data="element" />
+      </template>
       <template #status="{ element }">
         <BaseTableStatut
           :title="getStatutLabel(element)"
@@ -95,15 +95,23 @@
             <div class="grid grid-cols-2 gap-6">
               <BaseInput
                 name="nom d'utilisateur"
-                label="Nom d'utilisateur"
+                label="Nom "
                 rules="required"
                 v-model="user.name"
+              ></BaseInput>
+
+              <BaseInput
+                name="prénom d'utilisateur"
+                label="Prénom"
+                rules="required"
+                v-model="user.firstName"
               ></BaseInput>
 
               <BaseSelect
                 label="Sexe"
                 :items="sexes"
                 v-model="user.sex"
+                placeholder="Sélectionner un sexe..."
               ></BaseSelect>
 
               <BaseInput
@@ -133,6 +141,7 @@
                 rules="required"
                 :items="engines"
                 v-model="user.engineId"
+                placeholder="Sélectionnez l’engin..."
               ></BaseSelect>
 
               <BaseInput
@@ -170,17 +179,17 @@ export default defineComponent({
   setup() {
     const userStore = useUsersStore();
 
-     const customActions: (el: { status: string }) => IAction[] = (el: {
+    const customActions: (el: { status: string }) => IAction[] = (el: {
       status: string;
     }) => {
-    const actions = [
-      {
-        title: "Voir détail",
-        icon: "details",
-        action: details,
-      },
-    ];
-    if (el.status === UserAccountStatus.ACTIVE) {
+      const actions = [
+        {
+          title: "Voir détail",
+          icon: "details",
+          action: details,
+        },
+      ];
+      if (el.status === UserAccountStatus.ACTIVE) {
         actions.push({
           title: "Désactiver",
           icon: "cancel",
@@ -196,10 +205,12 @@ export default defineComponent({
       return actions;
     };
 
-     function toogleStatus(element: IUser) {
-      if (element.status === "active") return (element.status = UserAccountStatus.INACTIVE);
+    function toogleStatus(element: IUser) {
+      if (element.status === "active")
+        return (element.status = UserAccountStatus.INACTIVE);
 
-      if (element.status === "inactive") return (element.status = UserAccountStatus.ACTIVE);
+      if (element.status === "inactive")
+        return (element.status = UserAccountStatus.ACTIVE);
     }
 
     const router = useRouter();
@@ -271,6 +282,8 @@ export default defineComponent({
 
     const user = reactive<any>({
       name: "",
+      firstName: "",
+      identifier: "",
       phone: "",
       email: "",
       address: "",
@@ -302,11 +315,12 @@ export default defineComponent({
     const titles = [
       {
         title: "Identifiant",
-        name: "id",
+        name: "identifier",
       },
       {
         title: "Nom & Prénoms",
         name: "name",
+        transform: identifiants,
       },
 
       {
@@ -329,9 +343,13 @@ export default defineComponent({
       },
     ];
 
+    function identifiants(element: IUser) {
+      return element.name + " " + element.firstName;
+    }
+
     function getStatutLabel(element: IUser) {
-      if (element.status == UserAccountStatus.ACTIVE) return "Active";
-      else if (element.status == UserAccountStatus.INACTIVE) return "Inactive";
+      if (element.status == UserAccountStatus.ACTIVE) return "Actif";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactif";
       else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
     }
 
@@ -414,7 +432,7 @@ export default defineComponent({
       organisationId,
       getStatutLabel,
       getStatutType,
-      customActions
+      customActions,
     };
   },
 });

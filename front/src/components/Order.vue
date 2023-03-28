@@ -2,51 +2,47 @@
   <div class="w-full h-full flex flex-col relative overflow-hidden">
     <slot name="title"> </slot>
 
-    <div class="overflow-scroll ">
-      <BaseTable
-      :titles="titles"
-      :data="order.items"
-      class="my-4 "
-      v-if="order"
-    >
-      <template #product="{ element }">
-        <div class="flex items-center space-x-6">
-          <img src="@/assets/images/beverage.png" alt="" />
-          <div class="flex flex-col">
-            <div class="text-black font-semibold">
-              {{ element.product.name }}
-            </div>
-            <div class="text-tableColor">
-              {{ element.product.bulkPrice }} / Casiers
+    <div class="overflow-scroll">
+      <BaseTable :titles="titles" :data="order.items" class="my-4" v-if="order">
+        <template #product="{ element }">
+          <div class="flex items-center space-x-6">
+            <img src="@/assets/images/beverage.png" alt="" />
+            <div class="flex flex-col">
+              <div class="text-black font-semibold">
+                {{ element.product.name }}
+              </div>
+              <div class="text-tableColor">
+                {{ element.product.bulkPrice }} / Casiers
+              </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
 
-      <template #quantity="{ element }">
-        <div class="font-semibold text-black">
-          {{ element.quantity }} casiers
-        </div>
-      </template>
+        <template #quantity="{ element }">
+          <div class="font-semibold text-black">
+            {{ element.quantity }} casiers
+          </div>
+        </template>
 
-      <template #price="{ element }">
-        <div class="font-semibold text-black">
-          {{ helpers.currency(element.product.bulkPrice * element.quantity) }} F
-        </div>
-      </template>
-    </BaseTable>
+        <template #price="{ element }">
+          <div class="font-semibold text-black">
+            {{
+              helpers.currency(element.product.bulkPrice * element.quantity)
+            }}
+            F
+          </div>
+        </template>
+      </BaseTable>
     </div>
-
-  
 
     <div
-      class="bg-white absolute bottom-0 left-0 right-0 border-t border-borderColor font-bold flex items-center justify-between"
+      class="bg-white absolute bottom-0 left-0 right-0 border-t border-borderColor "
     >
-      <div>Total</div>
-      <div>{{ order.totalAmount }} F</div>
+      <div class="mt-4 flex font-bold  items-center justify-between">
+        <div>Total</div>
+        <div>{{ order.totalAmount }} F</div>
+      </div>
     </div>
-  
-   
   </div>
 </template>
 

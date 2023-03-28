@@ -58,7 +58,14 @@ export interface InfoOrganisation {
   organisation: IOrganisation;
   orders: Array<ItemsOrder>;
   partners: string;
+  ranking: IRanking;
   productsInfos: Record<any, any>;
+}
+
+export interface IRanking extends Commun {
+  type: string;
+  rank: number;
+  total: number;
 }
 
 export interface IProduct extends Commun {
@@ -94,10 +101,12 @@ export interface IOrder extends Commun {
 
 export interface IUser extends Commun {
   name: string;
+  firstName: string;
   phone: string;
   email: string;
   sex: Sex;
   role: UserRole;
+  identifier: string;
   organisation: IOrganisation;
   organisationId: string;
   birthday?: Date;
