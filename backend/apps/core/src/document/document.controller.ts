@@ -49,4 +49,12 @@ export class DocumentController {
   downloadProducts(@Param() params, @Query() filterParams: any) {
     return this.documentService.downloadProducts(filterParams);
   }
+
+  @Get('download-products-category')
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadCategories(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadCategories(filterParams);
+  }
 }
