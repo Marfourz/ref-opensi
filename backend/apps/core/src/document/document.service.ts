@@ -13,6 +13,7 @@ import { UserService } from '../user/user.service';
 import { getPlainRole } from 'helpers/getPlainRole';
 import { ProductsService } from '../product/product.service';
 import { ProductCategoryService } from '../product-category/product-category.service';
+import { OrganisationService } from '../organisation/organisation.service';
 
 @Injectable()
 export class DocumentService {
@@ -22,6 +23,7 @@ export class DocumentService {
     private readonly orderService: OrderService,
     private readonly stockService: StockService,
     private readonly userService: UserService,
+    private readonly organisationService: OrganisationService,
     private readonly productService: ProductsService,
     private readonly productCategoryService: ProductCategoryService,
   ) {}
@@ -253,8 +255,29 @@ export class DocumentService {
 
     const docContent = this.getTemplate('template-productsCategories', {
       data: data.data,
-      label: 'Récapitulatif des produits',
+      label: 'Récapitulatif des categories',
     });
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadDeliveryMen(filterParams: any, id: any) {
+    const data: PagiationPayload<User[]> =
+      await this.organisationService.getDeliveryMenOfOrganisation(
+        id,
+        filterParams,
+      );
+
+    const payload: any = data;
+
+    payload.data.map((element) => {
+      element.role = getPlainRole(element.role);
+    });
+
+    payload.label = 'Récapitulatif des livreurs';
+
+    const docContent = this.getTemplate('template-users', payload);
 
     const document = await this.generateDocument(docContent);
     return document;

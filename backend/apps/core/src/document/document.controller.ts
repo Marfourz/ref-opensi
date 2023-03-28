@@ -31,6 +31,15 @@ export class DocumentController {
     return this.documentService.downloadUsers(filterParams, params.id);
   }
 
+  @Get('download-deliveryMen/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadDeliveryMen(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadDeliveryMen(filterParams, params.id);
+  }
+
   @Get('download-stocks/:id')
   @ApiParam({ name: 'id' })
   @ApiQuery({ name: 'page', type: Number, required: false })
