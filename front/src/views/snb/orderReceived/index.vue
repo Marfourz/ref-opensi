@@ -88,7 +88,7 @@
               </template>
               <template #filter>
                 <div class="flex space-x-4 h-full">
-                  <BaseButton icon="upload" size="small"
+                  <BaseButton icon="upload" size="small" @click="downloadOrder"
                     >Télécharger</BaseButton
                   >
                 </div>
@@ -449,6 +449,11 @@ export default defineComponent({
       showItemOrder(items[0]);
     }
 
+
+    async function downloadOrder(){
+     // await orderStore.downloadOrder(order.id as,)
+    }
+
     return {
       titles,
       goToCreateAppros,
@@ -477,6 +482,7 @@ export default defineComponent({
       showHistoric,
       showModal,
       onFetch,
+      downloadOrder
     };
   },
 });

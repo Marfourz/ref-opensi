@@ -33,6 +33,26 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
       }
     },
 
+
+
+    async downloadProduct(query: any, id: PrimaryKey) {
+      try {
+        const response = await Api.get(`product-category/${id}/products`, {
+          params: query,
+        });
+
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+
+
+
+    
+
     async create(data: any) {
       try {
         const response = await Api.post("product-category", data);
