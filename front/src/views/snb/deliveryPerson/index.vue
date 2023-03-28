@@ -68,7 +68,7 @@
         </div>
       </template>
       <template #action="{ element }">
-        <BaseActions :actions="customActions(element)" :data="element" />
+        <BaseActions :actions="customActions(element)" :data="element"  />
       </template>
       <template #status="{ element }">
         <BaseTableStatut
@@ -283,7 +283,6 @@ export default defineComponent({
     const user = reactive<any>({
       name: "",
       firstName: "",
-      identifier: "",
       phone: "",
       email: "",
       address: "",
@@ -297,15 +296,15 @@ export default defineComponent({
       return [
         {
           title: "Homme",
-          value: Sex.MALE,
+          value: Sex.male,
         },
         {
           title: "Femme",
-          value: Sex.FEMALE,
+          value: Sex.female,
         },
         {
           title: "Autre",
-          value: Sex.OTHERS,
+          value: Sex.others,
         },
       ];
     });
