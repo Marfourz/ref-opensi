@@ -100,9 +100,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
 
-    async statInfo(organisationId:string) {
+    async statInfo(organisationId:string, params:{startDate?: Date,endDate?:Date}) {
       try {
-        const response = await Api.get(`organisations/snb/infos/${organisationId}`);
+        const response = await Api.get(`organisations/snb/infos/${organisationId}`,{params});
         return response;
       } catch (error) {
         throw error;
@@ -120,10 +120,10 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async statPartners(type: OrganisationType) {
+    async statPartners(params : {type: OrganisationType,startDate?: Date,endDate?:Date},) {
       try {
         const response = await Api.get(
-          `organisations/top-partners?type=${type}`
+          `organisations/top-partners?`,{params}
         );
         return response;
       } catch (error) {
