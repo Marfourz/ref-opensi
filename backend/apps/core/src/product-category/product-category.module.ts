@@ -31,6 +31,7 @@ import { RolesGuard } from 'guards/roles.guard';
       useClass: RolesGuard,
     },
   ],
+  exports: [ProductCategoryService],
 })
 export class ProductCategoryModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

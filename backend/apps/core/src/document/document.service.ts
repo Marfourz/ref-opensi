@@ -12,6 +12,7 @@ import { StockService } from '../stock/stock.service';
 import { UserService } from '../user/user.service';
 import { getPlainRole } from 'helpers/getPlainRole';
 import { ProductsService } from '../product/product.service';
+import { ProductCategoryService } from '../product-category/product-category.service';
 
 @Injectable()
 export class DocumentService {
@@ -22,6 +23,7 @@ export class DocumentService {
     private readonly stockService: StockService,
     private readonly userService: UserService,
     private readonly productService: ProductsService,
+    private readonly productCategoryService: ProductCategoryService,
   ) {}
 
   async generateReceiptDocument(invoiceId: string) {
@@ -232,6 +234,25 @@ export class DocumentService {
 
     const docContent = this.getTemplate('template-products', {
       data: payload,
+      label: 'Récapitulatif des produits',
+    });
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadCategories(filterParams: any) {
+    const data: any = await this.productCategoryService.getAllCategories(
+      filterParams,
+    );
+
+    data.data.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+    });
+
+    const docContent = this.getTemplate('template-productsCategories', {
+      data: data.data,
       label: 'Récapitulatif des produits',
     });
 
