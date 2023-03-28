@@ -22,6 +22,15 @@ export class DocumentController {
     return this.documentService.downloadOrders(filterParams, params.id);
   }
 
+  @Get('download-received-orders/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadReceivedOrders(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadReceivedOrders(filterParams, params.id);
+  }
+
   @Get('download-users/:id')
   @ApiParam({ name: 'id' })
   @ApiQuery({ name: 'page', type: Number, required: false })

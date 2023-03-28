@@ -176,6 +176,28 @@ export class DocumentService {
     return document;
   }
 
+  async downloadReceivedOrders(filterParams: any, id: any) {
+    const data: any = await this.orderService.getOrdersOfSubOrganisations(
+      filterParams,
+      id,
+    );
+
+    const payload: any = data;
+
+    payload.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+      element.status = getPlainStatus(element.status);
+    });
+
+    payload.label = 'Récapitulatif des commandes';
+
+    const docContent = this.getTemplate('template-orders', payload);
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
   async downloadUsers(filterParams: any, id: any) {
     const data: PagiationPayload<User[]> =
       await this.userService.searchForUsersOfOrganisation(filterParams, id);
