@@ -17,6 +17,12 @@
       </div>
       <BasePagination :peerPage="paginationData.peerPage" :totalElements="paginationData.total" @change="pageChange" />
     </div>
+    
+    <div v-if="items && items.length == 0" class=" h-full flex flex-col justify-center">
+      <EmptyState :title="emptyMessage" image="" ></EmptyState>
+    </div>
+
+
     <BaseTable
       :titles="titles"
       :data="items"
@@ -24,12 +30,16 @@
       :actions="actions"
       :filterActions="filterActions"
       class="mt-6"
+      v-else
       @itemClick="$emit('itemClick',$event)"
     >
       <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
       </template>
     </BaseTable>
+
+   
+    
   </div>
 </template>
 
@@ -49,6 +59,7 @@ import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
 import { IAction } from "@/types/interfaces";
 import { PrimaryKey } from "../../types/interfaces";
+import EmptyState from "../EmptyState.vue";
 
 export interface QueryParams {
   q: string;
@@ -68,7 +79,7 @@ export type FetchData<T> = (
   
 
 export default defineComponent({
-  components: { BasePagination },
+  components: { BasePagination,EmptyState },
   props: {
     fetchData: {
       type: Function as PropType<FetchData<any>>,
@@ -80,6 +91,7 @@ export default defineComponent({
     },
     emptyMessage: {
       type: String,
+      default : "Aucun élément ajouté pour l'instant"
     },
     loading: {
       type: Boolean,
@@ -214,6 +226,7 @@ export default defineComponent({
       loadData();
     }
 
+
     
     return {
       paginationData,
@@ -227,6 +240,9 @@ export default defineComponent({
       loading
     };
   },
+
+
+ 
 });
 </script>
 
