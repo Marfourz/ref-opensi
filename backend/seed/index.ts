@@ -129,6 +129,13 @@ async function main() {
       console.info('DeliveryMan was already created : ', existingDeliveryMan);
     }*/
 
+    const usersAfterWork = await (
+      await axios.get(process.env.USERS_MANAGER_URL + '/users')
+    ).data;
+
+    console.log('Users in USER MANAGER : ', usersAfterWork.length);
+    console.log('Current users in USER MANAGER : ', usersAfterWork);
+
     console.info('Database seed successfully!!');
   } catch (error) {
     throw error;
