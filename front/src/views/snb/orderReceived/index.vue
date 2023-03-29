@@ -67,7 +67,7 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganizationType"
-              :downloadData="orderStore.downloadOrder"
+              :downloadData="orderStore.downloadReceivedOrder"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
               @onFetch="onFetch"

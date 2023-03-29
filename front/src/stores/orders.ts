@@ -118,5 +118,25 @@ export const useOrdersStore = defineStore("ordersStore", {
         throw error;
       }
     },
+
+
+    async downloadReceivedOrder(query: any,id: PrimaryKey) {
+      try {
+        const response = await Api.get(
+          `documents/download-received-orders/${id}`
+        );
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
   },
+
+
+
+  
+
+
+
+  
 });
