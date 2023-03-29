@@ -36,7 +36,8 @@ import BaseRightModal from "@/components/base/BaseRightModal.vue";
 import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
 import BaseActions from "@/components/base/BaseActions.vue";
 import VPanel from "@/components/VPanel.vue";
-
+import HistoryStockList from "@/components/HistoryStockList.vue";
+// import HistoryStock from "@/components/HistoryStock.vue";
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -74,6 +75,8 @@ app.component("BaseRightModal", BaseRightModal);
 app.component("HistoryTrackingList", HistoryTrackingList);
 app.component("BaseActions", BaseActions);
 app.component("VPanel", VPanel);
+// app.component("HistoryStock", HistoryStock);
+app.component("HistoryStockList", HistoryStockList);
 
 
 app.use(createPinia());

@@ -79,7 +79,6 @@ export const useProductStore = defineStore("productStore", {
       }
     },
 
-
     async downloadProductsStock(query: any, orgId: PrimaryKey) {
       try {
         const response = await Api.get(`documents/download-stocks/${orgId}`, {
@@ -91,10 +90,6 @@ export const useProductStore = defineStore("productStore", {
         throw error;
       }
     },
-
-
-
-    
 
     async createStock(data: ICreateStock) {
       try {
@@ -129,6 +124,16 @@ export const useProductStore = defineStore("productStore", {
       ];
 
       return labels.find((value: any) => value.code == type)?.label;
+    },
+
+    async historyStock(id: PrimaryKey) {
+      try {
+        const response = await Api.get(`stocks/${id}/stock-evolution`);
+        console.log(response);
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
     },
   },
 });

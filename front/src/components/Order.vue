@@ -36,7 +36,7 @@
     </div>
 
     <div
-      class="bg-white pt-1 absolute bottom-0 left-0 right-0 border-t border-borderColor font-bold flex items-center justify-between"
+      class="bg-white pt-1 absolute bottom-0 left-0 right-0 border-t border-borderColor "
     >
       <div class="mt-4 flex font-bold  items-center justify-between">
         <div>Total</div>
