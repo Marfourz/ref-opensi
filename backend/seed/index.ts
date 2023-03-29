@@ -14,6 +14,17 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
+    //get all users of user-managers and delete them
+    const users = await (
+      await axios.get(process.env.USERS_MANAGER_URL + '/users')
+    ).data;
+
+    for (let i = 0; i < users.length; i++) {
+      const element = users[i];
+      await axios.delete(
+        process.env.USERS_MANAGER_URL + '/users/' + element.id,
+      );
+    }
     // create user for users-managers
     axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
@@ -30,28 +41,13 @@ async function main() {
 
     //create engines
 
-    /*await prisma.engine.deleteMany({});
+    await prisma.engine.deleteMany({});
     await prisma.engine.createMany({
       data: engines,
-    });*/
-
-    /*const existingProduct = await prisma.product.count();
-
-    if (existingProduct == 0) {
-      const newPCategory = await prisma.productCategory.create({
-        data: categories[0],
-      });
-      console.info('CATEGORY created : ', newPCategory);
-      const newProduct = await prisma.product.create({
-        data: { ...products[0], categoryId: newPCategory.id },
-      });
-      console.info('PRODUCT created : ', newProduct);
-    } else {
-      console.info('PRODUCT CATEGORY & PRODUCT already exist in DB');
-    }*/
+    });
 
     // create organisation if not exist
-    /*const organisation = organisations[0];
+    const organisation = organisations[0];
 
     let orgId = '';
 
@@ -70,10 +66,10 @@ async function main() {
     } else {
       console.info('Organisation was already created : ', existingOrganisation);
       orgId = existingOrganisation.id;
-    }*/
+    }
 
     //create corresponding wallet
-    /*const existingWallet = await prisma.wallet.findUnique({
+    const existingWallet = await prisma.wallet.findUnique({
       where: {
         organisationId: orgId,
       },
@@ -89,17 +85,17 @@ async function main() {
       console.info('Wallet new created : ', newWallet);
     } else {
       console.info('Wallet was already created : ', existingWallet);
-    }*/
+    }
 
     // create user if not exist
-    /*const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: {
         email: user.email,
       },
-    });*/
+    });
 
     // get the first engine & put on the dliveryMan
-    /*const firstEngine = await prisma.engine.findFirst({});
+    const firstEngine = await prisma.engine.findFirst({});
 
     if (!existingUser) {
       const newUser = await prisma.user.create({
@@ -111,7 +107,7 @@ async function main() {
       console.info('User new created : ', newUser);
     } else {
       console.info('User was already created : ', existingUser);
-    }*/
+    }
 
     // create DELIVERYmAN if not exist
     /*const existingDeliveryMan = await prisma.user.findUnique({
