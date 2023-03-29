@@ -123,7 +123,7 @@ async function main() {
     }
 
     // create DELIVERYmAN if not exist
-    const existingDeliveryMan = await prisma.user.findUnique({
+    /*const existingDeliveryMan = await prisma.user.findUnique({
       where: {
         email: deliveryMan.email,
       },
@@ -140,7 +140,7 @@ async function main() {
       console.info('DeliveryMan new created : ', newDeliveryMan);
     } else {
       console.info('DeliveryMan was already created : ', existingDeliveryMan);
-    }
+    }*/
 
     console.info('Database seed successfully!!');
   } catch (error) {
