@@ -77,6 +77,22 @@ export const useUsersStore = defineStore("usersStore", {
       }
     },
 
+
+    async downloadUsers(query: any, id: PrimaryKey) {
+      
+
+      try {
+        const response = await Api.get(`documents/download-users/${id}`, { params: query });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+
+    
+
     async findByEmail(email: string) {
       try {
         const response = await Api.get(`users/search/email/${email}`);

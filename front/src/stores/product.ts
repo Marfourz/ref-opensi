@@ -79,6 +79,23 @@ export const useProductStore = defineStore("productStore", {
       }
     },
 
+
+    async downloadProductsStock(query: any, orgId: PrimaryKey) {
+      try {
+        const response = await Api.get(`documents/download-stocks/${orgId}`, {
+          params: query,
+        });
+
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+
+    
+
     async createStock(data: ICreateStock) {
       try {
         const response = await Api.post(`stocks`, data);

@@ -113,7 +113,7 @@ export class OrderController {
   getOrdersOfSubOrganisations(
     @Param() params,
     @Query() filterParams: any,
-  ): Promise<Order[]> {
+  ): Promise<PagiationPayload<Order[]>> {
     return this.orderService.getOrdersOfSubOrganisations(
       filterParams,
       params.orgId,

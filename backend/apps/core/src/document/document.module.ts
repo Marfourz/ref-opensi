@@ -7,6 +7,9 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderModule } from '../order/order.module';
 import { StockModule } from '../stock/stock.module';
 import { UserModule } from '../user/user.module';
+import { ProductsModule } from '../product/product.module';
+import { ProductCategoryModule } from '../product-category/product-category.module';
+import { OrganisationModule } from '../organisation/organisation.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { UserModule } from '../user/user.module';
     OrderModule,
     StockModule,
     UserModule,
+    ProductsModule,
+    ProductCategoryModule,
+    OrganisationModule,
   ],
   controllers: [DocumentController],
   providers: [DocumentService, PrismaService],

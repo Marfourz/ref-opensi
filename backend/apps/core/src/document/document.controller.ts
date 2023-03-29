@@ -22,6 +22,15 @@ export class DocumentController {
     return this.documentService.downloadOrders(filterParams, params.id);
   }
 
+  @Get('download-received-orders/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadReceivedOrders(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadReceivedOrders(filterParams, params.id);
+  }
+
   @Get('download-users/:id')
   @ApiParam({ name: 'id' })
   @ApiQuery({ name: 'page', type: Number, required: false })
@@ -29,6 +38,15 @@ export class DocumentController {
   @ApiQuery({ name: 'q', type: String, required: false })
   downloadUsers(@Param() params, @Query() filterParams: any) {
     return this.documentService.downloadUsers(filterParams, params.id);
+  }
+
+  @Get('download-deliveryMen/:id')
+  @ApiParam({ name: 'id' })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadDeliveryMen(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadDeliveryMen(filterParams, params.id);
   }
 
   @Get('download-stocks/:id')
@@ -39,5 +57,22 @@ export class DocumentController {
   @ApiQuery({ name: 'categoryId', type: String, required: false })
   downloadStocks(@Param() params, @Query() filterParams: any) {
     return this.documentService.downloadStocks(filterParams, params.id);
+  }
+
+  @Get('download-products/:id')
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  @ApiQuery({ name: 'categoryId', type: String, required: false })
+  downloadProducts(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadProducts(filterParams);
+  }
+
+  @Get('download-products-category')
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'q', type: String, required: false })
+  downloadCategories(@Param() params, @Query() filterParams: any) {
+    return this.documentService.downloadCategories(filterParams);
   }
 }
