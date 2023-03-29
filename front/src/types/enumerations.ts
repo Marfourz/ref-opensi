@@ -1,7 +1,7 @@
 export enum Sex {
-  MALE = "male",
-  FEMALE = "female",
-  OTHERS = "others",
+  male = "male",
+  female = "female",
+  others = "others",
 }
 
 export enum UserRole {
@@ -24,7 +24,6 @@ export enum OrganisationType {
   MD = "md",
   DP = "dp",
 }
-
 
 export enum AccountStatus {
   DELIVERY = "delivered",
@@ -58,25 +57,23 @@ export enum UserAccountStatus {
   SUSPENDED = "suspended",
 }
 
-  export enum OrderStatus {
-    NEW = "new",
-    DELIVERY = "delivered",
-    DELIVERED = "delivered",
-    ACCEPTED = "accepted",
-    REJECTED = "aborted",
-    INPROGRESS = "inProgress",
-  }
+export enum OrderStatus {
+  NEW = "new",
+  DELIVERY = "delivered",
+  DELIVERED = "delivered",
+  ACCEPTED = "accepted",
+  REJECTED = "aborted",
+  INPROGRESS = "inProgress",
+}
 
-  export enum HistoricalOrderStatus {
-    CREATED = "created",
-    DELIVERED = "delivered",
-    ACCEPTED = "accepted",
-  }
+export enum HistoricalOrderStatus {
+  CREATED = "created",
+  DELIVERED = "delivered",
+  ACCEPTED = "accepted",
+}
 
-
-
-  export enum StockState{
-    ALL = '',
-    SUPPLY = 'supply',
-    SALE='sale'
-  }
+export enum StockState {
+  ALL = "",
+  SUPPLY = "supply",
+  SALE = "sale",
+}

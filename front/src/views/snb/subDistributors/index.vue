@@ -16,6 +16,7 @@
           </div>
         </div>
       </div>
+
       <BaseTableWithFilter
         class="flex flex-col flex-1"
         :titles="titles"
@@ -24,6 +25,7 @@
         :actions="actions"
         :requestId="organisationId"
         :key="reload"
+        :emptyMessage="emptyMessage"
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
@@ -37,13 +39,13 @@
             >
           </div>
         </template>
+
         <template #status="{ element }">
           <BaseTableStatut
             :title="getStatutLabel(element)"
             :type="getStatutType(element)"
           ></BaseTableStatut>
         </template>
-
         <template #action="{ element }">
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
@@ -155,7 +157,7 @@ import { PrimaryKey } from "../../../types/interfaces";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 export default defineComponent({
-  components: { Form},
+  components: { Form },
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
@@ -331,8 +333,6 @@ export default defineComponent({
       if (element.status === "inactive") return (element.status = "active");
     }
 
-    
-
     const partenaireTitle = computed(() => {
       if (master.type == OrganisationType.DA) return "distributeur agrée";
       else if (master.type == OrganisationType.DP) return "dépôt";
@@ -461,6 +461,25 @@ export default defineComponent({
       }
     });
 
+
+    const emptyMessage = computed(()=>{
+      if(master.type == OrganisationType.MD)
+        return "Vos masters distributeurs ajoutés seront visibles ici.<br> Cliquez sur le bouton \"Nouveau master distributeur\" <br> pour ajouter des masters distributeurs"
+      else if(master.type == OrganisationType.DA ){
+        if(organisationType.value == OrganisationType.MD)
+          return "Vos distributeurs agréés ajoutés seront visibles ici.<br> Cliquez sur le bouton \"Nouveau distributeur agréé\" <br> pour ajouter des distributeurs agréés"
+        else
+          return "Vos distributeurs agréés ajoutés seront visibles ici."
+      }
+      else if(master.type == OrganisationType.DP){
+        if(organisationType.value == OrganisationType.DP)
+          return "Vos dépôts ajoutés seront visibles ici. Cliquez sur le bouton \"Nouveau dépôt\" pour ajouter des dépôts"
+        else
+          return "Vos dépôts ajoutés seront visibles ici."
+      }
+       
+    })
+
     return {
       organizationStore,
       titles,
@@ -486,6 +505,7 @@ export default defineComponent({
       customActions,
       showNewSubDistributor,
       toogleStatus,
+      emptyMessage
     };
   },
 });

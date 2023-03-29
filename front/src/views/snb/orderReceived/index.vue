@@ -67,6 +67,7 @@
               :titles="titles"
               :requestId="organisationId"
               :fetchData="orderStore.fetchAllByOrganizationType"
+              :downloadData="orderStore.downloadOrder"
               :filterActions="filterActions"
               @itemClick="showItemOrder"
               @onFetch="onFetch"
@@ -86,13 +87,7 @@
                   {{ helpers.formatDateHour(element.createdAt) }}
                 </div>
               </template>
-              <template #filter>
-                <div class="flex space-x-4 h-full">
-                  <BaseButton icon="upload" size="small"
-                    >Télécharger</BaseButton
-                  >
-                </div>
-              </template>
+             
             </BaseTableWithFilter>
           </div>
         </div>
@@ -187,12 +182,10 @@
     </PageInTwoPart>
     <BaseRightModal :show="showModal" v-if="showModal">
       <HistoryTrackingList
-        :orderId="order.reference"
+        :orderReference="order.reference"
         :orderStatus="getStatutType(order)"
         :orderStatusLabel="getStatutLabel(order)"
-        :order_created="order"
-        :order_accepted="order"
-        :order_delivered="order"
+        :order="order"
         @close="showModal = false"
       ></HistoryTrackingList>
     </BaseRightModal>
@@ -324,8 +317,11 @@ export default defineComponent({
             action: rejectOrder,
           },
         ];
-        else if (element.status == OrderStatus.ACCEPTED || element.status == OrderStatus.INPROGRESS || element.status == OrderStatus.DELIVERED) {
-
+      else if (
+        element.status == OrderStatus.ACCEPTED ||
+        element.status == OrderStatus.INPROGRESS ||
+        element.status == OrderStatus.DELIVERED
+      ) {
         if (!element.deliveryMan) {
           elements.push({
             title: "Assigner à un livreur",
@@ -448,6 +444,11 @@ export default defineComponent({
       showItemOrder(items[0]);
     }
 
+
+    async function downloadOrder(){
+     // await orderStore.downloadOrder(order.id as,)
+    }
+
     return {
       titles,
       goToCreateAppros,
@@ -476,8 +477,7 @@ export default defineComponent({
       showHistoric,
       showModal,
       onFetch,
-      // infoHistoryOrder,
-      // getHistoryOrder,
+      downloadOrder
     };
   },
 });

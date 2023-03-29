@@ -56,17 +56,19 @@
       >
     </div>
 
-    <BaseTableWithFilter
+    <div>
+      <BaseTableWithFilter
       :titles="titles"
       :fetchData="organizationStore.fetchAllDeliveryMen"
+      :downloadData="organizationStore.downloadDeliveryMen"
       :requestId="organisationId"
-      :actions="actions"
       :key="reload"
+     
     >
-      <template #filter>
-        <div class="flex space-x-4 h-full">
-          <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-        </div>
+    
+      <template #action="{ element }">
+          
+        <BaseActions :actions="customActions(element)" :data="element"  />
       </template>
       <template #status="{ element }">
         <BaseTableStatut
@@ -75,6 +77,9 @@
         ></BaseTableStatut>
       </template>
     </BaseTableWithFilter>
+    </div>
+
+  
 
     <BaseBottomModal :show="showModal">
       <div class="w-[80%]">
@@ -93,15 +98,23 @@
             <div class="grid grid-cols-2 gap-6">
               <BaseInput
                 name="nom d'utilisateur"
-                label="Nom d'utilisateur"
+                label="Nom "
                 rules="required"
                 v-model="user.name"
+              ></BaseInput>
+
+              <BaseInput
+                name="prénom d'utilisateur"
+                label="Prénom"
+                rules="required"
+                v-model="user.firstName"
               ></BaseInput>
 
               <BaseSelect
                 label="Sexe"
                 :items="sexes"
                 v-model="user.sex"
+                placeholder="Sélectionner un sexe..."
               ></BaseSelect>
 
               <BaseInput
@@ -131,6 +144,7 @@
                 rules="required"
                 :items="engines"
                 v-model="user.engineId"
+                placeholder="Sélectionnez l’engin..."
               ></BaseSelect>
 
               <BaseInput
@@ -156,7 +170,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useUsersStore } from "@/stores/users";
 import { Sex, UserRole } from "@/types/enumerations";
 import { Form } from "vee-validate";
-import { IUser } from "@/types/interfaces";
+import { IAction, IUser } from "@/types/interfaces";
 import { useEnginesStore } from "../../../stores/engines";
 import { useOrganizationStore } from "../../../stores/organization";
 import BaseTableStatut from "../../../components/base/BaseTableStatut.vue";
@@ -168,23 +182,39 @@ export default defineComponent({
   setup() {
     const userStore = useUsersStore();
 
-    const actions = [
-      {
-        title: "Voir détail",
-        icon: "eye",
-        action: details,
-      },
-      {
-        title: "Modifier",
-        icon: "edit",
-        action: onUpdate,
-      },
-      {
-        title: "Supprimer",
-        icon: "removeRed",
-        action: onDelete,
-      },
-    ];
+    const customActions: (el: { status: string }) => IAction[] = (el: {
+      status: string;
+    }) => {
+      const actions = [
+        {
+          title: "Voir détail",
+          icon: "details",
+          action: details,
+        },
+      ];
+      if (el.status === UserAccountStatus.ACTIVE) {
+        actions.push({
+          title: "Désactiver",
+          icon: "cancel",
+          action: toogleStatus,
+        });
+        return actions;
+      }
+      actions.push({
+        title: "Activer",
+        icon: "yes",
+        action: toogleStatus,
+      });
+      return actions;
+    };
+
+    function toogleStatus(element: IUser) {
+      if (element.status === "active")
+        return (element.status = UserAccountStatus.INACTIVE);
+
+      if (element.status === "inactive")
+        return (element.status = UserAccountStatus.ACTIVE);
+    }
 
     const router = useRouter();
     function details(row: IUser) {
@@ -255,6 +285,7 @@ export default defineComponent({
 
     const user = reactive<any>({
       name: "",
+      firstName: "",
       phone: "",
       email: "",
       address: "",
@@ -268,15 +299,15 @@ export default defineComponent({
       return [
         {
           title: "Homme",
-          value: Sex.MALE,
+          value: Sex.male,
         },
         {
           title: "Femme",
-          value: Sex.FEMALE,
+          value: Sex.female,
         },
         {
           title: "Autre",
-          value: Sex.OTHERS,
+          value: Sex.others,
         },
       ];
     });
@@ -286,11 +317,12 @@ export default defineComponent({
     const titles = [
       {
         title: "Identifiant",
-        name: "id",
+        name: "identifier",
       },
       {
         title: "Nom & Prénoms",
         name: "name",
+        transform: identifiants,
       },
 
       {
@@ -313,9 +345,13 @@ export default defineComponent({
       },
     ];
 
+    function identifiants(element: IUser) {
+      return element.name + " " + element.firstName;
+    }
+
     function getStatutLabel(element: IUser) {
-      if (element.status == UserAccountStatus.ACTIVE) return "Active";
-      else if (element.status == UserAccountStatus.INACTIVE) return "Inactive";
+      if (element.status == UserAccountStatus.ACTIVE) return "Actif";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactif";
       else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
     }
 
@@ -387,7 +423,6 @@ export default defineComponent({
       sexes,
       user,
       onSubmit,
-      actions,
       selectedUser,
       createUser,
       modal,
@@ -399,6 +434,7 @@ export default defineComponent({
       organisationId,
       getStatutLabel,
       getStatutType,
+      customActions,
     };
   },
 });

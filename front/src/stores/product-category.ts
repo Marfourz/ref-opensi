@@ -20,6 +20,19 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
       }
     },
 
+
+    async downloadCategories(query: any) {
+      try {
+        const response = await Api.get(`documents/download-products-category`, {
+          params: query,
+        });
+
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async fetchProducts(query: any, id: PrimaryKey) {
       try {
         const response = await Api.get(`product-category/${id}/products`, {
@@ -32,6 +45,26 @@ export const useProductCategoryStore = defineStore("productCategoryStore", {
         throw error;
       }
     },
+
+    
+
+    async downloadProduct(query: any, id: PrimaryKey) {
+      try {
+        const response = await Api.get(`documents/download-products/${id}`, {
+          params: query,
+        });
+
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
+
+
+
+    
 
     async create(data: any) {
       try {

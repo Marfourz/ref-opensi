@@ -160,7 +160,8 @@ export default {
     },
 
     apply() {
-      this.$emit("input", this.dateChoice);
+      console.log("value", this.dateChoice.start);
+      this.$emit("input", {startDate : this.dateChoice.start, endDate: this.dateChoice.end});
       this.show = false;
     },
 

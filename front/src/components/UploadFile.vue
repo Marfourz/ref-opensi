@@ -26,13 +26,13 @@
       class="border border-dashed border-primary py-4 flex items-center justify-between rounded px-8"
       v-else
     >
-      <div class="rounded">
+      <div class="rounded h-10 w-10">
         <img
           :src="onlineFile.url"
           alt=""
           v-if="onlineFile && !selectedFile.link"
         />
-        <img :src="selectedFile.link" alt="" class="h-8" v-else />
+        <img :src="selectedFile.link" alt="" class="h-10 w-10" v-else />
       </div>
 
       <div class="flex items-center space-x-8">

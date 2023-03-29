@@ -91,6 +91,7 @@
       :actions="actions"
       @total="total = $event"
       :key="reload"
+      :downloadData="productCategoryStore.downloadCategories"
     >
       <template #description="{ element }">
         <div>

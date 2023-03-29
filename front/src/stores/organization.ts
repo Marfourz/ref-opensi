@@ -43,6 +43,18 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+
+    async downloadDeliveryMen(query: any, id: PrimaryKey) {
+      try {
+        const response = await Api.get(`documents/download-deliveryMen/${id}`, {
+          params: query,
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async create(data: any) {
       try {
         const response = await Api.post("organisations", data);
@@ -100,9 +112,9 @@ export const useOrganizationStore = defineStore("organizationStore", {
     },
 
 
-    async statInfo(organisationId:string) {
+    async statInfo(organisationId:string, params:{startDate?: Date,endDate?:Date}) {
       try {
-        const response = await Api.get(`organisations/snb/infos/${organisationId}`);
+        const response = await Api.get(`organisations/snb/infos/${organisationId}`,{params});
         return response;
       } catch (error) {
         throw error;
@@ -120,10 +132,10 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-    async statPartners(type: OrganisationType) {
+    async statPartners(params : {type: OrganisationType,startDate?: Date,endDate?:Date},) {
       try {
         const response = await Api.get(
-          `organisations/top-partners?type=${type}`
+          `organisations/top-partners?`,{params}
         );
         return response;
       } catch (error) {

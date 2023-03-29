@@ -5,13 +5,15 @@ import * as handlebars from 'handlebars';
 import { HttpService } from '@nestjs/axios';
 import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderService } from '../order/order.service';
-import { PagiationPayload } from '../../../../types/index';
-import { Order, User, Stock } from '@prisma/client';
+import { PagiationPayload, Payload } from '../../../../types/index';
+import { Order, User, Stock, Product } from '@prisma/client';
 import { getPlainPackagingType, getPlainStatus } from 'helpers/getPlainStatus';
 import { StockService } from '../stock/stock.service';
 import { UserService } from '../user/user.service';
 import { getPlainRole } from 'helpers/getPlainRole';
 import { ProductsService } from '../product/product.service';
+import { ProductCategoryService } from '../product-category/product-category.service';
+import { OrganisationService } from '../organisation/organisation.service';
 
 @Injectable()
 export class DocumentService {
@@ -21,6 +23,9 @@ export class DocumentService {
     private readonly orderService: OrderService,
     private readonly stockService: StockService,
     private readonly userService: UserService,
+    private readonly organisationService: OrganisationService,
+    private readonly productService: ProductsService,
+    private readonly productCategoryService: ProductCategoryService,
   ) {}
 
   async generateReceiptDocument(invoiceId: string) {
@@ -171,6 +176,28 @@ export class DocumentService {
     return document;
   }
 
+  async downloadReceivedOrders(filterParams: any, id: any) {
+    const data: any = await this.orderService.getOrdersOfSubOrganisations(
+      filterParams,
+      id,
+    );
+
+    const payload: any = data.data;
+
+    payload.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+      element.status = getPlainStatus(element.status);
+    });
+
+    payload.label = 'Récapitulatif des commandes';
+
+    const docContent = this.getTemplate('template-orders', payload);
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
   async downloadUsers(filterParams: any, id: any) {
     const data: PagiationPayload<User[]> =
       await this.userService.searchForUsersOfOrganisation(filterParams, id);
@@ -197,12 +224,10 @@ export class DocumentService {
     const payload: any = data.data;
 
     payload.forEach((element, i) => {
-      if (element.stocks.length >= 1) {
-        stocks.push(element.stocks[0]);
-        stocks[i].name = element.name;
-        stocks[i].bulkPrice = element.bulkPrice;
-        stocks[i].total = element.bulkPrice * element.unitPrice;
-      }
+      stocks.push(element);
+      stocks[i].name = element.product.name;
+      stocks[i].bulkPrice = element.product.bulkPrice;
+      stocks[i].total = element.product.bulkPrice * element.product.unitPrice;
     });
 
     stocks.forEach((element) => {
@@ -210,15 +235,71 @@ export class DocumentService {
       element.id = element.id.toString().slice(-8);
     });
 
-    /*return {
-      data: stocks,
-      label: 'Récapitulatif des stocks',
-    };*/
-
     const docContent = this.getTemplate('template-stocks', {
       data: stocks,
       label: 'Récapitulatif des stocks',
     });
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadProducts(filterParams: any) {
+    const data: PagiationPayload<Product[]> =
+      await this.productService.searchForProducts(filterParams);
+
+    const payload: any = data.data;
+
+    payload.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+      //element.status = getPlainStatus(element.status);
+    });
+
+    const docContent = this.getTemplate('template-products', {
+      data: payload,
+      label: 'Récapitulatif des produits',
+    });
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadCategories(filterParams: any) {
+    const data: any = await this.productCategoryService.getAllCategories(
+      filterParams,
+    );
+
+    data.data.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+    });
+
+    const docContent = this.getTemplate('template-productsCategories', {
+      data: data.data,
+      label: 'Récapitulatif des categories',
+    });
+
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadDeliveryMen(filterParams: any, id: any) {
+    const data: PagiationPayload<User[]> =
+      await this.organisationService.getDeliveryMenOfOrganisation(
+        id,
+        filterParams,
+      );
+
+    const payload: any = data;
+
+    payload.data.map((element) => {
+      element.role = getPlainRole(element.role);
+    });
+
+    payload.label = 'Récapitulatif des livreurs';
+
+    const docContent = this.getTemplate('template-users', payload);
 
     const document = await this.generateDocument(docContent);
     return document;

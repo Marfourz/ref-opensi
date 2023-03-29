@@ -1,22 +1,50 @@
 <template>
   <div>
-    <div v-if="!hideFilter" class="w-full p-4 border rounded flex items-center justify-between shadow">
+    <div
+      v-if="!hideFilter"
+      class="w-full p-4 border rounded flex items-center justify-between shadow"
+    >
       <div class="space-x-4 flex">
-        <div class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]">
+        <div
+          class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]"
+        >
           <BaseIcon name="search" class="text-grey-50"></BaseIcon>
-          <input type="text" v-model="params.q" @input="onSearch"
+          <input
+            type="text"
+            v-model="params.q"
+            @input="onSearch"
             class="outiline-0 text-gray-700 focus:shadow-outline focus:outline-none w-full bg-transparent"
-            placeholder="Rechercher" />
+            placeholder="Rechercher"
+          />
         </div>
 
         <div class="">
           <slot name="filter">
-            <BaseButton icon="upload" size="small" class="h-full">Télécharger</BaseButton>
+            <BaseButton
+              icon="upload"
+              size="small"
+              class="h-full"
+              @click="downloadData"
+              :loading="downloadLoading"
+              >Télécharger</BaseButton
+            >
           </slot>
         </div>
       </div>
-      <BasePagination :peerPage="paginationData.peerPage" :totalElements="paginationData.total" @change="pageChange" />
+      <BasePagination
+        :peerPage="paginationData.peerPage"
+        :totalElements="paginationData.total"
+        @change="pageChange"
+      />
     </div>
+
+    <div
+      v-if="items && items.length == 0"
+      class="h-full flex flex-col justify-center mt-6"
+    >
+      <EmptyState :title="emptyMessage" image=""></EmptyState>
+    </div>
+
     <BaseTable
       :titles="titles"
       :data="items"
@@ -24,7 +52,8 @@
       :actions="actions"
       :filterActions="filterActions"
       class="mt-6"
-      @itemClick="$emit('itemClick',$event)"
+      v-else
+      @itemClick="$emit('itemClick', $event)"
     >
       <template v-for="(_, name) in slots" v-slot:[name]="slotData">
         <slot :name="name" v-bind="slotData" />
@@ -49,6 +78,8 @@ import BasePagination from "./BasePagination.vue";
 import type { ITitle } from "./BaseTable.vue";
 import { IAction } from "@/types/interfaces";
 import { PrimaryKey } from "../../types/interfaces";
+import EmptyState from "../EmptyState.vue";
+import { useToast } from "vue-toastification";
 
 export interface QueryParams {
   q: string;
@@ -65,13 +96,20 @@ export type FetchData<T> = (
   id?: PrimaryKey
 ) => Promise<ResponseData<T>>;
 
-  
+export type DownloadData<T> = (
+  params: QueryParams,
+  id?: PrimaryKey
+) => Promise<any>;
 
 export default defineComponent({
-  components: { BasePagination },
+  components: { BasePagination, EmptyState },
   props: {
     fetchData: {
       type: Function as PropType<FetchData<any>>,
+      required: true,
+    },
+    downloadData: {
+      type: Function as PropType<DownloadData<any>>,
       required: true,
     },
     titles: {
@@ -80,6 +118,7 @@ export default defineComponent({
     },
     emptyMessage: {
       type: String,
+      default: "Aucun élément ajouté pour l'instant",
     },
     loading: {
       type: Boolean,
@@ -101,9 +140,8 @@ export default defineComponent({
       default: false,
     },
 
-    filterActions:{
-      type : Function 
-
+    filterActions: {
+      type: Function,
     },
 
     params: {
@@ -137,7 +175,6 @@ export default defineComponent({
         let response;
         if (!props.requestId) {
           response = await props.fetchData({ ...params, ...props.params });
-          
         } else {
           response = await props.fetchData(
             { ...params, ...props.params },
@@ -148,24 +185,55 @@ export default defineComponent({
 
         if (Array.isArray(response)) {
           items.value = response;
-          
         } else {
           items.value = response.data;
           paginationData.total = response.count;
         }
 
-        
-
         loading.value = false;
-        
+
         context.emit("total", items.value.length);
         context.emit("onFetch", items.value);
-        
       } catch (error: any) {
         console.log({ ...error });
         loading.value = false;
       }
     }
+
+    const downloadLoading = ref(false)
+
+    const toast = useToast()
+    async function downloadData() {
+      params.perPage = paginationData.peerPage;
+      downloadLoading.value = true
+      try {
+        let response;
+        if (!props.requestId) {
+          response = await props.downloadData({ ...params, ...props.params });
+        } else {
+          response = await props.downloadData(
+            { ...params, ...props.params },
+            props.requestId
+          );
+        }
+        downloadURI(response.url, "")
+        downloadLoading.value = false
+      } catch (error: any) {
+        console.log({ ...error });
+        toast.error("Echec du téléchargement.")
+        downloadLoading.value = false
+
+      }
+    }
+
+    const downloadURI = (uri : string, name : string) => {
+      const link = document.createElement("a");
+      link.download = name;
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
 
     watch(
       () => props.requestId,
@@ -214,7 +282,6 @@ export default defineComponent({
       loadData();
     }
 
-    
     return {
       paginationData,
       search,
@@ -224,7 +291,9 @@ export default defineComponent({
       pageChange,
       slotDatas,
       slots,
-      loading
+      loading,
+      downloadData,
+      downloadLoading
     };
   },
 });

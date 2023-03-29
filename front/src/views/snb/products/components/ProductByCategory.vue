@@ -12,7 +12,9 @@
         <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0" :selectedTab="categoryId">
           <template #[tab.name] v-for="tab in tabs">
             <BaseTableWithFilter :key="tab.name" :fetchData="productStore.fetchAllProductsStock" :titles="titles"
-              :actions="actions" :requestId="organisationId" :params="{ categoryId: categoryId }" class="mt-6">
+              :actions="actions" :requestId="organisationId" :params="{ categoryId: categoryId }" class="mt-6"
+              :downloadData="productStore.downloadProductsStock"
+              >
               <template #image="{ element }">
                 <div>
                   <img :src="`${element.product.image && element.product.image[0]
