@@ -215,6 +215,19 @@ export class AuthService {
   }
 
   async getResetPasswordCode(user: UserGetResetDto) {
+    const userExist = await this.prismaService.user.findUnique({
+      where: {
+        email: user.username,
+      },
+    });
+
+    if (!userExist) {
+      throw new HttpException(
+        'Utilisateur avec cet email introuvable',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const otp = getRandomInt(10000, 99999).toString();
 
     await this.prismaService.user.update({
@@ -243,6 +256,19 @@ export class AuthService {
   }
 
   async resetPasswordWithOtp(data: UserResetPasswordOtp) {
+    const userExist = await this.prismaService.user.findUnique({
+      where: {
+        email: data.username,
+      },
+    });
+
+    if (!userExist) {
+      throw new HttpException(
+        'Utilisateur avec cet email introuvable',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const token = await this.getResetPasswordToken({ username: data.username });
 
     await this.resetPassword({
@@ -257,6 +283,19 @@ export class AuthService {
   }
 
   async verifyOtpCode(data: VerifyOtpDto) {
+    const userExist = await this.prismaService.user.findUnique({
+      where: {
+        email: data.username,
+      },
+    });
+
+    if (!userExist) {
+      throw new HttpException(
+        'Utilisateur avec cet email introuvable',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const user = await this.prismaService.user.findFirst({
       where: {
         email: data.username,
