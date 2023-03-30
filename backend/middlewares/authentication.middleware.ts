@@ -60,6 +60,8 @@ export class AuthenticationMiddleware implements NestMiddleware {
                 data.orgId = user.organisation.id;
                 req.user = data;
 
+                console.log('The current user connected : ', req.user);
+
                 next();
               })
               .catch((error) => {

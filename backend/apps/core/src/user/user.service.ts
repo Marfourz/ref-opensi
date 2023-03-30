@@ -92,13 +92,24 @@ export class UserService {
     }
   }
 
-  async updateSingleUser(id: string, update: updateUserDto): Promise<User> {
+  async updateSingleUser(
+    user,
+    id: string,
+    update: updateUserDto,
+  ): Promise<User> {
     try {
+      if (update.email) {
+        await this.authService.updateUser(
+          { email: update.email, username: update.email },
+          user.uid,
+        );
+      }
       const updatedUser = await this.prisma.user.update({
         where: { id },
         data: update,
       });
       return updatedUser;
+      console.log(user);
     } catch (error) {
       throw error;
       return;

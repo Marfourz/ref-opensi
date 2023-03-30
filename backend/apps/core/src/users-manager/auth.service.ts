@@ -48,10 +48,11 @@ export class AuthService {
       .get('/users/me', { headers: { Authorization: `Bearer ${token}` } })
       .toPromise()
       .then(async (res) => {
-        const user = await this.prismaService.user.findUnique({
+        const user: any = await this.prismaService.user.findUnique({
           where: { email: res.data.email },
           include: { organisation: true, engine: true },
         });
+        user.userManagerPayload = res.data;
         return user;
       })
       .catch((err) => {
@@ -61,7 +62,6 @@ export class AuthService {
           data: err.response.data,
         };
       });
-
     return me;
   }
 
