@@ -99,7 +99,7 @@
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
                 <div class="flex items-center space-x-3">
                   <div
-                    class="rounded-full flex items-center justify-center bg-[#EDEFF3] w-12 h-12"
+                    class="rounded-full flex items-center justify-center  w-12 h-12"
                   >
                     <BaseIcon name="shop"></BaseIcon>
                   </div>

@@ -73,7 +73,7 @@ export enum HistoricalOrderStatus {
 }
 
 export enum StockState {
-  ALL = "",
+  ALL = "all",
   SUPPLY = "supply",
   SALE = "sale",
 }

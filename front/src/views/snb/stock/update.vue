@@ -42,7 +42,7 @@
     <div><BaseGoBack></BaseGoBack></div>
     <div class="flex items-center space-x-6">
       <BaseTitle title="Stock"></BaseTitle>
-      <BaseButton icon="plus" size="small" @click="modal.show = true" 
+      <BaseButton icon="plus" size="small" @click="modal.show = true"
         >Nouveau stock</BaseButton
       >
     </div>
@@ -171,7 +171,7 @@ export default defineComponent({
         toast.success("Stock mise à jour avec succès");
         loading.value = false;
         modal.show = false;
-        stock.currentQuantity = 0
+        stock.currentQuantity = 0;
         reload.value = reload.value + 1;
       } catch (error) {
         loading.value = false;
