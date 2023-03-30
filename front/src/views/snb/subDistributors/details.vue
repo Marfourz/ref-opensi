@@ -69,7 +69,7 @@
         </div>
       </template>
       <template #distributors>
-        <div class="mt-7">
+        <div class="mt-7 space-y-">
           <BaseTitle title="Distributeurs agréés"></BaseTitle>
           <VOrganisation />
         </div>

@@ -41,7 +41,7 @@ export default defineComponent({
 
         onMounted(async ()=>{
 
-            imageUrl.value = await import(props.image).then((module) => imageUrl.value = module.default);
+          //  imageUrl.value = await import(props.image).then((module) => imageUrl.value = module.default);
         })
 
     

@@ -32,7 +32,7 @@
             >
               <BaseIcon name="digitalMoney"></BaseIcon>
             </BaseSelectedCard>
-            <div class="font-semibold">Mobile Money ou carte bancaire</div>
+            <div class="font-semibold">Mobile Money ou Virement bancaire</div>
           </div>
 
           <div class="flex space-x-2 items-center cursor-pointer" @click="changePaymentMethod(PaymentMethod.CASH)">
