@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-full  flex flex-col">
     <div
       v-if="!hideFilter"
       class="w-full p-4 border rounded flex items-center justify-between shadow"
@@ -200,12 +200,12 @@ export default defineComponent({
       }
     }
 
-    const downloadLoading = ref(false)
+    const downloadLoading = ref(false);
 
-    const toast = useToast()
+    const toast = useToast();
     async function downloadData() {
       params.perPage = paginationData.peerPage;
-      downloadLoading.value = true
+      downloadLoading.value = true;
       try {
         let response;
         if (!props.requestId) {
@@ -216,17 +216,16 @@ export default defineComponent({
             props.requestId
           );
         }
-        downloadURI(response.url, "")
-        downloadLoading.value = false
+        downloadURI(response.url, "");
+        downloadLoading.value = false;
       } catch (error: any) {
         console.log({ ...error });
-        toast.error("Echec du téléchargement.")
-        downloadLoading.value = false
-
+        toast.error("Echec du téléchargement.");
+        downloadLoading.value = false;
       }
     }
 
-    const downloadURI = (uri : string, name : string) => {
+    const downloadURI = (uri: string, name: string) => {
       const link = document.createElement("a");
       link.download = name;
       link.href = uri;
@@ -293,7 +292,7 @@ export default defineComponent({
       slots,
       loading,
       downloadData,
-      downloadLoading
+      downloadLoading,
     };
   },
 });

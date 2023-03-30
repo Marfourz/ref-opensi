@@ -60,8 +60,9 @@
       >
     </div>
 
-    <div>
+    <div class=" h-full">
       <BaseTableWithFilter
+       class="h-full"
       :titles="titles"
       :fetchData="organizationStore.fetchAllDeliveryMen"
       :downloadData="organizationStore.downloadDeliveryMen"
@@ -191,7 +192,7 @@ export default defineComponent({
       const actions = [
         {
           title: "Voir détail",
-          icon: "details",
+          icon: "eyefine",
           action: details,
         },
       ];
