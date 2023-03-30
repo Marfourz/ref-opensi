@@ -290,15 +290,15 @@ export class StockService {
 
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
-      let type: string,
+      let type: boolean,
         quantity = 0;
       if (
         element.parentOrganisationId == element.organisationId ||
         element.parentOrganisationId == orgId
       ) {
-        type = 'Vente';
+        type = false; //vente
       } else {
-        type = 'Appro';
+        type = true; //achat
       }
 
       for (let j = 0; j < element.items.length; j++) {
@@ -306,27 +306,15 @@ export class StockService {
         quantity += e.quantity;
       }
 
-      /*data.push({
-        deliveryDate: element.deliveryDate,
-        type,
-        quantity,
-        total: element.totalAmount,
-      });*/
-
       const dataItem: any = {};
       dataItem[element.deliveryDate] = {
-        type,
+        appro: type,
         quantity,
         total: element.totalAmount,
       };
 
       data.push(dataItem);
     }
-
-    /*if (organisation.type == 'snb') {
-      const stock
-      data.push('Manage SNB case');
-    }*/
 
     return data;
   }
