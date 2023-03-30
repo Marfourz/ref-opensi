@@ -92,7 +92,7 @@
         </div>
 
         <div
-          class="border rounded-lg p-4"
+          class="border rounded-lg p-4 min-h-[520px]"
           v-if="
             orgType === OrganisationType.SNB || orgType === OrganisationType.MD
           "
@@ -119,7 +119,7 @@
           </BaseTable>
         </div>
 
-        <div class="border rounded-lg p-4">
+        <div class="border rounded-lg p-4 min-h-[520px]">
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top dépôts
           </div>

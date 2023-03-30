@@ -43,6 +43,18 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
+
+    async downloadDeliveryMen(query: any, id: PrimaryKey) {
+      try {
+        const response = await Api.get(`documents/download-deliveryMen/${id}`, {
+          params: query,
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async create(data: any) {
       try {
         const response = await Api.post("organisations", data);

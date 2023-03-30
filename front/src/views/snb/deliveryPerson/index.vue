@@ -60,27 +60,29 @@
       >
     </div>
 
-    <BaseTableWithFilter
+    <div>
+      <BaseTableWithFilter
       :titles="titles"
       :fetchData="organizationStore.fetchAllDeliveryMen"
+      :downloadData="organizationStore.downloadDeliveryMen"
       :requestId="organisationId"
       :key="reload"
+    
     >
-      <template #filter>
-        <div class="flex space-x-4 h-full">
-          <BaseButton icon="upload" size="small">Télécharger</BaseButton>
-        </div>
-      </template>
-      <template #action="{ element }">
-        <BaseActions :actions="customActions(element)" :data="element" />
-      </template>
+     
       <template #status="{ element }">
         <BaseTableStatut
           :title="getStatutLabel(element)"
           :type="getStatutType(element)"
         ></BaseTableStatut>
       </template>
+       <template #action="{ element }">
+        <BaseActions :actions="customActions(element)" :data="element"  />
+      </template>
     </BaseTableWithFilter>
+    </div>
+
+  
 
     <BaseBottomModal :show="showModal">
       <div class="w-[80%]">
@@ -208,6 +210,8 @@ export default defineComponent({
       });
       return actions;
     };
+
+
 
     // function toogleStatus(element: IUser) {
     //   if (element.status === "active")

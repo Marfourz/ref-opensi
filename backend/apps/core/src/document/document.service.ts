@@ -7,7 +7,11 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderService } from '../order/order.service';
 import { PagiationPayload, Payload } from '../../../../types/index';
 import { Order, User, Stock, Product } from '@prisma/client';
-import { getPlainPackagingType, getPlainStatus } from 'helpers/getPlainStatus';
+import {
+  getPlainPackagingType,
+  getPlainStatus,
+  getPlainStatusOfPartners,
+} from 'helpers/getPlainStatus';
 import { StockService } from '../stock/stock.service';
 import { UserService } from '../user/user.service';
 import { getPlainRole } from 'helpers/getPlainRole';
@@ -184,15 +188,43 @@ export class DocumentService {
 
     const payload: any = data.data;
 
+    console.log('PAYLOAD : ', payload);
+
     payload.map((element) => {
       element.createdAt = element.createdAt.toLocaleDateString();
       element.id = element.id.toString().slice(-8);
       element.status = getPlainStatus(element.status);
     });
 
-    payload.label = 'Récapitulatif des commandes';
+    const docContent = this.getTemplate('template-orders', {
+      data: payload,
+      label: 'Récapitulatif des commandes reçues',
+    });
 
-    const docContent = this.getTemplate('template-orders', payload);
+    const document = await this.generateDocument(docContent);
+    return document;
+  }
+
+  async downloadPartners(filterParams: any, id: any) {
+    const data: any = await this.organisationService.searchForPartners(
+      id,
+      filterParams,
+    );
+
+    const payload: any = data.data;
+
+    console.log('PAYLOAD : ', payload);
+
+    payload.map((element) => {
+      element.createdAt = element.createdAt.toLocaleDateString();
+      element.id = element.id.toString().slice(-8);
+      element.status = getPlainStatusOfPartners(element.status);
+    });
+
+    const docContent = this.getTemplate('template-partners', {
+      data: payload,
+      label: 'Récapitulatif de vos partenaires',
+    });
 
     const document = await this.generateDocument(docContent);
     return document;

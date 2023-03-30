@@ -14,6 +14,17 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
+    //get all users of user-managers and delete them
+    const users = await (
+      await axios.get(process.env.USERS_MANAGER_URL + '/users')
+    ).data;
+
+    for (let i = 0; i < users.length; i++) {
+      const element = users[i];
+      await axios.delete(
+        process.env.USERS_MANAGER_URL + '/users/' + element.id,
+      );
+    }
     // create user for users-managers
     axios
       .post(process.env.USERS_MANAGER_URL + '/users', {
@@ -29,36 +40,11 @@ async function main() {
       });
 
     //create engines
-    await prisma.engine.deleteMany({});
 
+    await prisma.engine.deleteMany({});
     await prisma.engine.createMany({
       data: engines,
     });
-    /*const existingEngine = await prisma.engine.count();
-
-    if (existingEngine == 0) {
-      const newEngine = await prisma.engine.create({
-        data: engines[0],
-      });
-      console.info('ENGINE created : ', newEngine);
-    } else {
-      console.info('ENGINE already exist in DB');
-    }*/
-
-    const existingProduct = await prisma.product.count();
-
-    if (existingProduct == 0) {
-      const newPCategory = await prisma.productCategory.create({
-        data: categories[0],
-      });
-      console.info('CATEGORY created : ', newPCategory);
-      const newProduct = await prisma.product.create({
-        data: { ...products[0], categoryId: newPCategory.id },
-      });
-      console.info('PRODUCT created : ', newProduct);
-    } else {
-      console.info('PRODUCT CATEGORY & PRODUCT already exist in DB');
-    }
 
     // create organisation if not exist
     const organisation = organisations[0];
@@ -100,6 +86,7 @@ async function main() {
     } else {
       console.info('Wallet was already created : ', existingWallet);
     }
+
     // create user if not exist
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -123,7 +110,7 @@ async function main() {
     }
 
     // create DELIVERYmAN if not exist
-    const existingDeliveryMan = await prisma.user.findUnique({
+    /*const existingDeliveryMan = await prisma.user.findUnique({
       where: {
         email: deliveryMan.email,
       },
@@ -140,7 +127,14 @@ async function main() {
       console.info('DeliveryMan new created : ', newDeliveryMan);
     } else {
       console.info('DeliveryMan was already created : ', existingDeliveryMan);
-    }
+    }*/
+
+    const usersAfterWork = await (
+      await axios.get(process.env.USERS_MANAGER_URL + '/users')
+    ).data;
+
+    console.log('Users in USER MANAGER : ', usersAfterWork.length);
+    console.log('Current users in USER MANAGER : ', usersAfterWork);
 
     console.info('Database seed successfully!!');
   } catch (error) {

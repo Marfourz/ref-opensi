@@ -14,7 +14,7 @@
           <th
             v-for="title in titles"
             :key="title.name"
-            class="py-4 border-b text-left pl-2 font-semibold"
+            class="py-4 border-b text-left pl-2 font-semibold "
           >
             {{ title.title }}
           </th>
@@ -33,7 +33,7 @@
       <tbody class="bg-white" v-else-if="data && data.length != 0">
         <tr
           v-for="(element, i) in data"
-          class="font-semibold cursor-default"
+          class="font-semibold cursor-default hover:bg-[#EDEFF3]"
           :key="i"
           :class="{
             'bg-[#F8F9FB]': isEqual(element, currentElement) && actions,
@@ -108,12 +108,12 @@ export interface ITitle {
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import isEqual from "lodash/isEqual";
 import { IAction } from "@/types/interfaces";
-import BaseActions from "../../components/base/BaseActions.vue";
+//import BaseActions from "../../components/base/BaseActions.vue";
 
 type FilterActions<T> = (item : any) => Array<IAction>
 
 export default defineComponent({
-  components: { BaseActions },
+ // components: { BaseActions },
   props: {
     data: {
       type: Array as () => Array<any>,

@@ -1,3 +1,4 @@
+import { OrganisationStatusEnum } from '@prisma/client';
 import {
   OrderStatusEnum,
   OrganisationTypeEnum,
@@ -14,6 +15,19 @@ export const getPlainStatus = (status: OrderStatusEnum) => {
       break;
     case OrderStatusEnum.delivered:
       return 'Livrée';
+      break;
+    default:
+      break;
+  }
+};
+
+export const getPlainStatusOfPartners = (status: OrganisationStatusEnum) => {
+  switch (status) {
+    case OrganisationStatusEnum.active:
+      return 'ACTIF';
+      break;
+    case OrganisationStatusEnum.inactive:
+      return 'INACTIF';
       break;
     default:
       break;

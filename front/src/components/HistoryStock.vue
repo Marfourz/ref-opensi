@@ -43,6 +43,11 @@ type Params = {
   }
 
 const MAPPING_OBJ:  Record<StockState, Params> = {
+   all: {
+    title: "Vente",
+    icon: IconDeposit,
+    primaryColor: "#287D3C" ,
+  },
   
   sale: {
     title: "Vente",

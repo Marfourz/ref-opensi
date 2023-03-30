@@ -66,7 +66,9 @@ export class ProductsService {
         where: { ...w },
       });
 
-      const count = await this.prisma.product.count();
+      const count = await this.prisma.product.count({
+        where: { ...w },
+      });
 
       return { data: products, count };
     } catch (error) {
