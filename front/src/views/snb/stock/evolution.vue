@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      {{ activeTab }}
+     
       <div class="">
         <TimeLineCard v-for="item in 6" />
       </div>

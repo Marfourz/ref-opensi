@@ -21,11 +21,15 @@
               Annuler
             </BaseButton>
             <BaseButton
-              bgColor="danger"
-              class="w-1/2 bg-danger"
-              @click="deleteUser"
+              :bgColor="
+                selectedUser?.status === UserAccountStatus.ACTIVE
+                  ? 'danger'
+                  : 'primary'
+              "
+              class="w-1/2"
+              @click="toogleStatus"
             >
-              Supprimer
+              {{ toggleText }}
             </BaseButton>
           </div>
         </div>
@@ -63,18 +67,17 @@
       :downloadData="organizationStore.downloadDeliveryMen"
       :requestId="organisationId"
       :key="reload"
-     
-    >
     
-      <template #action="{ element }">
-          
-        <BaseActions :actions="customActions(element)" :data="element"  />
-      </template>
+    >
+     
       <template #status="{ element }">
         <BaseTableStatut
           :title="getStatutLabel(element)"
           :type="getStatutType(element)"
         ></BaseTableStatut>
+      </template>
+       <template #action="{ element }">
+        <BaseActions :actions="customActions(element)" :data="element"  />
       </template>
     </BaseTableWithFilter>
     </div>
@@ -196,25 +199,27 @@ export default defineComponent({
         actions.push({
           title: "Désactiver",
           icon: "cancel",
-          action: toogleStatus,
+          action: onToggle,
         });
         return actions;
       }
       actions.push({
         title: "Activer",
         icon: "yes",
-        action: toogleStatus,
+        action: onToggle,
       });
       return actions;
     };
 
-    function toogleStatus(element: IUser) {
-      if (element.status === "active")
-        return (element.status = UserAccountStatus.INACTIVE);
 
-      if (element.status === "inactive")
-        return (element.status = UserAccountStatus.ACTIVE);
-    }
+
+    // function toogleStatus(element: IUser) {
+    //   if (element.status === "active")
+    //     return (element.status = UserAccountStatus.INACTIVE);
+
+    //   if (element.status === "inactive")
+    //     return (element.status = UserAccountStatus.ACTIVE);
+    // }
 
     const router = useRouter();
     function details(row: IUser) {
@@ -228,7 +233,7 @@ export default defineComponent({
     const modal = reactive({
       title: "",
       subtitle: "",
-      type: "create" as "create" | "delete" | "update",
+      type: "create" as "create" | "delete" | "update" | "toogleStatus",
       show: false,
       mode: "confirm" as "confirm" | "success",
     });
@@ -266,6 +271,43 @@ export default defineComponent({
       modal.type = "delete";
     }
 
+    function onToggle(value: IUser) {
+      selectedUser.value = value;
+      if (value.status === UserAccountStatus.ACTIVE)
+        modal.title = `Êtes-vous sûr de vouloir désactiver le livreur  ${
+          selectedUser.value.name + " " + selectedUser.value.firstName
+        } ?`;
+      if (value.status === UserAccountStatus.INACTIVE)
+        modal.title = `Êtes-vous sûr de vouloir activer le livreur  ${
+          selectedUser.value.name + " " + selectedUser.value.firstName
+        } ?`;
+      modal.show = true;
+      modal.subtitle = "";
+      modal.mode = "confirm";
+      modal.type = "delete";
+    }
+
+    async function toogleStatus(element: IUser) {
+      try {
+        if (selectedUser.value?.status === UserAccountStatus.ACTIVE) {
+          const response = await userStore.update(selectedUser.value.id, {
+            status: UserAccountStatus.INACTIVE,
+          });
+          modal.title = `Livreur désactiver avec succès`;
+        } else {
+          const response = await userStore.update(selectedUser.value?.id, {
+            status: UserAccountStatus.ACTIVE,
+          });
+          modal.title = `Livreur activer avec succès`;
+        }
+
+        reload.value = !reload.value;
+        modal.show = true;
+        modal.subtitle = "";
+        modal.mode = "success";
+      } catch (error) {}
+    }
+
     async function deleteUser() {
       try {
         if (selectedUser.value) {
@@ -278,6 +320,12 @@ export default defineComponent({
         }
       } catch (error) {}
     }
+
+    const toggleText = computed(() => {
+      if (selectedUser.value?.status === UserAccountStatus.ACTIVE)
+        return "Desactiver";
+      else return "Activer";
+    });
 
     function onView(value: IUser) {
       selectedUser.value = value;
@@ -435,6 +483,9 @@ export default defineComponent({
       getStatutLabel,
       getStatutType,
       customActions,
+      toogleStatus,
+      toggleText,
+      UserAccountStatus,
     };
   },
 });

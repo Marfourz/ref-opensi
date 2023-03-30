@@ -62,10 +62,7 @@
       :requestId="organisationId"
       :actions="actions"
       :key="reload"
-
-    >
-     
-    </BaseTableWithFilter>
+    ></BaseTableWithFilter>
 
     <BaseBottomModal :show="showModal">
       <div class="w-[80%]">
@@ -96,7 +93,7 @@
             <BaseInput
               name="firstname"
               label="Email"
-               rules="required|email"
+              rules="required|email"
               v-model="user.email"
             ></BaseInput>
             <BaseSelect
@@ -183,7 +180,7 @@ export default defineComponent({
 
     function onDelete(value: IUser) {
       selectedUser.value = value;
-      modal.title = "Confirmez-vous la suppression de l'utilisateur ?"
+      modal.title = "Confirmez-vous la suppression de l'utilisateur ?";
       modal.show = true;
       modal.subtitle = "";
       modal.mode = "confirm";
