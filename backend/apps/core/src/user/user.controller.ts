@@ -110,10 +110,11 @@ export class UserController {
     description: 'Contain auth token',
   })
   updateSingleUser(
+    @Req() req,
     @Param() params,
     @Body() update: updateUserDto,
   ): Promise<User> {
-    return this.userService.updateSingleUser(params.id, update);
+    return this.userService.updateSingleUser(req.user, params.id, update);
   }
 
   @Delete(':id')

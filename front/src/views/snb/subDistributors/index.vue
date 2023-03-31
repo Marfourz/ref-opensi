@@ -1,62 +1,62 @@
 <template>
   <div class="">
     <div class="space-y-6 flex flex-col h-full">
-      <BaseModal :show="modal.show">
-        <template #modal>
+       <BaseModal :show="modal.show">
+      <template #modal>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+        >
+          <BaseIcon name="warning"></BaseIcon>
           <div
-            class="flex flex-col space-y-6 items-center py-4"
-            v-if="modal.mode == 'confirm' && modal.type == 'delete'"
-          >
-            <BaseIcon name="warning"></BaseIcon>
-            <div
-              class="text-center font-semibold text-2xl"
-              v-html="modal.title"
-            ></div>
-            <div class="flex items-center space-x-2 w-full">
-              <BaseButton
-                :bgColor="
-                  selectedMaster?.status === UserAccountStatus.ACTIVE
-                    ? 'primary'
-                    : 'primary'
-                "
-                :outline="true"
-                class="w-1/2"
-                @click="modal.show = false"
-              >
-                Annuler
-              </BaseButton>
-              <BaseButton
-                :bgColor="
-                  selectedMaster?.status === UserAccountStatus.ACTIVE
-                    ? 'danger'
-                    : 'primary'
-                "
-                class="w-1/2"
-                @click="toogleStatus"
-              >
-                {{ toggleText }}
-              </BaseButton>
-            </div>
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              :bgColor="
+                selectedMaster?.status === UserAccountStatus.ACTIVE
+                  ? 'primary'
+                  : 'primary'
+              "
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              :bgColor="
+                selectedMaster?.status === UserAccountStatus.ACTIVE
+                  ? 'danger'
+                  : 'primary'
+              "
+              class="w-1/2"
+              @click="toogleStatus"
+            >
+              {{ toggleText }}
+            </BaseButton>
           </div>
+        </div>
 
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-else-if="(modal.mode = 'success')"
+        >
           <div
-            class="flex flex-col space-y-6 items-center py-4"
-            v-else-if="(modal.mode = 'success')"
+            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
           >
-            <div
-              class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
-            >
-              <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
-            </div>
-            <div class="font-bold text-2xl">
-              {{ modal.title }}
-            </div>
-            <BaseButton class="w-full" @click="modal.show = false"
-              >Terminer</BaseButton
-            >
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
           </div>
-        </template>
-      </BaseModal>
+          <div class="font-bold text-2xl">
+            {{ modal.title }}
+          </div>
+          <BaseButton class="w-full" @click="modal.show = false"
+            >Terminer</BaseButton
+          >
+        </div>
+      </template>
+    </BaseModal> 
       <div class="">
         <BaseTitle title="Partenaires"></BaseTitle>
         <!-- Panel -->
@@ -299,12 +299,18 @@ export default defineComponent({
       return actions;
     };
 
+
+
     function onToggle(value: IOrganisation) {
       selectedMaster.value = value;
       if (value.status === UserAccountStatus.ACTIVE)
-        modal.title = `Êtes-vous sûr de vouloir désactiver ${selectedMaster.value.ownerName} ?`;
+        modal.title = `Êtes-vous sûr de vouloir désactiver ${
+          selectedMaster.value.ownerName
+        } ?`;
       if (value.status === UserAccountStatus.INACTIVE)
-        modal.title = `Êtes-vous sûr de vouloir activer ${selectedMaster.value.ownerName} ?`;
+        modal.title = `Êtes-vous sûr de vouloir activer ${
+          selectedMaster.value.ownerName
+        } ?`;
       modal.show = true;
       modal.subtitle = "";
       modal.mode = "confirm";
@@ -314,20 +320,14 @@ export default defineComponent({
     async function toogleStatus(value: IOrganisation) {
       try {
         if (selectedMaster.value?.status === UserAccountStatus.ACTIVE) {
-          const response = await organizationStore.update(
-            selectedMaster.value.id,
-            {
-              status: UserAccountStatus.INACTIVE,
-            }
-          );
+          const response = await organizationStore.update(selectedMaster.value.id, {
+            status: UserAccountStatus.INACTIVE,
+          });
           modal.title = `${selectedMaster.value?.ownerName}  désactivé avec succès`;
         } else {
-          const response = await organizationStore.update(
-            selectedMaster.value?.id,
-            {
-              status: UserAccountStatus.ACTIVE,
-            }
-          );
+          const response = await organizationStore.update(selectedMaster.value?.id, {
+            status: UserAccountStatus.ACTIVE,
+          });
           modal.title = `${selectedMaster.value?.ownerName} activé avec succès`;
         }
 
@@ -344,6 +344,9 @@ export default defineComponent({
       else return "Activer";
     });
 
+
+
+    
     const actions = [
       {
         title: "Voir détail",

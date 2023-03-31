@@ -24,9 +24,11 @@ import {
   ApiParam,
   ApiHeader,
   ApiQuery,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiTags('Organisations - Partenaires')
+@ApiBearerAuth()
 @Controller('organisations')
 export class OrganisationController {
   constructor(private readonly organisationService: OrganisationService) {}
