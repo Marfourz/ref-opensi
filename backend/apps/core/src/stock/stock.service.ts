@@ -245,7 +245,7 @@ export class StockService {
     return { totalPackProducts, totalRackProducts, totalCost, lastStock };
   }
 
-  async getStockEvolution(orgId: string): Promise<any> {
+  async getStockEvolution(orgId: string, { filterType }): Promise<any> {
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -290,15 +290,15 @@ export class StockService {
 
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
-      let type: boolean,
+      let type: string,
         quantity = 0;
       if (
         element.parentOrganisationId == element.organisationId ||
         element.parentOrganisationId == orgId
       ) {
-        type = false; //vente
+        type = 'Vente'; //vente
       } else {
-        type = true; //achat
+        type = 'Approvissionnement'; //achat
       }
 
       for (let j = 0; j < element.items.length; j++) {
@@ -306,9 +306,10 @@ export class StockService {
         quantity += e.quantity;
       }
 
-      const dataItem: any = {};
-      dataItem[element.deliveryDate] = {
-        appro: type,
+      let dataItem: any = {};
+      dataItem = {
+        date: element.deliveryDate,
+        type,
         quantity,
         total: element.totalAmount,
       };
@@ -316,6 +317,10 @@ export class StockService {
       data.push(dataItem);
     }
 
+    if (filterType) {
+      const result = data.filter((element) => element.type == filterType);
+      return result;
+    }
     return data;
   }
 }
