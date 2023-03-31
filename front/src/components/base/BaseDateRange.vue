@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" @click="show = !show">
+  <div class="relative" @click="show = !show" @click.stop="">
     <div
       class="flex items-center justify-between w-full text-grey-70 font-semibold text-sm border border-gray-400 rounded-lg py-2 px-3"
     >
@@ -45,10 +45,18 @@
           </div>
         </div>
         <div class="w-full flex space-x-4 mt-4">
-          <BaseButton outline="true" size="medium"  class=" w-full" @click="reset()"
+          <BaseButton
+            outline="true"
+            size="medium"
+            class="w-full"
+            @click="reset()"
             >Annuler</BaseButton
           >
-          <BaseButton type="primary" size="medium" @click="apply()" class=" w-full"
+          <BaseButton
+            type="primary"
+            size="medium"
+            @click="apply()"
+            class="w-full"
             >Appliquer</BaseButton
           >
         </div>
@@ -161,7 +169,10 @@ export default {
 
     apply() {
       console.log("value", this.dateChoice.start);
-      this.$emit("input", {startDate : this.dateChoice.start, endDate: this.dateChoice.end});
+      this.$emit("input", {
+        startDate: this.dateChoice.start,
+        endDate: this.dateChoice.end,
+      });
       this.show = false;
     },
 
@@ -172,7 +183,14 @@ export default {
 
   mounted() {
     this.selectedDate = this.dates[2];
-    this.setDate()
+    this.setDate();
+    document.addEventListener("click", (event) => {
+      this.show = false;
+    });
+    this.$emit("input", {
+      startDate: this.dateChoice.start,
+      endDate: this.dateChoice.end,
+    });
   },
 };
 </script>

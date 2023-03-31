@@ -74,7 +74,6 @@
       </div>
 
       <BaseTableWithFilter
-        class="flex flex-col flex-1"
         :titles="titles"
         :fetchData="organizationStore.fetchAllParteners"
         :params="{ type: master.type }"
@@ -565,24 +564,19 @@ export default defineComponent({
       }
     });
 
-
-    const emptyMessage = computed(()=>{
-      if(master.type == OrganisationType.MD)
-        return "Vos masters distributeurs ajoutés seront visibles ici.<br> Cliquez sur le bouton \"Nouveau master distributeur\" <br> pour ajouter des masters distributeurs"
-      else if(master.type == OrganisationType.DA ){
-        if(organisationType.value == OrganisationType.MD)
-          return "Vos distributeurs agréés ajoutés seront visibles ici.<br> Cliquez sur le bouton \"Nouveau distributeur agréé\" <br> pour ajouter des distributeurs agréés"
-        else
-          return "Vos distributeurs agréés ajoutés seront visibles ici."
+    const emptyMessage = computed(() => {
+      if (master.type == OrganisationType.MD)
+        return 'Vos masters distributeurs ajoutés seront visibles ici.<br> Cliquez sur le bouton "Nouveau master distributeur" <br> pour ajouter des masters distributeurs';
+      else if (master.type == OrganisationType.DA) {
+        if (organisationType.value == OrganisationType.MD)
+          return 'Vos distributeurs agréés ajoutés seront visibles ici.<br> Cliquez sur le bouton "Nouveau distributeur agréé" <br> pour ajouter des distributeurs agréés';
+        else return "Vos distributeurs agréés ajoutés seront visibles ici.";
+      } else if (master.type == OrganisationType.DP) {
+        if (organisationType.value == OrganisationType.DP)
+          return 'Vos dépôts ajoutés seront visibles ici. Cliquez sur le bouton "Nouveau dépôt" pour ajouter des dépôts';
+        else return "Vos dépôts ajoutés seront visibles ici.";
       }
-      else if(master.type == OrganisationType.DP){
-        if(organisationType.value == OrganisationType.DP)
-          return "Vos dépôts ajoutés seront visibles ici. Cliquez sur le bouton \"Nouveau dépôt\" pour ajouter des dépôts"
-        else
-          return "Vos dépôts ajoutés seront visibles ici."
-      }
-       
-    })
+    });
 
     return {
       organizationStore,

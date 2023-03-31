@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full space-y-2">
+  <div class="w-full space-y-2" >
     <label
       for=""
       class="font-semibold w-full text-[#6B7A99] text-[14px]"
@@ -10,6 +10,7 @@
       <div
         class="flex justify-between items-center px-4 border py-2 rounded-md border-borderColor"
         @click="showElement = !showElement"
+        @click.stop=""
       >
         <input
           type="text"
@@ -103,12 +104,15 @@ export default defineComponent({
       }
     );
 
-    // onMounted(() => {
+    onMounted(() => {
     //   if (props.items && props.items.length > 0) {
     //     selected.value = props.items[0];
     //     context.emit("update:modelValue", selected.value.value);
     //   }
-    // });
+     document.addEventListener("click", (event) => {
+      showElement.value = false;
+    });
+     });
 
     return {
       selected,

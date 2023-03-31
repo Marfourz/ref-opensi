@@ -2,25 +2,44 @@
   <div class="">
     <div class="pt-8">
       <div>
-        <div class="flex flex-col items-center space-y-4" v-show="!total || total == 0">
+        <div
+          class="flex flex-col items-center space-y-4"
+          v-show="!total || total == 0"
+        >
           <img src="@/assets/images/emptyProduct.png" alt="" />
           <div class="font-semibold text-center">
             Aucun produit dans le stock
           </div>
         </div>
 
-        <BaseTabs :tabs="tabs" @change="categoryId = $event" v-show="total != 0" :selectedTab="categoryId">
+        <BaseTabs
+          :tabs="tabs"
+          @change="categoryId = $event"
+          v-show="total != 0"
+          :selectedTab="categoryId"
+        >
           <template #[tab.name] v-for="tab in tabs">
-            <BaseTableWithFilter :key="tab.name" :fetchData="productStore.fetchAllProductsStock" :titles="titles"
-              :actions="actions" :requestId="organisationId" :params="{ categoryId: categoryId }" class="mt-6"
+            <BaseTableWithFilter
+              :key="tab.name"
+              :fetchData="productStore.fetchAllProductsStock"
+              :titles="titles"
+              :actions="actions"
+              :requestId="organisationId"
+              :params="{ categoryId: categoryId }"
+              class="mt-6"
               :downloadData="productStore.downloadProductsStock"
-              >
+            >
               <template #image="{ element }">
                 <div>
-                  <img :src="`${element.product.image && element.product.image[0]
-                      ? element.product.image[0].url
-                      : '/assets/images/beverage.png'
-                    }`" alt="" />
+                  <img
+                    :src="`${
+                      element.product.image && element.product.image[0]
+                        ? element.product.image[0].url
+                        : '/assets/images/beverage.png'
+                    }`"
+                    alt=""
+                    class="max-h-10 max-w-10"
+                  />
                 </div>
               </template>
               <template #volume="{ element }">
@@ -150,7 +169,7 @@ export default defineComponent({
         categories.value = response.data;
 
         categoryId.value = response.data[0].id;
-      } catch (error: any) { }
+      } catch (error: any) {}
       await getTotal();
     });
     return {

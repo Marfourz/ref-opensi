@@ -84,7 +84,7 @@
             :titles="titles"
             :actions="actions"
             :requestId="categoryId"
-            class="mt-6" 
+            class="mt-6"
             :downloadData="productCategoryStore.downloadProduct"
           >
             <template #image="{ element }">
@@ -96,6 +96,7 @@
                       : '@/assets/images/beverage.png'
                   }`"
                   alt=""
+                  class="max-h-10 max-w-10"
                 />
               </div>
             </template>
@@ -303,8 +304,7 @@ export default defineComponent({
     ];
 
     function formatDate(element: IProduct) {
-     
-        return helpers.formatDate(element.createdAt as any);
+      return helpers.formatDate(element.createdAt as any);
     }
 
     function getVolume(elememnt: IProduct) {
@@ -374,30 +374,24 @@ export default defineComponent({
 
     async function onSubmit() {
       try {
-       
         if (selectedProduct.value) {
-          if (image.value){
+          if (image.value) {
             const responseImage = await fileStore.updloadProductImage(
               selectedProduct.value.id,
               image.value as File
             );
           }
-           
-         
+
           const response = await productStore.update(
             selectedProduct.value.id,
             product
           );
 
           toast.success("La boisson a été mise à jour avec succès");
-            reload.value = reload.value + 1;
-            showModal.value = false;
-            router.push({ name: "products" });
-          
-         
+          reload.value = reload.value + 1;
+          showModal.value = false;
+          router.push({ name: "products" });
         } else {
-         
-          
           if (!image.value) toast.error("Vous devez choisir une image");
           else {
             const response = await productStore.create(product);
@@ -411,8 +405,6 @@ export default defineComponent({
             router.push({ name: "products" });
           }
         }
-
-       
       } catch (error: any) {}
     }
 
@@ -440,9 +432,6 @@ export default defineComponent({
         return "Prix du pack (en FCFA)";
       else return "Prix du casier (en FCFA)";
     });
-
-
-    
 
     onMounted(async () => {
       try {

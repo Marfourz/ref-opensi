@@ -9,7 +9,7 @@
           {{ selectedMaster?.organisation.socialReason }}
         </div>
         <BaseTableStatut
-          :title="selectedMaster?.organisation.status"
+          :title="statusTitle"
           :type="
             selectedMaster?.organisation.status === 'active'
               ? 'success'
@@ -134,6 +134,14 @@ import VOrders from "@/components/VOrders.vue";
 import VOrganisation from "@/components/VOrganisation.vue";
 import BaseGoBack from "@/components/base/BaseGoBack.vue";
 import OrgnaisationTurnoverEvolution from "@/components/OrgnaisationTurnoverEvolution.vue";
+import { UserAccountStatus } from "@/types/enumerations";
+
+
+const statusTitle = computed(() => {
+  if (selectedMaster.value?.organisation && selectedMaster.value.organisation.status == UserAccountStatus.INACTIVE)
+  return "Inactif";
+  else return "Actif";
+})
 
 const tabs = [
   { name: "dashboard", libelle: "Tableau de board" },
@@ -281,4 +289,5 @@ const enable = async () => {
     console.log(error);
   }
 };
+
 </script>

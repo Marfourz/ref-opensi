@@ -24,7 +24,7 @@
       <span class="font-semibold text-xl">{{ user?.name }}</span>
       <BaseTableStatut
         :type="stateTitle === 'Désactiver' ? 'success' : 'danger'"
-        :title="user?.status"
+        :title="statusTitle"
       ></BaseTableStatut>
     </div>
     <div class="grid grid-cols-3 gap-4 mt-10">
@@ -39,7 +39,7 @@
 
       <div class="flex flex-col">
         <span class="font-semibold text-base">Sexe</span>
-        <span class="font-medium text-sm" v-if="user && user.sex"> {{sexMappingObject[user?.sex as Sex]  }} </span>
+        <span class="font-medium text-sm" v-if="user && user.sex"> {{sexMappingObject[user?.sex ]  }} </span>
         <!-- <span class="font-medium text-sm" v-if="user && user.sex"> {{Sex[user.sex.toLocaleUpperCase()] }} </span> -->
       </div>
       <div class="flex flex-col">
@@ -98,6 +98,12 @@ export default defineComponent({
       else return "Désactiver";
     });
 
+const statusTitle = computed(() => {
+    if (user.value && user.value.status == UserAccountStatus.INACTIVE)
+        return "Inactif";
+      else return "Actif";
+})
+
     const sexMappingObject : Record <Sex, string> ={
       male: "Homme",
       female: "Femme",
@@ -126,6 +132,7 @@ export default defineComponent({
       Sex,
       user,
       stateTitle,
+      statusTitle,
       toggleState,
       helpers,
       sexMappingObject,
