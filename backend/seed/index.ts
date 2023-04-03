@@ -7,6 +7,7 @@ import { products } from './products';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+//
 const { PrismaClient } = require('@prisma/client');
 import axios from 'axios';
 
