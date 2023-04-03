@@ -7,6 +7,7 @@ import { PrismaService } from 'libs/prisma/src/prisma.service';
 import { OrderService } from '../order/order.service';
 import { PagiationPayload, Payload } from '../../../../types/index';
 import { Order, User, Stock, Product } from '@prisma/client';
+import * as dayjs from 'dayjs';
 import {
   getPlainPackagingType,
   getPlainStatus,
@@ -65,7 +66,9 @@ export class DocumentService {
   async generateInvoiceDocument(ordId: string) {
     const orderData: any = await this.getOrderData(ordId);
 
-    orderData.createdAt = orderData.createdAt.toLocaleDateString();
+    orderData.createdAt = dayjs(orderData.createdAt).format(
+      'YYYY-MM-DD HH:mm:ss',
+    );
 
     orderData.items.map((element) => {
       element.total = element.quantity * element.product.bulkPrice;
@@ -167,7 +170,9 @@ export class DocumentService {
     const payload: any = data;
 
     payload.data.map((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
       element.status = getPlainStatus(element.status);
     });
@@ -191,7 +196,9 @@ export class DocumentService {
     console.log('PAYLOAD : ', payload);
 
     payload.map((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
       element.status = getPlainStatus(element.status);
     });
@@ -216,7 +223,9 @@ export class DocumentService {
     console.log('PAYLOAD : ', payload);
 
     payload.map((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
       element.status = getPlainStatusOfPartners(element.status);
     });
@@ -263,7 +272,9 @@ export class DocumentService {
     });
 
     stocks.forEach((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
     });
 
@@ -283,7 +294,9 @@ export class DocumentService {
     const payload: any = data.data;
 
     payload.map((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
       //element.status = getPlainStatus(element.status);
     });
@@ -303,7 +316,9 @@ export class DocumentService {
     );
 
     data.data.map((element) => {
-      element.createdAt = element.createdAt.toLocaleDateString();
+      element.createdAt = dayjs(element.createdAt).format(
+        'YYYY-MM-DD HH:mm:ss',
+      );
       element.id = element.id.toString().slice(-8);
     });
 

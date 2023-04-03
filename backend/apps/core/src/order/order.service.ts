@@ -3,7 +3,6 @@ import {
   Prisma,
   OrderStatusEnum,
   InvoiceStatusEnum,
-  TransactionStatusEnum,
   PaymentMethodEnum,
 } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
@@ -28,7 +27,11 @@ import { TransactionService } from '../transaction/transaction.service';
 import { InvoiceService } from '../invoice/invoice.service';
 import { invoiceDto } from '../invoice/invoice.dto';
 import { transactionDto } from '../transaction/transaction.dto';
-import { OrganisationTypeEnum, Order } from '@prisma/client';
+import {
+  OrganisationTypeEnum,
+  Order,
+  TransactionStatusEnum,
+} from '@prisma/client';
 import { NOTIFICATION_MESSAGES } from 'apps/notification/src/constants.notifications';
 
 @Injectable()
@@ -169,7 +172,7 @@ export class OrderService {
         where: { id },
         include: {
           transaction: true,
-          items: { include: { product: true } },
+          items: { include: { product: { include: { image: true } } } },
           invoice: true,
           organisation: true,
         },
@@ -466,8 +469,10 @@ export class OrderService {
         const orderReferenceConstraint: any = {};
         const w: any = {
           organisation: {
+            parentOrganisationId: orgId,
             type: subType,
           },
+          parentOrganisationId: orgId,
         };
         console.log(q);
         if (q != undefined && q != '') {
