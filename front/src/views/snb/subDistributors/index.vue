@@ -358,8 +358,6 @@ export default defineComponent({
     };
 
 
-
-
     function onToggle(value: IOrganisation) {
       selectedMaster.value = value;
       if (value.status === UserAccountStatus.ACTIVE)
@@ -379,6 +377,7 @@ export default defineComponent({
     async function toogleStatus(value: IOrganisation) {
       try {
         if (selectedMaster.value?.status === UserAccountStatus.ACTIVE) {
+
           const response = await organizationStore.update(selectedMaster.value.id, {
             status: UserAccountStatus.INACTIVE,
           });

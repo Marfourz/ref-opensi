@@ -65,7 +65,7 @@
       <template #orders>
         <div class="mt-7 space-y-6">
           <BaseTitle title="Commandes"></BaseTitle>
-          <VOrders :organisationId="state.organisationId" />
+          <VOrders :organisationId="state.organisationId" class=""/>
         </div>
       </template>
       <template #distributors>
