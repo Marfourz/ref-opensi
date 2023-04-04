@@ -4,7 +4,7 @@
     <!-- Statistiques -->
     <div class="flex justify-between items-center mt-9">
       <div class="font-bold text-xl tracking-[-2%]">Statistiques</div>
-      <BaseDateRange @input="periodes.stat=$event"></BaseDateRange>
+      <BaseDateRange @input="periodes.stat = $event"></BaseDateRange>
     </div>
 
     <!-- DashboardCard -->
@@ -19,64 +19,86 @@
     </div>
 
     <div class="w-full">
-      <OrgnaisationTurnoverEvolution :organisationId="organisationId"/>
+      <OrgnaisationTurnoverEvolution :organisationId="organisationId" />
     </div>
 
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl tracking-[-2%]">
         Chiffre d’affaires par produit
       </div>
-      <BaseDateRange  ></BaseDateRange>
+      <BaseDateRange></BaseDateRange>
     </div>
     <BaseTable :titles="titles" :data="productsInfos">
       <template #produit="{ element }">
-        <div class="flex items-center space-x-2.5"
-        >
-          <div class="bg-grey-75 flex items-center justify-center rounded-lg w-[50px] h-[50px]">
-            <img
+        <div class="flex items-center space-x-2.5">
+          <div
+            class="bg-grey-75 flex items-center justify-center rounded-lg w-[50px] h-[50px]"
+          >
+              <img
             :src="`${
               element.images && element.images[0]
                 ? element.images[0].url
                 : '@/assets/images/beverage.png'
             }`"
             alt=""
-          />
-        
-         
-        </div>
+          />  
+           <!-- <template #image="{ element }">
+              <div class="w-8 h-8">
+                <img
+                  :src="`${
+                    element.image && element.image[0]
+                      ? element.image[0].url
+                      : '@/assets/images/beverage.png'
+                  }`"
+                  alt=""
+                  class="max-h-10 max-w-10"
+                />
+              </div>
+            </template> -->
+          </div>
           <div>{{ element.product.name }}</div>
         </div>
-       
-
       </template>
 
       <template #totalBulk="{ element }">
         <div>
-            {{ element.currentQuantity ? element.currentQuantity : 0 }}
+          {{ element.currentQuantity ? element.currentQuantity : 0 }}
         </div>
       </template>
     </BaseTable>
     <!-- Performance des partenaires -->
     <div class="flex justify-between items-center mt-7">
       <div class="font-bold text-xl">Performance des partenaires</div>
-     
-      <BaseDateRange  @input="periodes.topParteners=$event"></BaseDateRange>
+
+      <BaseDateRange @input="periodes.topParteners = $event"></BaseDateRange>
     </div>
     <!-- Array top parteners -->
     <div>
       <div class="grid grid-cols-3 gap-6 mt-7">
         <div
-          class="border rounded-lg p-4 min-h-[520px] "
+          class="border rounded-lg p-4 min-h-[520px]"
           v-if="orgType === OrganisationType.SNB"
         >
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top masters distributeurs
           </div>
-          <div v-if="statPartners.md.length == 0" class=" h-full flex flex-col justify-center">
-            <EmptyState title="Vos top masters distributeurs <br> apparaîtront ici" image="" :textPosition="TextPosition.TOP"></EmptyState>
+          <div
+            v-if="statPartners.md.length == 0"
+            class="h-full flex flex-col justify-center"
+          >
+            <EmptyState
+              title="Vos top masters distributeurs <br> apparaîtront ici"
+              image=""
+              :textPosition="TextPosition.TOP"
+            ></EmptyState>
           </div>
-          
-          <BaseTable :titles="title" :data="statPartners.md" class="py-3" v-else>
+
+          <BaseTable
+            :titles="title"
+            :data="statPartners.md"
+            class="py-3"
+            v-else
+          >
             <template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
@@ -100,12 +122,19 @@
           <div class="bg-grey-80 py-3 gap-4 px-3 font-bold text-base">
             Top distributeurs agréés
           </div>
-          <div v-if="statPartners.da.length == 0" class=" h-full flex flex-col justify-center">
-            <EmptyState title="Vos top distributeurs agréés  <br> apparaîtront ici " image="" :textPosition="TextPosition.TOP"></EmptyState>
+          <div
+            v-if="statPartners.da.length == 0"
+            class="h-full flex flex-col justify-center"
+          >
+            <EmptyState
+              title="Vos top distributeurs agréés  <br> apparaîtront ici "
+              image=""
+              :textPosition="TextPosition.TOP"
+            ></EmptyState>
           </div>
-          
-          <BaseTable :titles="title" :data="statPartners.da" class="py-3"
-          v-else  ><template #id="{ element }">
+
+          <BaseTable :titles="title" :data="statPartners.da" class="py-3" v-else
+            ><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -124,12 +153,19 @@
             Top dépôts
           </div>
 
-          <div v-if="statPartners.dp.length == 0" class=" h-full flex flex-col justify-center">
-            <EmptyState title="Vos top dépôts <br> apparaîtront ici" image="" :textPosition="TextPosition.TOP"></EmptyState>
+          <div
+            v-if="statPartners.dp.length == 0"
+            class="h-full flex flex-col justify-center"
+          >
+            <EmptyState
+              title="Vos top dépôts <br> apparaîtront ici"
+              image=""
+              :textPosition="TextPosition.TOP"
+            ></EmptyState>
           </div>
-          
-          <BaseTable :titles="title" :data="statPartners.dp" class="py-3"
-            v-else><template #id="{ element }">
+
+          <BaseTable :titles="title" :data="statPartners.dp" class="py-3" v-else
+            ><template #id="{ element }">
               <div>
                 {{ element.index + 1 }}
               </div>
@@ -217,10 +253,10 @@ export default defineComponent({
     });
 
     const titles = [
-      
+
       {
         title: "Produit",
-        name: "produit",
+        name: "image",
       },
 
       {
@@ -234,6 +270,8 @@ export default defineComponent({
         transform: formatPrice,
       },
     ];
+ const image = ref<File>();
+
 
     const title = [
       {
@@ -290,7 +328,7 @@ export default defineComponent({
       } catch (error) {}
 
     }
-    
+
     const periodes = reactive({
       topParteners : {
         startDate : new Date(),
@@ -303,14 +341,14 @@ export default defineComponent({
     })
 
     async function loadTopParteners(){
-      
+
       try {
         const response = await organisationStore.statPartners({
           type : OrganisationType.MD,
           startDate : periodes.topParteners.startDate,
           endDate : periodes.topParteners.endDate,
         }
-          
+
         );
         statPartners.md = response.data;
       } catch (error) {}
@@ -335,7 +373,7 @@ export default defineComponent({
 
 
     watch(()=>periodes.topParteners , async (newValue)=>{
-    
+
       await loadTopParteners()
     })
 
