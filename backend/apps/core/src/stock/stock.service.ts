@@ -242,7 +242,12 @@ export class StockService {
       },
     });
 
-    return { totalPackProducts, totalRackProducts, totalCost, lastStock };
+    return {
+      totalPackProducts,
+      totalRackProducts,
+      totalCost,
+      lastStock: lastStock[0],
+    };
   }
 
   async getStockEvolution(orgId: string, { filterType }): Promise<any> {

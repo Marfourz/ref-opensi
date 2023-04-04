@@ -387,7 +387,7 @@ export default defineComponent({
             selectedProduct.value.id,
             product
           );
-loading.value = true;
+          loading.value = true;
           toast.success("Le produit a été mise à jour avec succès");
           reload.value = reload.value + 1;
           showModal.value = false;
