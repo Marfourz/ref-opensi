@@ -8,7 +8,7 @@ export const user = {
   birthday: '1998-02-16',
   sex: 'male',
   status: 'active',
-  role: 'superUser',
+  role: 'administrator',
 };
 
 export const deliveryMan = {
