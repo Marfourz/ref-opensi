@@ -150,7 +150,7 @@ const statusColor = computed(() => {
       return "danger";
     if (selectedMaster.value.organisation.status == UserAccountStatus.ACTIVE)
       return "success";
-    return "";
+  
   }
 });
 const statusLoading = ref(false);
