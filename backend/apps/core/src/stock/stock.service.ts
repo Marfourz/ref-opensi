@@ -246,7 +246,7 @@ export class StockService {
       totalPackProducts,
       totalRackProducts,
       totalCost,
-      lastStock: lastStock[0],
+      lastStock: lastStock.length > 0 ? lastStock[0] : null,
     };
   }
 
