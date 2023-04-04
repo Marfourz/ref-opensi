@@ -21,17 +21,16 @@
       </div>
      
       <div class="">
-        <TimeLineCard v-for="item in 6" />
+        <HIstoryStockList :type="activeTab"></HIstoryStockList>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import VPanel from "@/components/VPanel.vue";
 import { StockState } from "@/types/enumerations";
-import TimeLineCard from "@/components/TimeLine/TimeLineCard.vue";
 import { ref } from "vue";
+import HIstoryStockList from "@/components/HistoryStockList.vue";
 
 import type { Ref } from "vue";
 

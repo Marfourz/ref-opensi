@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { IUser, PrimaryKey } from "@/types/interfaces";
 import Api from "../api";
 import product from "../data/product";
-import { PackagingType } from "../types/enumerations";
+import { PackagingType, StockState } from "../types/enumerations";
 import { useUsersStore } from "./users";
 
 interface ICreateStock {
@@ -126,9 +126,15 @@ export const useProductStore = defineStore("productStore", {
       return labels.find((value: any) => value.code == type)?.label;
     },
 
-    async historyStock(id: PrimaryKey) {
+    async historyStock(id: PrimaryKey, type: StockState) {
       try {
-        const response = await Api.get(`stocks/${id}/stock-evolution`);
+        const params = {} as {
+          filterType?: string;
+        };
+        if (type) params.filterType = type;
+        const response = await Api.get(`stocks/${id}/stock-evolution`, {
+          params,
+        });
         console.log(response);
         return response.data;
       } catch (error) {

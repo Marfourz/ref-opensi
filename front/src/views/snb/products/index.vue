@@ -391,6 +391,7 @@ export default defineComponent({
           loading.value = true;
           toast.success("Le produit a été mise à jour avec succès");
           reload.value = reload.value + 1;
+
           showModal.value = false;
           router.push({ name: "products" });
         } else {
@@ -402,6 +403,11 @@ export default defineComponent({
               image.value as File
             );
             toast.success("Le produit a été ajouté avec succès");
+            product.bulkPrice = 0
+            product.name =""
+            product.volume= 0
+            product.unitPrice= 0
+
             reload.value = reload.value + 1;
             showModal.value = false;
             router.push({ name: "products" });
