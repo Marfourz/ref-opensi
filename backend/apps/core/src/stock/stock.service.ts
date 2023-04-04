@@ -1,16 +1,18 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import {
-  Stock,
-  PackagingTypeEnum,
-  TransactionStatusEnum,
-} from '@prisma/client';
+import { Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
-import { OrderStatusEnum, OrganisationTypeEnum } from '@prisma/client';
+import {
+  OrderStatusEnum,
+  OrganisationTypeEnum,
+  TransactionStatusEnum,
+  PackagingTypeEnum,
+} from '@prisma/client';
 import { orderDto } from '../order/order.dto';
 import { OrderService } from '../order/order.service';
+import { getPlainPackagingType } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class StockService {
@@ -269,7 +271,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     } else {
@@ -286,7 +292,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     }
@@ -296,6 +306,7 @@ export class StockService {
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
       let type: string,
+        packagingType: PackagingTypeEnum,
         quantity = 0;
       if (
         element.parentOrganisationId == element.organisationId ||
@@ -308,6 +319,7 @@ export class StockService {
 
       for (let j = 0; j < element.items.length; j++) {
         const e = element.items[j];
+        packagingType = e.product.packagingType;
         quantity += e.quantity;
       }
 
@@ -315,6 +327,7 @@ export class StockService {
       dataItem = {
         date: element.deliveryDate,
         type,
+        packagingType: getPlainPackagingType(packagingType),
         quantity,
         total: element.totalAmount,
       };
