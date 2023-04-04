@@ -120,7 +120,7 @@ async function main() {
     return;
   }
 }
-/*
+
 main()
   .then(async () => {
     await prisma.$disconnect();
@@ -129,4 +129,4 @@ main()
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);
-  });*/
+  });
