@@ -95,8 +95,9 @@ export class StockController {
     name: 'x-auth-token',
     description: 'Contain auth token',
   })
-  getStockEvolution(@Param() params): any {
-    return this.stockService.getStockEvolution(params.orgId);
+  @ApiQuery({ name: 'filterType', type: String, required: false })
+  getStockEvolution(@Param() params, @Query() filterParams: any): any {
+    return this.stockService.getStockEvolution(params.orgId, filterParams);
   }
 
   @Put(':id')

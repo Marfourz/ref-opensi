@@ -7,6 +7,7 @@ import { products } from './products';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config({ path: '.env.development' });
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+//
 const { PrismaClient } = require('@prisma/client');
 import axios from 'axios';
 
@@ -94,9 +95,6 @@ async function main() {
       },
     });
 
-    // get the first engine & put on the dliveryMan
-    const firstEngine = await prisma.engine.findFirst({});
-
     if (!existingUser) {
       const newUser = await prisma.user.create({
         data: {
@@ -108,26 +106,6 @@ async function main() {
     } else {
       console.info('User was already created : ', existingUser);
     }
-
-    // create DELIVERYmAN if not exist
-    /*const existingDeliveryMan = await prisma.user.findUnique({
-      where: {
-        email: deliveryMan.email,
-      },
-    });
-
-    if (!existingDeliveryMan) {
-      const newDeliveryMan = await prisma.user.create({
-        data: {
-          organisationId: orgId,
-          engineId: firstEngine.id,
-          ...deliveryMan,
-        },
-      });
-      console.info('DeliveryMan new created : ', newDeliveryMan);
-    } else {
-      console.info('DeliveryMan was already created : ', existingDeliveryMan);
-    }*/
 
     const usersAfterWork = await (
       await axios.get(process.env.USERS_MANAGER_URL + '/users')

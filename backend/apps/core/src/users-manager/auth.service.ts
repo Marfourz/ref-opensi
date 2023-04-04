@@ -178,9 +178,9 @@ export class AuthService {
     return data;
   }
 
-  changePassword(update: UserChangePasswordDto, userId: any) {
+  changePassword(update: UserChangePasswordDto) {
     const data = this.httpService
-      .put(`/users/${userId}/password`, update)
+      .put(`/users/${update.userId}/password`, update)
       .toPromise()
       .then((res) => {
         return res.data;

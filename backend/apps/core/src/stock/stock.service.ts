@@ -1,16 +1,18 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import {
-  Stock,
-  PackagingTypeEnum,
-  TransactionStatusEnum,
-} from '@prisma/client';
+import { Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
-import { OrderStatusEnum, OrganisationTypeEnum } from '@prisma/client';
+import {
+  OrderStatusEnum,
+  OrganisationTypeEnum,
+  TransactionStatusEnum,
+  PackagingTypeEnum,
+} from '@prisma/client';
 import { orderDto } from '../order/order.dto';
 import { OrderService } from '../order/order.service';
+import { getPlainPackagingType } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class StockService {
@@ -22,6 +24,8 @@ export class StockService {
 
   async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
+      //get absolute value of currentQuantity of stock
+      stock.currentQuantity = Math.abs(stock.currentQuantity);
       const organisation = await this.prisma.organisation.findUnique({
         where: {
           id: stock.organisationId,
@@ -242,10 +246,15 @@ export class StockService {
       },
     });
 
-    return { totalPackProducts, totalRackProducts, totalCost, lastStock };
+    return {
+      totalPackProducts,
+      totalRackProducts,
+      totalCost,
+      lastStock: lastStock.length > 0 ? lastStock[0] : null,
+    };
   }
 
-  async getStockEvolution(orgId: string): Promise<any> {
+  async getStockEvolution(orgId: string, { filterType }): Promise<any> {
     const organisation = await this.prisma.organisation.findUnique({
       where: {
         id: orgId,
@@ -264,7 +273,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     } else {
@@ -281,7 +294,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     }
@@ -290,25 +307,29 @@ export class StockService {
 
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
-      let type: boolean,
+      let type: string,
+        packagingType: PackagingTypeEnum,
         quantity = 0;
       if (
         element.parentOrganisationId == element.organisationId ||
         element.parentOrganisationId == orgId
       ) {
-        type = false; //vente
+        type = 'sale'; //vente
       } else {
-        type = true; //achat
+        type = 'supply'; //achat
       }
 
       for (let j = 0; j < element.items.length; j++) {
         const e = element.items[j];
+        packagingType = e.product.packagingType;
         quantity += e.quantity;
       }
 
-      const dataItem: any = {};
-      dataItem[element.deliveryDate] = {
-        appro: type,
+      let dataItem: any = {};
+      dataItem = {
+        date: element.deliveryDate,
+        type,
+        packagingType: getPlainPackagingType(packagingType),
         quantity,
         total: element.totalAmount,
       };
@@ -316,6 +337,10 @@ export class StockService {
       data.push(dataItem);
     }
 
+    if (filterType) {
+      const result = data.filter((element) => element.type == filterType);
+      return result;
+    }
     return data;
   }
 }

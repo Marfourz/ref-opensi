@@ -240,7 +240,7 @@ export default defineComponent({
     });
 
     function onDelete(value: IProduct) {
-      modal.title = `Êtes-vous sûr de vouloir <br> supprimer cette boisson ?`;
+      modal.title = `Êtes-vous sûr de vouloir <br> supprimer ce produit ?`;
       modal.show = true;
       modal.type = "delete";
       selectedProduct.value = value;
@@ -374,6 +374,7 @@ export default defineComponent({
     const reload = ref(0);
 
     async function onSubmit() {
+      loading.value = true;
       try {
         if (selectedProduct.value) {
           if (image.value) {
@@ -387,8 +388,8 @@ export default defineComponent({
             selectedProduct.value.id,
             product
           );
-
-          toast.success("La boisson a été mise à jour avec succès");
+          loading.value = true;
+          toast.success("Le produit a été mise à jour avec succès");
           reload.value = reload.value + 1;
           showModal.value = false;
           router.push({ name: "products" });
@@ -400,7 +401,7 @@ export default defineComponent({
               response.data.id,
               image.value as File
             );
-            toast.success("La boisson a été crée avec succès");
+            toast.success("Le produit a été ajouté avec succès");
             reload.value = reload.value + 1;
             showModal.value = false;
             router.push({ name: "products" });

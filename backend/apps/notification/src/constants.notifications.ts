@@ -6,8 +6,8 @@ const mailGenerator: any = new Mailgen({
   theme: 'default',
   product: {
     name: 'SNB',
-    link: 'https://snb.io/',
-    logo: 'https://snb.io/img/logo.png',
+    link: 'https://snb.opensi.co',
+    logo: 'https://snb.opensi.co/assets/logo-e3eb85f3.png',
   },
 });
 export const NOTIFICATION_MESSAGES = {

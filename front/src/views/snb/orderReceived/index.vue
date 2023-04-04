@@ -158,7 +158,7 @@
                       <a
                         class="text-[#0050CF] font-semibold underline cursor-pointer"
                         @click="goToViewDeliveryMan(order.deliveryMan.id)"
-                        >{{ order.deliveryMan.name }}</a
+                        >{{ order.deliveryMan.name }} {{ order.deliveryMan.firstName }}</a
                       >
                     </div>
                     <div></div>
@@ -305,14 +305,14 @@ export default defineComponent({
         elements = [
           {
             title: "Accepter",
-            classIcon: "text-tableColor",
+           // classIcon: "text-tableColor",
             icon: "yes",
             action: acceptOrder,
           },
           {
             title: "Rejeter",
             iconClass: "text-[#E03A15] w-3 h-3",
-            titleClass: "text-[#E03A15] ",
+           // titleClass: "text-[#E03A15] ",
             icon: "close",
             action: rejectOrder,
           },

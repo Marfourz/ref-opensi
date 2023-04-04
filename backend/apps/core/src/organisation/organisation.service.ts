@@ -20,6 +20,7 @@ import { NotificationService } from 'apps/notification/src/notification.service'
 import { Role } from '../../../../guards/roles.enum';
 import { UserService } from '../user/user.service';
 import { constants } from 'buffer';
+import { getSubTypeOrg } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class OrganisationService {
@@ -397,13 +398,27 @@ export class OrganisationService {
       },
     });
 
-    //get orders of organisation for deduct turnover
-    const orders = await this.prisma.order.count({
-      where: {
-        organisationId: orgId,
-        ...dateRange,
-      },
-    });
+    let orders;
+
+    if (organisation.type === OrganisationTypeEnum.snb) {
+      orders = await this.prisma.order.count({
+        where: {
+          organisation: {
+            type: OrganisationTypeEnum.md,
+          },
+          parentOrganisationId: orgId,
+          ...dateRange,
+        },
+      });
+    } else {
+      //get orders of organisation for deduct turnover
+      orders = await this.prisma.order.count({
+        where: {
+          organisationId: orgId,
+          ...dateRange,
+        },
+      });
+    }
 
     //get orders of organisation
     const turnover = await this.getOrganisationTurnover(orgId);
@@ -411,48 +426,22 @@ export class OrganisationService {
     //get organisation ranking
     const ranking = await this.getOrganisationRanking(orgId, organisation.type);
 
-    //get all organisation by type
-    const MDs = await this.prisma.organisation.count({
-      where: {
-        type: OrganisationTypeEnum.md,
-      },
-    });
+    const subType = getSubTypeOrg(organisation.type);
 
-    const DAs = await this.prisma.organisation.count({
-      where: {
-        type: OrganisationTypeEnum.da,
-      },
-    });
+    let partners = 0;
 
-    const DPs = await this.prisma.organisation.count({
-      where: {
-        type: OrganisationTypeEnum.dp,
-      },
-    });
+    if (subType != 'none') {
+      partners = await this.prisma.organisation.count({
+        where: {
+          type: subType,
+        },
+      });
+    }
 
     //get partners according to organisation type
     // MDs : count of all "master distributeurs"
     // DAs : count of all "distributeurs agrées"
     // DPs : count of all "dépots"
-
-    let partners = 0;
-
-    switch (organisation.type) {
-      case OrganisationTypeEnum.snb:
-        partners = MDs + DAs + DPs;
-        break;
-      case OrganisationTypeEnum.md:
-        partners = DAs + DPs;
-        break;
-      case OrganisationTypeEnum.da:
-        partners = DPs;
-        break;
-      case OrganisationTypeEnum.dp:
-        partners = 0;
-        break;
-      default:
-        break;
-    }
 
     //get stock of the organisation
     const stocks: any = await this.prisma.stock.findMany({
@@ -461,7 +450,11 @@ export class OrganisationService {
         ...dateRange,
       },
       include: {
-        product: true,
+        product: {
+          include: {
+            image: true,
+          },
+        },
       },
     });
 
@@ -623,10 +616,24 @@ export class OrganisationService {
     return orders;*/
   }
 
-  async getTurnoverOfPeriod(period, parentOrganisationId) {
+  async getTurnoverOfPeriod(period, id) {
+    const organisation = await this.prisma.organisation.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    const additionalConstraints: any = {};
+
+    if (organisation.type == OrganisationTypeEnum.snb) {
+      additionalConstraints.organisationId = id;
+    }
+
     return await this.prisma.order.aggregate({
       where: {
-        parentOrganisationId,
+        parentOrganisationId: id,
+        status: OrderStatusEnum.delivered,
+        ...additionalConstraints,
         createdAt: {
           gte: new Date(period.gte).toISOString(),
           lte: new Date(period.lte).toISOString(),

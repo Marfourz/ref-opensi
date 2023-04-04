@@ -21,7 +21,7 @@ model User {
 
   firstName           String?
 
-  phone               String
+  phone               String   @unique
 
   email               String   @unique
 
@@ -147,7 +147,7 @@ model ItemOrder {
 model Product {
   id                  String   @id @default(uuid())
 
-  name                String
+  name                String   @unique
 
   category            ProductCategory @relation(fields: [categoryId], references: [id])
 
@@ -175,7 +175,7 @@ model Product {
 model ProductCategory {
   id                  String   @id @default(uuid())
 
-  name                String
+  name                String   @unique
 
   description         String
 
