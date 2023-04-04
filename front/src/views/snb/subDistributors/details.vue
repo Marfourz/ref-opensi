@@ -65,7 +65,7 @@
       <template #orders>
         <div class="mt-7 space-y-6">
           <BaseTitle title="Commandes"></BaseTitle>
-          <VOrders :organisationId="state.organisationId" />
+          <VOrders :organisationId="state.organisationId" class=""/>
         </div>
       </template>
       <template #distributors>
@@ -80,7 +80,7 @@
         </div>
         <div class="grid grid-cols-3 gap-4">
           <div class="flex flex-col">
-            <span class="font-semibold text-base">Nom</span>
+            <span class="font-semibold text-base">Raison sociale</span>
             <span class="font-medium text-sm">
               {{ selectedMaster?.organisation.socialReason }}
             </span>
@@ -104,13 +104,14 @@
             </span>
           </div>
           <div class="flex flex-col">
-            <span class="font-semibold text-base">Représentant</span>
+            <span class="font-semibold text-base">Nom du représentant</span>
             <span class="font-medium text-sm">
               {{ selectedMaster?.organisation.ownerName }}
             </span>
           </div>
           <div class="flex flex-col">
             <span class="font-semibold text-base">Adresse</span>
+            
             <span class="font-medium text-sm">
               {{ selectedMaster?.organisation.adress }}
             </span>
@@ -250,6 +251,7 @@ const selectedTab = ref("");
 onMounted(async () => {
   state.organisationId = route.params.id as string;
   console.log(id.value);
+  selectedMaster.value?.organisation.status;
   try {
     if (state.organisationId) {
       const response = await organizationStore.onView(state.organisationId);

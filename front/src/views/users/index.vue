@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-6">
-    <BaseModal :show="modal.show">
+    <!-- <BaseModal :show="modal.show">
       <template #modal>
         <div
           class="flex flex-col space-y-6 items-center py-4"
@@ -47,6 +47,62 @@
           >
         </div>
       </template>
+    </BaseModal> -->
+    <BaseModal :show="modal.show">
+      <template #modal>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+        >
+          <BaseIcon name="warning"></BaseIcon>
+          <div
+            class="text-center font-semibold text-2xl"
+            v-html="modal.title"
+          ></div>
+          <div class="flex items-center space-x-2 w-full">
+            <BaseButton
+              :bgColor="
+                selectedUser?.status === UserAccountStatus.ACTIVE
+                  ? 'danger'
+                  : 'primary'
+              "
+              :outline="true"
+              class="w-1/2"
+              @click="modal.show = false"
+            >
+              Annuler
+            </BaseButton>
+            <BaseButton
+              :bgColor="
+                selectedUser?.status === UserAccountStatus.ACTIVE
+                  ? 'danger'
+                  : 'primary'
+              "
+              class="w-1/2"
+              @click="toogleStatus"
+            >
+              {{ toggleText }}
+            </BaseButton>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-else-if="(modal.mode = 'success')"
+        >
+          <div
+            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+          >
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+          </div>
+          <div class="font-bold text-2xl">
+            {{ modal.title }}
+          </div>
+          <BaseButton class="w-full" @click="modal.show = false"
+            >Terminer</BaseButton
+          >
+        </div>
+      </template>
     </BaseModal>
 
     <div class="flex items-center space-x-6">
@@ -60,9 +116,13 @@
       :fetchData="userStore.fetchByOrganization"
       :downloadData="userStore.downloadUsers"
       :requestId="organisationId"
-      :actions="actions"
+    
       :key="reload"
-    ></BaseTableWithFilter>
+    >
+  <template #action="{ element }">
+          <BaseActions :actions="customActions(element)" :data="element" />
+        </template>
+  </BaseTableWithFilter>
 
     <BaseBottomModal :show="showModal">
       <div class="w-[80%]">
@@ -123,30 +183,98 @@ import { Sex, UserRole } from "../../types/enumerations";
 import { Form } from "vee-validate";
 import { IUser } from "../../types/interfaces";
 import { useToast } from "vue-toastification";
+import { IAction } from "@/types/interfaces";
+import { UserAccountStatus } from "../../types/enumerations";
 
 export default defineComponent({
   components: { Form },
   setup() {
+    // const actions = [
+    //   //   {
+    //   //     title: "Voir détail",
+    //   //     icon: "eye",
+    //   //     action: onView,
+    //   //   },
+    //   {
+    //     title: "Modifier",
+    //     icon: "edit",
+    //     action: onUpdate,
+    //   },
+    //   {
+    //     title: "Supprimer",
+    //     icon: "removeRed",
+    //     action: onDelete,
+    //   },
+    // ];
     const userStore = useUsersStore();
 
-    const actions = [
-      //   {
-      //     title: "Voir détail",
-      //     icon: "eye",
-      //     action: onView,
-      //   },
-      {
-        title: "Modifier",
-        icon: "edit",
-        action: onUpdate,
-      },
-      {
-        title: "Supprimer",
-        icon: "removeRed",
-        action: onDelete,
-      },
-    ];
+    const customActions: (el: { status: string }) => IAction[] = (el: {
+      status: string;
+    }) => {
+      const actions = [
+        {
+          title: "Modifier",
+          icon: "editfine",
+          action: onUpdate,
+        },
+      ];
+      if (el.status === UserAccountStatus.ACTIVE) {
+        actions.push({
+          title: "Désactiver",
+          icon: "cancel",
+          action: onToggle,
+        });
+        return actions;
+      }
+      actions.push({
+        title: "Activer",
+        icon: "yes",
+        action: onToggle,
+      });
+      return actions;
+    };
 
+    function onToggle(value: IUser) {
+      selectedUser.value = value;
+      if (value.status === UserAccountStatus.ACTIVE)
+        modal.title = `Êtes-vous sûr de vouloir désactiver ${selectedUser.value.name} ?`;
+      if (value.status === UserAccountStatus.INACTIVE)
+        modal.title = `Êtes-vous sûr de vouloir activer ${selectedUser.value.name} ?`;
+      modal.show = true;
+      modal.subtitle = "";
+      modal.mode = "confirm";
+      modal.type = "delete";
+    }
+
+    
+    async function toogleStatus(value: IUser) {
+      try {
+        if (selectedUser.value?.status === UserAccountStatus.ACTIVE) {
+     
+
+          const response = await userStore.update(selectedUser.value?.id, {
+            status: UserAccountStatus.INACTIVE,
+          });
+          modal.title = `${selectedUser.value?.name}  désactivé avec succès`;
+        } else {
+          const response = await userStore.update(selectedUser.value?.id, {
+            status: UserAccountStatus.ACTIVE,
+          });
+          modal.title = `${selectedUser.value?.name} activé avec succès`;
+        }
+
+        reload.value = !reload.value;
+        modal.show = true;
+        modal.subtitle = "";
+        modal.mode = "success";
+      } catch (error) {}
+    }
+
+    const toggleText = computed(() => {
+      if (selectedUser.value?.status === UserAccountStatus.ACTIVE)
+        return "Désactiver";
+      else return "Activer";
+    });
     const modal = reactive({
       title: "",
       subtitle: "",
@@ -156,6 +284,8 @@ export default defineComponent({
     });
 
     const selectedUser = ref<IUser | null>();
+
+    
 
     function createUser() {
       selectedUser.value = null;
@@ -240,10 +370,10 @@ export default defineComponent({
           title: "Administrateur",
           value: UserRole.ADMIN,
         },
-        {
-          title: "Livreur",
-          value: UserRole.DELIVERY_MAN,
-        },
+        // {
+        //   title: "Livreur",
+        //   value: UserRole.DELIVERY_MAN,
+        // },
         {
           title: "Super administrateur",
           value: UserRole.SUPER_USER,
@@ -342,7 +472,7 @@ export default defineComponent({
       sexes,
       user,
       onSubmit,
-      actions,
+      // actions,
       selectedUser,
       createUser,
       modal,
@@ -350,6 +480,10 @@ export default defineComponent({
       loading,
       reload,
       organisationId,
+      UserAccountStatus,
+      toggleText,
+      toogleStatus,
+      customActions,
     };
   },
 });

@@ -1,6 +1,6 @@
 <template>
-  <div class="border border-t-2" :key="reload">
-    <div
+  <div class="border-2 border-t-2 " :key="reload">
+     <div
       class="absolute top-6 right-0 left-0 flex justify-center"
       v-if="showSuccesInfo"
     >
@@ -55,7 +55,7 @@
           </div>
         </div>
       </template>
-    </BaseModal>
+    </BaseModal> 
 
     <PageInTwoPart class="py-0" firstPartClass="pt-0 pl-0">
       <template #firstPart>
@@ -87,13 +87,6 @@
               </template>
               <template #filter>
                 <div class="flex space-x-4 h-full">
-                  <!-- <div
-              class="flex border rounded items-center justify-center px-4 font-semibold space-x-2"
-            >
-              <div>Filtré par</div>
-              <BaseIcon name="simpleArrowBottom"></BaseIcon>
-            </div> -->
-
                   <BaseButton icon="upload" size="small"
                     >Télécharger</BaseButton
                   >
@@ -302,7 +295,7 @@ export default defineComponent({
           {
             title: "Rejeter",
             iconClass: "text-[#E03A15] w-3 h-3",
-            titleClass: "text-[#E03A15] ",
+           // titleClass: "text-[#E03A15] ",
             icon: "close",
             action: rejectOrder,
           },
@@ -379,16 +372,7 @@ export default defineComponent({
        
       }
     }
-    // const infoHistoryOrder = ref();
-
-    // async function getHistoryOrder(id: any) {
-    //   try {
-    //     const response = await orderStore.historyOrder(id);
-    //     infoHistoryOrder.value = response;
-    //   } catch (error) {
-    //     toast.error("T");
-    //   }
-    // }
+   
   
 
     const reload = ref(1);

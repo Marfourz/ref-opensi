@@ -1,16 +1,11 @@
 <template>
   <div>
     <Form class="space-y-6" @submit="onSubmit">
-      <BaseInput
-        name="email"
-        label="Email"
-       
-        v-model="username"
-      ></BaseInput>
+                
+      <BaseInput name="email" label="Email" v-model="username" ></BaseInput>
       <div>
         <BaseInput
           name="mot de passe"
-          
           label="Mot de passe"
           type="password"
           v-model="password"
@@ -58,13 +53,11 @@ async function onSubmit() {
     router.push({ name: "dashboard" });
 
     loading.value = false;
-  } catch (error:any) {
-    if(error.response.status == 401){
+  } catch (error: any) {
+    if (error.response.status == 401) {
       toast.error("Vos identifiants sont incorrects");
-    }
-    else
-      toast.error("Un problème est survenu.Contactez l'administrateur.");
-    
+    } else toast.error("Un problème est survenu.Contactez l'administrateur.");
+
     console.log("error", error);
     loading.value = false;
   }

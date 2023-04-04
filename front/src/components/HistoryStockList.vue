@@ -14,7 +14,8 @@ props: {
     //   type: Object as PropType<IOrder>,
     // },
   },
-
+//
+//
 //   setup(props) {
 //     const orderStore = useOrdersStore();
 //     const infoHistoryOrder = ref<Array<IOrderHistory>>([]);
@@ -27,5 +28,7 @@ props: {
 
 //     return { infoHistoryOrder };
 //   },
+//
+//
 });
 </script>

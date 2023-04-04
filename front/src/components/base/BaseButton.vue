@@ -3,7 +3,7 @@
     :class="classes"
     v-bind="$attrs"
     :disabled="disabled"
-    class="flex items-center justify-center"
+    class="flex items-center justify-center min-w-[120px]"
     @click="onClick"
   >
     <div v-if="!loading" class="flex space-x-2 items-center">
@@ -11,14 +11,17 @@
       <div><slot></slot></div>
     </div>
 
-    <img src="@/assets/images/loader.gif" alt="" v-else class="w-5 h-5" />
+    <!-- <img src="@/assets/images/loader.gif" alt="" v-else class="w-5 h-5" /> -->
+    <div class="w-4" v-else>
+      <BaseIcon name="loader"></BaseIcon>
+    </div>
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import _ from "lodash";
-import BaseIcon from "./BaseIcon.vue";
+// import BaseIcon from "./BaseIcon.vue";
 
 interface Props {
   size?: "small" | "medium" | "large";

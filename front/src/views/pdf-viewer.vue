@@ -7,7 +7,7 @@
                 <BaseIcon name="pdf"></BaseIcon>
                 <div class="text-grey-30 font-semibold text-[16px]">Facture proforma</div>
             </div>
-            <a :href="link" class="" ><div class="space-x-2 py-3 bg-primary text-white flex items-center justify-center px-6 rounded" type="success" >
+            <a :href="link" class=""  ><div class="space-x-2 py-3 bg-primary text-white flex items-center justify-center px-6 rounded" type="success" >
                 <BaseIcon name="download"></BaseIcon>
                 <span class="text-sm">Télécharger</span>
                 </div></a>

@@ -1,6 +1,6 @@
 <template>
   <Form class="space-y-6">
-    <BaseInput name="email" rules="required|email" label="Email"></BaseInput>
+    <BaseInput name="email" rules="email" label="Email"></BaseInput>
     <BaseButton class="w-full" @click="goToVerificationCode"
       >Valider</BaseButton
     >
