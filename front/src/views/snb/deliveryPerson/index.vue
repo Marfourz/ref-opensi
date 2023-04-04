@@ -13,13 +13,17 @@
           ></div>
           <div class="flex items-center space-x-2 w-full">
             <BaseButton
-              bgColor="danger"
+             :bgColor="
+                selectedUser?.status === UserAccountStatus.ACTIVE
+                  ? 'danger'
+                  : 'primary'" 
               :outline="true"
               class="w-1/2"
               @click="modal.show = false"
             >
               Annuler
             </BaseButton>
+            
             <BaseButton
               :bgColor="
                 selectedUser?.status === UserAccountStatus.ACTIVE
