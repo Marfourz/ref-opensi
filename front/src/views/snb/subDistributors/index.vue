@@ -1,6 +1,63 @@
 <template>
   <div class="">
     <div class="space-y-6 flex flex-col h-full">
+      <!-- <BaseModal :show="modal.show">
+        <template #modal>
+          <div
+            class="flex flex-col space-y-6 items-center py-4"
+            v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+          >
+            <BaseIcon name="warning"></BaseIcon>
+            <div
+              class="text-center font-semibold text-2xl"
+              v-html="modal.title"
+            ></div>
+            <div class="flex items-center space-x-2 w-full">
+              <BaseButton
+                :bgColor="
+                  selectedMaster?.status === UserAccountStatus.ACTIVE
+                    ? 'primary'
+                    : 'primary'
+                "
+                :outline="true"
+                class="w-1/2"
+                @click="modal.show = false"
+              >
+                Annuler
+              </BaseButton>
+              <BaseButton
+                :bgColor="
+                  selectedMaster?.status === UserAccountStatus.ACTIVE
+                    ? 'danger'
+                    : 'primary'
+                "
+                class="w-1/2"
+                @click="toogleStatus"
+              >
+                {{ toggleText }}
+              </BaseButton>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col space-y-6 items-center py-4"
+            v-else-if="(modal.mode = 'success')"
+          >
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+            >
+              <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+            </div>
+            <div class="font-bold text-2xl">
+              {{ modal.title }}
+            </div>
+            <BaseButton class="w-full" @click="modal.show = false"
+              >Terminer</BaseButton
+            >
+          </div>
+        </template>
+      </BaseModal> -->
+
        <BaseModal :show="modal.show">
       <template #modal>
         <div
@@ -16,7 +73,7 @@
             <BaseButton
               :bgColor="
                 selectedMaster?.status === UserAccountStatus.ACTIVE
-                  ? 'primary'
+                  ? 'danger'
                   : 'primary'
               "
               :outline="true"
@@ -216,6 +273,7 @@ export default defineComponent({
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
+        master.type = OrganisationType.DP;
 
       if (
         organisationType.value == OrganisationType.MD ||
@@ -300,7 +358,6 @@ export default defineComponent({
     };
 
 
-
     function onToggle(value: IOrganisation) {
       selectedMaster.value = value;
       if (value.status === UserAccountStatus.ACTIVE)
@@ -320,6 +377,7 @@ export default defineComponent({
     async function toogleStatus(value: IOrganisation) {
       try {
         if (selectedMaster.value?.status === UserAccountStatus.ACTIVE) {
+
           const response = await organizationStore.update(selectedMaster.value.id, {
             status: UserAccountStatus.INACTIVE,
           });
@@ -340,13 +398,10 @@ export default defineComponent({
 
     const toggleText = computed(() => {
       if (selectedMaster.value?.status === UserAccountStatus.ACTIVE)
-        return "Desactiver";
+        return "Désactiver";
       else return "Activer";
     });
 
-
-
-    
     const actions = [
       {
         title: "Voir détail",
@@ -524,14 +579,14 @@ export default defineComponent({
             selectedMaster.value.id,
             master
           );
-          modal.title = `Partenaire modifié avec succès`;
+          modal.title = `Partenaire modifié avec succès.`;
           // toast.success("Partenaire modifié avec succès"); Partenaire modifié avec succès
         } else {
           const response = await organizationStore.create({
             ...master,
             parentOrganisationId: organisationId.value,
           });
-          modal.title = `Partenaire crée avec succès`;
+          modal.title = `Un nouveau partenaire crée avec succès.`;
           // toast.success("Partenaire crée avec succès"); Partenaire crée avec succès
         }
         modal.show = true;

@@ -42,7 +42,7 @@
             >
               <BaseIcon :name="`calendar${paymentDeadline}`"></BaseIcon>
             </BaseSelectedCard>
-            <div class="font-semibold">Paiement sur 30 jours</div>
+            <div class="font-semibold">Paiement sur {{ paymentDeadline?.toString() }} jours</div>
           </div>
         </div>
         <div class="flex justify-between font-semibold text-xl mt-1">
@@ -50,7 +50,7 @@
           <div>{{ totalAmount }} F</div>
         </div>
         <BaseButton class="w-full" :loading="loading" @click="onSubmit"
-          >Payer maintenant</BaseButton
+          >{{ buttonTitle }}</BaseButton
         >
       </div>
     </div>
@@ -87,6 +87,13 @@ export default defineComponent({
       return basketStore.getBasketPrice;
     });
 
+     const buttonTitle = computed(() => {
+      if (selectedPaymentMethod.value === PaymentMethod.KKIAPAY)
+      return "Payer maintenant";
+      else return "Terminer";
+    });
+   
+
     const loading = ref(false);
 
     const ordersStore = useOrdersStore();
@@ -111,8 +118,6 @@ export default defineComponent({
       });
 
       try{
-        
-        
         const response = await ordersStore.create({
         organisationId: organisationId.value,
         items: orders,
@@ -129,13 +134,7 @@ export default defineComponent({
         toast.error(error.response.data.message)
         router.push({ name: "appros" });
       }
-
-      
-     
       }
-
-
-    
 
     async function onSubmit() {
       if(selectedPaymentMethod.value == PaymentMethod.KKIAPAY){
@@ -144,8 +143,6 @@ export default defineComponent({
       else{
         await makeAppro(undefined) 
       }
-     
-      
     }
 
     async function successHandler(paymentResponse: { transactionId: string }) {
@@ -160,11 +157,6 @@ export default defineComponent({
         phone: "97000000",
       });
     }
-
-
-   
-
-
 
     const selectedPaymentMethod = ref<PaymentMethod>(PaymentMethod.KKIAPAY);
 
@@ -191,7 +183,8 @@ export default defineComponent({
       kkiapayWidget,
       onSubmit,
       loading,
-      paymentDeadline
+      paymentDeadline,
+      buttonTitle,
     };
   },
 });
