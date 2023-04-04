@@ -1,5 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { User, ActivityLog, UserStatusEnum, UserRoleEnum } from '@prisma/client';
+import {
+  User,
+  ActivityLog,
+  UserStatusEnum,
+  UserRoleEnum,
+} from '@prisma/client';
 import { updateUserDto } from './user.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { AuthService } from '../users-manager/auth.service';
@@ -26,6 +31,23 @@ export class UserService {
     if (existingUser) {
       throw new HttpException(
         'Un utilisateur avec cet email existe déja',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    user.phone = user.phone.includes('229')
+      ? user.phone.replace('229', '')
+      : user.phone;
+
+    const existingUserByPhone = await this.prisma.user.findUnique({
+      where: {
+        phone: user.phone,
+      },
+    });
+
+    if (existingUserByPhone) {
+      throw new HttpException(
+        'Un utilisateur avec ce numero de téléphone existe déja',
         HttpStatus.CONFLICT,
       );
     }

@@ -14,6 +14,18 @@ export class ProductCategoryService {
 
   async createCategory(category: categoryDto): Promise<ProductCategory> {
     try {
+      const existingCategory = await this.prisma.productCategory.findUnique({
+        where: {
+          name: category.name,
+        },
+      });
+
+      if (existingCategory) {
+        throw new HttpException(
+          'Une categorie avec ce nom existe déja',
+          HttpStatus.CONFLICT,
+        );
+      }
       const newCategory = await this.prisma.productCategory.create({
         data: category,
       });

@@ -24,6 +24,8 @@ export class StockService {
 
   async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
+      //get absolute value of currentQuantity of stock
+      stock.currentQuantity = Math.abs(stock.currentQuantity);
       const organisation = await this.prisma.organisation.findUnique({
         where: {
           id: stock.organisationId,
@@ -312,9 +314,9 @@ export class StockService {
         element.parentOrganisationId == element.organisationId ||
         element.parentOrganisationId == orgId
       ) {
-        type = 'Vente'; //vente
+        type = 'sale'; //vente
       } else {
-        type = 'Approvissionnement'; //achat
+        type = 'supply'; //achat
       }
 
       for (let j = 0; j < element.items.length; j++) {
