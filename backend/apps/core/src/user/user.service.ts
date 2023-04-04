@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { User, ActivityLog } from '@prisma/client';
+import { User, ActivityLog, UserStatusEnum, UserRoleEnum } from '@prisma/client';
 import { updateUserDto } from './user.dto';
 import { PrismaService } from 'libs/prisma/src';
 import { AuthService } from '../users-manager/auth.service';
@@ -98,12 +98,26 @@ export class UserService {
     update: updateUserDto,
   ): Promise<User> {
     try {
+      // if update contains email, update user in 'user manager too'
       if (update.email) {
         await this.authService.updateUser(
           { email: update.email, username: update.email },
           user.uid,
         );
       }
+
+      // update user to inactive only if not an "administrator"
+      if (
+        user.roles.includes(UserRoleEnum.administrator) &&
+        update.status === UserStatusEnum.inactive
+      ) {
+        throw new HttpException(
+          'Vous ne pouvez pas désactiver un administrateur',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      console.log('THE USER CONNECTED ', user);
       const updatedUser = await this.prisma.user.update({
         where: { id },
         data: update,
