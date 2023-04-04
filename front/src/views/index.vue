@@ -28,15 +28,17 @@
       </div>
       <BaseDateRange  ></BaseDateRange>
     </div>
+    
     <BaseTable :titles="titles" :data="productsInfos">
       <template #produit="{ element }">
         <div class="flex items-center space-x-2.5"
         >
           <div class="bg-grey-75 flex items-center justify-center rounded-lg w-[50px] h-[50px]">
+           
             <img
             :src="`${
-              element.images && element.images[0]
-                ? element.images[0].url
+              element.product.image && element.product.image[0]
+                ? element.product.image[0].url
                 : '@/assets/images/beverage.png'
             }`"
             alt=""

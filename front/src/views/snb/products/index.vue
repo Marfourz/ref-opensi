@@ -40,7 +40,7 @@
     <div class="flex justify-between items-center">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
-        <BaseButton icon="plus" size="small" @click="showModal = true"
+        <BaseButton icon="plus" size="small" @click="createProduct"
           >Nouveau produit</BaseButton
         >
       </div>
@@ -77,7 +77,7 @@
         <template
           #[tab.name]
           v-for="tab in tabs"
-          :key="`${tab.name}-${reload}`"
+
         >
           <BaseTableWithFilter
             :fetchData="productCategoryStore.fetchProducts"
@@ -86,6 +86,7 @@
             :requestId="categoryId"
             class="mt-6"
             :downloadData="productCategoryStore.downloadProduct"
+            :key="`${tab.name}-${reload}`"
           >
             <template #image="{ element }">
               <div class="w-8 h-8">
@@ -181,7 +182,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import EmptyState from "../../../components/EmptyState.vue";
 import { useProductStore } from "@/stores/product";
 import BaseTableWithFilter from "../../../components/base/BaseTableWithFilter.vue";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import UploadFileVue from "../../../components/UploadFile.vue";
 import { PackagingType } from "../../../types/enumerations";
@@ -405,6 +406,9 @@ export default defineComponent({
             router.push({ name: "products" });
           }
         }
+
+        categoryId.value = product.categoryId
+        
       } catch (error: any) {}
     }
 
@@ -433,11 +437,25 @@ export default defineComponent({
       else return "Prix du casier (en FCFA)";
     });
 
+
+    const route = useRoute()
+
+    function createProduct(){
+      showModal.value = true 
+      selectedProduct.value = null
+    }
+
+    
+
     onMounted(async () => {
+
+
       try {
         const response = await productCategoryStore.fetchAll();
-
-        categoryId.value = response.data[0].id;
+        if(route.params.categoryId)
+          categoryId.value = route.params.categoryId as string
+        else
+          categoryId.value = response.data[0].id;
 
         categories.value = response.data.map((value: any) => {
           return {
@@ -474,6 +492,7 @@ export default defineComponent({
       modal,
       deleteProduct,
       reload,
+      createProduct
     };
   },
 });

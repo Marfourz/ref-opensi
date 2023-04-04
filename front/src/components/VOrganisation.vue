@@ -1,12 +1,84 @@
 <template>
-  <BaseTableWithFilter :titles="titles"> </BaseTableWithFilter>
+  <div>
+   
+    <BaseTableWithFilter  
+      :titles="titles"
+      :requestId="organisation?.id"
+      :fetchData="organisationStore.fetchAllParteners"
+      :params="{ type: organisationType }"
+    > 
+  
+    
+    <template #status="{ element }">
+          <BaseTableStatut
+            :title="getStatutLabel(element)"
+            :type="getStatutType(element)"
+          ></BaseTableStatut>
+        </template>
+      
+        <template #wallet="{ element }">
+          <div>{{ element.wallet.turnover }} FCFA</div>
+        </template>
+  
+  </BaseTableWithFilter>
+    
+  </div>
+ 
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent,computed,onMounted, PropType } from "vue";
+import { useOrganizationStore } from "../stores/organization";
+import { useUsersStore } from "../stores/users";
+import { OrganisationType, UserAccountStatus } from "../types/enumerations";
+import { IOrganisation } from "../types/interfaces";
 
 export default defineComponent({
-  setup() {
+  props:{
+    organisation : {
+      type : Object as PropType<IOrganisation>
+     }
+  },
+
+  setup(props) {
+
+    const organisationStore = useOrganizationStore()
+    const usersStore = useUsersStore()
+
+   
+
+    const organisationType = computed(()=>{
+      const type = props.organisation?.type
+      if(type == OrganisationType.SNB)
+        return OrganisationType.MD
+      else if (type == OrganisationType.MD)
+        return OrganisationType.DA
+      else if(type == OrganisationType.DA)
+        return OrganisationType.DP
+    })
+
+    function getStatutLabel(element: IOrganisation) {
+      if (element.status == UserAccountStatus.ACTIVE) return "Actif";
+      else if (element.status == UserAccountStatus.INACTIVE) return "Inactif";
+      else if (element.status == UserAccountStatus.SUSPENDED) return "Suspendu";
+    }
+
+    function getStatutType(element: IOrganisation) {
+      if (element.status == UserAccountStatus.ACTIVE) return "success";
+      else if (element.status == UserAccountStatus.INACTIVE) return "danger";
+      else if (element.status == UserAccountStatus.SUSPENDED) return "warning";
+    }
+
+    function getTotalOrder(element: IOrganisation) {
+      if (element.orders) return element.orders.length;
+      return 0;
+    }
+
+    
+
+   
+
+
     const titles = [
       {
         title: "Nom",
@@ -24,11 +96,11 @@ export default defineComponent({
       {
         title: "Commandes",
         name: "commandes",
-        // transform: getTotalOrder,
+        transform: getTotalOrder,
       },
       {
         title: "Chiffre d’affaire",
-        name: "wallet.turnovers",
+        name: "wallet",
       },
       {
         title: "Statut",
@@ -37,6 +109,10 @@ export default defineComponent({
     ];
     return {
       titles,
+      organisationType,
+      organisationStore,
+      getStatutLabel,
+      getStatutType
     };
   },
 });

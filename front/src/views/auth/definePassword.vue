@@ -37,6 +37,7 @@ const confirmPassword = ref("");
 const usersStore = useUsersStore();
 const loading = ref(false);
 const toast = useToast();
+const otp = ref("")
 
 const customErrorMessage = ref("");
 
@@ -49,11 +50,21 @@ function onConfirmPasswordChange() {
 async function onSubmit() {
   loading.value = true;
   try {
-    const response = await usersStore.definePassword({
+    if(otp.value){
+      const response = await usersStore.resetPassword({
+      username: username.value,
+      otp: otp.value,
+      password: password.value,
+    });
+    }
+    else{
+      const response = await usersStore.definePassword({
       username: username.value,
       token: token.value,
       password: password.value,
     });
+    }
+    
     loading.value = false;
     router.push({ name: "login" });
   } catch (error: any) {
@@ -65,6 +76,7 @@ async function onSubmit() {
 onMounted(() => {
   token.value = route.query.t as string;
   username.value = route.query.username as string;
+  otp.value = route.query.otp as string;
 });
 </script>
 

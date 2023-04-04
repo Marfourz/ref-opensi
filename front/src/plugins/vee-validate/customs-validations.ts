@@ -23,6 +23,8 @@ export default {
     return true;
   },
 
+  
+
   decimalNumber: (value: string, args: any) => {
     const re = /^\d*\.?\d+$/;
     if (!re.test(value)) return "Entré non valide";

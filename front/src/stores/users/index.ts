@@ -104,8 +104,8 @@ export const useUsersStore = defineStore("usersStore", {
 
     async sendResetPasswordCode(email: string) {
       try {
-        const response = await Api.post(`auth/password/forgot`, {
-          email: email,
+        const response = await Api.post(`auth/getResetPasswordCode`, {
+          username: email,
         });
         return response.data;
       } catch (error) {
@@ -113,11 +113,11 @@ export const useUsersStore = defineStore("usersStore", {
       }
     },
 
-    async verifyResetPasswordCode(email: string, code: number) {
+    async verifyResetPasswordCode(username: string, otp: string) {
       try {
-        const response = await Api.post(`auth/password/verify-code`, {
-          email,
-          code,
+        const response = await Api.post(`auth/verifyOtpCode`, {
+          username,
+          otp,
         });
         return response.data;
       } catch (error) {
@@ -126,14 +126,14 @@ export const useUsersStore = defineStore("usersStore", {
     },
 
     async resetPassword(data: {
-      email: string;
-      code: number;
+      username: string;
+      otp: string;
       password: string;
     }) {
       console.log("ssss", data);
 
       try {
-        const response = await Api.post(`auth/password/reset`, data);
+        const response = await Api.put(`auth/resetPasswordWithOtp`, data);
       } catch (error) {
         throw error;
       }

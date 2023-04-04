@@ -23,7 +23,7 @@
       />
     </mask>
     <g mask="url(#mask0_1307_69358)">
-      <rect width="16" height="16" fill="#DA1414" />
+      <rect width="16" height="16" fill="currentColor" />
     </g>
   </svg>
 </template>

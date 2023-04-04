@@ -3,6 +3,7 @@ import FirstLogin from "@/views/auth/firstLogin.vue";
 import DefinePassword from "@/views/auth/definePassword.vue";
 import Login from "@/views/auth/login.vue";
 import ForgotPassword from "@/views/auth/forgotPassword.vue";
+import PasswordCode from "@/views/auth/code.vue";
 
 export default [
   {
@@ -49,12 +50,29 @@ export default [
         },
       },
       {
+        path: "/auth/definePassword",
+        name: "newPassword",
+        component: DefinePassword,
+        meta: {
+          title: "Nouveau mot de passe",
+          subtitle: "Veuillez définir et confirmer votre <br> nouveau mot de passe",
+        },
+      },
+      {
         path: "/auth/forgotPassword",
         name: "forgotPassword",
         component: ForgotPassword,
         meta: {
           title: "Réinitialisation du mot de passe",
           subtitle: "",
+        },
+      },
+      {
+        path: "/auth/password/code",
+        name: "passwordCode",
+        component: PasswordCode,
+        meta: {
+          title: "Réinitialisation de mot de passe",
         },
       },
     ],

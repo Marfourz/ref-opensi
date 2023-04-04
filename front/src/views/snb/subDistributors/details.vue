@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="flex flex-col">
     <router-link :to="{ name: 'subDistributors' }" path="sous-distributeurs">
       <BaseGoBack> </BaseGoBack>
     </router-link>
@@ -62,16 +62,16 @@
           </BaseTable>
         </div>
       </template>
-      <template #orders>
-        <div class="mt-7 space-y-6">
+      <template #orders >
+        <div class="mt-7 space-y-6 h-full">
           <BaseTitle title="Commandes"></BaseTitle>
           <VOrders :organisationId="state.organisationId" />
         </div>
       </template>
       <template #distributors>
-        <div class="mt-7 space-y-">
+        <div class="mt-7 space-y-4">
           <BaseTitle title="Distributeurs agréés"></BaseTitle>
-          <VOrganisation />
+          <VOrganisation :organisation="selectedMaster?.organisation"/>
         </div>
       </template>
       <template #infos>
@@ -134,7 +134,7 @@ import VOrders from "@/components/VOrders.vue";
 import VOrganisation from "@/components/VOrganisation.vue";
 import BaseGoBack from "@/components/base/BaseGoBack.vue";
 import OrgnaisationTurnoverEvolution from "@/components/OrgnaisationTurnoverEvolution.vue";
-import { UserAccountStatus } from "@/types/enumerations";
+import { OrganisationType, UserAccountStatus } from "@/types/enumerations";
 
 
 const statusTitle = computed(() => {
@@ -143,12 +143,26 @@ const statusTitle = computed(() => {
   else return "Actif";
 })
 
-const tabs = [
-  { name: "dashboard", libelle: "Tableau de board" },
-  { name: "orders", libelle: "Commandes" },
-  { name: "distributors", libelle: "Distributeurs agréés" },
-  { name: "infos", libelle: "Informations générales" },
-];
+const tabs = computed(()=>{
+  
+
+  let title = "Masters distributeurs"
+  const type = selectedMaster.value?.organisation.type
+  if (type == OrganisationType.MD)
+    title = "Distributeurs agrées"
+  else if(type == OrganisationType.DA)
+    title = "Dépôts"
+
+  return [
+    { name: "dashboard", libelle: "Tableau de board" },
+    { name: "orders", libelle: "Commandes" },
+    { name: "distributors", libelle: `${title}` },
+    { name: "infos", libelle: "Informations générales" }
+]
+
+})
+
+
 
 const titles = [
   {

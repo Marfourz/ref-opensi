@@ -10,7 +10,7 @@ just all;
 
 <template>
   <div class="tld-tabs bg-white text-[16px]">
-    <div class="w-full">
+    <div class="w-full h-full ">
       <!-- <div>{{ selectedTab }}</div> -->
       <!-- tabs button -->
       <ul
@@ -33,7 +33,7 @@ just all;
       </ul>
       <!-- tabs area -->
       <div
-        class="relative tld-tabs-tab-content tld-tabs-tab-space w-full"
+        class="relative tld-tabs-tab-content tld-tabs-tab-space w-full h-full"
         :class="`tld-active-tab-${openTab}`"
       >
         <slot :name="openTab" :item="openTab"> </slot>
