@@ -9,13 +9,11 @@
           {{ selectedMaster?.organisation.socialReason }}
         </div>
         <BaseTableStatut
+          :loading="selectedMaster ? false : true"
           :title="statusTitle"
-          :type="
-            selectedMaster?.organisation.status === 'active'
-              ? 'success'
-              : 'danger'
-          "
+          :type="statusColor"
         ></BaseTableStatut>
+       
       </div>
       <template
         v-if="selectedMaster && selectedMaster.organisation.status === 'active'"
@@ -65,7 +63,7 @@
       <template #orders>
         <div class="mt-7 space-y-6">
           <BaseTitle title="Commandes"></BaseTitle>
-          <VOrders :organisationId="state.organisationId" class=""/>
+          <VOrders :organisationId="state.organisationId" class="" />
         </div>
       </template>
       <template #distributors>
@@ -111,7 +109,7 @@
           </div>
           <div class="flex flex-col">
             <span class="font-semibold text-base">Adresse</span>
-            
+
             <span class="font-medium text-sm">
               {{ selectedMaster?.organisation.adress }}
             </span>
@@ -137,12 +135,25 @@ import BaseGoBack from "@/components/base/BaseGoBack.vue";
 import OrgnaisationTurnoverEvolution from "@/components/OrgnaisationTurnoverEvolution.vue";
 import { UserAccountStatus } from "@/types/enumerations";
 
-
 const statusTitle = computed(() => {
-  if (selectedMaster.value?.organisation && selectedMaster.value.organisation.status == UserAccountStatus.INACTIVE)
-  return "Inactif";
+  if (
+    selectedMaster.value?.organisation &&
+    selectedMaster.value.organisation.status == UserAccountStatus.INACTIVE
+  )
+    return "Inactif";
   else return "Actif";
-})
+});
+
+const statusColor = computed(() => {
+  if (selectedMaster.value?.organisation) {
+    if (selectedMaster.value.organisation.status == UserAccountStatus.INACTIVE)
+      return "danger";
+    if (selectedMaster.value.organisation.status == UserAccountStatus.ACTIVE)
+      return "success";
+    return "";
+  }
+});
+const statusLoading = ref(false);
 
 const tabs = [
   { name: "dashboard", libelle: "Tableau de board" },
@@ -291,5 +302,4 @@ const enable = async () => {
     console.log(error);
   }
 };
-
 </script>

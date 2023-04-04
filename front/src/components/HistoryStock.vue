@@ -25,7 +25,8 @@
           <div class="">
             <p class="font-semibold">{{ paramToUse.title }}</p>
             <div class="inline-block border-r text-grey-50 pr-2 mr-2">
-              Nombre de casier: <span class="text-black"> {{ casier }}</span>
+              Nombre de {{ packaging }}:
+              <span class="text-black"> {{ casier }}</span>
             </div>
             <router-link to="" class="text-[#2062F6] font-semibold"
               >Voir détails</router-link
@@ -51,10 +52,10 @@ type Params = {
 };
 
 const MAPPING_OBJ: Record<StockState, Params> = {
-  all: {
+  "": {
     title: "",
     icon: IconDeposit,
-    primaryColor: "",
+    primaryColor: "#287D3C",
   },
 
   sale: {
@@ -80,15 +81,19 @@ export default defineComponent({
       type: String,
     },
     amount: {
-      type: String,
+      type: Number,
     },
     casier: {
+      type: Number,
+    },
+    packaging: {
       type: String,
     },
   },
 
   setup(props) {
     const paramToUse = MAPPING_OBJ[props.type];
+    
 
     return { paramToUse };
   },

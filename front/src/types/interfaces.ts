@@ -5,6 +5,7 @@ import type {
   OrganisationType,
   PackagingType,
   Sex,
+  StockState,
   UserAccountStatus,
   UserRole,
 } from "./enumerations";
@@ -139,4 +140,12 @@ export interface IOrderHistory {
   date: string;
   actor: IOrganisation;
   status: HistoricalOrderStatus;
+}
+
+export interface IStockHistory {
+  total: number;
+  quantity: number;
+  date: string;
+  type: StockState;
+  packagingType: string;
 }
