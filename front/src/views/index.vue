@@ -29,12 +29,13 @@
       <BaseDateRange></BaseDateRange>
     </div>
     
+   
     <BaseTable :titles="titles" :data="productsInfos">
       <template #produit="{ element }">
         <div class="flex items-center space-x-2.5"
         >
           <div class="bg-grey-75 flex items-center justify-center rounded-lg w-[50px] h-[50px]">
-           
+            
             <img
             :src="`${
               element.product.image && element.product.image[0]
@@ -257,7 +258,7 @@ export default defineComponent({
 
       {
         title: "Produit",
-        name: "image",
+        name: "produit",
       },
 
       {

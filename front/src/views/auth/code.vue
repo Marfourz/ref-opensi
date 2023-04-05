@@ -96,7 +96,7 @@ export default defineComponent({
         });
       } catch (error: any) {
         
-        toast.error("Le code entré est incorrecte");
+        toast.error("Le code entré est incorrect");
       }
 
       console.log("OTP completed: ", value);
