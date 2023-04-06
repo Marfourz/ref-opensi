@@ -58,62 +58,62 @@
         </template>
       </BaseModal> -->
 
-       <BaseModal :show="modal.show">
-      <template #modal>
-        <div
-          class="flex flex-col space-y-6 items-center py-4"
-          v-if="modal.mode == 'confirm' && modal.type == 'delete'"
-        >
-          <BaseIcon name="warning"></BaseIcon>
+      <BaseModal :show="modal.show">
+        <template #modal>
           <div
-            class="text-center font-semibold text-2xl"
-            v-html="modal.title"
-          ></div>
-          <div class="flex items-center space-x-2 w-full">
-            <BaseButton
-              :bgColor="
-                selectedMaster?.status === UserAccountStatus.ACTIVE
-                  ? 'danger'
-                  : 'primary'
-              "
-              :outline="true"
-              class="w-1/2"
-              @click="modal.show = false"
-            >
-              Annuler
-            </BaseButton>
-            <BaseButton
-              :bgColor="
-                selectedMaster?.status === UserAccountStatus.ACTIVE
-                  ? 'danger'
-                  : 'primary'
-              "
-              class="w-1/2"
-              @click="toogleStatus"
-            >
-              {{ toggleText }}
-            </BaseButton>
+            class="flex flex-col space-y-6 items-center py-4"
+            v-if="modal.mode == 'confirm' && modal.type == 'delete'"
+          >
+            <BaseIcon name="warning"></BaseIcon>
+            <div
+              class="text-center font-semibold text-2xl"
+              v-html="modal.title"
+            ></div>
+            <div class="flex items-center space-x-2 w-full">
+              <BaseButton
+                :bgColor="
+                  selectedMaster?.status === UserAccountStatus.ACTIVE
+                    ? 'danger'
+                    : 'primary'
+                "
+                :outline="true"
+                class="w-1/2"
+                @click="modal.show = false"
+              >
+                Annuler
+              </BaseButton>
+              <BaseButton
+                :bgColor="
+                  selectedMaster?.status === UserAccountStatus.ACTIVE
+                    ? 'danger'
+                    : 'primary'
+                "
+                class="w-1/2"
+                @click="toogleStatus"
+              >
+                {{ toggleText }}
+              </BaseButton>
+            </div>
           </div>
-        </div>
 
-        <div
-          class="flex flex-col space-y-6 items-center py-4"
-          v-else-if="(modal.mode = 'success')"
-        >
           <div
-            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+            class="flex flex-col space-y-6 items-center py-4"
+            v-else-if="(modal.mode = 'success')"
           >
-            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+            <div
+              class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+            >
+              <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+            </div>
+            <div class="font-bold text-2xl text-center">
+              {{ modal.title }}
+            </div>
+            <BaseButton class="w-full" @click="modal.show = false"
+              >Terminer</BaseButton
+            >
           </div>
-          <div class="font-bold text-2xl">
-            {{ modal.title }}
-          </div>
-          <BaseButton class="w-full" @click="modal.show = false"
-            >Terminer</BaseButton
-          >
-        </div>
-      </template>
-    </BaseModal> 
+        </template>
+      </BaseModal>
       <div class="">
         <BaseTitle title="Partenaires"></BaseTitle>
         <!-- Panel -->
@@ -138,6 +138,7 @@
         :requestId="organisationId"
         :key="reload"
         :emptyMessage="emptyMessage"
+        :downloadData="organizationStore.downloadPartners"
       >
         <template #filter>
           <div class="flex space-x-4 h-full">
@@ -273,7 +274,7 @@ export default defineComponent({
   setup() {
     const etats = computed(() => {
       const items = [{ name: "Dépots", value: OrganisationType.DP }];
-        master.type = OrganisationType.DP;
+      master.type = OrganisationType.DP;
 
       if (
         organisationType.value == OrganisationType.MD ||
@@ -357,17 +358,12 @@ export default defineComponent({
       return actions;
     };
 
-
     function onToggle(value: IOrganisation) {
       selectedMaster.value = value;
       if (value.status === UserAccountStatus.ACTIVE)
-        modal.title = `Êtes-vous sûr de vouloir désactiver ${
-          selectedMaster.value.ownerName
-        } ?`;
+        modal.title = `Êtes-vous sûr de vouloir désactiver ${selectedMaster.value.ownerName} ?`;
       if (value.status === UserAccountStatus.INACTIVE)
-        modal.title = `Êtes-vous sûr de vouloir activer ${
-          selectedMaster.value.ownerName
-        } ?`;
+        modal.title = `Êtes-vous sûr de vouloir activer ${selectedMaster.value.ownerName} ?`;
       modal.show = true;
       modal.subtitle = "";
       modal.mode = "confirm";
@@ -377,15 +373,20 @@ export default defineComponent({
     async function toogleStatus(value: IOrganisation) {
       try {
         if (selectedMaster.value?.status === UserAccountStatus.ACTIVE) {
-
-          const response = await organizationStore.update(selectedMaster.value.id, {
-            status: UserAccountStatus.INACTIVE,
-          });
+          const response = await organizationStore.update(
+            selectedMaster.value.id,
+            {
+              status: UserAccountStatus.INACTIVE,
+            }
+          );
           modal.title = `${selectedMaster.value?.ownerName}  désactivé avec succès`;
         } else {
-          const response = await organizationStore.update(selectedMaster.value?.id, {
-            status: UserAccountStatus.ACTIVE,
-          });
+          const response = await organizationStore.update(
+            selectedMaster.value?.id,
+            {
+              status: UserAccountStatus.ACTIVE,
+            }
+          );
           modal.title = `${selectedMaster.value?.ownerName} activé avec succès`;
         }
 
@@ -586,7 +587,7 @@ export default defineComponent({
             ...master,
             parentOrganisationId: organisationId.value,
           });
-          modal.title = `Un nouveau partenaire crée avec succès.`;
+          modal.title =`Un nouveau partenaire crée avec succès.`;
           // toast.success("Partenaire crée avec succès"); Partenaire crée avec succès
         }
         modal.show = true;
@@ -633,6 +634,10 @@ export default defineComponent({
       }
     });
 
+    //   async function downloadPartners(organisation: IOrganisation){
+    //   await organizationStore.downloadPartners (organisation.id)
+    //  }
+
     return {
       organizationStore,
       titles,
@@ -661,6 +666,7 @@ export default defineComponent({
       emptyMessage,
       toggleText,
       UserAccountStatus,
+      // downloadPartners
     };
   },
 });

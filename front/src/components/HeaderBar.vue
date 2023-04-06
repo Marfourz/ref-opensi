@@ -5,7 +5,7 @@
     <nav class="w-full flex justify-between">
       <IconLogo />
       <div class="flex space-x-5 items-center">
-        <BaseIcon name="notification"></BaseIcon>
+        <BaseIcon name="notification" class="cursor-pointer" @click="showHistoric"></BaseIcon>
         <div class="bg-borderColor h-1/2 w-[1px]"></div>
         <div class="hidden md:flex items-center space-x-2">
           <IconProfile />
@@ -32,6 +32,9 @@
           <SideBar class="h-screen w-full"></SideBar>
         </div>
       </div>
+      <BaseRightModal :show="showModal" v-if="showModal">
+        <NotificationList  @close="showModal = false"/>
+    </BaseRightModal>
     </nav>
   </header>
 </template>
@@ -43,7 +46,8 @@ import SideBar from "@/components/SideBar/index.vue";
 import { computed, onMounted, ref } from "vue";
 import { useUsersStore } from "../stores/users";
 import { UserRole } from "../types/enumerations";
-import socket from "../plugins/socket";
+import { IUser } from "@/types/interfaces";
+import NotificationList from "@/components/NotificationList.vue";
 
 const showMenu = ref(false);
 
@@ -57,13 +61,16 @@ const roleLabel = computed(() => {
   return userStore.getRoleLabel(userStore.getCurrentUser?.role as UserRole);
 });
 
-onMounted(()=>{
-  socket.on('NEW_ORDER_RECORDED', (data) => {
-        console.log(data, 'NEW_ORDER_RECORDED')
-      })
+const userConnect = computed (() => {
+  return userStore.getCurrentUser?.id
 })
 
+  const showModal = ref(false);
 
+    function showHistoric(value: IUser) {
+      showModal.value = true;
+      //  userConnect = value.id;
+    }
 </script>
 
 <style scoped>

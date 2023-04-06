@@ -131,7 +131,7 @@ export const useProductStore = defineStore("productStore", {
         const params = {} as {
           filterType?: string;
         };
-        if (type) params.filterType = type;
+        if (type) params.filterType  = type;
         const response = await Api.get(`stocks/${id}/stock-evolution`, {
           params,
         });

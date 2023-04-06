@@ -51,14 +51,13 @@ import IconCreer from "./icons/IconCreer.vue";
 import { HistoricalOrderStatus } from "@/types/enumerations";
 
 type Params = {
-    title: string,
-    icon: typeof IconCreer  | typeof IconAccepter | typeof IconLivrer,
-    message: String,
-    primaryColor: String,
-  }
+  title: string;
+  icon: typeof IconCreer | typeof IconAccepter | typeof IconLivrer;
+  message: String;
+  primaryColor: String;
+};
 
-const MAPPING_OBJ:  Record<HistoricalOrderStatus, Params> = {
-  
+const MAPPING_OBJ: Record<HistoricalOrderStatus, Params> = {
   created: {
     title: "Commande créé",
     icon: IconCreer,
@@ -83,9 +82,9 @@ export default defineComponent({
   props: {
     type: {
       required: true,
-      type: String as PropType <HistoricalOrderStatus> ,
+      type: String as PropType<HistoricalOrderStatus>,
     },
-    
+
     name: {
       type: String,
     },
@@ -95,16 +94,11 @@ export default defineComponent({
   },
 
   setup(props) {
+    const paramToUse = MAPPING_OBJ[props.type];
 
-    const paramToUse =  MAPPING_OBJ[props.type]
-
-    return {paramToUse};
+    return { paramToUse };
   },
 });
 </script>
 
 <style lang="scss" scoped></style>
-
-
-
-

@@ -311,7 +311,7 @@ export default defineComponent({
           },
           {
             title: "Rejeter",
-            iconClass: "text-[#E03A15] w-3 h-3",
+            iconClass: "text-[#E03A15] w-5 h-5",
            // titleClass: "text-[#E03A15] ",
             icon: "close",
             action: rejectOrder,
