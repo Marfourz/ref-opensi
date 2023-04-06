@@ -8,7 +8,7 @@
     </div>
 
     <!-- DashboardCard -->
-    <div class="grid grid-cols-3 space-x-6 mt-7">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-4 mt-5  md:mt-7">
       <DashboardCard :data="turnover"></DashboardCard>
       <DashboardCard :data="numberOfOrders"></DashboardCard>
       <DashboardCard :data="numberOfPartners"></DashboardCard>
@@ -62,6 +62,12 @@
         </div>
       </template>
 
+      <template #productTurnover="{element}">
+              <div>
+                  {{ element.productTurnover ? element.productTurnover : 0 }} FCFA
+              </div>
+            </template>
+
       <template #totalBulk="{ element }">
         <div>
           {{ element.currentQuantity ? element.currentQuantity : 0 }}
@@ -76,7 +82,7 @@
     </div>
     <!-- Array top parteners -->
     <div>
-      <div class="grid grid-cols-3 gap-6 mt-7">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
         <div
           class="border rounded-lg p-4 min-h-[520px]"
           v-if="orgType === OrganisationType.SNB"
@@ -178,6 +184,8 @@
             <template #socialReason="{ element }">
               <div class="text-link">{{ element.socialReason }}</div>
             </template>
+
+          
           </BaseTable>
         </div>
       </div>
@@ -263,13 +271,13 @@ export default defineComponent({
 
       {
         title: "Nombre de casiers",
-        name: "totalBulk",
+        name: "selledQuantity",
       },
 
       {
         title: "Chiffre d’affaires",
-        name: "turnover",
-        transform: formatPrice,
+        name: "productTurnover"
+        
       },
     ];
  const image = ref<File>();

@@ -381,6 +381,9 @@ export default defineComponent({
       show.value = false;
       reload.value = reload.value + 1;
       showSuccesInfo.value = true;
+      window.setTimeout(()=>{
+        showSuccesInfo.value = false;
+      }, 3000)
     }
 
     const show = ref(false);
