@@ -32,6 +32,7 @@
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
     "pinia": "^2.0.30",
+    "socket.io-client": "^4.6.1",
     "v-calendar": "^3.0.0-alpha.8",
     "vee-validate": "^4.7.4",
     "vue": "^3.2.45",

@@ -35,14 +35,14 @@
             <div class="font-semibold">Mobile Money ou Virement bancaire</div>
           </div>
 
-          <div class="flex space-x-2 items-center cursor-pointer" @click="changePaymentMethod(PaymentMethod.CASH)">
+          <div class="flex space-x-2 items-center cursor-pointer" @click="changePaymentMethod(PaymentMethod.CASH)" v-if="paymentDeadline">
             <BaseSelectedCard
               :selected="selectedPaymentMethod == PaymentMethod.CASH"
               
             >
               <BaseIcon :name="`calendar${paymentDeadline}`"></BaseIcon>
             </BaseSelectedCard>
-            <div class="font-semibold">Paiement sur {{ paymentDeadline?.toString() }} jours</div>
+            <div class="font-semibold">Paiement sur {{ paymentDeadline }} jours</div>
           </div>
         </div>
         <div class="flex justify-between font-semibold text-xl mt-1">

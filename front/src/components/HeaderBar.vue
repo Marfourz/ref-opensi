@@ -43,6 +43,7 @@ import SideBar from "@/components/SideBar/index.vue";
 import { computed, onMounted, ref } from "vue";
 import { useUsersStore } from "../stores/users";
 import { UserRole } from "../types/enumerations";
+import socket from "../plugins/socket";
 
 const showMenu = ref(false);
 
@@ -55,6 +56,14 @@ const username = computed(() => {
 const roleLabel = computed(() => {
   return userStore.getRoleLabel(userStore.getCurrentUser?.role as UserRole);
 });
+
+onMounted(()=>{
+  socket.on('NEW_ORDER_RECORDED', (data) => {
+        console.log(data, 'NEW_ORDER_RECORDED')
+      })
+})
+
+
 </script>
 
 <style scoped>
