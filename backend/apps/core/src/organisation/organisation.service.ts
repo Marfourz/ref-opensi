@@ -341,7 +341,9 @@ export class OrganisationService {
       },
     });
 
+    console.log('[Turnover] : ', turnover);
     return turnover._sum.totalAmount;
+
   }
 
   async getOrganisationRanking(orgId: string, type: OrganisationTypeEnum) {
@@ -551,6 +553,7 @@ export class OrganisationService {
     for (let i = 0; i < sistersOrganisation.length; i++) {
       const element = sistersOrganisation[i];
       element.turnover = await this.getOrganisationTurnover(element.id);
+      console.log('[Turnover] : ', element.turnover);
       await this.walletService.updateSingleWallet(element.id, {
         turnover: element.turnover,
       });
