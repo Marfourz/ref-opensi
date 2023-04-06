@@ -546,8 +546,8 @@ export class OrganisationService {
       where: {
         type,
       },
-      select: {
-        id: true,
+      include: {
+        wallet: true,
       },
     });
 
@@ -558,7 +558,7 @@ export class OrganisationService {
       const element = sistersOrganisation[i];
       element.turnover = await this.getOrganisationTurnover(element.id);
       console.log('[Turnover returned] : ', element.turnover);
-      await this.walletService.updateSingleWallet(element.id, {
+      await this.walletService.updateSingleWallet(element.wallet.id, {
         turnover: element.turnover,
       });
     }
