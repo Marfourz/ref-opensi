@@ -34,6 +34,22 @@
             </BaseButton>
           </div>
         </div>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-else-if="(modal.mode = 'success')"
+        >
+          <div
+            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+          >
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+          </div>
+          <div class="font-bold text-2xl text-center">
+            {{ modal.title }}
+          </div>
+          <BaseButton class="w-full" @click="modal.show = false"
+            >Terminer</BaseButton
+          >
+        </div>
       </template>
     </BaseModal>
 
@@ -88,7 +104,7 @@
             :downloadData="productCategoryStore.downloadProduct"
           >
             <template #image="{ element }">
-              <div class="w-8 h-8">
+              <div class="w-8 h-8 flex justify-center">
                 <img
                   :src="`${
                     element.image && element.image[0]
@@ -96,7 +112,7 @@
                       : '@/assets/images/beverage.png'
                   }`"
                   alt=""
-                  class="max-h-10 max-w-10"
+                  class="h-8 max-w-10"
                 />
               </div>
             </template>
@@ -202,12 +218,12 @@ export default defineComponent({
     const actions = [
       {
         title: "Voir détail",
-        icon: "eye",
+        icon: "eyefine",
         action: onView,
       },
       {
         title: "Modifier",
-        icon: "edit",
+        icon: "editfine",
         action: onUpdate,
       },
       {
@@ -236,6 +252,7 @@ export default defineComponent({
       title: "",
       type: "create" as "create" | "delete" | "update",
       show: false,
+      mode: "confirm" as "confirm" | "success",
     });
 
     function onDelete(value: IProduct) {
@@ -388,7 +405,11 @@ export default defineComponent({
             product
           );
           loading.value = true;
-          toast.success("Le produit a été mise à jour avec succès");
+          modal.title = `Le produit a été mise à jour avec succès`;
+          //toast.success("Le produit a été mise à jour avec succès");
+          modal.show = true;
+          // modal.subtitle = "";
+          modal.mode = "success";
           reload.value = reload.value + 1;
 
           showModal.value = false;
@@ -401,11 +422,15 @@ export default defineComponent({
               response.data.id,
               image.value as File
             );
-            toast.success("Le produit a été ajouté avec succès");
-            product.bulkPrice = 0
-            product.name =""
-            product.volume= 0
-            product.unitPrice= 0
+            modal.title = `Le produit a été ajouté avec succès`;
+            modal.mode = "success";
+            modal.show = true;
+
+            // toast.success("Le produit a été ajouté avec succès");
+            product.bulkPrice = 0;
+            product.name = "";
+            product.volume = 0;
+            product.unitPrice = 0;
 
             reload.value = reload.value + 1;
             showModal.value = false;
