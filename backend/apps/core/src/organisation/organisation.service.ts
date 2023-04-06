@@ -341,7 +341,10 @@ export class OrganisationService {
       },
     });
 
+    if(!turnover._sum.totalAmount) return 0;
+
     return turnover._sum.totalAmount;
+
   }
 
   async getOrganisationRanking(orgId: string, type: OrganisationTypeEnum) {
@@ -543,15 +546,19 @@ export class OrganisationService {
       where: {
         type,
       },
-      select: {
-        id: true,
+      include: {
+        wallet: true,
       },
     });
 
+    console.log('[Sisters organisations returned] : ', sistersOrganisation);
+
     for (let i = 0; i < sistersOrganisation.length; i++) {
+      console.log('[Passed in loop]');
       const element = sistersOrganisation[i];
       element.turnover = await this.getOrganisationTurnover(element.id);
-      await this.walletService.updateSingleWallet(element.id, {
+      console.log('[Turnover returned] : ', element.turnover);
+      await this.walletService.updateSingleWallet(element.wallet.id, {
         turnover: element.turnover,
       });
     }
