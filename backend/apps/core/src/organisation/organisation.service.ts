@@ -551,7 +551,10 @@ export class OrganisationService {
       },
     });
 
+    console.log('[Sisters organisations returned] : ', sistersOrganisation);
+
     for (let i = 0; i < sistersOrganisation.length; i++) {
+      console.log('[Passed in loop]');
       const element = sistersOrganisation[i];
       element.turnover = await this.getOrganisationTurnover(element.id);
       console.log('[Turnover returned] : ', element.turnover);
