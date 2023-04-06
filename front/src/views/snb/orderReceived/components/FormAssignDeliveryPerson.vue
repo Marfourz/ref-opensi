@@ -102,7 +102,7 @@ export default defineComponent({
     function deliveryPersonFullName(person: IUser) {
       console.log("person", person);
 
-      return person.name;
+      return person.name + " " + person.firstName;
     }
 
     function onSelecteDeliveryPersonChange(person: IUser) {
