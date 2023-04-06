@@ -341,7 +341,8 @@ export class OrganisationService {
       },
     });
 
-    console.log('[Turnover] : ', turnover);
+    if(!turnover._sum.totalAmount) return 0;
+
     return turnover._sum.totalAmount;
 
   }
@@ -553,9 +554,9 @@ export class OrganisationService {
     for (let i = 0; i < sistersOrganisation.length; i++) {
       const element = sistersOrganisation[i];
       element.turnover = await this.getOrganisationTurnover(element.id);
-      console.log('[Turnover] : ', element.turnover);
+      console.log('[Turnover returned] : ', element.turnover);
       await this.walletService.updateSingleWallet(element.id, {
-        turnover: element.turnover ? element.turnover: 0,
+        turnover: element.turnover,
       });
     }
 
