@@ -8,7 +8,7 @@
           <div class="flex items-center space-x-6">
            
             <img
-            class="max-w-8 max-h-8"
+            class="w-8 max-h-8"
             :src="`${
               element.product.image && element.product.image[0]
                 ? element.product.image[0].url
