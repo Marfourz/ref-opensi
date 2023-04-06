@@ -555,7 +555,7 @@ export class OrganisationService {
       element.turnover = await this.getOrganisationTurnover(element.id);
       console.log('[Turnover] : ', element.turnover);
       await this.walletService.updateSingleWallet(element.id, {
-        turnover: element.turnover,
+        turnover: element.turnover ? element.turnover: 0,
       });
     }
 
