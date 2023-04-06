@@ -105,7 +105,7 @@
             >
               <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
             </div>
-            <div class="font-bold text-2xl">
+            <div class="font-bold text-2xl text-center">
               {{ modal.title }}
             </div>
             <BaseButton class="w-full" @click="modal.show = false"
@@ -587,7 +587,7 @@ export default defineComponent({
             ...master,
             parentOrganisationId: organisationId.value,
           });
-          modal.title = `Un nouveau partenaire crée avec succès.`;
+          modal.title =`Un nouveau partenaire crée avec succès.`;
           // toast.success("Partenaire crée avec succès"); Partenaire crée avec succès
         }
         modal.show = true;
