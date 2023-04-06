@@ -67,7 +67,6 @@ export default defineComponent({
     onMounted(async () => {
       loadHistoryStock();
     });
-
     return {
       infoHistorystock,
       loadHistoryStock,

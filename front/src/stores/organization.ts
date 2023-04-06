@@ -43,7 +43,6 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-
     async downloadDeliveryMen(query: any, id: PrimaryKey) {
       try {
         const response = await Api.get(`documents/download-deliveryMen/${id}`, {
@@ -111,33 +110,53 @@ export const useOrganizationStore = defineStore("organizationStore", {
       }
     },
 
-
-    async statInfo(organisationId:string, params:{startDate?: Date,endDate?:Date}) {
+    async statInfo(
+      organisationId: string,
+      params: { startDate?: Date; endDate?: Date }
+    ) {
       try {
-        const response = await Api.get(`organisations/snb/infos/${organisationId}`,{params});
+        const response = await Api.get(
+          `organisations/snb/infos/${organisationId}`,
+          { params }
+        );
         return response;
       } catch (error) {
         throw error;
       }
     },
 
-
-
-    async turnoverEvolution(organisationId:string){
+    async turnoverEvolution(organisationId: string) {
       try {
-        const response = await Api.get(`organisations/turnover-chart/${organisationId}`);
+        const response = await Api.get(
+          `organisations/turnover-chart/${organisationId}`
+        );
         return response.data;
       } catch (error) {
         throw error;
       }
     },
 
-    async statPartners(params : {type: OrganisationType,startDate?: Date,endDate?:Date},) {
+    async statPartners(params: {
+      type: OrganisationType;
+      startDate?: Date;
+      endDate?: Date;
+    }) {
+      try {
+        const response = await Api.get(`organisations/top-partners?`, {
+          params,
+        });
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    async downloadPartners(query: any, id: PrimaryKey) {
       try {
         const response = await Api.get(
-          `organisations/top-partners?`,{params}
+          `documents/download-partners/${id}`
         );
-        return response;
+        return response.data;
       } catch (error) {
         throw error;
       }

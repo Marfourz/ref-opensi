@@ -30,6 +30,7 @@
             >
           </slot>
         </div>
+        
       </div>
       <BasePagination
         :peerPage="paginationData.peerPage"
