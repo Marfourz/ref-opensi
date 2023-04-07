@@ -82,7 +82,7 @@ services:
     networks:
       - snb
     volumes:
-      - image:/uploads/products-images
+      - image:/app/uploads/products-images
     depends_on:
       - migrate
 
