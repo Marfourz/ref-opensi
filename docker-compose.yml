@@ -1,4 +1,5 @@
 version: "3.7"
+
 services:
   db_postgres:
     image: postgres:14-alpine
@@ -82,7 +83,7 @@ services:
     networks:
       - snb
     volumes:
-      - image:/uploads/products-images
+      - image:/app/uploads/products-images
     depends_on:
       - migrate
 
