@@ -67,7 +67,7 @@
         </div>
       </template>
       <template #distributors>
-        <div class="mt-7 space-y-4">
+        <div class="mt-7 space-y-6">
           <BaseTitle title="Distributeurs agréés"></BaseTitle>
           <VOrganisation :organisation="selectedMaster?.organisation"/>
         </div>
@@ -214,8 +214,8 @@ const state = reactive<State>({
 const turnover = computed(() => {
   return {
     title: `${
-      selectedMaster.value?.organisation.wallet.turnover
-        ? selectedMaster.value?.organisation.wallet.turnover
+      selectedMaster.value?.organisation.turnover
+        ? selectedMaster.value?.organisation.turnover
         : "0"
     } FCFA`,
 

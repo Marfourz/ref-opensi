@@ -140,7 +140,7 @@
                       <a
                         class="text-[#0050CF] font-semibold underline cursor-pointer"
                         @click="goToViewDeliveryMan(order.deliveryMan.id)"
-                        >{{ order.deliveryMan.name }}</a
+                        >{{ order.deliveryMan.name }} {{ order.deliveryMan.firstName }}</a
                       >
                     </div>
                     <div></div>
