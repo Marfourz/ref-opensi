@@ -205,8 +205,8 @@ export default defineComponent({
     const turnover = computed(() => {
       return {
         title: `${
-          statInfos.value && statInfos.value.wallet
-            ? helpers.currency(statInfos.value.wallet.turnover)
+          statInfos.value && statInfos.value.turnover
+            ? helpers.currency(statInfos.value.turnover)
             : 0
         } FCFA`,
 
