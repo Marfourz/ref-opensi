@@ -49,6 +49,7 @@ export interface IOrganisation extends Commun {
   orders?: Array<ItemsOrder>;
   wallet: Wallet;
   parentOrganisationId?: string;
+  turnover: string;
 }
 export interface Wallet extends Commun {
   turnover: string;

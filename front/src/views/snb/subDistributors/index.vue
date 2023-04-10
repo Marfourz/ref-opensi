@@ -140,9 +140,7 @@
         :emptyMessage="emptyMessage"
         :downloadData="organizationStore.downloadPartners"
       >
-        <template #filter>
-          <div class="flex space-x-4 h-full">
-            <BaseButton icon="upload" size="small">Télécharger</BaseButton>
+        <template #filters>
             <BaseButton
               icon="plus"
               size="small"
@@ -150,7 +148,6 @@
               v-if="showNewSubDistributor"
               >Nouveau {{ partenaireTitle }}</BaseButton
             >
-          </div>
         </template>
 
         <template #status="{ element }">

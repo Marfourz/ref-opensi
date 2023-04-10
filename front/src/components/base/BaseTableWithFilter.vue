@@ -19,7 +19,7 @@
         </div>
 
         <div class="">
-          <slot name="filter">
+          <div class="flex space-x-4 h-full">
             <BaseButton
               icon="upload"
               size="small"
@@ -28,9 +28,9 @@
               :loading="downloadLoading"
               >Télécharger</BaseButton
             >
-          </slot>
+            <slot name="filters"> </slot>
+          </div>
         </div>
-        
       </div>
       <BasePagination
         :peerPage="paginationData.peerPage"
