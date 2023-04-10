@@ -215,8 +215,8 @@ export default defineComponent({
     const turnover = computed(() => {
       return {
         title: `${
-          statInfos.value && statInfos.value.wallet
-            ? helpers.currency(statInfos.value.wallet.turnover)
+          statInfos.value
+            ? helpers.currency(statInfos.value.turnover)
             : 0
         } FCFA`,
 
@@ -369,7 +369,7 @@ export default defineComponent({
           endDate : periodes.topParteners.endDate,
         }
         );
-        statPartners.dp = response.data;
+        statPartners.da = response.data;
       } catch (error) {}
       try {
         const response = await organisationStore.statPartners({
@@ -377,7 +377,7 @@ export default defineComponent({
           startDate : periodes.topParteners.startDate,
           endDate : periodes.topParteners.endDate,
         });
-        statPartners.da = response.data;
+        statPartners.dp = response.data;
       } catch (error) {}
     }
 
