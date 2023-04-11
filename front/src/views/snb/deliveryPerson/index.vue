@@ -103,7 +103,7 @@
         </div>
         <div class="flex justify-center pt-6">
           <Form @submit="onSubmit" class="w-3/4">
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <BaseInput
                 name="nom d'utilisateur"
                 label="Nom "
@@ -139,6 +139,7 @@
                 rules="required|numeric"
                 v-model="user.phone"
               ></BaseInput>
+              
               <BaseInput
                 name="firstname"
                 label="Email"

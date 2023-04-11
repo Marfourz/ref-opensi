@@ -9,11 +9,12 @@
           <BaseGoBack> </BaseGoBack>
         </router-link>
       </div>
-      <div>
+      <div class="hidden md:block">
         <BaseButton
           size="small"
           @click="toggleState"
           :bg-color="stateTitle === 'Désactiver' ? 'danger' : 'primary'"
+          
         >
           {{ stateTitle }}
         </BaseButton>
@@ -27,7 +28,8 @@
         :title="statusTitle"
       ></BaseTableStatut>
     </div>
-    <div class="grid grid-cols-3 gap-4 mt-10">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+
       <div class="flex flex-col">
         <span class="font-semibold text-base">Nom</span>
         <span class="font-medium text-sm">{{ user?.name }}</span>

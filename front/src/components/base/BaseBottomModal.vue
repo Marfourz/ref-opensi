@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <div
       class="fixed -top-10 bottom-0 right-0 left-0 bg-black opacity-50"
       v-if="show"
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {

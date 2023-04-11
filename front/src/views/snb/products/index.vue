@@ -81,7 +81,9 @@
       <!-- <EmptyState
         title="Vos produits ajoutés seront visibles ici. <br> Cliquez sur le bouton Nouveau produit <br> pour ajouter des produits"
         image="/assets/images/emptyProduct.png"
-      ></EmptyState> -->
+      ></EmptyState> -->    
+
+      
     </div>
 
     <div class="pt-8" v-show="total != 0">

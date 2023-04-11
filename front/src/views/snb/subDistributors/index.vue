@@ -490,7 +490,7 @@ export default defineComponent({
     // }
 
     const partenaireTitle = computed(() => {
-      if (master.type == OrganisationType.DA) return "distributeur agrée";
+      if (master.type == OrganisationType.DA) return "distributeur agréé";
       else if (master.type == OrganisationType.DP) return "dépôt";
       else return "master distributeur";
     });

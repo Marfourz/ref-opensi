@@ -74,7 +74,7 @@
     </div>
     <!-- Array top parteners -->
     <div>
-      <div class="grid grid-cols-3 gap-6 mt-7">
+      <div class="md:grid grid-cols-3 gap-6 mt-7 ">
         <div
           class="border rounded-lg p-4 min-h-[520px]"
           v-if="orgType === OrganisationType.SNB"
