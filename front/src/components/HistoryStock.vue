@@ -1,7 +1,9 @@
 <template>
   <div class="flex gap-4">
     <div class="flex justify-center flex-col">
-      <div class="bg-fadePrimary p-1.5 rounded-full">
+      <div class=" p-1.5 rounded-full"
+          :style="`background-color: ${paramToUse.secondColor}`"
+      >
         <div
           class="w-4 h-4 rounded-full"
           :style="`background-color: ${paramToUse.primaryColor}`"
@@ -9,7 +11,7 @@
       </div>
       <div class="flex-1 relative">
         <div
-          class="absolute h-full border-dashed border-r-2 border-primary translate-x-1/2 right-1/2"
+          class="absolute h-full border-dashed border-r-2 translate-x-1/2 right-1/2"
           :style="`border-color: ${paramToUse.primaryColor}`"
         ></div>
       </div>
@@ -17,8 +19,8 @@
     <div class="mb-4 flex-1">
       <span class="text-grey-50 text-xs"> {{ date }}</span>
       <div
-        class="rounded-lg border flex gap-4 p-4 bg-fadePrimary"
-        :style="`border-color: ${paramToUse.primaryColor}`"
+        class="rounded-lg border-2  flex gap-4 p-4"
+        :style="`border-color: ${paramToUse.primaryColor}; background-color: ${paramToUse.secondColor}` "
       >
         <component :is="paramToUse.icon" class="w-5 h-5" />
         <div class="flex flex-1 justify-between items-center">
@@ -32,7 +34,8 @@
               >Voir détails</router-link
             >
           </div>
-          <span class="text-xl font-bold text-primary"> {{ amount }} FCFA</span>
+          <span class="text-xl font-bold "
+          :style="`color: ${paramToUse.primaryColor}`"> {{ amount }} FCFA</span>
         </div>
       </div>
     </div>
@@ -49,6 +52,7 @@ type Params = {
   title: string;
   icon: typeof IconDeposit | typeof IconDepositb;
   primaryColor: String;
+  secondColor: String;
 };
 
 const MAPPING_OBJ: Record<StockState, Params> = {
@@ -56,17 +60,22 @@ const MAPPING_OBJ: Record<StockState, Params> = {
     title: "",
     icon: IconDeposit,
     primaryColor: "#287D3C",
+    secondColor: "287D3C",
   },
 
   sale: {
     title: "Vente",
     icon: IconDeposit,
     primaryColor: "#287D3C",
+    secondColor: "#EDF9F0",
+
   },
   supply: {
     title: "Approvisionnement",
     icon: IconDepositb,
     primaryColor: "#0050CF",
+    secondColor: "#F0F5FF",
+
   },
 };
 
@@ -93,7 +102,7 @@ export default defineComponent({
 
   setup(props) {
     const paramToUse = MAPPING_OBJ[props.type];
-    
+
 
     return { paramToUse };
   },

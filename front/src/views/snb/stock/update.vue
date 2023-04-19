@@ -33,7 +33,7 @@
             class="font-bold text-2xl text-center"
             v-html="modal.title"
           ></div>
-          <BaseButton class="w-full" @click="modal.show = false"
+          <BaseButton class="w-full" @click="()=>{modal.show = false; modal.mode = 'confirm'}"
             >Terminer</BaseButton
           >
         </div>
@@ -47,14 +47,15 @@
       >
     </div>
 
-    <div :key="reload">
+    <div :key="reload"> 
       <ProductByCategory
         :titles="titles"
-        :actions="actions"
-        @categoryIdChange="loadProducts"
+        :actions="actions" 
+        @categoryIdChange="loadProducts"              
       ></ProductByCategory>
     </div>
   </div>
+  
 </template>
 
 <script lang="ts">
@@ -103,6 +104,7 @@ export default defineComponent({
     // }
 
     const loading = ref(false);
+    const view = ref(false);
 
     const modal = reactive({
       title: "Nouveau stock",
@@ -168,11 +170,13 @@ export default defineComponent({
       loading.value = true;
       try {
         const response = await productStore.createStock(stock);
-        toast.success("Stock mise à jour avec succès");
+        modal.title = `Stock mis à jour avec succès`;
+        //toast.success("Stock mis à jour avec succès");
         loading.value = false;
-        modal.show = false;
+        // modal.show = true;
         stock.currentQuantity = 0;
         reload.value = reload.value + 1;
+        modal.mode = "success";
       } catch (error) {
         loading.value = false;
         toast.error("Oups un problème est survenu. Contactez l'administrateur");
@@ -193,6 +197,7 @@ export default defineComponent({
       loadProducts,
       products,
       reload,
+      view,
     };
   },
 });
