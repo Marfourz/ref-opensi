@@ -34,15 +34,15 @@
           <div
             class="bg-grey-75 flex items-center justify-center rounded-lg w-[50px] h-[50px]"
           >
-              <img
-            :src="`${
-              element.images && element.images[0]
-                ? element.images[0].url
-                : '@/assets/images/beverage.png'
-            }`"
-            alt=""
-          />  
-           <!-- <template #image="{ element }">
+            <img
+              :src="`${
+                element.images && element.images[0]
+                  ? element.images[0].url
+                  : '@/assets/images/beverage.png'
+              }`"
+              alt=""
+            />
+            <!-- <template #image="{ element }">
               <div class="w-8 h-8">
                 <img
                   :src="`${
@@ -74,7 +74,9 @@
     </div>
     <!-- Array top parteners -->
     <div>
-      <div class="md:grid grid-cols-3 gap-6 mt-7 ">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-4 mt-5 md:mt-7"
+      >
         <div
           class="border rounded-lg p-4 min-h-[520px]"
           v-if="orgType === OrganisationType.SNB"
@@ -180,11 +182,19 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted, reactive, watch } from "vue";
+import {
+  defineComponent,
+  computed,
+  ref,
+  onMounted,
+  reactive,
+  watch,
+} from "vue";
 import DashboardCard from "@/components/DashboardCard.vue";
 import helpers from "@/helpers/index";
 import BaseTableStatut from "@/components/base/BaseTableStatut.vue";
@@ -195,11 +205,18 @@ import { OrganisationType } from "@/types/enumerations";
 import { useUsersStore } from "@/stores/users";
 import OrgnaisationTurnoverEvolution from "../components/OrgnaisationTurnoverEvolution.vue";
 import EmptyState from "../components/EmptyState.vue";
-import TextPosition from "@/components/EmptyState.vue"
-
+import TextPosition from "@/components/EmptyState.vue";
+import ResponsiveTable from "@/components/ResponsiveTable.vue";
 
 export default defineComponent({
-  components: { DashboardCard, BaseTableStatut, BaseTableWithFilter,OrgnaisationTurnoverEvolution, EmptyState },
+  components: {
+    DashboardCard,
+    BaseTableStatut,
+    BaseTableWithFilter,
+    OrgnaisationTurnoverEvolution,
+    EmptyState,
+    ResponsiveTable,
+  },
 
   setup() {
     const turnover = computed(() => {
@@ -253,7 +270,6 @@ export default defineComponent({
     });
 
     const titles = [
-
       {
         title: "Produit",
         name: "image",
@@ -270,8 +286,25 @@ export default defineComponent({
         transform: formatPrice,
       },
     ];
- const image = ref<File>();
+    const image = ref<File>();
 
+    const r = [
+     
+
+      {
+        title: "Nom",
+        name: "socialReason",
+      },
+       {
+        title: "Commandes",
+        name: "id",
+      },
+
+      {
+        title: "Chiffre d’affaires",
+        name: "wallet.turnover",
+      },
+    ];
 
     const title = [
       {
@@ -312,81 +345,83 @@ export default defineComponent({
       return userStore.getCurrentUser?.organisation?.type;
     });
 
-    const organisationId = computed(()=>{
-      return userStore.getCurrentUser?.organisationId
-    })
+    const organisationId = computed(() => {
+      return userStore.getCurrentUser?.organisationId;
+    });
 
+    watch(
+      () => organisationId.value,
+      (newValue) => {
+        loadStat();
+      }
+    );
 
-    watch(()=>organisationId.value,(newValue)=>{
-      loadStat()
-    })
-
-    async function loadStat(){
+    async function loadStat() {
       try {
-        const response = await organisationStore.statInfo(organisationId.value as string,periodes.stat);
+        const response = await organisationStore.statInfo(
+          organisationId.value as string,
+          periodes.stat
+        );
         statInfos.value = response.data;
       } catch (error) {}
-
     }
 
     const periodes = reactive({
-      topParteners : {
-        startDate : new Date(),
-        endDate : new Date()
+      topParteners: {
+        startDate: new Date(),
+        endDate: new Date(),
       },
-      stat:{
-        startDate : new Date(),
-        endDate : new Date()
-      }
-    })
+      stat: {
+        startDate: new Date(),
+        endDate: new Date(),
+      },
+    });
 
-    async function loadTopParteners(){
-
+    async function loadTopParteners() {
       try {
         const response = await organisationStore.statPartners({
-          type : OrganisationType.MD,
-          startDate : periodes.topParteners.startDate,
-          endDate : periodes.topParteners.endDate,
-        }
-
-        );
+          type: OrganisationType.MD,
+          startDate: periodes.topParteners.startDate,
+          endDate: periodes.topParteners.endDate,
+        });
         statPartners.md = response.data;
       } catch (error) {}
       try {
         const response = await organisationStore.statPartners({
-          type : OrganisationType.DA,
-          startDate : periodes.topParteners.startDate,
-          endDate : periodes.topParteners.endDate,
-        }
-        );
+          type: OrganisationType.DA,
+          startDate: periodes.topParteners.startDate,
+          endDate: periodes.topParteners.endDate,
+        });
         statPartners.dp = response.data;
       } catch (error) {}
       try {
         const response = await organisationStore.statPartners({
-          type : OrganisationType.DP,
-          startDate : periodes.topParteners.startDate,
-          endDate : periodes.topParteners.endDate,
+          type: OrganisationType.DP,
+          startDate: periodes.topParteners.startDate,
+          endDate: periodes.topParteners.endDate,
         });
         statPartners.da = response.data;
       } catch (error) {}
     }
 
+    watch(
+      () => periodes.topParteners,
+      async (newValue) => {
+        await loadTopParteners();
+      }
+    );
 
-    watch(()=>periodes.topParteners , async (newValue)=>{
-
-      await loadTopParteners()
-    })
-
-    watch(()=>periodes.stat , async (newValue)=>{
-      await loadStat()
-    })
+    watch(
+      () => periodes.stat,
+      async (newValue) => {
+        await loadStat();
+      }
+    );
 
     onMounted(async () => {
-      await loadStat()
-      await loadTopParteners()
+      await loadStat();
+      await loadTopParteners();
     });
-
-
 
     return {
       numberOfOrders,
@@ -402,7 +437,8 @@ export default defineComponent({
       OrganisationType,
       organisationId,
       TextPosition,
-      periodes
+      periodes,
+      r,
     };
   },
 });

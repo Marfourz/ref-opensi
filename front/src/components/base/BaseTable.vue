@@ -76,7 +76,6 @@
                   </BaseActions>
                 </div>
                 </div>
-               
               </slot>
             </div>
           </td>

@@ -1,7 +1,9 @@
 <template>
   <div class="flex gap-4">
     <div class="flex justify-center flex-col">
-      <div class="p-1.5 rounded-full bg-fadePrimary">
+      <div class="p-1.5 rounded-full bg-fadePrimary"
+          :style="`background-color: ${paramToUse.secondColor}`"
+      >
         <div
           class="w-4 h-4 rounded-full"
           :style="`background-color: ${paramToUse.primaryColor}`"
@@ -44,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Prop, PropType } from "vue";
+import { defineComponent, PropType } from "vue";
 import IconLivrer from "./icons/IconLivrer.vue";
 import IconAccepter from "./icons/IconAccepter.vue";
 import IconCreer from "./icons/IconCreer.vue";
@@ -55,6 +57,8 @@ type Params = {
   icon: typeof IconCreer | typeof IconAccepter | typeof IconLivrer;
   message: String;
   primaryColor: String;
+  secondColor: String;
+
 };
 
 const MAPPING_OBJ: Record<HistoricalOrderStatus, Params> = {
@@ -63,18 +67,23 @@ const MAPPING_OBJ: Record<HistoricalOrderStatus, Params> = {
     icon: IconCreer,
     message: "Créer par ",
     primaryColor: "#0050CF",
+   secondColor: "#EBF3FA",
+
   },
   accepted: {
     title: "Commande acceptée",
     icon: IconAccepter,
     message: "Acceptée par ",
     primaryColor: "#6929C4",
+    secondColor: "#F3F0FA",
+
   },
   delivered: {
     title: "Commande Livrée",
     icon: IconLivrer,
     message: "Livrée par ",
     primaryColor: "#28C75D",
+    secondColor: ''
   },
 };
 

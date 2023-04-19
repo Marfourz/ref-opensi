@@ -13,7 +13,6 @@
           :title="statusTitle"
           :type="statusColor"
         ></BaseTableStatut>
-       
       </div>
       <template
         v-if="selectedMaster && selectedMaster.organisation.status === 'active'"
@@ -150,7 +149,6 @@ const statusColor = computed(() => {
       return "danger";
     if (selectedMaster.value.organisation.status == UserAccountStatus.ACTIVE)
       return "success";
-    return "";
   }
 });
 const statusLoading = ref(false);
