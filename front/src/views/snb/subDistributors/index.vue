@@ -141,13 +141,13 @@
         :downloadData="organizationStore.downloadPartners"
       >
         <template #filters>
-            <BaseButton
-              icon="plus"
-              size="small"
-              @click="createMaster"
-              v-if="showNewSubDistributor"
-              >Nouveau {{ partenaireTitle }}</BaseButton
-            >
+          <BaseButton
+            icon="plus"
+            size="small"
+            @click="createMaster"
+            v-if="showNewSubDistributor"
+            >Nouveau {{ partenaireTitle }}</BaseButton
+          >
         </template>
 
         <template #status="{ element }">
@@ -490,7 +490,7 @@ export default defineComponent({
     // }
 
     const partenaireTitle = computed(() => {
-      if (master.type == OrganisationType.DA) return "distributeur agrée";
+      if (master.type == OrganisationType.DA) return "distributeur agréé";
       else if (master.type == OrganisationType.DP) return "dépôt";
       else return "master distributeur";
     });
@@ -584,7 +584,7 @@ export default defineComponent({
             ...master,
             parentOrganisationId: organisationId.value,
           });
-          modal.title =`Un nouveau partenaire crée avec succès.`;
+          modal.title = `Un nouveau partenaire créé avec succès.`;
           // toast.success("Partenaire crée avec succès"); Partenaire crée avec succès
         }
         modal.show = true;

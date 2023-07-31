@@ -60,7 +60,8 @@
         <slot :name="name" v-bind="slotData" />
       </template>
     </BaseTable>
-  </div>
+<!-- Response for mobile -->
+ </div>
 </template>
 
 <script lang="ts">

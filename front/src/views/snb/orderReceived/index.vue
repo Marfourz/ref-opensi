@@ -57,6 +57,28 @@
         </div>
       </template>
     </BaseModal>
+     
+    <!-- <BaseModal>
+      <template #modal>
+        <div
+          class="flex flex-col space-y-6 items-center py-4"
+          v-if="modal.mode == 'success'"
+        >
+          <div
+            class="w-14 h-14 rounded-full flex items-center justify-center bg-success text-white"
+          >
+            <BaseIcon name="check" class="w-8 h-8 text-white"></BaseIcon>
+          </div>
+          <div
+            class="font-bold text-2xl text-center"
+            v-html="modal.title"
+          ></div>
+          <BaseButton class="w-full" @click="modal.show = false"
+            >Terminer</BaseButton
+          >
+        </div>
+      </template>
+      </BaseModal>  -->
 
     <PageInTwoPart>
       <template #firstPart>
@@ -87,7 +109,6 @@
                   {{ helpers.formatDateHour(element.createdAt) }}
                 </div>
               </template>
-             
             </BaseTableWithFilter>
           </div>
         </div>
@@ -99,7 +120,7 @@
               <div class="border rounded-lg py-2.5 px-4 flex justify-between">
                 <div class="flex items-center space-x-3">
                   <div
-                    class="rounded-full flex items-center justify-center  w-12 h-12"
+                    class="rounded-full flex items-center justify-center w-12 h-12"
                   >
                     <BaseIcon name="shop"></BaseIcon>
                   </div>
@@ -158,7 +179,8 @@
                       <a
                         class="text-[#0050CF] font-semibold underline cursor-pointer"
                         @click="goToViewDeliveryMan(order.deliveryMan.id)"
-                        >{{ order.deliveryMan.name }} {{ order.deliveryMan.firstName }}</a
+                        >{{ order.deliveryMan.name }}
+                        {{ order.deliveryMan.firstName }}</a
                       >
                     </div>
                     <div></div>
@@ -193,7 +215,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, onMounted } from "vue";
+import { computed, defineComponent, ref, onMounted, reactive } from "vue";
 import PageInTwoPart from "../../../components/PageInTwoPart.vue";
 import { useOrdersStore } from "@/stores/orders";
 import Order from "@/components/Order.vue";
@@ -305,14 +327,14 @@ export default defineComponent({
         elements = [
           {
             title: "Accepter",
-           // classIcon: "text-tableColor",
+            // classIcon: "text-tableColor",
             icon: "yes",
             action: acceptOrder,
           },
           {
             title: "Rejeter",
             iconClass: "text-[#E03A15] w-5 h-5",
-           // titleClass: "text-[#E03A15] ",
+            // titleClass: "text-[#E03A15] ",
             icon: "close",
             action: rejectOrder,
           },
@@ -407,6 +429,15 @@ export default defineComponent({
 
     const showReject = ref(false);
 
+    // const modal = reactive({
+    //   title: "",
+    //   type: "create" as "create" | "delete" | "update",
+    //   show: false,
+    //   mode: "confirm" as "confirm" | "success",
+    // });
+
+  
+
     async function confirmRejectOrder() {
       loading.value = true;
       try {
@@ -417,6 +448,9 @@ export default defineComponent({
         loading.value = false;
         reload.value = reload.value + 1;
         toast.success("Commande rejetée avec succès");
+        // modal.title = `Commande rejetée avec succès`;
+        // modal.show = true;
+        // modal.mode = "success";
       } catch (error: any) {
         toast.success("Rejet impossible");
       }
@@ -444,9 +478,8 @@ export default defineComponent({
       showItemOrder(items[0]);
     }
 
-
-    async function downloadOrder(){
-     // await orderStore.downloadOrder(order.id as,)
+    async function downloadOrder() {
+      // await orderStore.downloadOrder(order.id as,)
     }
 
     return {
@@ -477,7 +510,9 @@ export default defineComponent({
       showHistoric,
       showModal,
       onFetch,
-      downloadOrder
+      downloadOrder,
+      // modal,
+
     };
   },
 });
