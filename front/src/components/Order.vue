@@ -6,7 +6,16 @@
       <BaseTable :titles="titles" :data="order.items" class="my-4" v-if="order">
         <template #product="{ element }">
           <div class="flex items-center space-x-6">
-            <img src="@/assets/images/beverage.png" alt="" />
+           
+            <img
+            class="w-8 max-h-8"
+            :src="`${
+              element.product.image && element.product.image[0]
+                ? element.product.image[0].url
+                : '@/assets/images/beverage.png'
+            }`"
+            alt=""
+          />
             <div class="flex flex-col">
               <div class="text-black font-semibold">
                 {{ element.product.name }}

@@ -5,7 +5,15 @@
         <router-link :to="{ name: 'appros' }" path="appros">
           <BaseGoBack> </BaseGoBack>
         </router-link>
-        <BaseTitle title="Nouvel appro"></BaseTitle>
+        <div class="flex space-x-4 items-center">
+          <BaseTitle title="Nouvel appro"></BaseTitle>
+          <div class="rounded-full bg-[#FF5353] text-white p-3 flex items-center space-x-3 md:hidden">
+            <span>{{ basketStore.getTotalProduct }}</span>
+            <span>Produit(s) ajoutés</span>
+            <BaseIcon name="arrowRight"></BaseIcon>
+          </div>
+        </div>
+        
         <div class="flex flex-wrap space-x-3.5">
           <ProductCategory
             class="my-2"
@@ -18,15 +26,18 @@
           </ProductCategory>
         </div>
 
-        <div class="grid gap-5 grid-cols-3">
+        <div class="grid md:gap-5 gap-2 grid-cols-2 md:grid-cols-3">
           <div v-for="product in products" :key="product.id">
-            <ProductInput :product="product" />
+            <ProductInput :product="product" @click="onSelectedProduct(product)" />
           </div>
         </div>
+
+
+        <MobileProductInput :product="selectedProduct" v-if="mobileAddProduct" @close="mobileAddProduct = false"></MobileProductInput>
       </div>
     </template>
     <template #secondPart>
-      <div class="space-y-3 h-full">
+      <div class="space-y-3 md:h-full hidden md:block">
         <BaseTitle title="Appro"></BaseTitle>
         <Basket></Basket>
       </div>
@@ -42,14 +53,26 @@ import ProductCategory from "../../../components/ProductCategory.vue";
 import Basket from "../../../components/Basket.vue";
 import { useProductStore } from "../../../stores/product";
 import { useProductCategoryStore } from "../../../stores/product-category";
+import MobileProductInput from "@/components/MobileProductInput.vue";
 import {
   IProduct,
   IProductCategory,
   PrimaryKey,
 } from "../../../types/interfaces";
+import BaseIcon from "../../../components/base/BaseIcon.vue";
+import BaseButton from "../../../components/base/BaseButton.vue";
+import { useBasketStore } from "../../../stores/basket";
 
 export default defineComponent({
-  components: { PageInTwoPart, ProductInput, ProductCategory, Basket },
+  components: {
+    PageInTwoPart,
+    ProductInput,
+    ProductCategory,
+    Basket,
+    BaseIcon,
+    BaseButton,
+    MobileProductInput,
+  },
   setup() {
     const productStore = useProductStore();
 
@@ -60,6 +83,17 @@ export default defineComponent({
     const categories = ref<Array<IProductCategory>>([]);
 
     const products = ref<Array<IProduct>>([]);
+
+    const mobileAddProduct = ref(false);
+
+    const selectedProduct = ref()
+
+    const basketStore = useBasketStore()
+
+    function onSelectedProduct(product : IProduct){
+      selectedProduct.value = product
+      mobileAddProduct.value = true
+    }
 
     onMounted(async () => {
       try {
@@ -89,6 +123,10 @@ export default defineComponent({
       categories,
       categoryId,
       products,
+      mobileAddProduct,
+      selectedProduct,
+      onSelectedProduct,
+      basketStore
     };
   },
 });

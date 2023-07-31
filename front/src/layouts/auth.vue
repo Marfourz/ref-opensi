@@ -7,7 +7,7 @@
       class="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center"
     >
       <div
-        class="bg-white w-[37%] py-10 px-14 rounded-2xl space-y-4 text-center flex flex-col items-center"
+        class="bg-white w-[80%] md:w-1/2 lg:w-[37%] py-10 px-14 rounded-2xl space-y-4 text-center flex flex-col items-center"
       >
         <img
           src="@/assets/images/logo.png"

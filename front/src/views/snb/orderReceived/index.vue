@@ -4,6 +4,7 @@
       class="absolute top-6 right-0 left-0 flex justify-center"
       v-if="showSuccesInfo"
     >
+
       <SuccessInfo
         title="Livreur assigné avec succès"
         class="w-fit"
@@ -419,6 +420,10 @@ export default defineComponent({
       show.value = false;
       reload.value = reload.value + 1;
       showSuccesInfo.value = true;
+      window.setTimeout(()=>{
+        showSuccesInfo.value = false;
+      }, 3000)
+      
     }
 
     const show = ref(false);

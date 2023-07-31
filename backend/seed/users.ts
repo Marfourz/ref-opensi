@@ -1,5 +1,5 @@
 export const user = {
-  name: 'Adinistrateur SNB',
+  name: 'Administrateur SNB',
   firstName: 'ADMIN USER',
   identifier: 'dg54g5df5',
   phone: '90020408',

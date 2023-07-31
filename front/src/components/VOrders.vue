@@ -1,6 +1,6 @@
 <template>
-  <div class="border-2 border-t-2 " :key="reload">
-     <div
+  <div class="border border-t-2  h-full" :key="reload">
+    <div
       class="absolute top-6 right-0 left-0 flex justify-center"
       v-if="showSuccesInfo"
     >
@@ -156,7 +156,7 @@
         >
           <img src="@/assets/images/emptyBasket.png" alt="" />
           <div class="font-semibold text-center">
-            Vous verrez ici les détails d'une <br />
+            Vous verrez ici les détails d'une <br  class="hidden md:block"/>
             commande
           </div>
         </div>
@@ -381,6 +381,9 @@ export default defineComponent({
       show.value = false;
       reload.value = reload.value + 1;
       showSuccesInfo.value = true;
+      window.setTimeout(()=>{
+        showSuccesInfo.value = false;
+      }, 3000)
     }
 
     const show = ref(false);

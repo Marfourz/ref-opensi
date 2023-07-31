@@ -36,6 +36,8 @@ import BaseRightModal from "@/components/base/BaseRightModal.vue";
 import HistoryTrackingList from "@/components/HistoryTrackingList.vue";
 import BaseActions from "@/components/base/BaseActions.vue";
 import VPanel from "@/components/VPanel.vue";
+
+
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
 });

@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="flex items-end space-x-2" v-if="!isValidate">
+    <div class="md:flex items-end space-x-2 hidden" v-if="!isValidate">
       <div>
         <label for="" class="text-xs text-[#6B7A99]">Nombre de casiers</label>
 
@@ -33,14 +33,19 @@
     </div>
 
     <div
-      class="rounded-full border flex items-center w-fit h-fit px-6 py-2.5 space-x-2"
+      class=" rounded-full border md:flex items-center w-fit h-fit px-6 py-2.5 space-x-2 hidden"
       v-else
     >
       <div>{{ quantity }}</div>
       <BaseIcon name="editProduct" @click="edit"></BaseIcon>
       <BaseIcon name="close" @click="close"></BaseIcon>
     </div>
+
+
+   
   </div>
+
+
 </template>
 
 <script lang="ts">

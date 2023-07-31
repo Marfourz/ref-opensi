@@ -55,6 +55,13 @@ export const useBasketStore = defineStore("basket", {
 
   getters: {
     getItems: (state) => state.items,
+    getTotalProduct: (state) => {
+      let total = 0
+      state.items.forEach((value : IItem)=>{
+        total += total + +value.quantity
+      })
+      return total
+    },
     getBasketPrice: (state) => {
       let price = 0;
       state.items.forEach((item: IItem) => {

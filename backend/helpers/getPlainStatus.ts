@@ -37,10 +37,10 @@ export const getPlainStatusOfPartners = (status: OrganisationStatusEnum) => {
 export const getPlainPackagingType = (type: PackagingTypeEnum) => {
   switch (type) {
     case PackagingTypeEnum.pack:
-      return 'Packs';
+      return 'Pack(s)';
       break;
     case PackagingTypeEnum.rack:
-      return 'Casiers';
+      return 'Casier(s)';
       break;
     default:
       break;

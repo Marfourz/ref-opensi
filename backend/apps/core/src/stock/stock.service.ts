@@ -1,16 +1,18 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import {
-  Stock,
-  PackagingTypeEnum,
-  TransactionStatusEnum,
-} from '@prisma/client';
+import { Stock } from '@prisma/client';
 import { PrismaService } from 'libs/prisma/src';
 import { stockDto, updateStockDto, stockOptions } from './stock.dto';
 import { PagiationPayload } from 'types';
 import { pick } from 'underscore';
-import { OrderStatusEnum, OrganisationTypeEnum } from '@prisma/client';
+import {
+  OrderStatusEnum,
+  OrganisationTypeEnum,
+  TransactionStatusEnum,
+  PackagingTypeEnum,
+} from '@prisma/client';
 import { orderDto } from '../order/order.dto';
 import { OrderService } from '../order/order.service';
+import { getPlainPackagingType } from 'helpers/getPlainStatus';
 
 @Injectable()
 export class StockService {
@@ -22,6 +24,8 @@ export class StockService {
 
   async createStock(stock: stockDto, option?: stockOptions): Promise<Stock> {
     try {
+      //get absolute value of currentQuantity of stock
+      stock.currentQuantity = Math.abs(stock.currentQuantity);
       const organisation = await this.prisma.organisation.findUnique({
         where: {
           id: stock.organisationId,
@@ -246,7 +250,7 @@ export class StockService {
       totalPackProducts,
       totalRackProducts,
       totalCost,
-      lastStock: lastStock[0],
+      lastStock: lastStock.length > 0 ? lastStock[0] : null,
     };
   }
 
@@ -269,7 +273,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     } else {
@@ -286,7 +294,11 @@ export class StockService {
           status: OrderStatusEnum.delivered,
         },
         include: {
-          items: true,
+          items: {
+            include: {
+              product: true,
+            },
+          },
         },
       });
     }
@@ -296,18 +308,20 @@ export class StockService {
     for (let i = 0; i < deliveredOrders.length; i++) {
       const element = deliveredOrders[i];
       let type: string,
+        packagingType: PackagingTypeEnum,
         quantity = 0;
       if (
         element.parentOrganisationId == element.organisationId ||
         element.parentOrganisationId == orgId
       ) {
-        type = 'Vente'; //vente
+        type = 'sale'; //vente
       } else {
-        type = 'Approvissionnement'; //achat
+        type = 'supply'; //achat
       }
 
       for (let j = 0; j < element.items.length; j++) {
         const e = element.items[j];
+        packagingType = e.product.packagingType;
         quantity += e.quantity;
       }
 
@@ -315,6 +329,7 @@ export class StockService {
       dataItem = {
         date: element.deliveryDate,
         type,
+        packagingType: getPlainPackagingType(packagingType),
         quantity,
         total: element.totalAmount,
       };

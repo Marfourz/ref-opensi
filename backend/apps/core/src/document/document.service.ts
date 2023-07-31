@@ -268,7 +268,7 @@ export class DocumentService {
       stocks.push(element);
       stocks[i].name = element.product.name;
       stocks[i].bulkPrice = element.product.bulkPrice;
-      stocks[i].total = element.product.bulkPrice * element.product.unitPrice;
+      stocks[i].total = element.product.bulkPrice * element.currentQuantity;
     });
 
     stocks.forEach((element) => {

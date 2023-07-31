@@ -1,18 +1,28 @@
 <template>
   <div class="space-y-6">
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0">
       <div class="flex items-center space-x-6">
         <BaseTitle title="Stock"></BaseTitle>
+       
+      </div>
+
+      <div class="flex md:space-x-9 space-x-4  items-center">
+        <div class="text-link underline cursor-pointer font-semibold">
         <router-link :to="{ name: 'evolutionStock' }">
-          <BaseButton icon="stock2" size="small">Évolution du stock</BaseButton>
+          Évolution du stock
         </router-link>
+       
       </div>
       <div class="text-link underline cursor-pointer font-semibold" @click="goToUpadateStock" v-if="isSnb">
         Gestion de stock
       </div>
+      </div>
+
+      
+     
     </div>
 
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1  gap-4">
       <DashboardCard :data="rackStock"></DashboardCard>
       <DashboardCard :data="packStock"></DashboardCard>
       <DashboardCard :data="totalCost"></DashboardCard>
@@ -20,7 +30,7 @@
     </div>
 
 
-    <ProductByCategory :titles="titles" :actions="actions" :withoutFilter="true"></ProductByCategory>
+    <ProductByCategory :titles="titles" :mobileTitles="mobileTitles" :actions="actions" :withoutFilter="true"></ProductByCategory>
   </div>
 </template>
 
@@ -103,7 +113,7 @@ export default defineComponent({
       },
       {
         title: "Nom du produit",
-        name: "product.name",
+        name: "product.name"
       },
 
       {
@@ -129,7 +139,20 @@ export default defineComponent({
       }
     ];
 
+    const mobileTitles = [
+    {
+        title: "Identifiant",
+        name: "image",
+      },
+      {
+        title: "Nom du produit",
+        name: "product.name",
+      }
+    ]
 
+
+
+   
 
     function getTotalPrice(element: any) {
       let price = 0
@@ -206,7 +229,8 @@ export default defineComponent({
       organizationId,
       generalInfos,
       reload,
-      isSnb
+      isSnb,
+      mobileTitles
 
     };
   },

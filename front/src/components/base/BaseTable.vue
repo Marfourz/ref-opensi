@@ -1,6 +1,5 @@
 <template>
   <div class="w-full overflow-auto flex-1 bg-white text-[14px]">
-   
     <table class="table-auto w-full text-md">
       <thead>
         <tr class="bg-grey-10 text-tableColor">
@@ -14,7 +13,18 @@
           <th
             v-for="title in titles"
             :key="title.name"
-            class="py-4 border-b text-left pl-2 font-semibold "
+            class="py-4 border-b text-left pl-2 font-semibold"
+            :class="{
+              'hidden md:table-cell': mobileTitles && mobileTitles.length != 0,
+            }"
+          >
+            {{ title.title }}
+          </th>
+
+          <th
+            v-for="title in mobileTitles"
+            :key="title.name"
+            class="py-4 border-b text-left pl-2 font-semibold md:hidden"
           >
             {{ title.title }}
           </th>
@@ -31,43 +41,46 @@
         </tr>
       </tbody>
       <tbody class="bg-white" v-else-if="data && data.length != 0">
-        <tr
-          v-for="(element, i) in data"
-          class="font-semibold cursor-default hover:bg-[#EDEFF3]"
-          :key="i"
-          :class="{
-            'bg-[#F8F9FB]': isEqual(element, currentElement) && actions,
-            'border-b font-semibold ': i != data.length - 1,
-          }"
-          @mouseenter="currentElement = element"
-          @click="onItemClick(element)"
-        >
-          <td v-if="selectable">
-            <div class="p-2 flex justify-center items-center">
-              <input
-                type="checkbox"
-                class="cursor-pointer"
-                @change="onCheckedElement(element, $event)"
-                :checked="
-                  verifyElementExistInArray(element, checkedElements)
-                    ? true
-                    : false
-                "
-              />
-            </div>
-          </td>
-          <td
-            v-for="title in titles"
-            :key="title.name"
-            class="py-4 text-left pl-2 "
+        <template v-for="(element, i) in data" :key="i">
+          <tr
+            class="font-semibold cursor-default hover:bg-[#EDEFF3]"
+            :class="{
+              'bg-[#F8F9FB]': isEqual(element, currentElement) && actions,
+              //'border-b font-semibold ': i != data.length - 1,
+            }"
+            @mouseenter="currentElement = element"
+            @click="onItemClick(element)"
           >
-            <div v-if="title.name != 'action'" class="max-w-xs ">
-              <slot :name="title.name" :element="{ ...element, index: i }">
-                <!-- {{ element[title.name] }} -->
-                <div v-html="getElementValue(title, element, i)"></div>
-              </slot>
-            </div>
+            <td v-if="selectable">
+              <div class="p-2 flex justify-center items-center">
+                <input
+                  type="checkbox"
+                  class="cursor-pointer"
+                  @change="onCheckedElement(element, $event)"
+                  :checked="
+                    verifyElementExistInArray(element, checkedElements)
+                      ? true
+                      : false
+                  "
+                />
+              </div>
+            </td>
+            <td
+              v-for="title in titles"
+              :key="title.name"
+              class="py-4 text-left pl-2"
+              :class="{
+                'hidden md:table-cell': mobileTitles && mobileTitles.length != 0,
+              }"
+            >
+              <div v-if="title.name != 'action'" class="max-w-xs">
+                <slot :name="title.name" :element="{ ...element, index: i }">
+                  <!-- {{ element[title.name] }} -->
+                  <div v-html="getElementValue(title, element, i)"></div>
+                </slot>
+              </div>
 
+<<<<<<< HEAD
             <div v-else-if="isEqual(element, currentElement)" class="max-h-4 ">
               <slot name="action" :element="element">
                 <div class="flex items-center justify-center">
@@ -76,10 +89,81 @@
                   </BaseActions>
                 </div>
                 </div>
+=======
+              <div v-else-if="isEqual(element, currentElement)" class="max-h-4">
+                <slot name="action" :element="element">
+                  <div class="flex items-center justify-center">
+                    <div class="absolute">
+                      <BaseActions
+                        :actions="getActions(element)"
+                        :data="element"
+                      >
+                      </BaseActions>
+                    </div>
+                  </div>
+                </slot>
+              </div>
+            </td>
+
+            <td
+              v-for="title in mobileTitles"
+              :key="title.name"
+              class="py-4 text-left pl-2 md:hidden "
+            >
+              <div v-if="title.name != 'action'" class="max-w-xs">
+                <slot :name="title.name" :element="{ ...element, index: i }">
+                  <!-- {{ element[title.name] }} -->
+                  <div v-html="getElementValue(title, element, i)"></div>
+                </slot>
+              </div>
+
+              <div v-else-if="isEqual(element, currentElement)" class="max-h-4">
+                <slot name="action" :element="element">
+                  <div class="flex items-center justify-center">
+                    <div class="absolute">
+                      <BaseActions
+                        :actions="getActions(element)"
+                        :data="element"
+                      >
+                      </BaseActions>
+                    </div>
+                  </div>
+                </slot>
+              </div>
+            </td>
+          </tr>
+
+          <tr :class="{ 'border-b font-semibold ': i != data.length - 1 }" class=" md:hidden">
+            <td
+             
+              :colspan="titles.length"
+              v-if="isEqual(element, selectedElement)"
+              
+            >
+              
+              <slot name="detail" :element="element"> 
+                <table class="w-full font-normal">
+                  <template  v-for="title in titles"  :key="title.name">
+                    <tr  v-if="!titleInMobileTiles(title.name)" >
+                    <td class="p-2">{{ title.title }}</td>
+                    
+                    <td class="">
+                      
+                      <slot :name="title.name" :element="{ ...element, index: i }">
+                        <!-- {{ element[title.name] }} -->
+                        <div v-html="getElementValue(title, element, i)"></div>
+                      </slot>
+                    </td>
+                  </tr>
+                  </template>
+                  
+                </table>
+              
+>>>>>>> deploy
               </slot>
-            </div>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </template>
       </tbody>
       <tbody class="bg-white" v-else>
         <tr class="">
@@ -101,24 +185,25 @@ export interface ITitle {
   transform?: Function;
 }
 
-
-
-
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import isEqual from "lodash/isEqual";
 import { IAction } from "@/types/interfaces";
 //import BaseActions from "../../components/base/BaseActions.vue";
 
-type FilterActions<T> = (item : any) => Array<IAction>
+type FilterActions<T> = (item: any) => Array<IAction>;
 
 export default defineComponent({
- // components: { BaseActions },
+  // components: { BaseActions },
   props: {
     data: {
       type: Array as () => Array<any>,
       required: true,
     },
     titles: {
+      type: Array as () => Array<ITitle>,
+      required: true,
+    },
+    mobileTitles: {
       type: Array as () => Array<ITitle>,
       required: true,
     },
@@ -133,16 +218,20 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    showDetail: {
+      type: Boolean,
+      default: false,
+    },
+
     actions: {
       type: Array as PropType<Array<IAction>>,
     },
-    filterActions:{
-      type : Function as PropType<FilterActions<any>>
-
+    filterActions: {
+      type: Function as PropType<FilterActions<any>>,
     },
   },
 
-  expose: ["resetSelection","itemClick"],
+  expose: ["resetSelection", "itemClick"],
 
   setup(props, context) {
     const currentElement = ref();
@@ -200,10 +289,15 @@ export default defineComponent({
       if (props.data.length != 0) currentElement.value = props.data[0];
     }
 
+    const selectedElement = ref(null);
+
     function onItemClick(element: any) {
-      console.log("yoy yoy");
-      
-      context.emit("itemClick",element)
+      selectedElement.value = element;
+      context.emit("itemClick", element);
+    }
+
+    function titleInMobileTiles(title : string){
+      return props.mobileTitles.find((value:ITitle)=>value.name == title)
     }
 
     //watchers
@@ -213,11 +307,9 @@ export default defineComponent({
       context.emit("checkedElement", checkedElements.value);
     });
 
-    function getActions(element : any){
-      if(props.filterActions)
-        return props.filterActions(element)
-      else
-        return props.actions
+    function getActions(element: any) {
+      if (props.filterActions) return props.filterActions(element);
+      else return props.actions;
     }
 
     return {
@@ -230,7 +322,9 @@ export default defineComponent({
       checkedElements,
       verifyElementExistInArray,
       onItemClick,
-      getActions
+      getActions,
+      selectedElement,
+      titleInMobileTiles
     };
   },
 });

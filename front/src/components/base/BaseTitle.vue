@@ -1,5 +1,5 @@
 <template>
-  <div class="font-semibold text-2xl">
+  <div class="font-semibold md:text-2xl text-lg">
     {{ title }}
   </div>
 </template>

@@ -8,7 +8,7 @@
     </div>
 
     <!-- DashboardCard -->
-    <div class="grid grid-cols-3 space-x-6 mt-7">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-4 mt-5  md:mt-7">
       <DashboardCard :data="turnover"></DashboardCard>
       <DashboardCard :data="numberOfOrders"></DashboardCard>
       <DashboardCard :data="numberOfPartners"></DashboardCard>
@@ -28,6 +28,8 @@
       </div>
       <BaseDateRange></BaseDateRange>
     </div>
+    
+   
     <BaseTable :titles="titles" :data="productsInfos">
       <template #produit="{ element }">
         <div class="flex items-center space-x-2.5">
@@ -60,6 +62,12 @@
         </div>
       </template>
 
+      <template #productTurnover="{element}">
+              <div>
+                  {{ element.productTurnover ? element.productTurnover : 0 }} FCFA
+              </div>
+            </template>
+
       <template #totalBulk="{ element }">
         <div>
           {{ element.currentQuantity ? element.currentQuantity : 0 }}
@@ -74,9 +82,13 @@
     </div>
     <!-- Array top parteners -->
     <div>
+<<<<<<< HEAD
       <div
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-4 mt-5 md:mt-7"
       >
+=======
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-7">
+>>>>>>> deploy
         <div
           class="border rounded-lg p-4 min-h-[520px]"
           v-if="orgType === OrganisationType.SNB"
@@ -89,7 +101,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top masters distributeurs <br> apparaîtront ici"
+              title="Vos top masters distributeurs <br class='hidden md:block'> apparaîtront ici"
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>
@@ -129,7 +141,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top distributeurs agréés  <br> apparaîtront ici "
+              title="Vos top distributeurs agréés  <br class='hidden md:block'> apparaîtront ici "
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>
@@ -160,7 +172,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top dépôts <br> apparaîtront ici"
+              title="Vos top dépôts <br class='hidden md:block'> apparaîtront ici"
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>
@@ -178,6 +190,8 @@
             <template #socialReason="{ element }">
               <div class="text-link">{{ element.socialReason }}</div>
             </template>
+
+          
           </BaseTable>
         </div>
       </div>
@@ -222,7 +236,7 @@ export default defineComponent({
     const turnover = computed(() => {
       return {
         title: `${
-          statInfos.value && statInfos.value.turnover
+          statInfos.value
             ? helpers.currency(statInfos.value.turnover)
             : 0
         } FCFA`,
@@ -272,18 +286,18 @@ export default defineComponent({
     const titles = [
       {
         title: "Produit",
-        name: "image",
+        name: "produit",
       },
 
       {
         title: "Nombre de casiers",
-        name: "totalBulk",
+        name: "selledQuantity",
       },
 
       {
         title: "Chiffre d’affaires",
-        name: "turnover",
-        transform: formatPrice,
+        name: "productTurnover"
+        
       },
     ];
     const image = ref<File>();
@@ -388,11 +402,20 @@ export default defineComponent({
       } catch (error) {}
       try {
         const response = await organisationStore.statPartners({
+<<<<<<< HEAD
           type: OrganisationType.DA,
           startDate: periodes.topParteners.startDate,
           endDate: periodes.topParteners.endDate,
         });
         statPartners.dp = response.data;
+=======
+          type : OrganisationType.DA,
+          startDate : periodes.topParteners.startDate,
+          endDate : periodes.topParteners.endDate,
+        }
+        );
+        statPartners.da = response.data;
+>>>>>>> deploy
       } catch (error) {}
       try {
         const response = await organisationStore.statPartners({
@@ -400,7 +423,7 @@ export default defineComponent({
           startDate: periodes.topParteners.startDate,
           endDate: periodes.topParteners.endDate,
         });
-        statPartners.da = response.data;
+        statPartners.dp = response.data;
       } catch (error) {}
     }
 

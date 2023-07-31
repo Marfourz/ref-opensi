@@ -3,10 +3,10 @@
     :class="classes"
     v-bind="$attrs"
     :disabled="disabled"
-    class="flex items-center justify-center min-w-[120px]"
+    class="flex items-center justify-center md:min-w-[120px]"
     @click="onClick"
   >
-    <div v-if="!loading" class="flex space-x-2 items-center">
+    <div v-if="!loading" class="flex md:space-x-2 items-center">
       <BaseIcon :name="icon" v-if="icon != ''"></BaseIcon>
       <div><slot></slot></div>
     </div>

@@ -2,7 +2,7 @@
   <div class="h-screen w-scren flex flex-col">
     <HeaderBar />
     <div class="flex-1 flex h-[calc(100vh-56px)] overflow-hidden">
-      <SideBar class="overflow-scroll"></SideBar>
+      <SideBar class="overflow-scroll hidden md:block"></SideBar>
       <RouterView
         class="w-full overflow-scroll"
         :class="{ 'px-6 py-8': !withoutPadding }"

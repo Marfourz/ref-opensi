@@ -53,11 +53,11 @@
       </template>
     </BaseModal>
 
-    <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-6">
+    <div class="md:flex space-y-4 md:space-y-0 justify-between items-center">
+      <div class="flex justify-between md:justify-start items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
-        <BaseButton icon="plus" size="small" @click="showModal = true"
-          >Nouveau produit</BaseButton
+        <BaseButton icon="plus" size="small" @click="createProduct"
+          >Nouveau</BaseButton
         >
       </div>
       <div
@@ -72,8 +72,8 @@
       <div class="flex flex-col items-center space-y-4">
         <img src="@/assets/images/emptyProduct.png" alt="" />
         <div class="font-semibold text-center">
-          Vos produits ajoutés seront visibles ici. <br />
-          Cliquez sur le bouton Nouveau produit <br />
+          Vos produits ajoutés seront visibles ici. <br class="hidden md:block" />
+          Cliquez sur le bouton Nouveau produit <br class="hidden md:block" />
           pour ajouter des produits
         </div>
       </div>
@@ -95,15 +95,17 @@
         <template
           #[tab.name]
           v-for="tab in tabs"
-          :key="`${tab.name}-${reload}`"
+
         >
           <BaseTableWithFilter
             :fetchData="productCategoryStore.fetchProducts"
             :titles="titles"
             :actions="actions"
             :requestId="categoryId"
+            :mobileTitles="mobileTitles"
             class="mt-6"
             :downloadData="productCategoryStore.downloadProduct"
+            :key="`${tab.name}-${reload}`"
           >
             <template #image="{ element }">
               <div class="w-8 h-8 flex justify-center">
@@ -118,13 +120,19 @@
                 />
               </div>
             </template>
+
+         
           </BaseTableWithFilter>
+
+
+
+          
         </template>
       </BaseTabs>
     </div>
 
-    <BaseBottomModal :show="showModal">
-      <div class="w-[80%]">
+    <BaseBottomModal :show="showModal" >
+      <div class="md:w-[80%] w-[90%]">
         <div class="border-b pb-2 flex items-center justify-between">
           <div class="font-bold text-2xl">
             {{ !selectedProduct ? "Ajouter un produit" : "Mettre à jour" }}
@@ -136,7 +144,7 @@
           ></BaseIcon>
         </div>
         <div class="flex justify-center pt-6">
-          <Form class="w-3/4 space-y-6" @submit="onSubmit">
+          <Form class="md:w-3/4 space-y-6" @submit="onSubmit">
             <BaseInput
               name="nom du produit"
               label="Nom du produit"
@@ -183,7 +191,7 @@
             ></UploadFileVue>
 
             <div class="pb-2">
-              <BaseButton class="w-[200px]" :loading="loading">{{
+              <BaseButton class="md:w-[200px] w-full" :loading="loading">{{
                 selectedProduct ? "Mettre à jour" : "Ajouter"
               }}</BaseButton>
             </div>
@@ -199,7 +207,7 @@ import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import EmptyState from "../../../components/EmptyState.vue";
 import { useProductStore } from "@/stores/product";
 import BaseTableWithFilter from "../../../components/base/BaseTableWithFilter.vue";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { useProductCategoryStore } from "../../../stores/product-category";
 import UploadFileVue from "../../../components/UploadFile.vue";
 import { PackagingType } from "../../../types/enumerations";
@@ -283,6 +291,21 @@ export default defineComponent({
     function goToProductCategory() {
       router.push({ name: "categories" });
     }
+
+    const mobileTitles = [
+    {
+        title: "Identifiant",
+        name: "image",
+      },
+      {
+        title: "Nom du produit",
+        name: "name",
+      },
+      {
+        title: "Action",
+        name: "action",
+      },
+    ]
 
     const titles = [
       {
@@ -439,6 +462,9 @@ export default defineComponent({
             router.push({ name: "products" });
           }
         }
+
+        categoryId.value = product.categoryId
+        
       } catch (error: any) {}
     }
 
@@ -467,11 +493,25 @@ export default defineComponent({
       else return "Prix du casier (en FCFA)";
     });
 
+
+    const route = useRoute()
+
+    function createProduct(){
+      showModal.value = true 
+      selectedProduct.value = null
+    }
+
+    
+
     onMounted(async () => {
+
+
       try {
         const response = await productCategoryStore.fetchAll();
-
-        categoryId.value = response.data[0].id;
+        if(route.params.categoryId)
+          categoryId.value = route.params.categoryId as string
+        else
+          categoryId.value = response.data[0].id;
 
         categories.value = response.data.map((value: any) => {
           return {
@@ -508,6 +548,8 @@ export default defineComponent({
       modal,
       deleteProduct,
       reload,
+      createProduct,
+      mobileTitles
     };
   },
 });

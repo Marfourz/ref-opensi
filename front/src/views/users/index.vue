@@ -119,6 +119,11 @@
     
       :key="reload"
     >
+    <template #name="{element}">
+      <div>
+          {{ element.name + " " + element.firstName }}
+      </div>
+    </template>
   <template #action="{ element }">
           <BaseActions :actions="customActions(element)" :data="element" />
         </template>
@@ -140,9 +145,15 @@
           <Form class="w-3/4 space-y-6" @submit="onSubmit">
             <BaseInput
               name="nom d'utilisateur"
-              label="Nom d'utilisateur"
+              label="Nom"
               rules="required"
               v-model="user.name"
+            ></BaseInput>
+            <BaseInput
+              name="prénom"
+              label="Prénom"
+              rules="required"
+              v-model="user.firstName"
             ></BaseInput>
             <BaseInput
               name="téléphone"
@@ -151,7 +162,7 @@
               v-model="user.phone"
             ></BaseInput>
             <BaseInput
-              name="firstname"
+              name="Email"
               label="Email"
               rules="required|email"
               v-model="user.email"
@@ -291,6 +302,7 @@ export default defineComponent({
       selectedUser.value = null;
       showModal.value = true;
       user.name = "";
+      user.firstName = ""
       user.phone = "";
       user.email = "";
       user.address = "";
@@ -302,6 +314,7 @@ export default defineComponent({
       selectedUser.value = value;
       showModal.value = true;
       user.name = value.name;
+      user.firstName = value.firstName
       user.phone = value.phone;
       user.email = value.email;
       user.sex = value.sex;
@@ -336,6 +349,7 @@ export default defineComponent({
 
     const user = reactive({
       name: "",
+      firstName:"",
       phone: "",
       email: "",
       address: "",

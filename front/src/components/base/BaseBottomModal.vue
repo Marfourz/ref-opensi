@@ -1,11 +1,15 @@
 <template>
+<<<<<<< HEAD
   <div class="">
+=======
+  <div >
+>>>>>>> deploy
     <div
-      class="fixed -top-10 bottom-0 right-0 left-0 bg-black opacity-50"
+      class="fixed top-0 bottom-0 right-0 left-0 bg-black opacity-50"
       v-if="show"
     ></div>
     <div
-      class="bg-white flex justify-center pt-10 fixed bottom-0 left-0 right-0 top-12 rounded-t-2xl overflow-scroll"
+      class="bg-white flex justify-center md:pt-10 pt-5 fixed bottom-0 left-0 right-0 md:top-12 top-0 md:rounded-t-2xl overflow-scroll"
       v-if="show"
     >
       <slot></slot>

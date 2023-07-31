@@ -10,6 +10,18 @@ export class ProductsService {
 
   async createProduct(product: productDto): Promise<Product> {
     try {
+      const existingProduct = await this.prisma.product.findUnique({
+        where: {
+          name: product.name,
+        },
+      });
+
+      if (existingProduct) {
+        throw new HttpException(
+          'Un produit avec ce nom existe déja',
+          HttpStatus.CONFLICT,
+        );
+      }
       const newProduct = await this.prisma.product.create({
         data: product,
       });

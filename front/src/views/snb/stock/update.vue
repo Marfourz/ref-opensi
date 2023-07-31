@@ -89,6 +89,7 @@ export default defineComponent({
       {
         title: "Produits en stock",
         name: "product.name",
+        transform: formatName
       },
 
       {
@@ -96,6 +97,10 @@ export default defineComponent({
         name: "currentQuantity",
       },
     ];
+
+    function formatName(element : any){
+      return `${element.product.name} ${element.product.volume} CL`
+    }
 
     // function getStock(element: IProduct) {
     //   if (element.stocks && element.stocks[0])
