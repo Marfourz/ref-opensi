@@ -85,7 +85,7 @@ export default defineComponent({
     SideItem,
     BaseIcon
 },
-  setup() {
+  setup(props,context) {
     const router = useRouter();
     const route = useRoute();
     const activeMenu = ref("Accueil");
@@ -201,6 +201,7 @@ export default defineComponent({
 
       activeMenu.value = menu.title;
       router.push({ name: menu.route });
+      context.emit('close')
     }
 
     const organizationType = computed(() => {

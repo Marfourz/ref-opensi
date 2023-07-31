@@ -2,11 +2,11 @@
   <div class="h-full flex flex-col">
     <div
       v-if="!hideFilter"
-      class="w-full p-4 border rounded flex items-center justify-between shadow"
+      class="w-full p-4 border rounded flex items-center justify-between shadow md:static fixed bottom-0 right-0 left-0 bg-white"
     >
-      <div class="space-x-4 flex">
+      <div class="space-x-4 flex w-full">
         <div
-          class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] w-[280px]"
+          class="border items-center rounded-lg py-2 px-5 flex space-x-4 bg-[#DADEE3] md:w-[280px] w-full"
         >
           <BaseIcon name="search" class="text-grey-50"></BaseIcon>
           <input
@@ -26,7 +26,7 @@
               class="h-full"
               @click="downloadData"
               :loading="downloadLoading"
-              >Télécharger</BaseButton
+              ><span class="hidden md:block">Télécharger</span></BaseButton
             >
             <slot name="filters"> </slot>
           </div>
@@ -52,6 +52,7 @@
       :loading="loading"
       :actions="actions"
       :filterActions="filterActions"
+      :mobileTitles="mobileTitles"
       class="mt-6"
       v-else
       @itemClick="$emit('itemClick', $event)"
@@ -116,6 +117,9 @@ export default defineComponent({
     titles: {
       type: Array as () => Array<ITitle>,
       required: true,
+    },
+    mobileTitles:{
+      type: Array as () => Array<ITitle>
     },
     emptyMessage: {
       type: String,

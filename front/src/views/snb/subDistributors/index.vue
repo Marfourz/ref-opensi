@@ -115,9 +115,20 @@
         </template>
       </BaseModal>
       <div class="">
-        <BaseTitle title="Partenaires"></BaseTitle>
+        <div class="flex justify-between">
+          <BaseTitle title="Partenaires"></BaseTitle>
+          <BaseButton
+              icon="plus"
+              size="small"
+              class=" md:hidden"
+              @click="createMaster"
+              v-if="showNewSubDistributor"
+              >Nouveau </BaseButton
+            >
+        </div>
+        
         <!-- Panel -->
-        <div class="flex mt-8 space-x-4">
+        <div class="flex mt-8 space-x-4 w-full overflow-scroll">
           <div v-for="(etat, index) in etats" :key="index">
             <VPanel
               :labels="etat.name"
@@ -132,6 +143,7 @@
 
       <BaseTableWithFilter
         :titles="titles"
+        :mobileTitles="mobileTitles"
         :fetchData="organizationStore.fetchAllParteners"
         :params="{ type: master.type }"
         :actions="actions"
@@ -144,6 +156,7 @@
             <BaseButton
               icon="plus"
               size="small"
+              class="hidden md:block"
               @click="createMaster"
               v-if="showNewSubDistributor"
               >Nouveau {{ partenaireTitle }}</BaseButton
@@ -167,7 +180,7 @@
     <BaseBottomModal :show="showModal">
       <div class="w-[80%]">
         <div class="border-b pb-2 flex items-center justify-between">
-          <div class="font-bold text-2xl">
+          <div class="font-bold md:text-2xl text-lg" >
             {{
               !selectedMaster
                 ? `Ajouter un ${partenaireTitle}`
@@ -181,8 +194,8 @@
           ></BaseIcon>
         </div>
         <div class="flex justify-center pt-6">
-          <Form class="w-3/4 space-y-6" @submit="onSubmit">
-            <div class="flex justify-between space-x-6">
+          <Form class="md:w-3/4 w-full space-y-6" @submit="onSubmit">
+            <div class="grid md:grid-cols-2 grid-cols-1 md:gap-6 gap-2">
               <BaseInput
                 name="raison sociale"
                 label="Raison Sociale"
@@ -196,8 +209,6 @@
                 rules="required|min:10|max:13|numeric"
                 v-model="master.fiscalId"
               ></BaseInput>
-            </div>
-            <div class="flex justify-between space-x-6">
               <BaseInput
                 name="téléphone"
                 label="Téléphone"
@@ -210,8 +221,6 @@
                 rules="required|email"
                 v-model="master.email"
               ></BaseInput>
-            </div>
-            <div class="flex justify-between space-x-6">
               <BaseInput
                 name="Nom du représentant"
                 label="Nom du représentant"
@@ -225,9 +234,11 @@
                 v-model="master.adress"
               ></BaseInput>
             </div>
+           
+          
 
             <div class="text-[#0F0F14]">Méthode de paiement</div>
-            <div class="flex items-center space-x-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 md:gap-6 gap-4">
               <div
                 class="flex items-center space-x-2 cursor-pointer"
                 v-for="method in paymentMethods"
@@ -243,7 +254,7 @@
               </div>
             </div>
 
-            <BaseButton class="w-[200px]" :loading="loading">{{
+            <BaseButton class="md:w-[200px] w-full" :loading="loading">{{
               selectedMaster ? "Mettre à jour" : "Ajouter"
             }}</BaseButton>
           </Form>
@@ -508,6 +519,28 @@ export default defineComponent({
 
     const showModal = ref(false);
 
+
+    const mobileTitles = [
+    {
+        title: "Nom d'utilisateur",
+        name: "ownerName",
+      },
+
+    
+      {
+        title: "Chiffre d’affaires",
+        name: "wallet",
+      },
+      {
+        title: "Statut",
+        name: "status",
+      },
+      {
+        title: "Action",
+        name: "action",
+      },
+    ]
+
     const titles = [
       {
         title: "Nom d'utilisateur",
@@ -663,6 +696,7 @@ export default defineComponent({
       emptyMessage,
       toggleText,
       UserAccountStatus,
+      mobileTitles
       // downloadPartners
     };
   },

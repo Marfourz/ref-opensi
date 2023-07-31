@@ -17,6 +17,9 @@ const iconComponent = computed(() => {
     loadingComponent: IconLoader,
   });
 });
+
+
+
 </script>
 
 <style scoped></style>

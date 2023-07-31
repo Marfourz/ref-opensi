@@ -156,7 +156,7 @@
         >
           <img src="@/assets/images/emptyBasket.png" alt="" />
           <div class="font-semibold text-center">
-            Vous verrez ici les détails d'une <br />
+            Vous verrez ici les détails d'une <br  class="hidden md:block"/>
             commande
           </div>
         </div>

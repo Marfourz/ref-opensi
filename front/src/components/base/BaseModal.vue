@@ -2,7 +2,9 @@
   <Transition name="modal">
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper" @click.self="onBgClose">
-        <div class="modal-container" :style="'width:' + width">
+
+        <div class="modal-container w-full" :style="isMobile ? 'width:' + width : 'width:100%'" >
+         
           <slot name="modal">
             <div class="modal-header relative">
               <div class="flex justify-between">
@@ -47,7 +49,7 @@
   </Transition>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent,computed } from "vue";
 
 export default defineComponent({
   props: {
@@ -77,8 +79,13 @@ export default defineComponent({
       }
     }
 
+    const isMobile = computed(()=>{
+      return window.matchMedia('(min-width: 768px)').matches
+    })
+
     return {
       onBgClose,
+      isMobile
     };
   },
 });

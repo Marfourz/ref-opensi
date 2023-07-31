@@ -20,6 +20,7 @@
         >
           <template #[tab.name] v-for="tab in tabs">
             <BaseTableWithFilter
+              :mobileTitles="mobileTitles"
               :key="tab.name"
               :fetchData="productStore.fetchAllProductsStock"
               :titles="titles"
@@ -29,6 +30,11 @@
               class="mt-6"
               :downloadData="productStore.downloadProductsStock"
             >
+              <template #name="{element}">
+                <div>
+                    {{ element.name }} dd
+                </div>
+              </template>
               <template #image="{ element }">
                 <div>
                   <img
@@ -88,6 +94,9 @@ export default defineComponent({
       type: Array as () => Array<ITitle>,
       required: true,
     },
+    mobileTitles: {
+      type: Array as () => Array<ITitle>
+    },
     actions: {
       type: Array as PropType<Array<IAction>>,
     },
@@ -102,6 +111,9 @@ export default defineComponent({
     function goToProductCategory() {
       router.push({ name: "categories" });
     }
+
+   
+
 
     const selectedProduct = ref();
 
@@ -184,7 +196,7 @@ export default defineComponent({
       categories,
       categoryId,
       organisationId,
-      helpers,
+      helpers
     };
   },
 });

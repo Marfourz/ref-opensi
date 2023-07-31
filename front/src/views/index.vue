@@ -95,7 +95,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top masters distributeurs <br> apparaîtront ici"
+              title="Vos top masters distributeurs <br class='hidden md:block'> apparaîtront ici"
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>
@@ -135,7 +135,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top distributeurs agréés  <br> apparaîtront ici "
+              title="Vos top distributeurs agréés  <br class='hidden md:block'> apparaîtront ici "
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>
@@ -166,7 +166,7 @@
             class="h-full flex flex-col justify-center"
           >
             <EmptyState
-              title="Vos top dépôts <br> apparaîtront ici"
+              title="Vos top dépôts <br class='hidden md:block'> apparaîtront ici"
               image=""
               :textPosition="TextPosition.TOP"
             ></EmptyState>

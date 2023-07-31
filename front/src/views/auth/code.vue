@@ -125,7 +125,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .otp-input {
   width: 52px;
   height: 40px;

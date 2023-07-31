@@ -10,7 +10,7 @@
     />
 
     <div
-      class="border border-dashed border-primary py-4 flex justify-center rounded"
+      class="border border-dashed border-primary p-4 flex justify-center rounded"
       v-if="!selectedFile.file && !onlineFile.url"
       @click="onSelectFile"
     >

@@ -53,11 +53,11 @@
       </template>
     </BaseModal>
 
-    <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-6">
+    <div class="md:flex space-y-4 md:space-y-0 justify-between items-center">
+      <div class="flex justify-between md:justify-start items-center space-x-6">
         <BaseTitle title="Produits"></BaseTitle>
         <BaseButton icon="plus" size="small" @click="createProduct"
-          >Nouveau produit</BaseButton
+          >Nouveau</BaseButton
         >
       </div>
       <div
@@ -72,8 +72,8 @@
       <div class="flex flex-col items-center space-y-4">
         <img src="@/assets/images/emptyProduct.png" alt="" />
         <div class="font-semibold text-center">
-          Vos produits ajoutés seront visibles ici. <br />
-          Cliquez sur le bouton Nouveau produit <br />
+          Vos produits ajoutés seront visibles ici. <br class="hidden md:block" />
+          Cliquez sur le bouton Nouveau produit <br class="hidden md:block" />
           pour ajouter des produits
         </div>
       </div>
@@ -100,6 +100,7 @@
             :titles="titles"
             :actions="actions"
             :requestId="categoryId"
+            :mobileTitles="mobileTitles"
             class="mt-6"
             :downloadData="productCategoryStore.downloadProduct"
             :key="`${tab.name}-${reload}`"
@@ -117,13 +118,19 @@
                 />
               </div>
             </template>
+
+         
           </BaseTableWithFilter>
+
+
+
+          
         </template>
       </BaseTabs>
     </div>
 
-    <BaseBottomModal :show="showModal">
-      <div class="w-[80%]">
+    <BaseBottomModal :show="showModal" >
+      <div class="md:w-[80%] w-[90%]">
         <div class="border-b pb-2 flex items-center justify-between">
           <div class="font-bold text-2xl">
             {{ !selectedProduct ? "Ajouter un produit" : "Mettre à jour" }}
@@ -135,7 +142,7 @@
           ></BaseIcon>
         </div>
         <div class="flex justify-center pt-6">
-          <Form class="w-3/4 space-y-6" @submit="onSubmit">
+          <Form class="md:w-3/4 space-y-6" @submit="onSubmit">
             <BaseInput
               name="nom du produit"
               label="Nom du produit"
@@ -182,7 +189,7 @@
             ></UploadFileVue>
 
             <div class="pb-2">
-              <BaseButton class="w-[200px]" :loading="loading">{{
+              <BaseButton class="md:w-[200px] w-full" :loading="loading">{{
                 selectedProduct ? "Mettre à jour" : "Ajouter"
               }}</BaseButton>
             </div>
@@ -282,6 +289,21 @@ export default defineComponent({
     function goToProductCategory() {
       router.push({ name: "categories" });
     }
+
+    const mobileTitles = [
+    {
+        title: "Identifiant",
+        name: "image",
+      },
+      {
+        title: "Nom du produit",
+        name: "name",
+      },
+      {
+        title: "Action",
+        name: "action",
+      },
+    ]
 
     const titles = [
       {
@@ -524,7 +546,8 @@ export default defineComponent({
       modal,
       deleteProduct,
       reload,
-      createProduct
+      createProduct,
+      mobileTitles
     };
   },
 });

@@ -3,6 +3,7 @@
     <BaseModal
       :title="modal.title"
       :show="modal.show"
+    
       @close="modal.show = false"
     >
       <Form @submit="onSubmit" class="space-y-6" v-if="modal.mode == 'confirm'">
@@ -72,10 +73,10 @@
       </template>
     </BaseModal>
     <BaseGoBack></BaseGoBack>
-    <div class="flex items-center space-x-6">
+    <div class="flex items-center space-x-6 md:justify-start justify-between">
       <BaseTitle title="Listes des catégories"></BaseTitle>
       <BaseButton icon="plus" size="small" @click="createCategory"
-        >Nouvelle catégorie
+        ><span class="hidden  md:block"> Nouvelle catégorie</span> <span class="block md:hidden">Nouveau</span>
       </BaseButton>
     </div>
     <!-- <div class="px-8 pt-12" v-show="total == 0">

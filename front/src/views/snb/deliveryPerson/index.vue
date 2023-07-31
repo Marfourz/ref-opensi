@@ -68,6 +68,7 @@
       <BaseTableWithFilter
        class="h-full"
       :titles="titles"
+      :mobileTitles="mobileTitles"
       :fetchData="organizationStore.fetchAllDeliveryMen"
       :downloadData="organizationStore.downloadDeliveryMen"
       :requestId="organisationId"
@@ -102,8 +103,8 @@
           ></BaseIcon>
         </div>
         <div class="flex justify-center pt-6">
-          <Form @submit="onSubmit" class="w-3/4">
-            <div class="grid grid-cols-2 gap-6">
+          <Form @submit="onSubmit" class="md:w-3/4 w-full">
+            <div class="grid md:grid-cols-2 grid-cols-1 gap-4 md:gap-6">
               <BaseInput
                 name="nom d'utilisateur"
                 label="Nom "
@@ -398,6 +399,26 @@ export default defineComponent({
       },
     ];
 
+    const mobileTitles = [
+    {
+        title: "Identifiant",
+        name: "identifier",
+      },
+      {
+        title: "Nom & Prénoms",
+        name: "name",
+        transform: identifiants,
+      },
+      {
+        title: "Statut",
+        name: "status",
+      },
+      {
+        title: "Action",
+        name: "action",
+      },
+    ]
+
     function identifiants(element: IUser) {
       return element.name + " " + element.firstName;
     }
@@ -491,6 +512,7 @@ export default defineComponent({
       toogleStatus,
       toggleText,
       UserAccountStatus,
+      mobileTitles
     };
   },
 });
